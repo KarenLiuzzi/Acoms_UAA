@@ -1,0 +1,8 @@
+python manage.py shell
+from accounts.models.user import TipoDocumento, Persona	
+tip_doc= TipoDocumento(descripcion_tipo_documento= 'CI')   
+tip_doc.save()
+
+
+karen= Persona(id_tipo_documento= tip_doc, nombre='karen', apellido='liuzzi', documento= '4978990')
+karen.save()
