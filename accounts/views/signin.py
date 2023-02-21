@@ -1,6 +1,7 @@
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
 from accounts.forms import SignInForm
 
@@ -25,5 +26,7 @@ class SignInView(View):
             if user:
                 login(request, user)
                 return redirect("calendarapp:calendar")
+            else:
+                messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
         context = {"form": forms}
         return render(request, self.template_name, context)

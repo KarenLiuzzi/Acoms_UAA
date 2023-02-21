@@ -2,14 +2,69 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from accounts.models import User
 from accounts.models.user import Persona
 
+def clean_email(mail):
+        user = User.objects.filter(email= mail)
+        #Validamos si existe un usuario con el mail
+        if user.count() == 0:
+
+            raise ValidationError("No existe un usuario registrado con el correo electrónico!")
+            
+        else:
+            return mail
+
+def validar_mail(mail):
+        user = User.objects.filter(email= mail)
+        #Validamos si existe un usuario con el mail
+        if user.count() == 0:
+            raise ValidationError("Los datos son incorrectos, vuelve a intentarlo.")
+        return mail
+
+
+
+class ResetPassConfirmation(forms.Form):
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"class": "form-control"}),
+        validators=[validate_password],
+    )
+    password2 = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput(attrs={"class": "form-control"}),
+        validators=[validate_password])
+
+    
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Las Contraseñas no coinciden!")
+        return password2    
+
+class ResetPassForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}), validators=[clean_email])
 
 class SignInForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}))
+
+    # def clean(self):
+    #     cleaned_data = super().clean()
+
+    # def clean_password(self):
+    #     user = User.objects.get(mail= self.cleaned_data.get("email"))
+
+    #     if user.check_password():
+    #         # Contraseña correcta
+    #         return self.cleaned_data.get("password")
+    #     else:
+    #         raise ValidationError("Los datos son incorrectos, vuelve a intentarlo.")
+        
+
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}), validators=[validar_mail])
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
+        widget=forms.PasswordInput(attrs={"class": "form-control"})  
     )
 
 class SignUpForm(forms.ModelForm):
@@ -84,5 +139,37 @@ class SignUpForm(forms.ModelForm):
             raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
         return id_persona
 
-#agregar para recuperar contrasenha
-#para visualizar el perfil y cambiar la contrasenha
+#clase para generar el token de reset pass a el usuario
+class ForgotPasswordTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        login_timestamp= (
+            ''
+            if user.last_login is None 
+            else user.last_login.replace(microsecond= 0, tzinfo= None)
+        )
+        return f'{user.pk} {user.password} {login_timestamp} {timestamp}'
+
+
+class CambiarContrasenha(forms.Form):
+    contrasenha = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )
+
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"class": "form-control"}),
+        validators=[validate_password],
+    )
+    password2 = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput(attrs={"class": "form-control"}),
+        validators=[validate_password])
+
+    
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Las Contraseñas no coinciden!")
+        return password2    

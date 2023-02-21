@@ -18,9 +18,9 @@ class SignUpView(View):
     def post(self, request, *args, **kwargs):
         forms = self.form_class(request.POST)
         if forms.is_valid():
-            print("antes de asignar valor al ID")
-            forms.id_persona= 1
-            print("formulario validado")
+            # print("antes de asignar valor al ID")
+            # forms.id_persona= 1
+            # print("formulario validado")
             forms.save()
             return redirect("accounts:signin")
         context = {"form": forms}

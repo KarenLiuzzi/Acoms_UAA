@@ -1,0 +1,55 @@
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">My Modal Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="#">
+          {% csrf_token %}
+
+          <p class="or">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <span class="text-danger"> {{ message }} </span>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+          </p>
+
+              <div class="col-md-12">
+                <div class="form-group">
+                    <label class="label" for="password">Contraseña Actual</label>
+                    {{ form.contrasenha}}
+                    <span class="text-danger">{{ form.errors.contrasenha }}</span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="label" for="password">Contraseña Nueva</label>
+                    {{ form.password1 }}
+                    <span class="text-danger">{{ form.errors.password1 }}</span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="label" for="password">Confirmar Contraseña</label>
+                    {{ form.password2 }}
+                    <span class="text-danger">{{ form.errors.password2 }}</span>
+                </div>
+
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              </div>  
+              
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

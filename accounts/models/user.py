@@ -97,9 +97,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+#comentamos para ver como devuelve al instanciar el objeto con un campo en un queryset
+    # def __str__(self):
+    #     return self.email
 
+    # def __str__(self):
+    #     field_values = []
+    #     for field in self._meta.get_fields():
+    #         field_values.append(str(getattr(self, field.name, '')))
+    #     return ' '.join(field_values)
     def __str__(self):
-        return self.email
+         return '%s %s %s %s' % (self.email, self.id_persona, self.documento, self.is_staff)
 
     REQUIRED_FIELDS= ['documento']
 

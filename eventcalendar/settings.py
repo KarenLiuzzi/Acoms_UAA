@@ -118,3 +118,18 @@ USE_TZ = False
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = [os.path.join(BASE_DIR, "sent_emails")]
+
+# SENDGRID_API_KEY = os.getenv('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')
+
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = 'apikey' # this is exactly the value 'apikey'
+# EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+#agregado el tiempo limite del token para reset passwords
+PASSWORD_RESET_TIMEOUT = 86400

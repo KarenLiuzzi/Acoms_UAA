@@ -1,0 +1,108 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% comment %} {% block title %}Event Dashboard{% endblock title %}
+
+{% block breadcrumb %}
+    <div>
+        <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
+        <p>Event Dashboard</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+    </ul>
+{% endblock breadcrumb %} {% endcomment %}
+
+{% block content %}
+<div class="row">
+    {% comment %} <div class="col-md-6 col-lg-3">
+        <div class="widget-small primary coloured-icon">
+            <i class="icon fa fa-files-o fa-3x"></i>
+            <div class="info">
+                <h4>Total Completed Events</h4>
+                <p><b>{{ total_event }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small info coloured-icon">
+            <i class="icon fa fa-thumbs-o-up fa-3x"></i>
+            <div class="info">
+                <h4>Total Running Events</h4>
+                <p><b>{{ running_events.count }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small warning coloured-icon">
+            <i class="icon fa fa-users fa-3x"></i>
+            <div class="info">
+                <h4>Total Participants</h4>
+                <p><b>10</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small danger coloured-icon">
+            <i class="icon fa fa-star fa-3x"></i>
+            <div class="info">
+                <h4>Stars</h4>
+                <p><b>500</b></p>
+            </div>
+        </div>
+    </div> {% endcomment %}
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-body">
+                <div> {% comment %} <div class="table-responsive"> {% endcomment %}
+                    <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                        <div class="row">
+                            <div class="col-sm-12">
+
+                                <div class="mb-3 row">
+                                    <label for="staticEmail" class="col-sm-2 col-form-label">Correo:</label>
+                                    <div class="col-sm-10">
+                                      {{ user.email }}
+                                    </div>
+                                  </div>
+                                  <div class="mb-3 row">
+                                    <label for="staticFecha" class="col-sm-2 col-form-label">Fecha de alta:</label>
+                                    <div class="col-sm-10">
+                                        {{ user.date_joined|date:"SHORT_DATE_FORMAT" }}
+                                    </div>
+                                  </div>
+                                  <div class="mb-3 row">
+                                    <label for="staticNombre" class="col-sm-2 col-form-label">Nombre:</label>
+                                    <div class="col-sm-10">
+                                        {% comment %} Se puede usar funciones filters dentro de jinja {% endcomment %}
+                                        {{ persona.nombre|add:' '|title}}{{ persona.apellido|title }}
+                                    </div>
+                                  </div>
+
+                                  <div class="col-auto">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cambiarcontrasenha">
+                                        Cambiar Contraseña
+                                    </button>
+                                    {% include 'accounts/cambiar_contrasenha.html' %}
+                                  </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
+
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+{% endblock extrascripts %}
