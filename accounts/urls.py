@@ -14,5 +14,5 @@ urlpatterns = [
     path("signout/", views.signout, name="signout"),
     path("profile/", profile.ProfileView, name="profile"),
     path("cambiarcontrasenha/", reset.CambiarContrasenhaView.as_view(), name="cambiarcontrasenha"),
-
+    
 ]

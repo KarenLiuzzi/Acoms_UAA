@@ -176,9 +176,17 @@
             {% block content %}
             {% endblock content %}
         </main>
+        
+
+        <div id="modal" class="modal fade">
+            {% comment %} el this sirve para indicar a htmx que este el el dialogo que debe cerrar, el document le agregue para que funcione cerrar el dialogo  {% endcomment %}
+            <div id="dialog" class="modal-dialog" role="document" hx-target="this"> <!--insertamos html aqui --></div>
+        </div>
+
         <!-- Essential javascripts for application to work-->
-        {% include 'base/js.html' %}
+        {% include 'base/js.html' %}   
         {% block extrascripts %}
         {% endblock extrascripts %}
+        
     </body>
 </html>

@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -11,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from accounts.models.user import User
 from accounts.forms import ResetPassForm, ResetPassConfirmation, ForgotPasswordTokenGenerator,CambiarContrasenha
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import update_session_auth_hash
 
 #formulario de carga del correo para enviarle el token de restableciento
 class ResetPassView(View):
@@ -128,17 +131,17 @@ def enviarcorreo(forgot_password_urls, destinatario):
     except Exception as e:
         print(e)
 
-@login_required
-class CambiarContrasenhaView(View):
+#@login_required
+#este me esta causando errores!
+class CambiarContrasenhaView(LoginRequiredMixin, View):
+
+    template_name = "accounts/cambiar_contrasenha.html"
+    form_class = CambiarContrasenha
+
     def get(self, request, *args, **kwargs):
-
-        template_name = "accounts/cambiar_contrasenha.html"
-        form_class = CambiarContrasenha
-
         forms = self.form_class()
         context = {"form": forms}
-
-        return render(request, 'my_modal.html', context)
+        return render(request, self.template_name, context)
 
     #aqui procedemos a hacer el cambio
     def post(self, request, *args, **kwargs):
@@ -147,13 +150,15 @@ class CambiarContrasenhaView(View):
 
             #aqui debemos validar si la contrasenha ingresada es el mismo que el usuario logeado actualmente
             current_user = request.user
-            senha= forms.cleaned_data["password1"]
+            senha= forms.cleaned_data["contrasenha"]
             if current_user.check_password(senha):
                 # Contraseña correcta
-                current_user.set_password(forms.cleaned_data["contrasenha"])
+                current_user.set_password(forms.cleaned_data["password1"])
                 current_user.save()
+                #actualizamos los datos de la sesion actual 
+                update_session_auth_hash(request, request.user)
                 #ver que hacer una vez que ya este finalizado!
-                return redirect("accounts:signin")
+                return HttpResponse(status= 204) #No content
             else:
                 messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
 
