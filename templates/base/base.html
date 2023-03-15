@@ -164,7 +164,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Docs</span></a>
+                    <a class="app-menu__item" href="{% url 'calendarapp:form_cal_func_doc' %}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Administrar Calendario</span></a>
                 </li>
             </ul>
         </aside>
@@ -177,10 +177,10 @@
             {% endblock content %}
         </main>
         
-
-        <div id="modal" class="modal fade">
+        {% comment %} <div id="modal" class="modal fade" > {% endcomment %}
+        <div id="modal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             {% comment %} el this sirve para indicar a htmx que este el el dialogo que debe cerrar, el document le agregue para que funcione cerrar el dialogo  {% endcomment %}
-            <div id="dialog" class="modal-dialog" role="document" hx-target="this"> <!--insertamos html aqui --></div>
+            <div id="dialog" class="modal-dialog modal-dialog-centered" role="document" hx-target="this"> <!--insertamos html aqui --></div>
         </div>
 
         <!-- Essential javascripts for application to work-->

@@ -9,6 +9,7 @@ import calendar
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+from calendarapp.models.calendario import HorarioSemestral
 
 
 from calendarapp.models import EventMember, Event
@@ -143,3 +144,10 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
             return redirect("calendarapp:calendar")
         context = {"form": forms}
         return render(request, self.template_name, context)
+
+def FormularioCalendarioFuncDoc(request):
+    #obtenemos todos los objetos de horario semestral del funcionario docente y devolvemos en el template
+    dict_cal_fun_doc= HorarioSemestral.objects.all()
+    context = { "dict_cal_fun_doc": dict_cal_fun_doc
+    }
+    return render(request,'calendarapp/calendario_form.html',context=context)
