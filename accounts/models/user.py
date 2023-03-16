@@ -107,7 +107,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     #         field_values.append(str(getattr(self, field.name, '')))
     #     return ' '.join(field_values)
     def __str__(self):
-         return '%s %s %s %s' % (self.email, self.id_persona, self.documento, self.is_staff)
+         return '%s %s %s %s %s' % (self.email, self.id_persona, self.documento, self.is_staff, self.is_superuser)
 
     REQUIRED_FIELDS= ['documento']
 

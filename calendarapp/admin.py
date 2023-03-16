@@ -1,6 +1,12 @@
 from django.contrib import admin
 from calendarapp import models
+from calendarapp.models.calendario import Dia, Semestre, HorarioSemestral, Convocatoria
 
+#registramos nuestros modelos en la pantalla de admin
+admin.site.register(Dia)
+admin.site.register(Semestre)
+admin.site.register(HorarioSemestral)
+admin.site.register(Convocatoria)
 
 @admin.register(models.Event)
 class EventAdmin(admin.ModelAdmin):
