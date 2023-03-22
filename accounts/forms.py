@@ -6,6 +6,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from accounts.models import User
 from accounts.models.user import Persona
 
+#from django.forms.models import model_to_dict
+
 def clean_email(mail):
         user = User.objects.filter(email= mail)
         #Validamos si existe un usuario con el mail
@@ -104,11 +106,13 @@ class SignUpForm(forms.ModelForm):
     def clean_documento(self):
         doc = self.cleaned_data.get("documento")
         nro_doc=  Persona.objects.filter(documento= doc)
+        print(nro_doc)
         user_doc = User.objects.filter(documento= doc)
         #validamos si existe una persona con el nro de docuento en nuestra base de datos
         if nro_doc.count() == 0:
             raise ValidationError("El nro de documento no existe en la base de Datos!")
         #Validamos si existe un usuario con el nro de documento
+        #if user_doc.exists():
         if user_doc.count() != 0:
             raise ValidationError("Ya existe un usuario con el Nro de Cédula!")
         return doc
@@ -130,11 +134,15 @@ class SignUpForm(forms.ModelForm):
     
     def clean_id_persona(self):
         doc = self.cleaned_data.get("documento")
-        id = Persona.objects.filter(documento=doc)
-        if id.exists():
-            print("llego hasta validar el id persona")
-            id_persona = id
-            print("paso asignacion persona")
+        per = Persona.objects.filter(documento=doc).first()
+        print(per)
+        # if per is not None:
+        if per is not None:
+            #dict = model_to_dict(per.first())
+            # print("llego hasta validar el id persona")
+            id_persona = per
+            #print("paso asignacion persona")
+
         else:
             raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
         return id_persona

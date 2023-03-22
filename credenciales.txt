@@ -1,3 +1,38 @@
 prueba@test.com
 estaesasi
 4956652
+
+
+#cargamos una persona especifica para el objecto de persona/funcionario
+id 2
+ci 123456
+Jorge 
+Gonzalez
+mail jorgonz@test.com
+pass HolaMundo!23!
+
+#cargamos una persona especifica para el objecto de persona/Docente
+id 3
+ci 789654
+Luis 
+Diaz
+mail luidi@test.com
+pass HolaMundo!24!
+
+
+#cargamos una persona especifica para el objecto de persona/alumno
+id 4
+ci 456123
+Gloria
+Guimenez
+mail glogui@test.com
+pass HolaMundo!25!
+
+
+#cargamos una persona especifica para el objecto de persona/funcionario y docente
+id 5
+ci 147258
+Maria
+Aguero
+mail mariague@test.com
+pass HolaMundo!26!

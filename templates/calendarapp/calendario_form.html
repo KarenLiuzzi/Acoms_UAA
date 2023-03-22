@@ -5,9 +5,15 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="tile">
             <div class="tile-body">
                 <div class="table-responsive">
+                    <div class="tile">
+                        <div>
+                            <button type="button" class="btn btn-primary mt-2" hx-get="{% url 'calendarapp:add_cal_func_doc' %}" hx-target="#dialog" >
+                                Agregar
+                            </button>
+                        </div>
+                        <br>
                     <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                         <div class="row">
                             <div class="col-sm-12">
@@ -15,36 +21,36 @@
                                     <thead>
                                         <tr role="row">
                                             {% comment %} <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 261.641px;">SL</th> {% endcomment %}
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 417.312px;">Convocatoria</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 417.312px;">Dia</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 189.281px;">Hora Inicio</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 189.281px;">Convocatoria</th>  {% comment %} 417.312px {% endcomment %}
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.141px;">Dia</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.141px;">Hora Inicio</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.141px;">Hora Fin</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.141px;">Accion</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.281px;">Accion</th>
 
 
                                         </tr>
                                     </thead>
-                                    <tbody>
+
+                                    <tbody hx-trigger="loads, calenarioListChange from:body">
+                                     {% comment %} hx-get= "{{% url 'calendarapp:form_cal_func_doc' %}}" hx-trigger="loads">  {% endcomment %}
                                         {% for registro in dict_cal_fun_doc %}
-                                            <tr role="row" class="odd">
+                                            <tr role="row" class="odd" id="registro-{{registro.id_horario_semestral}}">
                                                 {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
-                                                <td>{{ registro.convocatoria_calendario.semestre_calendario.descripcion_semestre|add:' '|title }} {{ registro.convocatoria_calendario.anho }}</td>
-                                                <td>{{ registro.hsem_dia.descripcion_dia|title }}</td>
+                                                <td>{{ registro.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title }} {{ registro.id_convocatoria.anho }}</td>
+                                                <td>{{ registro.id_dia.descripcion_dia|title }}</td>
                                                 <td>{{ registro.hora_inicio|time:"H:i" }}</td>
                                                 <td>{{ registro.hora_fin|time:"H:i" }}</td>
                                                 <td>
                                                     <div>
                                                         <!-- Button trigger modal -->
-                                                        <button type="button" class="btn btn-primary" hx-get="{% url 'accounts:cambiarcontrasenha' %}" hx-target="#dialog">
+                                                          <button type="button" class="btn btn-primary" hx-get="{% url 'calendarapp:edit_cal_func_doc' pk=registro.id_horario_semestral %}" hx-target="#dialog">
                                                             Editar
-                                                        </button>
-                                                        {% comment %} {% include 'accounts/cambiar_contrasenha.html' %} {% endcomment %}
-                                                    
+                                                        </button> 
+                                                     
                                                         <!-- Button trigger modal -->
-                                                        <button type="button" class="btn btn-primary" hx-get="{% url 'accounts:cambiarcontrasenha' %}" hx-target="#dialog">
+                                                        <button type="button" class="btn btn-primary" hx-get="{% url "calendarapp:del_cal_func_doc" pk=registro.id_horario_semestral %}" hx-target="#dialog">
                                                             Eliminar
-                                                        </button>
-                                                        {% comment %} {% include 'accounts/cambiar_contrasenha.html' %} {% endcomment %}
+                                                        </button> 
                                                     </div>
                                                 </td>
                                             </tr>
@@ -63,9 +69,7 @@
 {% endblock content %}
 
 {% comment %} 
-crear datos de funcionario, dia, convocatoria , semestre 
 modificar el formulario base de ABM 
-CREAR LA urlCREAR EL FORM PARA EDITAR LOS CAMPOS
 {% endcomment %}
 
 {% block extrascripts %}

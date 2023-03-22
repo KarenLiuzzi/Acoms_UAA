@@ -1,7 +1,7 @@
 # cal/views.py
 
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from calendarapp.models.calendario import HorarioSemestral
-
+from calendarapp.forms import HorarioSemestralForm
 
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
@@ -144,10 +144,43 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
             return redirect("calendarapp:calendar")
         context = {"form": forms}
         return render(request, self.template_name, context)
+    
+#-------------------------------Función ABM Horario Semestral Funcionario/docente------------------------------------
 
-def FormularioCalendarioFuncDoc(request):
+def ListCalendarioFuncDoc(request):
     #obtenemos todos los objetos de horario semestral del funcionario docente y devolvemos en el template
     dict_cal_fun_doc= HorarioSemestral.objects.all()
     context = { "dict_cal_fun_doc": dict_cal_fun_doc
     }
     return render(request,'calendarapp/calendario_form.html',context=context)
+
+def EditCalendarioFuncDoc(request, pk):
+    hor_sem= get_object_or_404(HorarioSemestral, id_horario_semestral= pk)
+    if request.method == "POST":
+        #modiicar el form
+        form = HorarioSemestralForm(request.POST, instance=hor_sem)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=204, header={'HX-Trigger': 'calenarioListChange'})
+    else:
+        form= HorarioSemestralForm(instance= hor_sem)
+    
+    #modificar el html
+    return render(request, "calendarapp/form_hora_sem_func_doc.html", context = {"form": form, "hor_sem": hor_sem})
+
+def AddCalendarioFuncDoc(request):
+    if request.method == "POST":
+        #modificar el form
+        form = HorarioSemestralForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=204, header={'HX-Trigger': 'calenarioListChange'})
+    else:
+        form= HorarioSemestralForm()
+    return render(request, "calendarapp/form_hora_sem_func_doc.html", context = {"form": form})
+
+def delCalendarioFuncDoc(request, pk):
+    #ver como hacer aqui
+    return render(request, "calendarapp/form_hora_sem_func_doc.html")
+
+#falta probar la actualizacion de los datos en el formulario, falta ordenar por fecha en el combobox y ponerle un formato lindo a los mismos

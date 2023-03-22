@@ -13,11 +13,16 @@ class Dia(models.Model):
     id_dia= models.AutoField(primary_key=True)
     descripcion_dia = models.CharField(max_length=15, unique= True, null= False)
 
+    def __str__(self):
+        return '%s' % (self.descripcion_dia)
 
 
 class Semestre(models.Model):
     id_semestre= models.AutoField(primary_key=True)
     descripcion_semestre = models.CharField(max_length=15, unique= True, null= False)
+
+    def __str__(self):
+        return '%s' % (self.descripcion_semestre)
     
 class Convocatoria(models.Model):
     id_convocatoria= models.AutoField(primary_key=True)
@@ -29,6 +34,9 @@ class Convocatoria(models.Model):
     def clean(self):
         if self.anho != datetime.now().year:
             raise ValidationError('El año ingresado debe ser el año actual.')
+    
+    def __str__(self):
+        return '%s %s' % (self.id_semestre.descripcion_semestre, self.anho)
         
 # conv = Convocatoria.objects.get(anho=2001)
 # sem = conv.semestre_calendario.all()
@@ -51,3 +59,6 @@ class HorarioSemestral(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['id_funcionario_docente', 'id_convocatoria', 'id_dia', 'hora_inicio', 'hora_fin'], name='unique_horario_semestral') # violation_error_message='El rango de horas cargadas deben ser únicos para el mismo funcionario/docente en el mismo dia y convocatoria.'),
         ]
+
+    # def __str__(self):
+    #         return '%s %s %s %s %s %s %s' % (self.id_horario_semestral, self.id_funcionario_docente, self.id_convocatoria.id_semestre.descripcion_semestre, self.id_convocatoria.anho , self.id_dia.descripcion_dia, self.hora_fin, self.hora_fin)

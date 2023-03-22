@@ -1,0 +1,57 @@
+{% comment %} el request.path se usa para poder usar la misma url del gest para el metodo post {% endcomment %}
+<form hx-post= "{{request.path}}" class="modal-content">
+    {% csrf_token %}
+      <div class='modal-header'>
+        <h1> Horario Semestral </h1>
+      </div>
+    
+      <p class="or">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <span class="text-danger"> {{ message }} </span>
+                {% endfor %}
+            </ul>
+        {% endif %}
+      </p>
+    
+      <div class="modal-body">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="label" for="convocatoria">Convocatoria</label>
+            {{ form.convocatoria}}
+            <span class="text-danger">{{ form.errors.convocatoria }}</span>
+          </div>
+        </div>
+    
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="label" for="dia">Dia</label>
+            {{ form.dia }}
+            <span class="text-danger">{{ form.errors.dia }}</span>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+              <label class="label" for="hora inicio">Hora Inicio</label>
+              {{ form.hora_inicio }}
+              <span class="text-danger">{{ form.errors.hora_inicio }}</span>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+              <label class="label" for="hora fin">Hora Fin</label>
+              {{ form.hora_inicio }}
+              <span class="text-danger">{{ form.errors.hora_inicio }}</span>
+            </div>
+        </div>
+    
+        <div class="modal-footer">
+          {% comment %} cuidado con las versiones de Bootstrap! {% endcomment %}
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>  
+            
+      </div>
+    </form>  
