@@ -18,6 +18,8 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
+                                    {% comment %} {% csrf_token %} {% endcomment %}
+
                                     <thead>
                                         <tr role="row">
                                             {% comment %} <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 261.641px;">SL</th> {% endcomment %}
@@ -32,6 +34,7 @@
                                     </thead>
 
                                     <tbody hx-trigger="loads, calenarioListChange from:body">
+                                       
                                      {% comment %} hx-get= "{{% url 'calendarapp:form_cal_func_doc' %}}" hx-trigger="loads">  {% endcomment %}
                                         {% for registro in dict_cal_fun_doc %}
                                             <tr role="row" class="odd" id="registro-{{registro.id_horario_semestral}}">
@@ -48,7 +51,8 @@
                                                         </button> 
                                                      
                                                         <!-- Button trigger modal -->
-                                                        <button type="button" class="btn btn-primary" hx-get="{% url "calendarapp:del_cal_func_doc" pk=registro.id_horario_semestral %}" hx-target="#dialog">
+                                                        {% comment %} <button type="button" class="btn btn-primary" hx-get="{% url "calendarapp:del_cal_func_doc" pk=registro.id_horario_semestral %}" hx-target="#dialog"> {% endcomment %}
+                                                        <button type="button" class="btn btn-danger" onclick="deleteRecord(this)" data-id="{{ registro.id_horario_semestral }}">
                                                             Eliminar
                                                         </button> 
                                                     </div>

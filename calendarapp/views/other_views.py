@@ -1,7 +1,9 @@
 # cal/views.py
 
+from django.contrib import messages
+from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
@@ -11,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from calendarapp.models.calendario import HorarioSemestral
 from calendarapp.forms import HorarioSemestralForm
-
+from accounts.models.user import FuncionarioDocente
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
@@ -149,38 +151,57 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
 
 def ListCalendarioFuncDoc(request):
     #obtenemos todos los objetos de horario semestral del funcionario docente y devolvemos en el template
-    dict_cal_fun_doc= HorarioSemestral.objects.all()
-    context = { "dict_cal_fun_doc": dict_cal_fun_doc
-    }
+    #pasar solo los horarios semestrales que correspondan con el usuario logeado
+    current_user = request.user
+    #https://stackoverflow.com/questions/21925671/convert-django-model-object-to-dict-with-all-of-the-fields-intact
+    dict = model_to_dict(current_user)
+    persona=  dict["id_persona"]
+    dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
+    context = { "dict_cal_fun_doc": dict_cal_fun_doc}
     return render(request,'calendarapp/calendario_form.html',context=context)
 
 def EditCalendarioFuncDoc(request, pk):
     hor_sem= get_object_or_404(HorarioSemestral, id_horario_semestral= pk)
     if request.method == "POST":
         #modiicar el form
-        form = HorarioSemestralForm(request.POST, instance=hor_sem)
+        form = HorarioSemestralForm(request.POST, instance=hor_sem, user=request.user)
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, header={'HX-Trigger': 'calenarioListChange'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'calenarioListChange'})
+        #else:
+            #messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
     else:
-        form= HorarioSemestralForm(instance= hor_sem)
+        form= HorarioSemestralForm(instance= hor_sem, user=request.user)
     
     #modificar el html
     return render(request, "calendarapp/form_hora_sem_func_doc.html", context = {"form": form, "hor_sem": hor_sem})
 
 def AddCalendarioFuncDoc(request):
+    
     if request.method == "POST":
         #modificar el form
-        form = HorarioSemestralForm(request.POST)
+        # func_doc= FuncionarioDocente.objects.get(id_funcionario_docente= request.user.id_persona)
+        # print( form.id_funcionario_docente)
+        # form.id_funcionario_docente = func_doc 
+        # print(form.id_funcionario_docente)  # Asignamos el funcionario/docente autenticado al campo 'id_funcionario_docente'
+        # print('antes el if')
+        form = HorarioSemestralForm(request.POST, user=request.user)
+        # print(form.fields['id_funcionario_docente'])
+        # form.fields['id_funcionario_docente'] = FuncionarioDocente.objects.get(id_funcionario_docente= request.user.id_persona)
+        # print(form.fields['id_funcionario_docente'])
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, header={'HX-Trigger': 'calenarioListChange'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'calenarioListChange'})
+        #else: 
+           #messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
     else:
-        form= HorarioSemestralForm()
+        form = HorarioSemestralForm(user=request.user)
     return render(request, "calendarapp/form_hora_sem_func_doc.html", context = {"form": form})
 
-def delCalendarioFuncDoc(request, pk):
-    #ver como hacer aqui
-    return render(request, "calendarapp/form_hora_sem_func_doc.html")
+def delCalendarioFuncDoc(request, record_id):
 
-#falta probar la actualizacion de los datos en el formulario, falta ordenar por fecha en el combobox y ponerle un formato lindo a los mismos
+    record = HorarioSemestral.objects.get(pk=record_id)
+    record.delete()
+    return JsonResponse({}, status=204)
+    #ver como hacer aqui
+    #return render(request, "calendarapp/form_hora_sem_func_doc.html")

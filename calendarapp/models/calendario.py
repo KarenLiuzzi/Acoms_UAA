@@ -55,10 +55,13 @@ class HorarioSemestral(models.Model):
     hora_inicio= models.TimeField()
     hora_fin= models.TimeField()
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['id_funcionario_docente', 'id_convocatoria', 'id_dia', 'hora_inicio', 'hora_fin'], name='unique_horario_semestral') # violation_error_message='El rango de horas cargadas deben ser únicos para el mismo funcionario/docente en el mismo dia y convocatoria.'),
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(fields=['id_funcionario_docente', 'id_convocatoria', 'id_dia', 'hora_inicio', 'hora_fin'], name='unique_horario_semestral') # violation_error_message='El rango de horas cargadas deben ser únicos para el mismo funcionario/docente en el mismo dia y convocatoria.'),
+    #     ]
+
+    # class Meta:
+    #     unique_together =['id_funcionario_docente', 'id_convocatoria', 'id_dia', 'hora_inicio', 'hora_fin']
 
     # def __str__(self):
     #         return '%s %s %s %s %s %s %s' % (self.id_horario_semestral, self.id_funcionario_docente, self.id_convocatoria.id_semestre.descripcion_semestre, self.id_convocatoria.anho , self.id_dia.descripcion_dia, self.hora_fin, self.hora_fin)

@@ -1,39 +1,61 @@
-{% comment %} el request.path se usa para poder usar la misma url del gest para el metodo post {% endcomment %}
+{% comment %} el request.path se usa para poder usar la misma url del get para el metodo post {% endcomment %}
 <form hx-post= "{{request.path}}" class="modal-content">
     {% csrf_token %}
-      <div class='modal-header'>
-        <h1> Horario Semestral </h1>
+      <div class='modal-header text-center'>
+        <h3 class="modal-title w-100">Horario Semestral</h3> 
       </div>
     
-      <p class="or">
+      {% comment %} <p class="or">
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
                 <span class="text-danger"> {{ message }} </span>
                 {% endfor %}
             </ul>
-        {% endif %}
+        {% endif %} 
+      </p> {% endcomment %}
+
+      <p class="or">
+      {% if form.errors %}
+        <ul class="errorlist">
+          {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+            <span class="text-danger"> <li>{{ error }}</li> </span>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      {% endif %}
       </p>
-    
+
       <div class="modal-body">
         <div class="col-md-12">
           <div class="form-group">
-            <label class="label" for="convocatoria">Convocatoria</label>
-            {{ form.convocatoria}}
-            <span class="text-danger">{{ form.errors.convocatoria }}</span>
+            <label class="label" for="id_funcionario_docente">Funcionario/Docente</label> 
+            {{ form.id_funcionario_docente}} 
+             <span class="text-danger">{{ form.errors.id_funcionario_docente }}</span>
+          </div>
+        </div> 
+
+
+      <div class="modal-body">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="label" for="id_convocatoria">Convocatoria</label>
+            {{ form.id_convocatoria}}
+            <span class="text-danger">{{ form.errors.id_convocatoria }}</span>
           </div>
         </div>
     
         <div class="col-md-12">
           <div class="form-group">
-            <label class="label" for="dia">Dia</label>
-            {{ form.dia }}
-            <span class="text-danger">{{ form.errors.dia }}</span>
+            <label class="label" for="id_dia">Dia</label>
+            {{ form.id_dia }}
+            <span class="text-danger">{{ form.errors.id_dia }}</span>
           </div>
         </div>
         <div class="col-md-12">
           <div class="form-group">
-              <label class="label" for="hora inicio">Hora Inicio</label>
+              <label class="label" for="hora_inicio">Hora Inicio</label>
               {{ form.hora_inicio }}
               <span class="text-danger">{{ form.errors.hora_inicio }}</span>
             </div>
@@ -41,9 +63,9 @@
 
         <div class="col-md-12">
           <div class="form-group">
-              <label class="label" for="hora fin">Hora Fin</label>
-              {{ form.hora_inicio }}
-              <span class="text-danger">{{ form.errors.hora_inicio }}</span>
+              <label class="label" for="hora_fin">Hora Fin</label>
+              {{ form.hora_fin }}
+              <span class="text-danger">{{ form.errors.hora_fin }}</span>
             </div>
         </div>
     
@@ -55,3 +77,5 @@
             
       </div>
     </form>  
+
+ 

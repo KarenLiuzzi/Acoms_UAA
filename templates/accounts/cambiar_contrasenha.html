@@ -1,9 +1,10 @@
 {% comment %} el request.path se usa para poder usar la misma url del gest para el metodo post {% endcomment %}
 <form hx-post= "{{request.path}}" class="modal-content">
 {% csrf_token %}
-  <div class='modal-header'>
-    <h1> Cambiar Contraseña </h1>
-  </div>
+
+  <div class='modal-header text-center'>
+    <h3 class="modal-title w-100">Cambiar Contraseña</h3> 
+  </div>  
 
   <p class="or">
     {% if messages %}
