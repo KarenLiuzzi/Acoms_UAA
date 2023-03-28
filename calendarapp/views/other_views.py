@@ -150,15 +150,20 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
 #-------------------------------Función ABM Horario Semestral Funcionario/docente------------------------------------
 
 def ListCalendarioFuncDoc(request):
+    print("hace el llamado")
     #obtenemos todos los objetos de horario semestral del funcionario docente y devolvemos en el template
     #pasar solo los horarios semestrales que correspondan con el usuario logeado
     current_user = request.user
     #https://stackoverflow.com/questions/21925671/convert-django-model-object-to-dict-with-all-of-the-fields-intact
     dict = model_to_dict(current_user)
     persona=  dict["id_persona"]
+    print(persona)
     dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
     context = { "dict_cal_fun_doc": dict_cal_fun_doc}
-    return render(request,'calendarapp/calendario_form.html',context=context)
+    return render(request,'calendarapp/lista_calendario.html',context=context)
+
+def formCalendarioFuncDoc(request):
+    return render(request,'calendarapp/calendario_form.html')
 
 def EditCalendarioFuncDoc(request, pk):
     hor_sem= get_object_or_404(HorarioSemestral, id_horario_semestral= pk)
@@ -198,10 +203,29 @@ def AddCalendarioFuncDoc(request):
         form = HorarioSemestralForm(user=request.user)
     return render(request, "calendarapp/form_hora_sem_func_doc.html", context = {"form": form})
 
-def delCalendarioFuncDoc(request, record_id):
+# def delFormCalendrioFuncDoc(request, pk):
+#     context= {"pk": pk}
+#     return render(request, "/eliminar_arcivo.html", context)
 
-    record = HorarioSemestral.objects.get(pk=record_id)
-    record.delete()
-    return JsonResponse({}, status=204)
+def delCalendarioFuncDoc(request, pk):
+    if request.method == "POST":
+            try:
+                record = HorarioSemestral.objects.get(id_horario_semestral=pk)
+                record.delete()
+                return HttpResponse(status=204, headers={'HX-Trigger': 'calenarioListChange'})
+            
+            except:
+                messages.error(request, 'Ocurrió un error al intentar eliminar el registro.')
+                # Eliminar todos los mensajes de error
+                storage = messages.get_messages(request)
+                for message in storage:
+                    if message.level == messages.ERROR:
+                        storage.discard(message)
+                return render(request, "eliminar_registro.html", context = {"pk": pk})
+                
+    else:
+        
+        return render(request, "eliminar_registro.html", context = {"pk": pk})
+
     #ver como hacer aqui
     #return render(request, "calendarapp/form_hora_sem_func_doc.html")

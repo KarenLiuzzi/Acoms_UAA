@@ -161,7 +161,11 @@ class CambiarContrasenhaView(LoginRequiredMixin, View):
                 return HttpResponse(status= 204) #No content
             else:
                 messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
-                messages.clear()
+                # Eliminar todos los mensajes de error
+                storage = messages.get_messages(request)
+                for message in storage:
+                    if message.level == messages.ERROR:
+                        storage.discard(message)
 
         #si so es valido volvemos a retonar el mismo objeto form para poder mostrar el error en pantalla
         context = {"form": forms}
