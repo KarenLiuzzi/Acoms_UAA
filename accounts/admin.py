@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models.user import Persona, TipoDocumento, Alumno, Funcionario, Docente, FuncionarioDocente, User
+from accounts.models.user import Persona, TipoDocumento, Alumno, Funcionario, Docente, FuncionarioDocente, User, Facultad
 
 #registramos nuestros modelos en la pantalla de admin
 admin.site.register(Persona)
@@ -9,3 +9,4 @@ admin.site.register(Funcionario)
 admin.site.register(Docente)
 admin.site.register(FuncionarioDocente)
 admin.site.register(User)
+admin.site.register(Facultad)

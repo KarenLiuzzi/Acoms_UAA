@@ -183,6 +183,14 @@
             <div id="dialog" class="modal-dialog modal-dialog-centered" role="document" hx-target="this"> <!--insertamos html aqui --></div>
         </div>
 
+        <div class="position-fixed bottom-0 top-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+            <div id="toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+              <div class="toast-body" id="toast-body">
+              </div>
+            </div>
+        </div>
+
+
         <!-- Essential javascripts for application to work-->
         {% include 'base/js.html' %}   
         {% block extrascripts %}

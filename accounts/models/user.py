@@ -8,7 +8,9 @@ from django.utils.translation import gettext_lazy as _
 
 class TipoDocumento(models.Model):
     descripcion_tipo_documento = models.CharField(max_length=30, unique= True)
-    
+
+    def __str__(self):
+        return '%s' % (self.descripcion_tipo_documento)
 
 class Persona(models.Model):
     id_tipo_documento= models.ForeignKey(TipoDocumento, on_delete=models.PROTECT, related_name='tipo_documento')
@@ -19,10 +21,13 @@ class Persona(models.Model):
     telefono= models.CharField(max_length=30, blank= True)
     celular= models.CharField(max_length=30, blank= True)
 
+    def __str__(self):
+        return '%s %s %s' % (self.nombre, self.apellido, self.documento)
 
 class Alumno(models.Model):
     id_alumno= models.ForeignKey(Persona, on_delete=models.PROTECT, primary_key=True, related_name='alumno')
-
+    def __str__(self):
+         return '%s %s' % (self.id_alumno.nombre, self.id_alumno.apellido)
 
 class FuncionarioDocente(models.Model):
     id_funcionario_docente= models.ForeignKey(Persona, on_delete=models.PROTECT, primary_key=True, related_name='funcionario_docente')
@@ -31,9 +36,24 @@ class FuncionarioDocente(models.Model):
     
 class Docente(models.Model):
     id_docente= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, primary_key=True, related_name='docente')
+    def __str__(self):
+         return '%s %s' % (self.id_docente.id_funcionario_docente.nombre, self.id_docente.id_funcionario_docente.apellido)
 
 class Funcionario(models.Model):
     id_funcionario= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, primary_key=True, related_name='funcionario')
+    def __str__(self):
+         return '%s %s' % (self.id_funcionario.id_funcionario_docente.nombre, self.id_funcionario.id_funcionario_docente.apellido)
+
+class Facultad(models.Model):
+    id_facultad= models.AutoField(primary_key=True)
+    descripcion_facultad= models.CharField(max_length=60)
+
+    def __str__(self):
+         return '%s' % (self.descripcion_facultad.nombre)
+    
+    class Meta:
+        verbose_name_plural = "Facultades"
+
 
 """" En resumen, BaseUserManager es una clase base que proporciona una implementación básica de un administrador de usuarios, 
 es utilizado cuando se usa AbstractBaseUser para crear una clase de usuario personalizada, para que se pueda proporcionar un 
@@ -108,8 +128,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     #     for field in self._meta.get_fields():
     #         field_values.append(str(getattr(self, field.name, '')))
     #     return ' '.join(field_values)
+    # def __str__(self):
+    #      return '%s %s %s %s %s' % (self.email, self.id_persona, self.documento, self.is_staff, self.is_superuser)
     def __str__(self):
-         return '%s %s %s %s %s' % (self.email, self.id_persona, self.documento, self.is_staff, self.is_superuser)
+         return '%s' % (self.email)
 
     REQUIRED_FIELDS= ['documento']
 

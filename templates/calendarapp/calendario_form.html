@@ -14,28 +14,35 @@
                             </button>
                         </div>
                         <br>
-                    <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
-                                    {% comment %} {% csrf_token %} {% endcomment %}
 
-                                    <thead>
-                                        <tr role="row">
-                                            {% comment %} <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 261.641px;">SL</th> {% endcomment %}
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 189.281px;">Convocatoria</th>  {% comment %} 417.312px {% endcomment %}
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.141px;">Dia</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.141px;">Hora Inicio</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.141px;">Hora Fin</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.281px;">Accion</th>
+                        <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
+                                        <thead>
+                                            <tr role="row">
+                                                {% comment %} <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 261.641px;">SL</th> {% endcomment %}
+                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 189.281px;" >Convocatoria</th>  {% comment %} 417.312px {% endcomment %}
+                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.141px;">Dia</th>
+                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.141px;">Hora Inicio</th>
+                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.141px;">Hora Fin</th>
+                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.281px;">Accion</th>
 
 
-                                        </tr>
-                                    </thead>
+                                            </tr>
+                                        </thead>
 
-                                    <tbody hx-get= "{% url 'calendarapp:lista_cal_func_doc' %}" hx-trigger="load, calenarioListChange from:body">
-                                    </tbody>
-                                </table>
+                                        <tbody hx-get= "{% url 'calendarapp:lista_cal_func_doc' %}" hx-trigger="load, calenarioListChange from:body" hx-target="this">
+                                        {% comment %} <tbody hx-get= "{% url 'calendarapp:lista_cal_func_doc' %}" hx-trigger="calenarioListChange from:body" id="lista">
+                                            {% include 'calendarapp/lista_calendario.html' %}  {% endcomment %}
+                                            <tr>
+                                                <td class="spinner-border" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

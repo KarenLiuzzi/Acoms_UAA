@@ -8,13 +8,12 @@
         <td>
             <div>
                 <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" hx-get="{% url 'calendarapp:edit_cal_func_doc' pk=registro.id_horario_semestral %}" hx-target="#dialog">
+                <button type="button" class="btn btn-primary" hx-get="{% url 'calendarapp:edit_cal_func_doc' pk=registro.id_horario_semestral %}" hx-target="#dialog">
                     Editar
                 </button> 
                 
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-danger" hx-get="{% url "calendarapp:del_cal_func_doc" pk=registro.id_horario_semestral %}" hx-target="#dialog">
-                {% comment %} <button type="button" class="btn btn-danger" onclick="deleteRecord(this)" data-id="{{ registro.id_horario_semestral }}"> {% endcomment %}
                     Eliminar
                 </button> 
             </div>

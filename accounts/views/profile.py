@@ -6,7 +6,7 @@ from django.forms.models import model_to_dict
 
 from accounts.forms import SignUpForm
 
-#login_required, garantiza que el usuario esté autenticado antes de que se ejecute la vista.
+#login_required, garantiza que el usuario esté autenticado antes de que se ejecute la vista. Usar solo para funciones, no para clases
 @login_required
 def ProfileView(request):
 
