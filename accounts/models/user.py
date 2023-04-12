@@ -49,11 +49,69 @@ class Facultad(models.Model):
     descripcion_facultad= models.CharField(max_length=60)
 
     def __str__(self):
-         return '%s' % (self.descripcion_facultad.nombre)
+         return '%s' % (self.descripcion_facultad)
     
     class Meta:
         verbose_name_plural = "Facultades"
 
+
+class Carrera(models.Model):
+    id_carrera= models.AutoField(primary_key=True)
+    id_facultad= models.ForeignKey(Facultad, on_delete=models.PROTECT, related_name='carrera_facultad')
+    descripcion_carrera= models.CharField(max_length=100)
+
+    def __str__(self):
+         return '%s - %s' % (self.id_facultad.descripcion_facultad, self.descripcion_carrera)
+    
+    class Meta:
+        verbose_name_plural = "Carreras"
+
+class Departamento(models.Model):
+    id_departamento= models.AutoField(primary_key=True)
+    id_facultad= models.ForeignKey(Facultad, on_delete=models.PROTECT, related_name='departamento_facultad')
+    descripcion_departamento= models.CharField(max_length=100)
+    telefono= models.CharField(max_length=10)
+
+    def __str__(self):
+         return '%s - %s' % (self.id_facultad.descripcion_facultad, self.descripcion_departamento)
+    
+    class Meta:
+        verbose_name_plural = "Departamentos"
+
+class Materia(models.Model):
+    id_materia= models.AutoField(primary_key=True)
+    id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='materia_departameto')
+    descripcion_materia= models.CharField(max_length=100)
+
+    def __str__(self):
+         return '%s - %s' % (self.id_departamento.descripcion_departamento, self.descripcion_materia)
+    
+    class Meta:
+        verbose_name_plural = "Materias"
+
+#hacemos las tablas de muchos a muchos carrera/alumno y Mate. Funcio/docente
+
+class MateriaFuncionarioDocente(models.Model):
+    id_materia_funcionario_docente=  models.AutoField(primary_key=True)
+    id_materia= models.ForeignKey(Materia, on_delete=models.PROTECT, related_name='materia_funcionario_docente')
+    id_funcionario_docente= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='funcionario_docente_materia')
+
+    def __str__(self):
+         return '%s - %s' % (self.id_materia.descripcion_materia, self.id_funcionario_docente.id_funcionario_docente.documento)
+    
+    class Meta:
+        verbose_name_plural = "Materias Funcionario/Docente"
+
+class CarreraAlumno(models.Model):
+    id_carrera_alumno=  models.AutoField(primary_key=True)
+    id_carrera= models.ForeignKey(Carrera, on_delete=models.PROTECT, related_name='carrera_alumno')
+    id_alumno= models.ForeignKey(Alumno, on_delete=models.PROTECT, related_name='alumno_carrera')
+
+    def __str__(self):
+         return '%s - %s' % (self.id_carrera.descripcion_carrera, self.id_alumno)
+    
+    class Meta:
+        verbose_name_plural = "Carreras Alumno"
 
 """" En resumen, BaseUserManager es una clase base que proporciona una implementación básica de un administrador de usuarios, 
 es utilizado cuando se usa AbstractBaseUser para crear una clase de usuario personalizada, para que se pueda proporcionar un 

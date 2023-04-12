@@ -6,12 +6,7 @@ from calendarapp.models.calendario import Dia, Semestre, HorarioSemestral, Convo
 
 @admin.register(Dia)
 class DiaAdmin(admin.ModelAdmin):
-    # def get_model_info(self, obj):
-    #     # Obtener todos los campos del modelo
-    #     fields = obj._meta.fields
-    #     list= [field.name for field in fields]
-    #     # Crear una lista con los nombres de los campos
-    #     return list
+
     list_display = ['descripcion_dia'] # Campos a mostrar en la lista
     list_filter = ('descripcion_dia',)  # Filtro por campo
     search_fields = ('descripcion_dia',)  # Búsqueda por campo
@@ -19,12 +14,7 @@ class DiaAdmin(admin.ModelAdmin):
 
 @admin.register(Semestre)
 class SemestreAdmin(admin.ModelAdmin):
-    # def get_model_info(self, obj):
-    #     # Obtener todos los campos del modelo
-    #     fields = obj._meta.fields
-    #     list= [field.name for field in fields]
-    #     # Crear una lista con los nombres de los campos
-    #     return list
+
     list_display = ['descripcion_semestre'] # Campos a mostrar en la lista
     list_filter = ('descripcion_semestre',)  # Filtro por campo
     search_fields = ('descripcion_semestre',)  # Búsqueda por campo

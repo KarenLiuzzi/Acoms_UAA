@@ -56,7 +56,7 @@ class HorarioSemestral(models.Model):
     hora_fin= models.TimeField()
 
     class Meta:
-        verbose_name_plural = "Horario Semestrales"
+        verbose_name_plural = "Horarios Semestrales"
 
     # class Meta:
     #     constraints = [
