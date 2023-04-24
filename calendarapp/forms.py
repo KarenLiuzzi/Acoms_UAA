@@ -6,38 +6,95 @@ from calendarapp.models.calendario import HorarioSemestral, Dia, Convocatoria
 from accounts.models.user import FuncionarioDocente
 from django import forms
 
+#el parametro cargaremos en minutos y ese vamos a tomar como valor para poder calcular el tiempo entre horarios del funcionario/docente
+from datetime import datetime, timedelta
+
+def dividir_fechas_en_minutos(fecha1, fecha2, minutos):
+    # Convertir las fechas de strings a objetos datetime
+    fecha1 = datetime.strptime(fecha1, '%Y-%m-%d %H:%M:%S')
+    fecha2 = datetime.strptime(fecha2, '%Y-%m-%d %H:%M:%S')
+
+    # Calcular la diferencia en minutos
+    diferencia = fecha2 - fecha1
+    minutos_totales = int(diferencia.total_seconds() / 60)
+
+    # Dividir la diferencia en minutos según el tercer parámetro
+    divisiones = []
+    for i in range(minutos, minutos_totales + minutos, minutos):
+        fecha_division = fecha1 + timedelta(minutes=i)
+        divisiones.append(fecha_division)
+
+    return divisiones
+
+""" esto es un ejemplo de como se veria el metodo
+fecha1 = '2023-04-24 10:00:00'
+fecha2 = '2023-04-24 11:30:00'
+minutos = 15
+
+divisiones = dividir_fechas_en_minutos(fecha1, fecha2, minutos)
+for fecha_hora in divisiones:
+    print(fecha_hora.strftime('%Y-%m-%d %H:%M:%S'))
+    
+resultado:
+2023-04-24 10:15:00
+2023-04-24 10:30:00
+2023-04-24 10:45:00
+2023-04-24 11:00:00
+2023-04-24 11:15:00
+2023-04-24 11:30:00
+
+"""
+
+
+"""
+evento
+id_estado_actividad_academica= models.ForeignKey(EstadoActividadAcademica, on_delete=models.PROTECT, related_name='estado_acti_aca')
+    id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.PROTECT, related_name='convocatoria')
+    id_facultad= models.ForeignKey(Facultad, on_delete=models.PROTECT, related_name='facultad')
+    id_materia= models.ForeignKey(Materia, on_delete=models.PROTECT, related_name='materia', null= True)
+    id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='departamento')
+    id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='funcionario_docente_encarcado')
+    id_persona_receptor= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_receptor')
+    id_persona_alta= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_alta')
+    datetime_inicio_estimado = models.DateTimeField()
+    datetime_fin_estimado = models.DateTimeField()
+    datetime_inicio_real = models.DateTimeField(null= True, default= None)
+    datetime_fin_real = models.DateTimeField(null= True, default= None)
+    datetime_registro = models.DateTimeField(auto_now=True)
+    observacion= models.CharField(max_length=500, null= True)
+    nro_curso= models.CharField(max_length=30, null= True)"""
 
 class EventForm(ModelForm):
     class Meta:
         model = Event
-        fields = ["title", "description", "start_time", "end_time"]
+        fields = ["observacion", "datetime_inicio_estimado", "datetime_fin_estimado"]
         # datetime-local is a HTML5 input type
         widgets = {
-            "title": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Enter event title"}
-            ),
-            "description": forms.Textarea(
+            #"title": forms.TextInput(
+            #   attrs={"class": "form-control", "placeholder": "Enter event title"}
+            #),
+            "observacion": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter event description",
+                    "placeholder": "Observación",
                 }
             ),
-            "start_time": DateInput(
+            "datetime_inicio_estimado": DateInput(
                 attrs={"type": "datetime-local", "class": "form-control"},
                 format="%Y-%m-%dT%H:%M",
             ),
-            "end_time": DateInput(
+            "datetime_fin_estimado": DateInput(
                 attrs={"type": "datetime-local", "class": "form-control"},
                 format="%Y-%m-%dT%H:%M",
             ),
         }
-        exclude = ["user"]
+        #exclude = ["user"]
 
     def __init__(self, *args, **kwargs):
         super(EventForm, self).__init__(*args, **kwargs)
         # input_formats to parse HTML5 datetime-local input to datetime field
-        self.fields["start_time"].input_formats = ("%Y-%m-%dT%H:%M",)
-        self.fields["end_time"].input_formats = ("%Y-%m-%dT%H:%M",)
+        self.fields["datetime_inicio_estimado"].input_formats = ("%Y-%m-%dT%H:%M",)
+        self.fields["datetime_fin_estimado"].input_formats = ("%Y-%m-%dT%H:%M",)
 
 
 class AddMemberForm(forms.ModelForm):

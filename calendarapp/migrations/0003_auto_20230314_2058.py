@@ -7,10 +7,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('accounts', '0001_initial'),
-        ('calendarapp', '0002_auto_20210717_1606'),
-    ]
 
     operations = [
         migrations.CreateModel(

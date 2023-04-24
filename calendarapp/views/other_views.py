@@ -78,13 +78,13 @@ def create_event(request):
 
 class EventEdit(generic.UpdateView):
     model = Event
-    fields = ["title", "description", "start_time", "end_time"]
+    fields = ["observacion", "datetime_inicio_estimado", "datetime_fin_estimado"]
     template_name = "event.html"
 
 
 @login_required(login_url="signup")
 def event_details(request, event_id):
-    event = Event.objects.get(id=event_id)
+    event = Event.objects.get(id_actividad_academica=event_id)
     eventmember = EventMember.objects.filter(event=event)
     context = {"event": event, "eventmember": eventmember}
     return render(request, "event-details.html", context)
