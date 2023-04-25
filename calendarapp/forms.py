@@ -112,7 +112,9 @@ class HorarioSemestralForm(forms.ModelForm): #ModelForm
     #para el id_funcionario_docente generamos un campo modelchoicefield e indicamos que este desabilitado y no sea requerido en el template, el queryset dejamos vacio aqui.. y el valor predeterminado el primer valor
     #y lo sobreescribimos en el constructor para asignar el valor id_funcionario_docente del usuario logeado. 
 
-    id_funcionario_docente = forms.ModelChoiceField(label='id_funcionario_docente', queryset= FuncionarioDocente.objects.none() , to_field_name= 'id_funcionario_docente', initial=FuncionarioDocente.objects.first(), widget=forms.Select(attrs={'class': 'form-control'}))
+    #sacamos de manera momentanea el valor inicia para poder hacer las migraciones correctamente, luego volvemos a poner cuando ya hayamos migrado
+    id_funcionario_docente = forms.ModelChoiceField(label='id_funcionario_docente', queryset= FuncionarioDocente.objects.none() , to_field_name= 'id_funcionario_docente', widget=forms.Select(attrs={'class': 'form-control'}))
+    #id_funcionario_docente = forms.ModelChoiceField(label='id_funcionario_docente', queryset= FuncionarioDocente.objects.none() , to_field_name= 'id_funcionario_docente', initial=FuncionarioDocente.objects.first(), widget=forms.Select(attrs={'class': 'form-control'}))
     #id_funcionario_docente= forms.CharField(label='id_funcionario_docente', widget=forms.TextInput(attrs={"class": "hidden"}), disabled= True, required= False)
     id_convocatoria = forms.ModelChoiceField(label='id_convocatoria', queryset= Convocatoria.objects.all().order_by('-anho'), to_field_name= 'id_convocatoria', widget=forms.Select(attrs={'class': 'form-control'}))
     id_dia = forms.ModelChoiceField(label='id_dia', queryset= Dia.objects.all(), to_field_name= 'id_dia', widget=forms.Select(attrs={'class': 'form-control'}))
