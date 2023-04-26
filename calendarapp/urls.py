@@ -1,5 +1,5 @@
 from django.urls import path
-from calendarapp.views.other_views import ListCalendarioFuncDoc, formCalendarioFuncDoc, EditCalendarioFuncDoc, AddCalendarioFuncDoc, delCalendarioFuncDoc
+from calendarapp.views.other_views import formCalendarioFuncDoc, EditCalendarioFuncDoc, AddCalendarioFuncDoc, delCalendarioFuncDoc #ListCalendarioFuncDoc
 
 from . import views
 
@@ -9,7 +9,7 @@ app_name = "calendarapp"
 urlpatterns = [
     
     path("formulariofundoc/", formCalendarioFuncDoc, name="form_cal_func_doc"),
-    path("listafundoc/", ListCalendarioFuncDoc, name="lista_cal_func_doc"),
+    # path("listafundoc/", ListCalendarioFuncDoc, name="lista_cal_func_doc"),
     path("formulariofundoc/edit/<int:pk>/", EditCalendarioFuncDoc, name="edit_cal_func_doc"),
     path("formulariofundoc/add/", AddCalendarioFuncDoc, name="add_cal_func_doc"),
     path("formulariofundoc/delete/<int:pk>/", delCalendarioFuncDoc, name="del_cal_func_doc"),

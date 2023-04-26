@@ -42,7 +42,7 @@
                                             </tr>
                                         </tbody> {% endcomment %}
 
-                                        <tbody hx-trigger="load, calenarioListChange from:body" hx-target="this">
+                                        <tbody>
                                             {% for registro in dict_cal_fun_doc %}
                                                 <tr role="row" class="odd" id="registro-{{registro.id_horario_semestral}}">
                                                     {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
@@ -87,4 +87,7 @@ modificar el formulario base de ABM
     <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
     <script type="text/javascript">$('#sampleTable').DataTable();</script>
+
 {% endblock extrascripts %}
+
+

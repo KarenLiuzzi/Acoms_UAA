@@ -1,5 +1,5 @@
 {% comment %} el request.path se usa para poder usar la misma url del get para el metodo post {% endcomment %}
-<form hx-post= "{{request.path}}" class="modal-content" id="form">
+<form hx-post= "{{request.path}}" class="modal-content">
     {% csrf_token %}
       <div class='modal-header text-center'>
         <h3 class="modal-title w-100">Horario Semestral</h3> 
@@ -78,4 +78,18 @@
       </div>
     </form>  
 
- 
+  {% comment %} {% block extrascripts %}
+        <!-- Agregue este código JavaScript al final de la plantilla -->
+        <script>
+          // Obtenga el modal
+          var modal2 = new bootstrap.Modal(document.getElementById("modal"));
+          console.log(modal2);
+
+          // Cuando se envía el formulario, cierre el modal
+          document.querySelector("form").addEventListener("submit", function() {
+          modal2.hide();
+          //console.log(modal2.hide());
+          });
+      </script>
+  
+  {% endblock extrascripts %} {% endcomment %}

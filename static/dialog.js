@@ -27,17 +27,20 @@
       }
     })
 
+    // Obtenga el modal
+    //var modal = document.getElementById("miModal");
+
     // Cuando se envía el formulario, cierre el modal
-    document.getElementById("form").addEventListener("submit", function() {
-      modal.style.display = "none";
-      //modal.hide()
-    });
+    //document.querySelector("form").addEventListener("submit", function() {
+    //  modal.style.display = "none";
+    //});
 
     htmx.on("htmx:beforeSwap", (e) => {
       // console.log(e.detail.xhr.response)
       // console.log(e.detail.target.id)
         // Empty response targeting #dialog => hide the modal
-        if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+        //if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+          if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
           modal.hide()
           e.detail.shouldSwap = false
           //agregado ver si sacar 
