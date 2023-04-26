@@ -2,6 +2,8 @@
 ;(function(){
     const modal = new bootstrap.Modal(document.getElementById("modal"))
 
+    //const modal2 = document.getElementById("modal");
+
     htmx.on("htmx:afterSwap", (e) => {
       // Response targeting #dialog => show the modal
       if (e.detail.target.id == "dialog") {
@@ -24,6 +26,12 @@
         // modal.data('bs.modal')._config.backdrop = 'static';
       }
     })
+
+    // Cuando se envía el formulario, cierre el modal
+    document.getElementById("form").addEventListener("submit", function() {
+      modal.style.display = "none";
+      //modal.hide()
+    });
 
     htmx.on("htmx:beforeSwap", (e) => {
       // console.log(e.detail.xhr.response)

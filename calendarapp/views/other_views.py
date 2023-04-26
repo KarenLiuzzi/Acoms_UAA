@@ -11,6 +11,7 @@ import calendar
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+import requests
 from calendarapp.models.calendario import HorarioSemestral
 from calendarapp.forms import HorarioSemestralForm
 from accounts.models.user import FuncionarioDocente
@@ -156,18 +157,22 @@ def ListCalendarioFuncDoc(request):
     #https://stackoverflow.com/questions/21925671/convert-django-model-object-to-dict-with-all-of-the-fields-intact
     dict = model_to_dict(current_user)
     persona=  dict["id_persona"]
+    print(persona)
     dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
+    #print(dict_cal_fun_doc)
     context = { "dict_cal_fun_doc": dict_cal_fun_doc}
-    return render(request,'calendarapp/lista_calendario.html',context=context)
+    #return render(request,'calendarapp/lista_calendario.html',context=context)
+    return render(request,'calendarapp/calendario_form.html',context=context)
 
 @login_required
 def formCalendarioFuncDoc(request):
-    # current_user = request.user
-    # dict = model_to_dict(current_user)
-    # persona=  dict["id_persona"]
-    # dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
-    # context = { "dict_cal_fun_doc": dict_cal_fun_doc}
-    return render(request,'calendarapp/calendario_form.html')
+    #STO DEBO COMENTAR Y SACAR EL CONTEXT
+    current_user = request.user
+    dict = model_to_dict(current_user)
+    persona=  dict["id_persona"]
+    dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
+    context = { "dict_cal_fun_doc": dict_cal_fun_doc}
+    return render(request,'calendarapp/calendario_form.html', context= context)
 
 @login_required
 def EditCalendarioFuncDoc(request, pk):
@@ -178,7 +183,15 @@ def EditCalendarioFuncDoc(request, pk):
         if form.is_valid():
             form.save()
             #return HttpResponse(status=204, headers={'HX-Trigger': 'calenarioListChange'})
-            return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
+            
+            # Realizar una solicitud GET a otra vista
+            respuesta = requests.get('http://ejemplo.com/otra-vista/')
+            # Obtener el contenido de la respuesta
+            contenido = respuesta.content
+    
+    
+            #return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
+            return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"))
         #else:
             #messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
     else:
@@ -203,7 +216,8 @@ def AddCalendarioFuncDoc(request):
         # print(form.fields['id_funcionario_docente'])
         if form.is_valid():
             form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro agregado."})})
+            #return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro agregado."})})
+            return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"))
         #else: 
            #messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
     else:
@@ -220,7 +234,8 @@ def delCalendarioFuncDoc(request, pk):
             try:
                 record = HorarioSemestral.objects.get(id_horario_semestral=pk)
                 record.delete()
-                return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Eliminado."})})
+                #return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Eliminado."})})
+                return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"))
             
             except:
                 messages.error(request, 'Ocurrió un error al intentar eliminar el registro.')
