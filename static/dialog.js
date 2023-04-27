@@ -43,6 +43,9 @@
           if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
           modal.hide()
           e.detail.shouldSwap = false
+          console.log('ENTRO AQUI!')
+          //actualizamos la pagina actual
+          window.location.reload();
           //agregado ver si sacar 
           // modal.data('bs.modal',null);
 

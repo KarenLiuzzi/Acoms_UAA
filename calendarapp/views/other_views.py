@@ -183,8 +183,8 @@ def EditCalendarioFuncDoc(request, pk):
         form = HorarioSemestralForm(request.POST, instance=hor_sem, user=request.user)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=200)
-            #return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
+            #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=200)
+            return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
              #, status=204, headers={'HX-Trigger': json.dumps({"showMessage": "Registro Modificado."})})
             
         #else:
@@ -211,9 +211,9 @@ def AddCalendarioFuncDoc(request):
         # print(form.fields['id_funcionario_docente'])
         if form.is_valid():
             form.save()
-            #return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro agregado."})})
+            return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro agregado."})})
             #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"))
-            return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
+            #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
         #else: 
            #messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
     else:
@@ -230,9 +230,9 @@ def delCalendarioFuncDoc(request, pk):
             try:
                 record = HorarioSemestral.objects.get(id_horario_semestral=pk)
                 record.delete()
-                #return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Eliminado."})})
+                return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Eliminado."})})
                 #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"))
-                return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
+                #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
             
             except:
                 messages.error(request, 'Ocurrió un error al intentar eliminar el registro.')
