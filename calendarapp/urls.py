@@ -1,5 +1,5 @@
 from django.urls import path
-from calendarapp.views.other_views import formCalendarioFuncDoc, EditCalendarioFuncDoc, AddCalendarioFuncDoc, delCalendarioFuncDoc #ListCalendarioFuncDoc
+from calendarapp.views.other_views import formCalendarioFuncDoc, EditCalendarioFuncDoc, tipo_cita ,AddCalendarioFuncDoc, delCalendarioFuncDoc, tutoria, ori_academica #ListCalendarioFuncDoc
 
 from . import views
 
@@ -34,4 +34,11 @@ urlpatterns = [
         views.RunningEventsListView.as_view(),
         name="running_events",
     ),
+    
+    
+    
+    #AGREGADOS DE PRUEBA
+    path("tutoria/", tutoria, name="tuto"),
+    path("orientacionAcademica/", ori_academica, name="academica"),
+    path("tipoCita/", tipo_cita, name="tipo_cita"),
 ]

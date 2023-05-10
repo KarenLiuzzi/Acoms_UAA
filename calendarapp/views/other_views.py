@@ -249,3 +249,15 @@ def delCalendarioFuncDoc(request, pk):
 
     #ver como hacer aqui
     #return render(request, "calendarapp/form_hora_sem_func_doc.html")
+
+
+#agregados de pruebas
+
+def tutoria(request):
+    return render(request,'calendarapp/prueba_tutoria.html')
+
+def tipo_cita(request):
+    return render(request,'calendarapp/tipo_actividad_academica.html')
+
+def ori_academica(request):
+    return render(request,'calendarapp/prueba_ori_academica.html')
