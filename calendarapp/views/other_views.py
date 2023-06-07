@@ -1,5 +1,6 @@
 # cal/views.py
 import json
+from turtle import title
 from django.contrib import messages
 from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, render, redirect
@@ -11,6 +12,7 @@ import calendar
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+from calendarapp.models.event import DetalleActividadAcademica
 import requests
 from calendarapp.models.calendario import HorarioSemestral
 from calendarapp.forms import HorarioSemestralForm
@@ -121,28 +123,132 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
 
     def get(self, request, *args, **kwargs):
         forms = self.form_class()
-        events = Event.objects.get_all_events(user=request.user)
-        events_month = Event.objects.get_running_events(user=request.user)
+        #events = Event.objects.get_all_events(user=request.user)
+        events = Event.objects.get_all_events()
+        #events_month = Event.objects.get_running_events(user=request.user)
+        events_month = Event.objects.get_running_events(tipo_cita= '')
         event_list = []
         # start: '2020-09-16T16:00:00'
         for event in events:
+            tipo_cita= ""
+            if event.es_orientacion_academica:
+                tipo_cita= "ori_academica"
+            elif event.es_tutoria:
+                tipo_cita= "tutoria"
+                
+            #Horario
+            horario= ""
+            if event.id_cita.datetime_fin_real:
+                horario= event.id_cita.datetime_inicio_real.strftime("%H:%M") + ' - ' + event.id_cita.datetime_fin_real.strftime("%H:%M")
+            else:
+                horario= event.id_cita.datetime_inicio_estimado.strftime("%H:%M") + ' - ' + event.id_cita.datetime_fin_estimado.strftime("%H:%M")
+            
+            #Fecha
+            fecha= ""
+            
+            if event.id_cita.datetime_inicio_real:
+                fecha= event.id_cita.datetime_inicio_real.strftime("%Y-%m-%d")
+            else:
+                fecha= event.id_cita.datetime_inicio_estimado.strftime("%Y-%m-%d")
+                
+            #Encargado
+            encargado= ""
+            #print(type(event.id_cita.id_funcionario_docente_encargado.id_funcionario_docente.nombre))
+            encargado= event.id_cita.id_funcionario_docente_encargado.id_funcionario_docente.nombre + ' ' + event.id_cita.id_funcionario_docente_encargado.id_funcionario_docente.apellido
+            
+            #Receptor
+            receptor= ""
+            if event.id_cita.id_persona_receptor:
+                receptor= event.id_cita.id_persona_receptor.nombre + ' ' + event.id_cita.id_persona_receptor.apellido
+            else:
+                receptor= "----------"
+                
+            #Estado
+            estado= ""
+            estado= event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica
+            
+            #Convocatoria
+            convocatoria= ""
+            anho_str= str(event.id_cita.id_convocatoria.anho)
+            convocatoria= event.id_cita.id_convocatoria.id_semestre.descripcion_semestre + ' ' + anho_str
+            
+            #Facultad
+            facultad= ""
+            
+            if event.id_cita.id_facultad:
+                facultad= event.id_cita.id_facultad.descripcion_facultad
+            else:
+                facultad=  "----------"
+                
+            #Materia
+            materia= ""
+            if event.id_cita.id_materia:
+                materia= event.id_cita.id_materia.descripcion_materia
+            else:
+                materia= "----------"
+            #Observacion
+            observacion= ""
+            if event.id_cita.observacion:
+                observacion= event.id_cita.observacion
+            else:
+                observacion= "----------"
+                
+            #Curso
+            curso= ""
+            
+            if event.id_cita.nro_curso:
+                curso= event.id_cita.nro_curso
+            else:
+                curso= "----------"
+                
+            #Participantes
+            #participantes= [{"hola": "karen", "hola2": "liuzzi"}, {"hola": "luis", "hola2": "diaz"}]
+            participantes_lista= []
+            #print(participantes)
+            participantes_filtro= DetalleActividadAcademica.objects.filter(id_actividad_academica= event.id_cita.id_actividad_academica)
+            participantes_lista = list(participantes_filtro.values('id_participante__nombre', 'id_participante__apellido'))
+            
+            # if participantes_filtro.exists():
+            #     participantes= participantes_filtro
+            #     print(participantes)
+            # else:
+            #     participantes= []
+
+            
+            #estos nombres tienen que mantenerse
             event_list.append(
                 {
-                    "title": event.title,
-                    "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "title": event.id_cita.id_facultad.descripcion_facultad,
+                    "start": event.id_cita.datetime_inicio_estimado.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "end": event.id_cita.datetime_fin_estimado.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "id_cita": event.id_cita.id_actividad_academica,
+                    "tipo_cita": tipo_cita,
+                    "horario": horario,
+                    "fecha": fecha, 
+                    "encargado": encargado, 
+                    "receptor": receptor, 
+                    "estado": estado, 
+                    "convocatoria":convocatoria, 
+                    "facultad": facultad, 
+                    "materia":materia, 
+                    "observacion":observacion, 
+                    "curso": curso,
+                    "participantes": participantes_lista
 
                 }
+                
             )
+            #print(event.id_cita.id_actividad_academica)
         context = {"form": forms, "events": event_list,
                    "events_month": events_month}
         return render(request, self.template_name, context)
 
+    #descomentar una vez que este hecho el form de evento
     def post(self, request, *args, **kwargs):
         forms = self.form_class(request.POST)
         if forms.is_valid():
             form = forms.save(commit=False)
-            form.user = request.user
+            #form.user = request.user
             form.save()
             return redirect("calendarapp:calendar")
         context = {"form": forms}

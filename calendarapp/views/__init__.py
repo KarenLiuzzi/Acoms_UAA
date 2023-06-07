@@ -1,4 +1,4 @@
-from .event_list import AllEventsListView, RunningEventsListView
+from .event_list import AllEventsListView, RunningEventsListView, DetalleCita, CancelarCita
 from .other_views import (
     CalendarViewNew,
     CalendarView,
@@ -13,6 +13,8 @@ from .other_views import (
 __all__ = [
     AllEventsListView,
     RunningEventsListView,
+    DetalleCita,
+    CancelarCita,
     CalendarViewNew,
     CalendarView,
     create_event,

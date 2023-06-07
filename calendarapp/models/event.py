@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.db import models
 from django.urls import reverse
-
+from django.forms import model_to_dict
 from calendarapp.models import EventAbstract
 from accounts.models import User
 from django.db.models import Q, CheckConstraint
@@ -16,14 +16,29 @@ En resumen, models.Manager es un componente clave de Django que proporciona una 
 
 
 class EventManager(models.Manager):
-    """ Event manager """
+    """ Event manager. select_related: Sin embargo, debes tener en cuenta que esta optimización solo funciona para relaciones ForeignKey y OneToOneField. Si estás trabajando con relaciones ManyToManyField, deberás utilizar el método prefetch_related para optimizar las consultas. """
 
-    def get_all_events(self, user):
-        events = Event.objects.all() #.filter(user=user, is_active=True, is_deleted=False)
+    #este se usa para traer tanto las citas de tipo tutoria como de orientacion academica
+    #def get_all_events(self, user):
+    def get_all_events(self):
+        
+        #events = Event.objects.all() #.filter(user=user, is_active=True, is_deleted=False)
+        events = Cita.objects.select_related("id_cita")
+
         return events
+    """como hacer un inner join con dos modelos y obtener columnas seleccionadas con filtros especificos en django"""
 
-    def get_running_events(self, user):
-        running_events = Event.objects.all() 
+    #este usamos para traer un solo tipo de cita, ya sea de tipo tutoria u orientacion academica -- ver como modificar
+    #def get_running_events(self, user):
+    def get_running_events(self, tipo_cita):
+        if tipo_cita == 'Tutoria':
+            
+            running_events = Cita.objects.filter(es_tutoria= True).select_related("id_cita")
+        elif tipo_cita== "OriAcademica":
+            running_events = Cita.objects.filter(es_orientacion_academica= True).select_related("id_cita")
+        else: 
+            running_events = Cita.objects.select_related("id_cita")
+            
         """ .filter(
             user=user,
             is_active=True,
@@ -52,18 +67,18 @@ class Event(EventAbstract):
     id_estado_actividad_academica= models.ForeignKey(EstadoActividadAcademica, on_delete=models.PROTECT, related_name='estado_acti_aca')
     id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.PROTECT, related_name='convocatoria')
     id_facultad= models.ForeignKey(Facultad, on_delete=models.PROTECT, related_name='facultad')
-    id_materia= models.ForeignKey(Materia, on_delete=models.PROTECT, related_name='materia', null= True)
+    id_materia= models.ForeignKey(Materia, on_delete=models.SET_NULL, related_name='materia', blank=True, null=True)
     id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='departamento')
     id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='funcionario_docente_encarcado')
-    id_persona_receptor= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_receptor')
+    id_persona_receptor= models.ForeignKey(Persona, on_delete=models.SET_NULL, related_name='persona_receptor', blank=True, null=True)
     id_persona_alta= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_alta')
     datetime_inicio_estimado = models.DateTimeField()
     datetime_fin_estimado = models.DateTimeField()
-    datetime_inicio_real = models.DateTimeField(null= True, default= None)
-    datetime_fin_real = models.DateTimeField(null= True, default= None)
+    datetime_inicio_real = models.DateTimeField(null= True, blank=True)
+    datetime_fin_real = models.DateTimeField(null= True, blank=True)
     datetime_registro = models.DateTimeField(auto_now=True)
-    observacion= models.CharField(max_length=500, null= True)
-    nro_curso= models.CharField(max_length=30, null= True)
+    observacion= models.CharField(max_length=500, null= True, blank=True)
+    nro_curso= models.CharField(max_length=30, null= True, blank=True)
 
     # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
     # title = models.CharField(max_length=200, unique=True)
@@ -74,7 +89,7 @@ class Event(EventAbstract):
     objects = EventManager()
 
     def __str__(self):
-        return self.id_actividad_academica
+        return self.id_actividad_academica.__str__() 
 
     def get_absolute_url(self):
         return reverse("calendarapp:event-detail", args=(self.id_actividad_academica,))
@@ -136,6 +151,9 @@ class Parametro(models.Model):
                     name='solo_uno_puede_ser_true'
                 )
             ]
+    
+    def __str__(self):
+        return '%s %s' % (self.descripcion_parametro, self.valor) 
         
 class Cita(models.Model):
     id_cita= models.ForeignKey(Event, on_delete=models.PROTECT, related_name='ori_academ_cita', primary_key=True)
@@ -178,6 +196,7 @@ class TipoOrientacionAcademica(models.Model):
 
 class Motivo(models.Model):
     id_motivo = models.AutoField(primary_key=True)
+    id_tipo_orientacion_academica= models.ForeignKey(TipoOrientacionAcademica, on_delete=models.SET_NULL, related_name='motivo_orientacion_academica',  null= True)
     descripcion_motivo = models.CharField(max_length=500)
 
     def __str__(self):

@@ -84,7 +84,7 @@ class Materia(models.Model):
     descripcion_materia= models.CharField(max_length=100)
 
     def __str__(self):
-         return '%s - %s' % (self.id_departamento.descripcion_departamento, self.descripcion_materia)
+         return '%s - %s' % (self.id_departamento.descripcion_departamento, self.descripcion_materia) or ''
     
     class Meta:
         verbose_name_plural = "Materias"

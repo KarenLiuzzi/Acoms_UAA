@@ -22,6 +22,8 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
         <!-- Font-icon css-->
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
         {% block extracss %}
         {% endblock extracss %}
     </head>
@@ -153,10 +155,10 @@
                     <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Citas</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                     <ul class="treeview-menu">
                         <li>
-                            <a class="treeview-item" href="{% url 'calendarapp:running_events' %}"><i class="icon fa fa-circle-o"></i> Tutorías</a>
+                            <a class="treeview-item" href="{% url 'calendarapp:running_events' tipo_cita="Tutoria" %}"><i class="icon fa fa-circle-o"></i> Tutorías</a>
                         </li>
                         <li>
-                            <a class="treeview-item" href="{% url 'calendarapp:running_events' %}"><i class="icon fa fa-circle-o"></i> Orientaciones Académicas</a>
+                            <a class="treeview-item" href="{% url 'calendarapp:running_events' tipo_cita="OriAcademica" %}"><i class="icon fa fa-circle-o"></i> Orientaciones Académicas</a>
                         </li>
                         <li>
                             <a class="treeview-item" href="{% url 'calendarapp:all_events' %}"><i class="icon fa fa-circle-o"></i>Todo</a>
