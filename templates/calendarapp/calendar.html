@@ -23,7 +23,7 @@
         <div class="tile row">
             <div class="col-md-3">
                 <div id="external-events">
-                    <h4 class="mb-4">Running Events</h4>
+                    <h4 class="mb-4">Citas activas</h4>
                     {% for event in events_month %}
                       <div class="fc-event">
                           <h3>{{ event.title }}</h3>
@@ -31,7 +31,7 @@
                           <p>To: {{ event.end_time }}</p>
                       </div>
                     {% empty %}
-                      <p>No Running Events Found</p>
+                      <p>Ninguna Cita activa encontrada...</p>
                     {% endfor %}
                 </div>
             </div>

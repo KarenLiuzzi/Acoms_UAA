@@ -2,6 +2,8 @@
 ;(function(){
     const modal = new bootstrap.Modal(document.getElementById("modal"))
 
+    //const modal2 = document.getElementById("modal");
+
     htmx.on("htmx:afterSwap", (e) => {
       // Response targeting #dialog => show the modal
       if (e.detail.target.id == "dialog") {
@@ -25,13 +27,25 @@
       }
     })
 
+    // Obtenga el modal
+    //var modal = document.getElementById("miModal");
+
+    // Cuando se envía el formulario, cierre el modal
+    //document.querySelector("form").addEventListener("submit", function() {
+    //  modal.style.display = "none";
+    //});
+
     htmx.on("htmx:beforeSwap", (e) => {
       // console.log(e.detail.xhr.response)
       // console.log(e.detail.target.id)
         // Empty response targeting #dialog => hide the modal
-        if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+        //if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
+          if (e.detail.target.id == "dialog" && !e.detail.xhr.response) {
           modal.hide()
           e.detail.shouldSwap = false
+          console.log('ENTRO AQUI!')
+          //actualizamos la pagina actual
+          window.location.reload();
           //agregado ver si sacar 
           // modal.data('bs.modal',null);
 

@@ -54,6 +54,14 @@
     </div>
     <div class="col-md-12">
         <div class="tile">
+
+            <div>
+                <button type="button" class="btn btn-primary mt-2" hx-get="{% url 'calendarapp:tipo_cita' %}" hx-target="#dialog" >
+                    Registrar Cita
+                </button>
+            </div>
+            <br>
+
             <div class="tile-body">
                 <div class="table-responsive">
                     <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">

@@ -44,6 +44,8 @@ class EstadoActividadAcademica(models.Model):
 from accounts.models.user import Facultad, Materia, Departamento, FuncionarioDocente, Persona
 from calendarapp.models.calendario import Convocatoria
 
+
+
 class Event(EventAbstract):
     """ Event model """
 

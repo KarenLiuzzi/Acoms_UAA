@@ -147,19 +147,19 @@
                     <a class="app-menu__item active" href="{% url 'dashboard' %}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a>
                 </li>
                 <li>
-                    <a class="app-menu__item" href="{% url 'calendarapp:calendar' %}"><i class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Calendar</span></a>
+                    <a class="app-menu__item" href="{% url 'calendarapp:calendar' %}"><i class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Calendario</span></a>
                 </li>
                 <li class="treeview">
-                    <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Events</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Citas</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                     <ul class="treeview-menu">
                         <li>
-                            <a class="treeview-item" href="{% url 'calendarapp:running_events' %}"><i class="icon fa fa-circle-o"></i> Running</a>
+                            <a class="treeview-item" href="{% url 'calendarapp:running_events' %}"><i class="icon fa fa-circle-o"></i> Tutorías</a>
                         </li>
                         <li>
-                            <a class="treeview-item" href="{% url 'calendarapp:running_events' %}"><i class="icon fa fa-circle-o"></i> Upcoming</a>
+                            <a class="treeview-item" href="{% url 'calendarapp:running_events' %}"><i class="icon fa fa-circle-o"></i> Orientaciones Académicas</a>
                         </li>
                         <li>
-                            <a class="treeview-item" href="{% url 'calendarapp:all_events' %}"><i class="icon fa fa-circle-o"></i> All</a>
+                            <a class="treeview-item" href="{% url 'calendarapp:all_events' %}"><i class="icon fa fa-circle-o"></i>Todo</a>
                         </li>
                     </ul>
                 </li>
@@ -177,10 +177,11 @@
             {% endblock content %}
         </main>
         
-        {% comment %} <div id="modal" class="modal fade" > {% endcomment %}
         <div id="modal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             {% comment %} el this sirve para indicar a htmx que este el el dialogo que debe cerrar, el document le agregue para que funcione cerrar el dialogo  {% endcomment %}
-            <div id="dialog" class="modal-dialog modal-dialog-centered" role="document" hx-target="this"> <!--insertamos html aqui --></div>
+            <div id="dialog" class="modal-dialog modal-dialog-centered" role="document" hx-target="this"> 
+                <!--insertamos html aqui -->
+            </div>
         </div>
 
         <div class="position-fixed bottom-0 top-0 p-3" style="z-index: 5; right: 0; bottom: 0;">

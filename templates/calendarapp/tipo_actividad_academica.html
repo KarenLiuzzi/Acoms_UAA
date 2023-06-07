@@ -1,0 +1,75 @@
+{% comment %} <form hx-post= "{{request.path}}" class="modal-content"> {% endcomment %}
+<div class="modal-content">
+      <div class='modal-header text-center'>
+        <h3 class="modal-title w-100">Tipo de Cita</h3> 
+      </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="tutoria" value="tutoria" checked>
+            <label class="form-check-label" for="tutoria">
+              Tutoria
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="orientacion_academica" value="orientacion_academica">
+            <label class="form-check-label" for="orientacion_academica">
+              Orientación Académica
+            </label>
+          </div>
+
+    
+        <div class="modal-footer">
+          <button type="button mt-2" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="button mt-2" class="btn btn-primary" id="confirmar-btn">Confirmar</button>
+        </div>  
+            
+      </div>
+</div>  
+
+{% comment %} Este código agrega un escucha de evento click al botón. Cuando se hace clic en el botón, 
+el código verifica cuál de los elementos de radio está seleccionado y actualiza el href del botón en consecuencia.
+ Si el href se actualiza, el código redirige el navegador a la nueva ubicación utilizando window.location.href.{% endcomment %}
+
+{% block extrascripts %}
+    <script >
+
+        {% comment %} const radioChoices = document.querySelectorAll('.form-check-input');
+        const submitBtn = document.getElementById('confirmar-btn');
+        console.log("hola")
+        radioChoices.forEach((choice) => {
+        choice.addEventListener('click', () => {
+            if (choice.id === 'tutoria') {
+
+              console.log(choice.id === 'tutoria')
+
+            submitBtn.hx-get = '{% url "calendarapp:tuto" %}';
+
+            } else if (choice.id === 'orientacion_academica') {
+
+              console.log(choice.id === 'orientacion_academica')
+
+            submitBtn.hx-get = '{% url "calendarapp:academica" %}';
+            }
+        });
+        }); {% endcomment %}
+
+
+        const button = document.getElementById("confirmar-btn");
+        const tutoiaRadio = document.getElementById("tutoria");
+        const oriAcadeRadio = document.getElementById("orientacion_academica");
+
+        button.addEventListener("click", () => {
+          let href = "";
+          if (tutoiaRadio.checked) {
+            href = "{% url 'calendarapp:tuto' %}";
+          } else if (oriAcadeRadio.checked) {
+            href = "{% url 'calendarapp:academica' %}";
+          }
+          if (href !== "") {
+            window.location.href = href;
+          }
+        });
+
+
+    </script>
+{% endblock extrascripts %}

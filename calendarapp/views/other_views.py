@@ -3,7 +3,7 @@ import json
 from django.contrib import messages
 from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect, JsonResponse
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
@@ -11,6 +11,7 @@ import calendar
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+import requests
 from calendarapp.models.calendario import HorarioSemestral
 from calendarapp.forms import HorarioSemestralForm
 from accounts.models.user import FuncionarioDocente
@@ -148,26 +149,31 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
         return render(request, self.template_name, context)
     
 #-------------------------------Función ABM Horario Semestral Funcionario/docente------------------------------------
-@login_required
-def ListCalendarioFuncDoc(request):
-    #obtenemos todos los objetos de horario semestral del funcionario docente y devolvemos en el template
-    #pasar solo los horarios semestrales que correspondan con el usuario logeado
-    current_user = request.user
-    #https://stackoverflow.com/questions/21925671/convert-django-model-object-to-dict-with-all-of-the-fields-intact
-    dict = model_to_dict(current_user)
-    persona=  dict["id_persona"]
-    dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
-    context = { "dict_cal_fun_doc": dict_cal_fun_doc}
-    return render(request,'calendarapp/lista_calendario.html',context=context)
+# @login_required
+# def ListCalendarioFuncDoc(request):
+#     #obtenemos todos los objetos de horario semestral del funcionario docente y devolvemos en el template
+#     #pasar solo los horarios semestrales que correspondan con el usuario logeado
+#     current_user = request.user
+#     #https://stackoverflow.com/questions/21925671/convert-django-model-object-to-dict-with-all-of-the-fields-intact
+#     dict = model_to_dict(current_user)
+#     persona=  dict["id_persona"]
+#     print(persona)
+#     dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
+#     #print(dict_cal_fun_doc)
+#     context = { "dict_cal_fun_doc": dict_cal_fun_doc}
+#     #return render(request,'calendarapp/lista_calendario.html',context=context)
+#     return render(request,'calendarapp/calendario_form.html',context=context)
 
 @login_required
 def formCalendarioFuncDoc(request):
-    # current_user = request.user
-    # dict = model_to_dict(current_user)
-    # persona=  dict["id_persona"]
-    # dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
-    # context = { "dict_cal_fun_doc": dict_cal_fun_doc}
-    return render(request,'calendarapp/calendario_form.html')
+    #STO DEBO COMENTAR Y SACAR EL CONTEXT
+    if request.method != "POST":
+        current_user = request.user
+        dict = model_to_dict(current_user)
+        persona=  dict["id_persona"]
+        dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
+        context = { "dict_cal_fun_doc": dict_cal_fun_doc}
+        return render(request,'calendarapp/calendario_form.html', context= context)
 
 @login_required
 def EditCalendarioFuncDoc(request, pk):
@@ -177,8 +183,10 @@ def EditCalendarioFuncDoc(request, pk):
         form = HorarioSemestralForm(request.POST, instance=hor_sem, user=request.user)
         if form.is_valid():
             form.save()
-            #return HttpResponse(status=204, headers={'HX-Trigger': 'calenarioListChange'})
+            #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=200)
             return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
+             #, status=204, headers={'HX-Trigger': json.dumps({"showMessage": "Registro Modificado."})})
+            
         #else:
             #messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
     else:
@@ -204,6 +212,8 @@ def AddCalendarioFuncDoc(request):
         if form.is_valid():
             form.save()
             return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro agregado."})})
+            #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"))
+            #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
         #else: 
            #messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
     else:
@@ -221,6 +231,8 @@ def delCalendarioFuncDoc(request, pk):
                 record = HorarioSemestral.objects.get(id_horario_semestral=pk)
                 record.delete()
                 return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Eliminado."})})
+                #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"))
+                #return HttpResponseRedirect(reverse("calendarapp:form_cal_func_doc"), status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
             
             except:
                 messages.error(request, 'Ocurrió un error al intentar eliminar el registro.')
@@ -237,3 +249,15 @@ def delCalendarioFuncDoc(request, pk):
 
     #ver como hacer aqui
     #return render(request, "calendarapp/form_hora_sem_func_doc.html")
+
+
+#agregados de pruebas
+
+def tutoria(request):
+    return render(request,'calendarapp/prueba_tutoria.html')
+
+def tipo_cita(request):
+    return render(request,'calendarapp/tipo_actividad_academica.html')
+
+def ori_academica(request):
+    return render(request,'calendarapp/prueba_ori_academica.html')
