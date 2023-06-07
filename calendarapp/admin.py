@@ -1,6 +1,6 @@
 from django.contrib import admin
 from calendarapp import models
-from calendarapp.models.event import EstadoActividadAcademica, UnidadMedida, EstadoTarea, Parametro, TipoTarea, TipoTutoria, TipoOrientacionAcademica, Motivo
+from calendarapp.models.event import EstadoActividadAcademica, Event,UnidadMedida,Tutoria,DetalleActividadAcademica , OrientacionAcademica , Cita,EstadoTarea, Parametro, TipoTarea, TipoTutoria, TipoOrientacionAcademica, Motivo
 from calendarapp.models.calendario import Dia, Semestre, HorarioSemestral, Convocatoria
 
 #registramos nuestros modelos en la pantalla de admin
@@ -98,8 +98,11 @@ class TipoOrientacionAcademicaAdmin(admin.ModelAdmin):
 @admin.register(Motivo)
 class MotivoAdmin(admin.ModelAdmin):
 
+    def tipo_nombre(self, obj):
+        return '%s' % (obj.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica) 
+    tipo_nombre.short_description = 'Tipo Orientacion Academica'
     
-    list_display = ['descripcion_motivo'] # Campos a mostrar en la lista
+    list_display = ['tipo_nombre', 'descripcion_motivo'] # Campos a mostrar en la lista
     list_filter = ["descripcion_motivo"]  # Filtro por campo
     search_fields = ["descripcion_motivo"] # Búsqueda por campo
 
@@ -119,6 +122,90 @@ class EstadoTareaAdmin(admin.ModelAdmin):
     list_display = ['descripcion_estado_tarea'] # Campos a mostrar en la lista
     list_filter = ["descripcion_estado_tarea"]  # Filtro por campo
     search_fields = ["descripcion_estado_tarea"] # Búsqueda por campo
+    
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+
+    def estado_acti_nombre(self, obj):
+        return '%s' % (obj.id_estado_actividad_academica.descripcion_estado_actividad_academica) 
+    estado_acti_nombre.short_description = 'Estado'
+    
+    def convocatoria_nombre(self, obj):
+        return '%s %s' % (obj.id_convocatoria.id_semestre.descripcion_semestre, obj.id_convocatoria.anho) 
+    convocatoria_nombre.short_description = 'Convocatoria'
+    
+    def facultad_nombre(self, obj):
+        return '%s' % (obj.id_facultad.descripcion_facultad) 
+    facultad_nombre.short_description = 'Facultad'
+    
+    def materia_nombre(self, obj):
+        #si no existe el objeto, entonces devuelve vacio o None
+        try:
+            return '%s' % (obj.id_facultad.descripcion_facultad)
+        except AttributeError:
+            return ''
+    
+    def departamento_nombre(self, obj):
+        return '%s' % (obj.id_departamento.descripcion_departamento) 
+    departamento_nombre.short_description = 'Departamento'
+    
+    def encargado_nombre(self, obj):
+        return '%s %s' % (obj.id_funcionario_docente_encargado.id_funcionario_docente.nombre, obj.id_funcionario_docente_encargado.id_funcionario_docente.apellido) 
+    encargado_nombre.short_description = 'Encargado'
+    
+    def receptor_nombre(self, obj):
+        #si no existe el objeto, entonces devuelve vacio o None
+        try:
+            return '%s %s' % (obj.id_persona_receptor.nombre, obj.id_persona_receptor.apellido) 
+        except AttributeError:
+            return ''
+    
+    
+    def alta_nombre(self, obj):
+        return '%s %s' % (obj.id_persona_alta.nombre, obj.id_persona_alta.apellido) 
+    alta_nombre.short_description = 'Usuario alta'
+    
+    
+    list_display = ['estado_acti_nombre', 'convocatoria_nombre','facultad_nombre' ,'materia_nombre' ,'receptor_nombre','departamento_nombre', 'encargado_nombre' , 'alta_nombre' , 'datetime_inicio_estimado', 'datetime_fin_estimado', 'datetime_inicio_real', 'datetime_fin_real', 'datetime_registro', 'observacion', 'nro_curso'] # Campos a mostrar en la lista
+    #list_filter = ["descripcion_estado_tarea"]  # Filtro por campo
+    #search_fields = ["descripcion_estado_tarea"] # Búsqueda por campo
+
+
+
+@admin.register(Cita)
+class CitaAdmin(admin.ModelAdmin):
+    
+    def Parametro_nombre(self, obj):
+        return '%s %s' % (obj.id_parametro.descripcion_parametro, obj.id_parametro.valor) 
+    Parametro_nombre.short_description = 'Parametro'
+    
+    list_display = ['Parametro_nombre', 'es_tutoria','es_orientacion_academica' , 'es_notificable', 'motivo'] # Campos a mostrar en la lista
+
+
+
+@admin.register(OrientacionAcademica)
+class OrientacionAcademicaAdmin(admin.ModelAdmin):
+    
+    def motivo_nombre(self, obj):
+        return '%s' % (obj.id_motivo.descripcion_motivo) 
+    motivo_nombre.short_description = 'Motivo'
+    
+    
+    def tipo_nombre(self, obj):
+        return '%s' % (obj.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica) 
+    tipo_nombre.short_description = 'Tipo'
+    
+    
+    list_display = ['id_cita', 'motivo_nombre','tipo_nombre'] # Campos a mostrar en la lista
+
+@admin.register(DetalleActividadAcademica)
+class DetalleActividadAcademicaAdmin(admin.ModelAdmin):
+    
+    def participante_nombre(self, obj):
+        return '%s %s' % (obj.id_participante.nombre, obj.id_participante.apellido) 
+    participante_nombre.short_description = 'Participante'
+    
+    list_display = ['id_actividad_academica', 'participante_nombre', 'es_docente', 'es_funcionario', 'es_alumno'] # Campos a mostrar en la lista
 
 
 # @admin.register(models.Event)

@@ -1,0 +1,118 @@
+<div class="modal-content">
+    <div class='modal-header text-center'>
+      <h3 class="modal-title w-100">Detalles de Cita</h3> 
+    </div>
+
+    <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="fecha">Fecha:</label>
+              {% if cita.id_cita.datetime_inicio_real %}
+                {{ cita.id_cita.datetime_inicio_real|date:"d/m/Y" }}
+              {% else %}
+                {{ cita.id_cita.datetime_inicio_estimado|date:"d/m/Y" }}
+              {% endif %} 
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="horario">Horario:</label>
+              {% if cita.id_cita.datetime_fin_real %}
+                {{ cita.id_cita.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ cita.id_cita.datetime_fin_real|time:"H:i" }}
+              {% else %}
+                {{ cita.id_cita.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ cita.id_cita.datetime_fin_estimado|time:"H:i" }}
+              {% endif %} 
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="encargado">Encargado:</label>
+              {{ cita.id_cita.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ cita.id_cita.id_funcionario_docente_encargado|title }} 
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="receptor">Receptor:</label>
+              {% if cita.id_cita.id_persona_receptor %}
+                {{ cita.id_cita.id_persona_receptor.nombre|add:' '|title}}{{ cita.id_cita.id_persona_receptor.apellido|title }} 
+              {% else %}
+                ----------
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="estado">Estado:</label>
+              {{ cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica|title}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label for="convocatoria">Convocatoria:</label>
+              {{ cita.id_cita.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title}}{{ cita.id_cita.id_convocatoria.anho|title }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="facultad">Facultad:</label>
+              {% if cita.id_cita.id_facultad %}
+                {{ cita.id_cita.id_facultad.descripcion_facultad|title}}
+              {% else %}
+                ----------
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="materia">Materia:</label>
+              {% if cita.id_cita.id_materia %}
+                {{ cita.id_cita.id_materia.descripcion_materia|title}}
+              {% else %}
+                ----------
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="observacion">Observación:</label>
+              {% if cita.id_cita.observacion %}
+                {{ cita.id_cita.observacion|title}}
+              {% else %}
+                ----------
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="nro_curso">Nro Curso:</label>
+              {% if cita.id_cita.nro_curso %}
+                {{ cita.id_cita.nro_curso|title}}
+              {% else %}
+                ----------
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="participantes">Participantes:</label>
+              {% if detalles %}
+                <ul>
+                  {% for value in detalles %}
+                    <li>{{ value.id_participante.nombre|add:' '|title}}{{ value.id_participante.apellido|title }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p>Sin participantes...</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+    </div>
+      
+      <div class="modal-footer">
+        <button type="button mt-2" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+
+</div>  
+

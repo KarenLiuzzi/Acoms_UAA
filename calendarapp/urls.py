@@ -15,8 +15,8 @@ urlpatterns = [
     path("formulariofundoc/delete/<int:pk>/", delCalendarioFuncDoc, name="del_cal_func_doc"),
     # path("formfundoc/delete/<int:pk>/", delFormCalendrioFuncDoc, name="delFormCalendrioFuncDoc"),
     
-    path("calender/", views.CalendarViewNew.as_view(), name="calendar"),
-    path("calenders/", views.CalendarView.as_view(), name="calendars"),
+    path("calender/", views.CalendarViewNew.as_view(), name="calendar"), #este es el calendario
+    path("calenders/", views.CalendarView.as_view(), name="calendars"), #este es el dashboard
     path("event/new/", views.create_event, name="event_new"),
     path("event/edit/<int:pk>/", views.EventEdit.as_view(), name="event_edit"),
     path("event/<int:event_id>/details/", views.event_details, name="event-detail"),
@@ -30,13 +30,13 @@ urlpatterns = [
     ),
     path("all-event-list/", views.AllEventsListView.as_view(), name="all_events"),
     path(
-        "running-event-list/",
+        "running-event-list/<str:tipo_cita>/",
         views.RunningEventsListView.as_view(),
         name="running_events",
     ),
     
-    
-    
+    path("detallesCita/<int:id_cita>/", views.DetalleCita, name="detalles_cita"),
+    path("cita/cancelar/<int:id_cita>/", views.CancelarCita, name="cancelar_cita"),
     #AGREGADOS DE PRUEBA
     path("tutoria/", tutoria, name="tuto"),
     path("orientacionAcademica/", ori_academica, name="academica"),

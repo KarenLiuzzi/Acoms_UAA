@@ -6815,7 +6815,7 @@ var FullCalendar = (function (exports) {
         return TaskRunner;
     }());
 
-    // Computes what the title at the top of the calendarApi should be for this view
+    // Computes what the  at the top of the calendarApi should be for this view
     function buildTitle(dateProfile, viewOptions, dateEnv) {
         var range;
         // for views that span a large unit of time, show the proper interval, ignoring stray days before and after

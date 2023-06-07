@@ -70,20 +70,67 @@
                                 <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr role="row">
-                                            <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 261.641px;">SL</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 417.312px;">Event Name</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 189.281px;">Start Time</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.141px;">End Time</th>
+                                            <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 102.281px;">Fecha</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.312px;">Dia</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Horario</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Estado</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.141px;">Funcionario/Docente</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for event in latest_events %}
-                                            <tr role="row" class="odd">
-                                                <td class="sorting_1">{{ forloop.counter }}</td>
-                                                <td>{{ event.title }}</td>
-                                                <td>{{ event.start_time }}</td>
-                                                <td>{{ event.end_time }}</td>
-                                            </tr>
+                                        {% for event in running_events %}
+                                        <tr role="row" class="odd">
+                                            {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
+                                            <td>{% if event.id_cita.datetime_inicio_real %}
+                                                    {{ event.id_cita.datetime_inicio_real|date:"d/m/Y" }}
+                                                {% else %}
+                                                    {{ event.id_cita.datetime_inicio_estimado|date:"d/m/Y" }}
+                                                {% endif %} 
+                                            </td>
+                                            <td>
+                                                {% load humanize %}
+                                                {% if event.id_cita.datetime_inicio_real %}
+                                                {{ event.id_cita.datetime_inicio_real|naturalday|title  }}
+                                                {% else %}
+                                                    {{ event.id_cita.datetime_inicio_estimado|naturalday|title  }}
+                                                {% endif %} 
+                                            </td>
+                                            <td>{% if event.id_cita.datetime_fin_real %}
+                                                    {{ event.id_cita.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ event.id_cita.datetime_fin_real|time:"H:i" }}
+                                                {% else %}
+                                                    {{ event.id_cita.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ event.id_cita.datetime_fin_estimado|time:"H:i" }}
+                                                {% endif %} 
+                                            </td>
+                                            <td>
+                                            {{ event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica}}
+                                            </td>
+
+                                            <td>{{ event.id_cita.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ event.id_cita.id_funcionario_docente_encargado|title }}</td>
+                                            <td>
+                                                <div>
+                                                    <!-- Button trigger modal -->
+                                                    <button type="button" class="btn btn-primary"  hx-target="#dialog" hx-get="{% url 'calendarapp:detalles_cita' id_cita=event.id_cita %}" title="Detalles"> {% comment %} hx-get="{% url 'calendarapp:edit_cal_func_doc' pk=registro.id_horario_semestral %}" {% endcomment %}
+                                                        <i class="bi bi-eye-fill"></i>
+                                                    </button> 
+                                                    
+                                                    <!-- Button trigger modal -->
+                                                    {% if event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' %}
+
+                                                        <button type="button" class="btn btn-primary" hx-target="#dialog" title="Editar"> <i class="bi bi-pencil-fill"></i> </button>
+
+                                                        <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button> 
+
+                                                    {% else %}
+
+                                                        <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
+
+                                                        <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button>
+
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
