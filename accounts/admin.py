@@ -1,5 +1,9 @@
+from django import forms
 from django.contrib import admin
-from accounts.models.user import Persona, TipoDocumento, Alumno, Funcionario, Docente, FuncionarioDocente, User, CarreraAlumno, Facultad, Carrera, Departamento, Materia, MateriaFuncionarioDocente
+from accounts.models.user import User, Persona, TipoDocumento, Alumno, Funcionario, Docente, FuncionarioDocente, User, CarreraAlumno, Facultad, Carrera, Departamento, Materia, MateriaFuncionarioDocente
+from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.password_validation import validate_password
 
 #registramos nuestros modelos en la pantalla de admin
 admin.site.register(Persona)
@@ -8,8 +12,102 @@ admin.site.register(Alumno)
 admin.site.register(Funcionario)
 admin.site.register(Docente)
 admin.site.register(FuncionarioDocente)
-admin.site.register(User)
+#admin.site.register(User)
+   
+class UserForm(forms.ModelForm):
+    # Personaliza el formulario de creación de usuarios
+    documento = forms.CharField(
+        label="documento",
+        widget=forms.TextInput(attrs={"class": "form-control"}), error_messages= {'required': 'Por favor ingrese su Nro de Documento'}, strip= True
+    )
+    
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}))
+    
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"class": "form-control"}),
+        validators=[validate_password],
+    )
+    
+    id_persona = forms.CharField(
+        label="id_persona",
+        widget=forms.TextInput(attrs={"class": "hidden"}),
+        disabled= True, required= False,
+    )
 
+    class Meta:
+        model = User
+        fields = ('documento', 'email', 'password', 'is_staff', 'is_active', 'groups', 'id_persona')
+
+    # def clean_id_persona(self):
+    #     doc = self.cleaned_data.get("documento")
+    #     per = Persona.objects.filter(documento=doc).first()
+    #     # if per is not None:
+    #     if per is not None:
+    #         #dict = model_to_dict(per.first())
+    #         id_persona = per
+    #         #print("paso asignacion persona")
+
+    #     else:
+    #         #raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
+    #         print("no paso la asignacion de persona")
+    #     return id_persona
+    
+    def clean_documento(self):
+        doc = self.cleaned_data.get("documento")
+        nro_doc=  Persona.objects.filter(documento= doc)
+        user_doc = User.objects.filter(documento= doc)
+        #validamos si existe una persona con el nro de docuento en nuestra base de datos
+        if nro_doc.count() == 0:
+            raise ValidationError("El nro de documento no existe en la base de Datos!")
+        #Validamos si existe un usuario con el nro de documento
+        #if user_doc.exists():
+        if user_doc.count() != 0:
+            raise ValidationError("Ya existe un usuario con el Nro de Cédula!")
+        return doc
+ 
+    # def save(self, commit=True):
+    #     #En resumen, super() se utiliza para llamar a métodos o acceder a atributos de una clase base (padre) en una clase derivada(hijo).
+    #     user = super().save(commit=False)
+    #     user.set_password(self.cleaned_data["password"])
+    #     if commit:
+    #         user.save()
+    #     return user
+    
+    def save(self, commit=True):
+        # Sobrescribimos el valor de la persona
+         # Sobrescribimos el valor de la persona
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        doc = self.cleaned_data.get("documento")
+        per = Persona.objects.filter(documento=doc).first()
+        print(per)
+        if per:
+            user.id_persona = per  # Modificar el valor del campo
+            print(user.id_persona)
+            print("hola")
+        else:
+            print("no encontro la persona")
+        if commit:
+            user.save()
+        return user
+    
+# class UserAdmin(admin.ModelAdmin):
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    
+    form = UserForm
+    fields =  ['documento', 'email', 'password', 'is_staff', 'is_active', 'groups', 'materia_usuario']  # Agrega los campos que deseas mostrar en el formulario
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('documento', 'email', 'password1', 'password2', 'is_staff', 'is_active', 'groups', 'materia_usuario'),
+        }),
+    )
+    filter_vertical= ('groups', 'materia_usuario',)
+    search_fields = ['email']
+
+    
 @admin.register(Facultad)
 class FacultadAdmin(admin.ModelAdmin):
 

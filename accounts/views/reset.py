@@ -147,6 +147,11 @@ class CambiarContrasenhaView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         forms = self.form_class(request.POST)
         if forms.is_valid(): 
+            
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
 
             #aqui debemos validar si la contrasenha ingresada es el mismo que el usuario logeado actualmente
             current_user = request.user
@@ -162,10 +167,10 @@ class CambiarContrasenhaView(LoginRequiredMixin, View):
             else:
                 messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
                 # Eliminar todos los mensajes de error
-                storage = messages.get_messages(request)
-                for message in storage:
-                    if message.level == messages.ERROR:
-                        storage.discard(message)
+                # storage = messages.get_messages(request)
+                # for message in storage:
+                #     if message.level == messages.ERROR:
+                #         storage.discard(message)
 
         #si so es valido volvemos a retonar el mismo objeto form para poder mostrar el error en pantalla
         context = {"form": forms}

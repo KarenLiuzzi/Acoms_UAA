@@ -11,6 +11,9 @@ class TipoDocumento(models.Model):
 
     def __str__(self):
         return '%s' % (self.descripcion_tipo_documento)
+    
+    class Meta:
+        verbose_name_plural = "Tipos de documento"
 
 class Persona(models.Model):
     id_tipo_documento= models.ForeignKey(TipoDocumento, on_delete=models.PROTECT, related_name='tipo_documento')
@@ -23,27 +26,42 @@ class Persona(models.Model):
 
     def __str__(self):
         return '%s %s %s' % (self.nombre, self.apellido, self.documento)
+    
+    class Meta:
+        verbose_name_plural = "Personas"
 
 class Alumno(models.Model):
     id_alumno= models.ForeignKey(Persona, on_delete=models.PROTECT, primary_key=True, related_name='alumno')
     def __str__(self):
          return '%s %s' % (self.id_alumno.nombre, self.id_alumno.apellido)
 
+    class Meta:
+        verbose_name_plural = "Alumnos"
+        
 class FuncionarioDocente(models.Model):
     id_funcionario_docente= models.ForeignKey(Persona, on_delete=models.PROTECT, primary_key=True, related_name='funcionario_docente')
     def __str__(self):
          return '%s %s' % (self.id_funcionario_docente.nombre, self.id_funcionario_docente.apellido)
     
+    class Meta:
+        verbose_name_plural = "Funcionarios/Docentes"
+        
 class Docente(models.Model):
     id_docente= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, primary_key=True, related_name='docente')
     def __str__(self):
          return '%s %s' % (self.id_docente.id_funcionario_docente.nombre, self.id_docente.id_funcionario_docente.apellido)
 
+    class Meta:
+        verbose_name_plural = "Docentes"
+        
 class Funcionario(models.Model):
     id_funcionario= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, primary_key=True, related_name='funcionario')
     def __str__(self):
          return '%s %s' % (self.id_funcionario.id_funcionario_docente.nombre, self.id_funcionario.id_funcionario_docente.apellido)
 
+    class Meta:
+        verbose_name_plural = "Funcionarios"
+        
 class Facultad(models.Model):
     id_facultad= models.AutoField(primary_key=True)
     descripcion_facultad= models.CharField(max_length=60)
@@ -161,6 +179,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """ Custom user model, contendra los campos"""
     documento= models.CharField(max_length=30, unique= True, blank=True, null= True)
     id_persona= models.ForeignKey(Persona, on_delete=models.PROTECT,  related_name='usuario', blank= True, null= True)
+    materia_usuario= models.ManyToManyField(Materia, blank=True, help_text='Las materias asignadas al usuario', related_name='user_materias')
     
     email = models.EmailField(
         _("Email Address"),
@@ -192,6 +211,9 @@ class User(AbstractBaseUser, PermissionsMixin):
          return '%s' % (self.email)
 
     REQUIRED_FIELDS= ['documento']
+    
+    class Meta:
+        verbose_name_plural = "Usuarios"
 
 
 #probar como solicitar campo de documento en creacion de superuser

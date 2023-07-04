@@ -67,7 +67,7 @@ class Event(EventAbstract):
     id_estado_actividad_academica= models.ForeignKey(EstadoActividadAcademica, on_delete=models.PROTECT, related_name='estado_acti_aca')
     id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.PROTECT, related_name='convocatoria')
     id_facultad= models.ForeignKey(Facultad, on_delete=models.PROTECT, related_name='facultad')
-    id_materia= models.ForeignKey(Materia, on_delete=models.SET_NULL, related_name='materia', blank=True, null=True)
+    id_materia= models.ForeignKey(Materia, on_delete=models.SET_NULL, blank=True, null=True)
     id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='departamento')
     id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='funcionario_docente_encarcado')
     id_persona_receptor= models.ForeignKey(Persona, on_delete=models.SET_NULL, related_name='persona_receptor', blank=True, null=True)
@@ -108,6 +108,9 @@ Este método puede ser utilizado por otros componentes de la aplicación que nec
     def get_html_url(self):
         url = reverse("calendarapp:event-detail", args=(self.id_actividad_academica,))
         return f'<a href="{url}"> {self.id_actividad_academica} </a>'
+    
+    class Meta:
+        verbose_name_plural = "Actividades Academicas"
 
 
 class DetalleActividadAcademica(models.Model):
@@ -134,6 +137,9 @@ class UnidadMedida(models.Model):
 
     def __str__(self):
         return self.descripcion_unidad_medida
+    
+    class Meta:
+        verbose_name_plural = "Unidades de Medida"
 
 class Parametro(models.Model):
     id_parametro = models.AutoField(primary_key=True)
@@ -151,6 +157,8 @@ class Parametro(models.Model):
                     name='solo_uno_puede_ser_true'
                 )
             ]
+
+            verbose_name_plural = "Parametros"
     
     def __str__(self):
         return '%s %s' % (self.descripcion_parametro, self.valor) 
@@ -171,6 +179,8 @@ class Cita(models.Model):
                     name='unicos_cita'
                 )
             ]
+        
+            verbose_name_plural = "Citas"
 
 class TipoTutoria(models.Model):
     id_tipo_tutoria = models.AutoField(primary_key=True)
@@ -178,6 +188,9 @@ class TipoTutoria(models.Model):
 
     def __str__(self):
         return self.descripcion_tipo_tutoria
+    
+    class Meta:
+        verbose_name_plural = "Tipos de Tutoria"
 
 
 class Tutoria(models.Model):
@@ -193,6 +206,8 @@ class TipoOrientacionAcademica(models.Model):
     def __str__(self):
         return self.descripcion_tipo_orientacion_academica
 
+    class Meta:
+        verbose_name_plural = "Tutorias"
 
 class Motivo(models.Model):
     id_motivo = models.AutoField(primary_key=True)
@@ -201,6 +216,9 @@ class Motivo(models.Model):
 
     def __str__(self):
         return self.descripcion_motivo
+    
+    class Meta:
+        verbose_name_plural = "Motivos de Orientacion Academica"
 
 class OrientacionAcademica(models.Model):
     id_orientacion_academica = models.ForeignKey(Event, on_delete=models.PROTECT, related_name='acti_academ_orient_academ', primary_key=True)
@@ -217,6 +235,8 @@ class TipoTarea(models.Model):
     def __str__(self):
         return self.descripcion_tipo_tarea
     
+    class Meta:
+        verbose_name_plural = "Tipos de tarea"
 
 class EstadoTarea(models.Model):
     id_estado_tarea = models.AutoField(primary_key=True)
@@ -225,6 +245,8 @@ class EstadoTarea(models.Model):
     def __str__(self):
         return self.descripcion_estado_tarea
     
+    class Meta:
+        verbose_name_plural = "Estados de tarea"
 
 class Tarea(models.Manager):
 
@@ -247,3 +269,6 @@ class Tarea(models.Manager):
 
     def __str__(self):
         return self.id_tarea_relacionada
+    
+    class Meta:
+        verbose_name_plural = "Tareas"

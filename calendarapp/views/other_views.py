@@ -15,8 +15,8 @@ from django.urls import reverse_lazy, reverse
 from calendarapp.models.event import DetalleActividadAcademica
 import requests
 from calendarapp.models.calendario import HorarioSemestral
-from calendarapp.forms import HorarioSemestralForm
-from accounts.models.user import FuncionarioDocente
+from calendarapp.forms import HorarioSemestralForm, SolicitarCita
+from accounts.models.user import FuncionarioDocente, Persona, MateriaFuncionarioDocente, Materia, Departamento
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
@@ -333,6 +333,13 @@ def AddCalendarioFuncDoc(request):
 @login_required
 def delCalendarioFuncDoc(request, pk):
     if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                    
             try:
                 record = HorarioSemestral.objects.get(id_horario_semestral=pk)
                 record.delete()
@@ -343,11 +350,12 @@ def delCalendarioFuncDoc(request, pk):
             except:
                 messages.error(request, 'Ocurrió un error al intentar eliminar el registro.')
                 # Eliminar todos los mensajes de error
-                storage = messages.get_messages(request)
-                for message in storage:
-                    if message.level == messages.ERROR:
-                        storage.discard(message)
+                # storage = messages.get_messages(request)
+                # for message in storage:
+                #     if message.level == messages.ERROR:
+                #         storage.discard(message)
                 return render(request, "eliminar_registro.html", context = {"pk": pk})
+                
                 
     else:
         
@@ -359,11 +367,90 @@ def delCalendarioFuncDoc(request, pk):
 
 #agregados de pruebas
 
+@login_required
 def tutoria(request):
-    return render(request,'calendarapp/prueba_tutoria.html')
+    if request.method == "GET":
+        form = SolicitarCita() 
+    
+    # else:
+    #     if form.is_valid():
+    #         # Obtener opciones del campo2 usando cargar_opciones
+    #         departamento = cargar_opciones(request)
+
+    #         # Actualizar el campo select en el formulario con las opciones
+    #         form.fields['departamento'].choices = [(opcion['value'], opcion['label']) for opcion in departamento]
+
+    #         # Actualizar el queryset del campo2 en el formulario
+    #         form.fields['facultad'].queryset = opciones_departamento
+  
+    return render(request,'calendarapp/form_cita_tutoria.html', {'form': form})
 
 def tipo_cita(request):
     return render(request,'calendarapp/tipo_actividad_academica.html')
 
 def ori_academica(request):
     return render(request,'calendarapp/prueba_ori_academica.html')
+
+from django.http import JsonResponse
+
+def actualizar_campo(request):
+    
+    campo = request.GET.get('campo')
+    
+    if campo == "facultad":
+        selected_option= ""
+        selected_option = request.GET.get('id_facultad')
+        #obtenemos primeramente los Departamentos de la facultad seleccionada
+        departamentos =  Departamento.objects.filter(id_facultad= selected_option).values("id_departamento")
+        
+        # Traer las materias que macheen con los departamentos de la facultad seleccionada
+        queryset= ""
+        queryset = Materia.objects.filter(id_departamento__in=departamentos)
+        
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'
+            
+    elif campo == "materia":
+        
+        selected_option= ""
+        selected_option = request.GET.get('id_materia')
+        
+        #obtenemos el funcionario docente de la materia seleccionada
+        queryset= ""
+        queryset= MateriaFuncionarioDocente.objects.filter(id_materia= selected_option)
+        
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            options += f'<option value="{item.id_funcionario_docente}">{item.id_funcionario_docente.id_funcionario_docente.nombre} {item.id_funcionario_docente.id_funcionario_docente.apellido}</option>'
+            
+
+    return JsonResponse(options, safe=False)
+
+def obtener_participante(request):
+    documento = request.GET.get('nro_documento')
+    id_persona = request.GET.get('id_persona')
+    
+    if id_persona:
+          #obtenemos la persona
+        queryset= ""
+        queryset= Persona.objects.filter(id= id_persona).values("id", "nombre", "apellido")
+        if queryset.count() > 0 :
+            results = list(queryset)
+        else:
+            results= []
+        
+    elif documento:
+        #obtenemos el funcionario docente de la materia seleccionada
+        queryset= ""
+        queryset= Persona.objects.filter(documento= documento).values("id", "nombre", "apellido")
+        if queryset.count() > 0:
+            results = list(queryset)
+        else:
+            results= []
+
+    return JsonResponse(results, safe=False)
+
+
