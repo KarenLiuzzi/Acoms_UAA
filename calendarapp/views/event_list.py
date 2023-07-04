@@ -40,6 +40,13 @@ def DetalleCita(request, id_cita):
 @login_required
 def CancelarCita(request, id_cita):
     if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
             try:
                 record = Event.objects.get(id_actividad_academica=id_cita)
                 #indicar aqui el ID correspondiente al 
@@ -50,11 +57,7 @@ def CancelarCita(request, id_cita):
 
             except:
                 messages.error(request, 'Ocurrió un error al intentar cancelar la cita.')
-                # Eliminar todos los mensajes de error
-                storage = messages.get_messages(request)
-                for message in storage:
-                    if message.level == messages.ERROR:
-                        storage.discard(message)
+                
                 return render(request, "calendarapp/cancelar_cita.html", context = {"id_cita": id_cita})
                 
     else:

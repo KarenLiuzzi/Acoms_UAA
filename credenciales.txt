@@ -3,6 +3,19 @@ estaesasi
 4956652
 
 
+
+mio 
+kmooonnl@gmail.com
+HolaMundo!22!
+
+
+nuevo persona de prueba 
+fulanita 
+fulanita@test.com 
+ci 258147
+HolaMundo!22!
+
+
 #cargamos una persona especifica para el objecto de persona/funcionario
 id 2
 ci 123456

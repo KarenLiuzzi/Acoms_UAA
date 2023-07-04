@@ -1,0 +1,331 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Event List{% endblock title %}
+
+{% block breadcrumb %}
+    {% comment %} <div>
+        <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
+        <p>AcOMs</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#">Event List</a></li>
+    </ul> {% endcomment %}
+{% endblock breadcrumb %}
+
+{% block content %}
+<form method == 'POST'>
+    {% csrf_token %}
+
+    <div class="row">
+      <div class="col-md-12">
+          <button type="button" id="btnMostrarFormParticipantes" class="btn btn-info">Añadir Participantes</button>
+        <div id="formularioOculto" style="display: none;">
+          <!-- Bloque de búsqueda -->
+          <div class="form-group">
+            <label for="nro_documento">Número de Documento:</label>
+            <div class="input-group">
+              <input type="text" id="nro_documento" name="nro_documento" class="form-control">
+              <div class="input-group-append">
+                <button type="button" id="btnBuscar" class="btn btn-info">Buscar</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Bloque de resultados de búsqueda -->
+          <div id="resultadosBusqueda">
+            <h5>Resultados de búsqueda:</h5>
+            <table class="table table-hover table-bordered dataTable no-footer">
+              <thead>
+                <tr id="etiquetabusqueda">
+                  <th colspan="2">Sin resultados...</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Los resultados de la búsqueda se generarán aquí -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Bloque de registros agregados -->
+          <div id="registrosAgregados">
+            <h5>Lista de Participantes:</h5>
+            <table class="table table-hover table-bordered dataTable no-footer">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Los registros agregados se generarán aquí -->
+                <tr id="etiquetasinparticipantes">
+                  <td colspan="2">Sin participantes...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    
+          <div class="text-right">
+            <button type="button" id="btnOcultarFormParticipantes" class="btn btn-info">Confirmar</button>
+            <button type="button" id="btnBorrarLista" class="btn btn-info">Borrar Participantes</button>
+            <button type="button" id="btnCancelar" class="btn btn-info">Cancelar</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="form-body">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="label" for="id_facultad">Facultad</label> 
+            {{ form.id_facultad}} 
+             <span class="text-danger">{{ form.errors.id_facultad }}</span>
+          </div>
+        </div> 
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="label" for="id_materia">Materia</label>
+            {{ form.id_materia}}
+            <span class="text-danger">{{ form.errors.id_materia }}</span>
+          </div>
+        </div>
+    
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="label" for="id_persona_receptor">Docente</label>
+            {{ form.id_persona_receptor }}
+            <span class="text-danger">{{ form.errors.id_persona_receptor }}</span>
+          </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tile">    
+                    <div class="tile-body">
+                        <div class="table-responsive">
+                            <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 102.281px;">Fecha</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.312px;">Dia</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Horario</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        <input type = "submit" value="Confirmar"> 
+    </div>
+</form>
+{% endblock content %}
+
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#id_id_facultad').change(function() {
+                var selected_option = $(this).val();
+                console.log(selected_option)
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'id_facultad': selected_option,
+                        'campo': 'facultad'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_materia').html(data);
+                    }
+                });
+            });
+
+            $('#id_id_materia').change(function() {
+                var selected_option = $(this).val();
+                console.log(selected_option)
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'id_materia': selected_option,
+                        'campo': 'materia'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_persona_receptor').html(data);
+                    }
+                });
+            });
+
+        });
+    </script>
+    <script>     
+
+      var $registrosAgregadosTbody= $('#registrosAgregados tbody');
+      var $resultadosBusquedaTbody= $('#resultadosBusqueda tbody');
+      
+
+        $(document).ready(function() {
+          $('#btnMostrarFormParticipantes').click(function() {
+            $('#formularioOculto').toggle();
+            $('#btnMostrarFormParticipantes').toggle();
+          });
+        
+
+          $('#btnBuscar').click(function() {
+            var nroDocumento = $('#nro_documento').val();
+            
+            // Realizar solicitud AJAX para buscar el registro
+            $.ajax({
+              url: '/buscar_participante/',
+              data: {
+                'nro_documento': nroDocumento
+              },
+              dataType: 'json',
+              success: function(data) {
+                // Manejar los resultados de la búsqueda
+                var resultadosHtml = '';
+                
+                if (data.length === 0) {
+                  $('#etiquetabusqueda').show();
+                } else {
+
+                  for (var i = 0; i < data.length; i++) {
+                    resultadosHtml += '<tr>';
+                    resultadosHtml += '<td>' + data[i].nombre + ' ' + data[i].apellido + '</td>';
+                    resultadosHtml += '<td><button type="button" class="btnAgregar btn btn-info" data-id="' + data[i].id + '" >Agregar</button></td>';
+                    resultadosHtml += '</tr>';
+                  }
+                  
+                  $('#resultadosBusqueda tbody').html(resultadosHtml);
+                  $('#etiquetabusqueda').hide();
+
+                }
+
+                
+
+              }
+            });
+          });
+
+          $('#resultadosBusqueda').on('click', '.btnAgregar', function() {
+            var $row = $(this).closest('tr');
+            var id = $(this).data('id');
+            var nombre_participante= '';
+
+            $.ajax({
+              url: '/buscar_participante/',
+              data: {
+                'id_persona': id
+              },
+              dataType: 'json',
+              success: function(data) {
+
+                if (data.length === 0) {
+                  //$('#etiquetabusqueda').show();
+                } else {
+
+                  // Manejar los resultados de la búsqueda
+                  nombre_participante = data[0]["nombre"] + ' ' + data[0]["apellido"];
+                  // Crear una nueva fila en la tabla de registros agregados
+                  var $nuevaFila = $('<tr>');
+                  //console.log(nombre_participante)
+                  $nuevaFila.append('<td>' + nombre_participante + '</td>');
+                  $nuevaFila.append('<td><button type="button" class="btnEliminar btn btn-info" data-id="' + id + '" >Eliminar</button></td>');
+                  
+                  // Agregar la nueva fila al tbody de la tabla de registros agregados
+                  $('#registrosAgregados tbody').append($nuevaFila);
+                  
+                  // Eliminar la fila de resultados de búsqueda
+                  $row.remove();
+                }      
+
+                //Se pune uno xq la etiqueta cuenta como un elemento
+                if ($registrosAgregadosTbody.children().length > 1) {
+                  $('#etiquetasinparticipantes').hide();
+                }
+
+              }
+            });
+            
+            
+          });
+
+          // Validar si tbody está sin datos y agregar etiqueta "Sin participantes..." Se pune uno xq la etiqueta cuenta como un elemento
+          if ($registrosAgregadosTbody.children().length === 1) {
+            $('#etiquetasinparticipantes').show();
+          }
+          
+          // Manejar el evento de eliminar un registro
+          $('#registrosAgregados').on('click', '.btnEliminar', function() {
+            //$(this).closest('tr').remove();
+            var $row = $(this).closest('tr');
+            $row.remove();
+
+            //Se pune uno xq la etiqueta cuenta como un elemento
+            if ($registrosAgregadosTbody.children().length  === 1 ) {
+              $('#etiquetasinparticipantes').show();
+            }
+            
+          });
+
+        });
+
+        // Comprimir el formulario de añadir participantes
+        $('#btnOcultarFormParticipantes').click(function() {
+            $('#formularioOculto').toggle();
+            $('#btnMostrarFormParticipantes').toggle();
+            $('#nro_documento').val('');
+          });
+
+          $('#btnBorrarLista').click(function() {
+            //$('#formularioOculto').toggle();
+            $('#nro_documento').val('');
+            $('#registrosAgregados tbody').empty();
+            $registrosAgregadosTbody.append('<tr><td colspan="2" id="etiquetasinparticipantes">Sin participantes...</td></tr>');
+            $('#resultadosBusqueda tbody').empty();
+            $resultadosBusquedaTbody.append('<tr><td colspan="2" id="etiquetabusqueda">Sin resultados...</td></tr>');
+
+            //Se pune uno xq la etiqueta cuenta como un elemento
+            if ($registrosAgregadosTbody.children().length === 1 ) {
+              console.log("entro")
+              $('#etiquetasinparticipantes').show();
+            }
+
+          });
+
+        // Reiniciar el formulario de añadir participantes
+        $('#btnCancelar').click(function() {
+            //$('#registrosAgregados tbody').empty();
+            $('#resultadosBusqueda tbody').empty();
+            $resultadosBusquedaTbody.append('<tr><td colspan="2" id="etiquetabusqueda">Sin resultados...</td></tr>');
+            $('#nro_documento').val('');
+            $('#formularioOculto').toggle();
+            $('#btnMostrarFormParticipantes').toggle();
+        });
+
+      
+
+    </script>
+
+    
+{% endblock extrascripts %}

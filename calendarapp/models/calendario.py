@@ -15,6 +15,9 @@ class Dia(models.Model):
 
     def __str__(self):
         return '%s' % (self.descripcion_dia)
+    
+    class Meta:
+        verbose_name_plural = "Dias"
 
 
 class Semestre(models.Model):
@@ -23,6 +26,9 @@ class Semestre(models.Model):
 
     def __str__(self):
         return '%s' % (self.descripcion_semestre)
+    
+    class Meta:
+        verbose_name_plural = "Semestres"
     
 class Convocatoria(models.Model):
     id_convocatoria= models.AutoField(primary_key=True)
@@ -37,6 +43,9 @@ class Convocatoria(models.Model):
     
     def __str__(self):
         return '%s %s' % (self.id_semestre.descripcion_semestre, self.anho)
+    
+    class Meta:
+        verbose_name_plural = "Convocatorias"
         
 # conv = Convocatoria.objects.get(anho=2001)
 # sem = conv.semestre_calendario.all()

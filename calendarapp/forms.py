@@ -3,7 +3,7 @@ from django.forms import ModelForm, DateInput, TimeInput, ValidationError
 from requests import request
 from calendarapp.models import Event, EventMember
 from calendarapp.models.calendario import HorarioSemestral, Dia, Convocatoria
-from accounts.models.user import FuncionarioDocente
+from accounts.models.user import FuncionarioDocente, Facultad, Materia
 from django import forms
 
 #el parametro cargaremos en minutos y ese vamos a tomar como valor para poder calcular el tiempo entre horarios del funcionario/docente
@@ -195,4 +195,31 @@ class HorarioSemestralForm(forms.ModelForm): #ModelForm
     #         super(HorarioSemestralForm, self).save(*args, **kwargs)  # llama al método save del modelo padrex
 
 
+class SolicitarCita(forms.Form):
     
+    id_facultad= forms.ModelChoiceField(label='Facultad', queryset= Facultad.objects.all() , to_field_name= 'id_facultad', widget=forms.Select(attrs={'class': 'form-control'}))
+    #departamento= forms.ModelChoiceField(label='Departamento', queryset= Departamento.objects.none() , to_field_name= 'id_departamento', widget=forms.Select(attrs={'class': 'form-control'}))
+    id_materia= forms.ModelChoiceField(label='Materia', queryset= Materia.objects.none() , to_field_name= 'id_materia', widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+    id_persona_receptor = forms.ModelChoiceField(label='Docente', queryset= FuncionarioDocente.objects.none() , to_field_name= 'id_funcionario_docente', widget=forms.Select(attrs={'class': 'form-control'}), required=False)
+    
+    
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['id_facultad'].widget.attrs['onchange'] = 'actualizar_campo_materia()'
+        
+    
+    def clean(self):
+        
+        dt_AA_facultad = self.cleaned_data['id_facultad']
+        dt_AA_materia = self.cleaned_data['id_materia']
+        dt_AA_receptor = self.cleaned_data['id_funcionario_docente']
+        
+         # Crear instancias de los modelos y guardar los datos
+        modelo1 = Event(id_facultad= dt_AA_facultad, id_materia=dt_AA_materia, id_persona_receptor= dt_AA_receptor)
+        modelo1.save()
+
+        # modelo2 = Modelo2(id_materia=id_materia)
+        # modelo2.save()
+
+        # modelo3 = Modelo3(campo_modelo3=datos_modelo3)
+        # modelo3.save()

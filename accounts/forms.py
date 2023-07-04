@@ -42,7 +42,8 @@ class ResetPassConfirmation(forms.Form):
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
+        #if password1 and password2 and password1 != password2:
+        if password1 != password2:
             raise ValidationError("Las Contraseñas no coinciden!")
         return password2    
 
@@ -81,7 +82,6 @@ class SignUpForm(forms.ModelForm):
     id_persona = forms.CharField(
         label="id_persona",
         widget=forms.TextInput(attrs={"class": "hidden"}),
-        disabled= True, required= False,
     )
     
     password1 = forms.CharField(
@@ -120,7 +120,8 @@ class SignUpForm(forms.ModelForm):
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
+        #if password1 and password2 and password1 != password2:
+        if password1 != password2:
             raise ValidationError("Las Contraseñas no coinciden!")
         return password2
 
@@ -178,6 +179,10 @@ class CambiarContrasenha(forms.Form):
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
+        contrasenha= self.cleaned_data.get("contrasenha")
+        #if password1 and password2 and password1 != password2:
+        if password1 != password2:
             raise ValidationError("Las Contraseñas no coinciden!")
+        elif (contrasenha == password1 or contrasenha == password2):
+            raise ValidationError("La Contraseña debe ser diferente!")
         return password2    
