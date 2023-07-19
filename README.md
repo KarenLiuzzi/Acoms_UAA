@@ -14,7 +14,7 @@ cd event-calendar
 python -m venv venv
 ```
 ```
-venv\Scripts\activate
+env/Scripts/activate
 ```
 ```
 pip install -r requirements.txt
