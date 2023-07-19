@@ -3,7 +3,7 @@ from django.forms import model_to_dict
 from django.views.generic import ListView
 from django.shortcuts import render
 from calendarapp.models import Event
-from calendarapp.models.event import Cita, DetalleActividadAcademica, EstadoActividadAcademica
+from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from calendarapp import models
-from calendarapp.models.event import EstadoActividadAcademica, Event,UnidadMedida,Tutoria,DetalleActividadAcademica , OrientacionAcademica , Cita,EstadoTarea, Parametro, TipoTarea, TipoTutoria, TipoOrientacionAcademica, Motivo
+from calendarapp.models.event import EstadoActividadAcademica, Event,UnidadMedida,Tutoria , OrientacionAcademica , Cita,EstadoTarea, Parametro, TipoTarea, TipoTutoria, TipoOrientacionAcademica, Motivo #,DetalleActividadAcademica
 from calendarapp.models.calendario import Dia, Semestre, HorarioSemestral, Convocatoria
 
 #registramos nuestros modelos en la pantalla de admin
@@ -198,14 +198,15 @@ class OrientacionAcademicaAdmin(admin.ModelAdmin):
     
     list_display = ['id_cita', 'motivo_nombre','tipo_nombre'] # Campos a mostrar en la lista
 
-@admin.register(DetalleActividadAcademica)
-class DetalleActividadAcademicaAdmin(admin.ModelAdmin):
+#comentamos momentaneamente
+# @admin.register(DetalleActividadAcademica)
+# class DetalleActividadAcademicaAdmin(admin.ModelAdmin):
     
-    def participante_nombre(self, obj):
-        return '%s %s' % (obj.id_participante.nombre, obj.id_participante.apellido) 
-    participante_nombre.short_description = 'Participante'
+#     def participante_nombre(self, obj):
+#         return '%s %s' % (obj.id_participante.nombre, obj.id_participante.apellido) 
+#     participante_nombre.short_description = 'Participante'
     
-    list_display = ['id_actividad_academica', 'participante_nombre', 'es_docente', 'es_funcionario', 'es_alumno'] # Campos a mostrar en la lista
+#     list_display = ['id_actividad_academica', 'participante_nombre', 'es_docente', 'es_funcionario', 'es_alumno'] # Campos a mostrar en la lista
 
 
 # @admin.register(models.Event)

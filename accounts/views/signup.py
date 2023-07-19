@@ -23,5 +23,10 @@ class SignUpView(View):
             # print("formulario validado")
             forms.save()
             return redirect("accounts:signin")
+        else:
+            for field, errors in forms.errors.items():
+                for error in errors:
+                    print(f"Error en el campo {field}: {error}")
+                    
         context = {"form": forms}
         return render(request, self.template_name, context)

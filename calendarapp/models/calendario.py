@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import ValidationError
+from django.forms import ValidationError, model_to_dict
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from datetime import datetime
@@ -66,6 +66,12 @@ class HorarioSemestral(models.Model):
 
     class Meta:
         verbose_name_plural = "Horarios Semestrales"
+        
+        
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+
 
     # class Meta:
     #     constraints = [

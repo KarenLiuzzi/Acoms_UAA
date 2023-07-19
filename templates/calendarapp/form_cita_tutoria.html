@@ -1,12 +1,20 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
+{% comment %} agregado {% endcomment %}
+{% block head_list %}
+<link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+<script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+<script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+{% endblock %}
+
 {% block title %}Event List{% endblock title %}
 
 {% block breadcrumb %}
     {% comment %} <div>
         <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
-        <p>AcOMs</p>
+        <p>AcOMs</p>  
     </div>
     <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
@@ -55,7 +63,7 @@
               <thead>
                 <tr>
                   <th>Nombre</th>
-                  <th>Acción</th>
+                  <th>Opciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -96,12 +104,28 @@
     
         <div class="col-md-12">
           <div class="form-group">
-            <label class="label" for="id_persona_receptor">Docente</label>
-            {{ form.id_persona_receptor }}
-            <span class="text-danger">{{ form.errors.id_persona_receptor }}</span>
+            <label class="label" for="id_funcionario_docente_encargado">Docente</label>
+            {{ form.id_funcionario_docente_encargado }}
+            <span class="text-danger">{{ form.errors.id_funcionario_docente_encargado }}</span>
           </div>
         </div>
 
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="label" for="observacion">Motivo</label>
+            {{ form.observacion }}
+            <span class="text-danger">{{ form.errors.motivo }}</span>
+          </div>
+        </div>
+        
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="label" for="nro_curso">Nro. Curso</label>
+            {{ form.nro_curso }}
+            <span class="text-danger">{{ form.errors.motivo }}</span>
+          </div>
+        </div>
+        
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">    
@@ -116,7 +140,7 @@
                                                     <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 102.281px;">Fecha</th>
                                                     <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.312px;">Dia</th>
                                                     <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Horario</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Acción</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Opciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -142,7 +166,7 @@
     <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
     <script type="text/javascript">$('#sampleTable').DataTable();</script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+    {% comment %} <script>
         $(document).ready(function() {
             $('#id_id_facultad').change(function() {
                 var selected_option = $(this).val();
@@ -156,28 +180,37 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_materia').html(data);
+                        actualizarmateria();
                     }
                 });
             });
 
-            $('#id_id_materia').change(function() {
-                var selected_option = $(this).val();
-                console.log(selected_option)
-                $.ajax({
-                    url: '/actualizar_campo/',
-                    data: {
-                        'id_materia': selected_option,
-                        'campo': 'materia'
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        $('#id_id_persona_receptor').html(data);
-                    }
-                });
+            $('#id_id_materia').on('change', function() {
+              actualizarmateria()
+          });
+
+          function actualizarmateria() {
+            var selected_option = $('#id_id_materia').val();
+            console.log(selected_option);
+            $.ajax({
+                url: '/actualizar_campo/',
+                data: {
+                    'id_materia': selected_option,
+                    'campo': 'materia'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_funcionario_docente_encargado').html(data);
+                }
             });
+        }
+        
 
         });
-    </script>
+    </script> {% endcomment %}
+    <script>  
+      
+    </script>  
     <script>     
 
       var $registrosAgregadosTbody= $('#registrosAgregados tbody');

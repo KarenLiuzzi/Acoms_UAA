@@ -80,9 +80,15 @@ class SignUpForm(forms.ModelForm):
     )
     
     id_persona = forms.CharField(
-        label="id_persona",
+        label="id_persona", required= False,
         widget=forms.TextInput(attrs={"class": "hidden"}),
     )
+    
+    # materia_func_doc = forms.ModelMultipleChoiceField(queryset= Persona.objects.none(),
+    #     widget=forms.SelectMultiple(attrs={"class": "hidden"}), required= False
+    # )
+    
+    #email = forms.EmailField(label="email", widget=forms.EmailInput(attrs={"class": "form-control"}), validators=[validar_mail])
     
     password1 = forms.CharField(
         label="Password",
@@ -136,7 +142,7 @@ class SignUpForm(forms.ModelForm):
     def clean_id_persona(self):
         doc = self.cleaned_data.get("documento")
         per = Persona.objects.filter(documento=doc).first()
-        print(per)
+        #print(per)
         # if per is not None:
         if per is not None:
             #dict = model_to_dict(per.first())
@@ -147,6 +153,23 @@ class SignUpForm(forms.ModelForm):
         else:
             raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
         return id_persona
+    
+    # def clean_materia_func_doc(self):
+    #     materia_func_doc = self.cleaned_data.get("materia_func_doc")
+    #     #per = Persona.objects.filter(documento=doc).first()
+    #     #print(per)
+    #     # if per is not None:
+    #     if materia_func_doc is  None:
+    #     #     #dict = model_to_dict(per.first())
+    #     #     # print("llego hasta validar el id persona")
+    #     #     print(materia_func_doc)
+    #     #     #print("paso asignacion persona")
+
+    #     # else:
+    #         print(materia_func_doc)
+    #         raise ValidationError("Existe un problema con materia_func_doc!")
+            
+    #     return materia_func_doc
 
 #clase para generar el token de reset pass a el usuario
 class ForgotPasswordTokenGenerator(PasswordResetTokenGenerator):
