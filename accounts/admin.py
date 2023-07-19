@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from accounts.models.user import User, Persona, TipoDocumento, Alumno, Funcionario, Docente, FuncionarioDocente, User, CarreraAlumno, Facultad, Carrera, Departamento, Materia, MateriaFuncionarioDocente
+from accounts.models.user import User, Persona, TipoDocumento, Alumno, Funcionario, Docente, FuncionarioDocente, User, Facultad, Carrera, Departamento, Materia #, MateriaFuncionarioDocente , CarreraAlumno
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
@@ -14,7 +14,7 @@ admin.site.register(Docente)
 admin.site.register(FuncionarioDocente)
 #admin.site.register(User)
    
-class UserForm(forms.ModelForm):
+class UserFormCreate(forms.ModelForm):
     # Personaliza el formulario de creación de usuarios
     documento = forms.CharField(
         label="documento",
@@ -37,21 +37,21 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('documento', 'email', 'password', 'is_staff', 'is_active', 'groups', 'id_persona')
+        fields = ('documento', 'email', 'password', 'is_staff', 'is_active', 'groups','is_superuser', 'id_persona', 'groups', 'materia_func_doc')
 
-    # def clean_id_persona(self):
-    #     doc = self.cleaned_data.get("documento")
-    #     per = Persona.objects.filter(documento=doc).first()
-    #     # if per is not None:
-    #     if per is not None:
-    #         #dict = model_to_dict(per.first())
-    #         id_persona = per
-    #         #print("paso asignacion persona")
+    def clean_id_persona(self):
+        doc = self.cleaned_data.get("documento")
+        per = Persona.objects.filter(documento=doc).first()
+        # if per is not None:
+        if per is not None:
+            #dict = model_to_dict(per.first())
+            id_persona = per
+            #print("paso asignacion persona")
 
-    #     else:
-    #         #raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
-    #         print("no paso la asignacion de persona")
-    #     return id_persona
+        else:
+            #raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
+            print("no paso la asignacion de persona")
+        return id_persona
     
     def clean_documento(self):
         doc = self.cleaned_data.get("documento")
@@ -84,29 +84,153 @@ class UserForm(forms.ModelForm):
         print(per)
         if per:
             user.id_persona = per  # Modificar el valor del campo
-            print(user.id_persona)
-            print("hola")
         else:
-            print("no encontro la persona")
+            raise ValidationError("No existe la persona con el nro de cedula!")
         if commit:
             user.save()
         return user
     
-# class UserAdmin(admin.ModelAdmin):
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserFormModify(forms.ModelForm):
     
-    form = UserForm
-    fields =  ['documento', 'email', 'password', 'is_staff', 'is_active', 'groups', 'materia_usuario']  # Agrega los campos que deseas mostrar en el formulario
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}))
+    
+    class Meta:
+        model = User
+        fields = ('documento', 'email', 'is_staff', 'is_active', 'groups', 'materia_func_doc')
+    
+
+class UserAdmin(admin.ModelAdmin):
+    # def __init__(self, model, admin_site):
+    #     super().__init__(model, admin_site)
+    #     if self.model:
+    #         print('entro aqui cuando era creacion')
+    #         self.form = UserCreationForm
+    #         # Atributos para nuevo objeto
+    #         self.fields= ['documento', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc']
+    #         self.add_fieldsets = (
+    #             (None, {
+    #                 'classes': ('wide',),
+    #                 'fields': ('documento', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc'),
+    #             }),
+    #         )
+    #         self.filter_vertical= ('groups', 'materia_func_doc',)
+    #         self.search_fields = ['email']
+    #     else:
+            
+            
+    #         print('entro aqui cuando era modificacion')
+    #         # Atributos para objeto existente
+    #         self.form = UserFormModify
+    #         self.fields= ['email', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc']
+    #         self.add_fieldsets = (
+    #             (None, {
+    #                 'classes': ('wide',),
+    #                 'fields': ('email', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc'),
+    #             }),
+    #         )
+    #         self.filter_vertical= ('groups', 'materia_func_doc',)
+    #         self.search_fields = ['email']
+    
+    forms= UserFormModify
+    fields =  ['email', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc']  # Agrega los campos que deseas mostrar en el formulario
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('documento', 'email', 'password1', 'password2', 'is_staff', 'is_active', 'groups', 'materia_usuario'),
+            'fields': ('email', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc'),
         }),
     )
-    filter_vertical= ('groups', 'materia_usuario',)
+    filter_vertical= ('groups', 'materia_func_doc',)
     search_fields = ['email']
+    
+    def has_add_permission(self, request):
+        return False
+    
+    
+    # fields =  ['documento', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc']  # Agrega los campos que deseas mostrar en el formulario
+    # add_fieldsets = (
+    #     (None, {
+    #         'classes': ('wide',),
+    #         'fields': ('documento', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc'),
+    #     }),
+    # )
+    # filter_vertical= ('groups', 'materia_func_doc',)
+    # search_fields = ['email']
+    
+    # def get_form(self, request, obj=None, **kwargs):
+    #     if obj is None:
+    #         print('entro aqui cuando era creacion')
+    #         # Formulario para la creación de un nuevo objeto
+    #         return UserFormCreate
+    #     else:
+    #         # Formulario para la modificación de un objeto existente
+    #         print('entro aqui cuando era modificacion')
+    #         return UserFormModify
 
+        # form = UserCreationForm
+    # # Atributos para nuevo objeto
+    # fields= ['documento', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc']
+    # add_fieldsets = (
+    #                 (None, {
+    #                     'classes': ('wide',),
+    #                     'fields': ('documento', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc'),
+    #                 }),
+    #             )
+    # filter_vertical= ('groups', 'materia_func_doc',)
+    # search_fields = ['email']
+admin.site.register(User, UserAdmin)
+    
+# class UserAdmin(admin.ModelAdmin):
+# @admin.register(User)
+# class UserAdmin(admin.ModelAdmin):
+    
+#         def __init__(self, model, admin_site):
+#             super().__init__(model, admin_site)
+#             if self.model:
+#                 print('entro aqui cuando era modificacion')
+#                 # Atributos para objeto existente
+#                 self.form = UserFormModify
+#                 self.fields= ['email', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc']
+#                 self.add_fieldsets = (
+#                                 (None, {
+#                                     'classes': ('wide',),
+#                                     'fields': ('email', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc'),
+#                                 }),
+#                             )
+#                 self.filter_vertical= ('groups', 'materia_func_doc',)
+#                 self.search_fields = ['email']
+#             else:
+#                 print('entro aqui cuando era creacion')
+#                 self.form = UserCreationForm
+#                 # Atributos para nuevo objeto
+#                 self.fields= ['documento', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc']
+#                 self.add_fieldsets = (
+#                                 (None, {
+#                                     'classes': ('wide',),
+#                                     'fields': ('documento', 'email', 'password', 'is_staff', 'is_active', 'is_superuser', 'groups', 'materia_func_doc'),
+#                                 }),
+#                             )
+#                 self.filter_vertical= ('groups', 'materia_func_doc',)
+#                 self.search_fields = ['email']
+    
+
+
+    
+
+            
+    # def change_view(self, request, object_id, form_url='', extra_context=None):
+    #     self.readonly_fields = ('password',)  # Campos solo de lectura en la vista de modificación
+    #     return super().change_view(request, object_id, form_url, extra_context)
+
+    
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super().get_form(request, obj, **kwargs)
+    #     formfield_overrides = {
+    #         User.password.field.name: {'widget': forms.HiddenInput}
+    #     }
+    #     formfield_overrides.update(self.formfield_overrides)
+    #     formfield_overrides.update(kwargs.get('formfield_overrides', {}))
+    #     form.formfield_overrides = formfield_overrides
+    #     return form
     
 @admin.register(Facultad)
 class FacultadAdmin(admin.ModelAdmin):
@@ -151,38 +275,40 @@ class MateriaAdmin(admin.ModelAdmin):
     list_filter = ('descripcion_materia',)  # Filtro por campo
     search_fields = ('descripcion_materia',)  # Búsqueda por campo
 
+#esto tb comentamos momentaneamente
+# @admin.register(MateriaFuncionarioDocente)
+# class MateriaFuncionarioDocenteAdmin(admin.ModelAdmin):
 
-@admin.register(MateriaFuncionarioDocente)
-class MateriaFuncionarioDocenteAdmin(admin.ModelAdmin):
+#     def materia_nombre(self, obj):
+#         return '%s' % (obj.id_materia.descripcion_materia) 
+#     materia_nombre.short_description = 'Materia'
 
-    def materia_nombre(self, obj):
-        return '%s' % (obj.id_materia.descripcion_materia) 
-    materia_nombre.short_description = 'Materia'
-
-    def func_doc_nombre(self, obj):
-        return '%s' % (obj.id_funcionario_docente) 
-    func_doc_nombre.short_description = 'Funcionario/Docente'
-
-    
-
-    list_display = ['func_doc_nombre', 'materia_nombre'] # Campos a mostrar en la lista
-    # list_filter = ('descripcion_materia',)  # Filtro por campo
-    # search_fields = ('descripcion_materia',)  # Búsqueda por campo
-
-
-@admin.register(CarreraAlumno)
-class CarreraAlumnoAdmin(admin.ModelAdmin):
-
-    def carrera_nombre(self, obj):
-        return '%s' % (obj.id_carrera.descripcion_carrera) 
-    carrera_nombre.short_description = 'Carrera'
-
-    def func_doc_nombre(self, obj):
-        return '%s' % (obj.id_alumno) 
-    func_doc_nombre.short_description = 'Alumno'
+#     def func_doc_nombre(self, obj):
+#         return '%s' % (obj.id_funcionario_docente) 
+#     func_doc_nombre.short_description = 'Funcionario/Docente'
 
     
 
-    list_display = ['func_doc_nombre', 'carrera_nombre'] # Campos a mostrar en la lista
-    # list_filter = ('descripcion_materia',)  # Filtro por campo
-    # search_fields = ('descripcion_materia',)  # Búsqueda por campo
+#     list_display = ['func_doc_nombre', 'materia_nombre'] # Campos a mostrar en la lista
+#     # list_filter = ('descripcion_materia',)  # Filtro por campo
+#     # search_fields = ('descripcion_materia',)  # Búsqueda por campo
+
+
+
+#esto tb comentamos momentaneamente
+# @admin.register(CarreraAlumno)
+# class CarreraAlumnoAdmin(admin.ModelAdmin):
+
+#     def carrera_nombre(self, obj):
+#         return '%s' % (obj.id_carrera.descripcion_carrera) 
+#     carrera_nombre.short_description = 'Carrera'
+
+#     def func_doc_nombre(self, obj):
+#         return '%s' % (obj.id_alumno) 
+#     func_doc_nombre.short_description = 'Alumno'
+
+    
+
+#     list_display = ['func_doc_nombre', 'carrera_nombre'] # Campos a mostrar en la lista
+#     # list_filter = ('descripcion_materia',)  # Filtro por campo
+#     # search_fields = ('descripcion_materia',)  # Búsqueda por campo

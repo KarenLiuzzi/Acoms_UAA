@@ -15,12 +15,17 @@ from django.urls import reverse_lazy, reverse
 from calendarapp.models.event import DetalleActividadAcademica
 import requests
 from calendarapp.models.calendario import HorarioSemestral
-from calendarapp.forms import HorarioSemestralForm, SolicitarCita
-from accounts.models.user import FuncionarioDocente, Persona, MateriaFuncionarioDocente, Materia, Departamento
+from calendarapp.forms import HorarioSemestralForm, ActividadAcademicaForm
+from accounts.models.user import FuncionarioDocente, Persona, Materia, Departamento, User, Facultad
 from calendarapp.models import EventMember, Event
+from calendarapp.models.event import Parametro
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
-
+from django.views.generic import CreateView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+from datetime import datetime, timedelta
 
 def get_date(req_day):
     if req_day:
@@ -208,11 +213,11 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
             participantes_filtro= DetalleActividadAcademica.objects.filter(id_actividad_academica= event.id_cita.id_actividad_academica)
             participantes_lista = list(participantes_filtro.values('id_participante__nombre', 'id_participante__apellido'))
             
-            # if participantes_filtro.exists():
-            #     participantes= participantes_filtro
-            #     print(participantes)
-            # else:
-            #     participantes= []
+            if participantes_filtro.exists():
+                participantes= participantes_filtro
+                print(participantes)
+            else:
+                participantes= []
 
             
             #estos nombres tienen que mantenerse
@@ -370,7 +375,7 @@ def delCalendarioFuncDoc(request, pk):
 @login_required
 def tutoria(request):
     if request.method == "GET":
-        form = SolicitarCita() 
+        form = ActividadAcademicaForm() 
     
     # else:
     #     if form.is_valid():
@@ -398,6 +403,14 @@ def actualizar_campo(request):
     campo = request.GET.get('campo')
     
     if campo == "facultad":
+        queryset= ""
+        queryset = Facultad.objects.all()
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            options += f'<option value="{item.id_facultad}">{item.descripcion_facultad}</option>'
+            
+    elif campo == "materia":
         selected_option= ""
         selected_option = request.GET.get('id_facultad')
         #obtenemos primeramente los Departamentos de la facultad seleccionada
@@ -412,45 +425,155 @@ def actualizar_campo(request):
         for item in queryset:
             options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'
             
-    elif campo == "materia":
+    elif campo == "funcionariodocente":
         
         selected_option= ""
         selected_option = request.GET.get('id_materia')
         
         #obtenemos el funcionario docente de la materia seleccionada
         queryset= ""
-        queryset= MateriaFuncionarioDocente.objects.filter(id_materia= selected_option)
+        #tengo que obtener el id de la materia y traer el usuario que tenga una relacion con esa materia
+        materia= Materia.objects.get(id_materia= selected_option)
+        usuarios_relacionados= materia.func_doc_materias.all().values('id')
+        funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente__in=usuarios_relacionados)
+        queryset= funcionario_docente
+
         
         # Pasar los datos del queryset a datos HTML
         options = ''
         for item in queryset:
-            options += f'<option value="{item.id_funcionario_docente}">{item.id_funcionario_docente.id_funcionario_docente.nombre} {item.id_funcionario_docente.id_funcionario_docente.apellido}</option>'
-            
+            #options += f'<option value="{item.id_funcionario_docente}">{item.id_funcionario_docente.id_funcionario_docente.nombre} {item.id_funcionario_docente.id_funcionario_docente.apellido}</option>'
+             options += f'<option value="{item.id_funcionario_docente}">{item.id_funcionario_docente.nombre} {item.id_funcionario_docente.apellido}</option>'
 
     return JsonResponse(options, safe=False)
 
-def obtener_participante(request):
-    documento = request.GET.get('nro_documento')
-    id_persona = request.GET.get('id_persona')
+def obtener_horarios_cita(request):
     
-    if id_persona:
-          #obtenemos la persona
-        queryset= ""
-        queryset= Persona.objects.filter(id= id_persona).values("id", "nombre", "apellido")
-        if queryset.count() > 0 :
-            results = list(queryset)
-        else:
-            results= []
-        
-    elif documento:
-        #obtenemos el funcionario docente de la materia seleccionada
-        queryset= ""
-        queryset= Persona.objects.filter(documento= documento).values("id", "nombre", "apellido")
-        if queryset.count() > 0:
-            results = list(queryset)
-        else:
-            results= []
+    tipo = request.GET.get('tipo_acti_academica')
+    func_doc = request.GET.get('id_func_doc')
+    #el parametro cargaremos en minutos y ese vamos a tomar como valor para poder calcular el tiempo entre horarios del funcionario/docente
 
+    #logica para obtener los horarios disponibles del funcionario/docente de acuerdo al horario del mismo y si este rango de horarios aun se 
+    #encuentra disponible
+    
+    #primero traemos el parametro de minutos que se encuentra disponible de acuerdo a la actividad academica (tuto u orie academ )
+    if tipo== "tutoria":
+        parametro = Parametro.objects.filter(es_tutoria= True, id_unidad_medida__descripcion_unidad_medida__contains='minutos').values('valor')
+    elif tipo== "ori_academica":
+        parametro = Parametro.objects.filter(es_orientacion_academica= True, id_unidad_medida__descripcion_unidad_medida__contains='minutos').values('valor')
+    else:
+        parametro= ""
+    
+    #vamos a consultar los horarios cargados del funcionario_docente cuyo semestre aun no haya finalizado
+    horario_func_doc= HorarioSemestral.objects.filter(id_funcionario_docente= func_doc, id_convocatoria__fecha_fin__gt=datetime.now())
+    
+        
+def dividir_fechas_en_minutos(fecha1, fecha2, minutos):
+    # Convertir las fechas de strings a objetos datetime
+    fecha1 = datetime.strptime(fecha1, '%Y-%m-%d %H:%M:%S')
+    fecha2 = datetime.strptime(fecha2, '%Y-%m-%d %H:%M:%S')
+
+    # Calcular la diferencia en minutos
+    diferencia = fecha2 - fecha1
+    minutos_totales = int(diferencia.total_seconds() / 60)
+
+    # Dividir la diferencia en minutos según el tercer parámetro
+    divisiones = []
+    for i in range(minutos, minutos_totales + minutos, minutos):
+        fecha_division = fecha1 + timedelta(minutes=i)
+        divisiones.append(fecha_division)
+
+    return divisiones
+
+
+    
     return JsonResponse(results, safe=False)
 
+# def obtener_participante(request):
+#     documento = request.GET.get('nro_documento')
+#     id_persona = request.GET.get('id_persona')
+    
+#     if id_persona:
+#           #obtenemos la persona
+#         queryset= ""
+#         queryset= Persona.objects.filter(id= id_persona).values("id", "nombre", "apellido")
+#         if queryset.count() > 0 :
+#             results = list(queryset)
+#         else:
+#             results= []
+        
+#     elif documento:
+#         #obtenemos el funcionario docente de la materia seleccionada
+#         queryset= ""
+#         queryset= Persona.objects.filter(documento= documento).values("id", "nombre", "apellido")
+#         if queryset.count() > 0:
+#             results = list(queryset)
+#         else:
+#             results= []
 
+#     return JsonResponse(results, safe=False)
+
+
+class ActividadAcademicaCreateView(LoginRequiredMixin, CreateView):
+    model = Event
+    form_class = ActividadAcademicaForm
+    template_name = 'calendarapp/actividad_academica_create.html'
+    success_url = reverse_lazy('calendarapp:calenders')
+    #permission_required = 'erp.add_sale'
+    url_redirect = success_url
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
+    
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'search_participantes':
+                data = []
+                participantes = Persona.objects.filter(documento__icontains=request.POST['term'])[0:10]
+                for i in participantes:
+                    item = i.toJSON()
+                    item['value'] = i.nombre + ' ' + i.apellido
+                    data.append(item)
+            # elif action == 'search_facultad':
+            #     data = []
+            #     facultades = Facultad.objects.all()
+            #     for i in facultades:
+            #         item = i.toJSON()
+            #         item['value'] = i.descripcion_facultad
+            #         data.append(item)
+            elif action == 'add':
+                with transaction.atomic():
+                    print('entro')
+                    # actividad_academica = json.loads(request.POST['actividad_academica'])
+                    # cita = Event()
+                    # cita.date_joined = actividad_academica['date_joined']
+                    # cita.cli_id = actividad_academica['cli']
+                    # cita.subtotal = float(actividad_academica['subtotal'])
+                    # cita.iva = float(actividad_academica['iva'])
+                    # cita.total = float(actividad_academica['total'])
+                    # cita.save()
+                    # for i in vents['products']:
+                    #     det = DetSale()
+                    #     det.sale_id = sale.id
+                    #     det.prod_id = i['id']
+                    #     det.cant = int(i['cant'])
+                    #     det.price = float(i['pvp'])
+                    #     det.subtotal = float(i['subtotal'])
+                    #     det.save()
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Creación de una Cita'
+        context['entity'] = 'Actividad Academica'
+        context['list_url'] = self.success_url
+        context['action'] = 'add'
+        return context

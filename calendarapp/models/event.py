@@ -70,7 +70,8 @@ class Event(EventAbstract):
     id_materia= models.ForeignKey(Materia, on_delete=models.SET_NULL, blank=True, null=True)
     id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='departamento')
     id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='funcionario_docente_encarcado')
-    id_persona_receptor= models.ForeignKey(Persona, on_delete=models.SET_NULL, related_name='persona_receptor', blank=True, null=True)
+   #comento esto
+    #id_persona_receptor= models.ForeignKey(Persona, on_delete=models.SET_NULL, related_name='persona_receptor', blank=True, null=True)
     id_persona_alta= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_alta')
     datetime_inicio_estimado = models.DateTimeField()
     datetime_fin_estimado = models.DateTimeField()
@@ -79,6 +80,8 @@ class Event(EventAbstract):
     datetime_registro = models.DateTimeField(auto_now=True)
     observacion= models.CharField(max_length=500, null= True, blank=True)
     nro_curso= models.CharField(max_length=30, null= True, blank=True)
+    #comento esto
+    #participante_acti_academ= models.ManyToManyField(Persona, blank=True, help_text='Los participantes de la actividad academica', related_name='participante_acti_academica', through= 'DetalleActividadAcademica')
 
     # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
     # title = models.CharField(max_length=200, unique=True)
@@ -113,23 +116,24 @@ Este método puede ser utilizado por otros componentes de la aplicación que nec
         verbose_name_plural = "Actividades Academicas"
 
 
+
 class DetalleActividadAcademica(models.Model):
     id_detalle_actividad_Academica= models.AutoField(primary_key=True)
-    id_participante= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_participante')
-    id_actividad_academica= models.ForeignKey(Event, on_delete=models.PROTECT, related_name='actividad_academica')
-    es_docente = models.BooleanField(default=False)
-    es_funcionario = models.BooleanField(default=False)
-    es_alumno = models.BooleanField(default=False)
+    id_participante= models.ForeignKey(Persona, on_delete=models.CASCADE, related_name='persona_participante')
+    id_actividad_academica= models.ForeignKey(Event, on_delete=models.CASCADE, related_name='actividad_academica')
+    # es_docente = models.BooleanField(default=False)
+    # es_funcionario = models.BooleanField(default=False)
+    # es_alumno = models.BooleanField(default=False)
 
-    class Meta:
-        constraints = [
-            CheckConstraint(
-                check=Q(es_docente=True, es_funcionario=False, es_alumno=False) |
-                      Q(es_docente=False, es_funcionario=True, es_alumno=False) |
-                      Q(es_docente=False, es_funcionario=False, es_alumno=True),
-                name='unicos_participantes'
-            )
-        ]
+    # class Meta:
+    #     constraints = [
+    #         CheckConstraint(
+    #             check=Q(es_docente=True, es_funcionario=False, es_alumno=False) |
+    #                   Q(es_docente=False, es_funcionario=True, es_alumno=False) |
+    #                   Q(es_docente=False, es_funcionario=False, es_alumno=True),
+    #             name='unicos_participantes'
+    #         )
+    #     ]
 
 class UnidadMedida(models.Model):
     id_unidad_medida = models.AutoField(primary_key=True)
@@ -168,7 +172,7 @@ class Cita(models.Model):
     id_parametro = models.ForeignKey(Parametro, on_delete=models.PROTECT, related_name='parametro_cita')
     es_tutoria = models.BooleanField(default=False)
     es_orientacion_academica = models.BooleanField(default=False)
-    es_notificable = models.BooleanField(default=False)
+    es_notificable = models.BooleanField(default=True)
     motivo= models.CharField(max_length=500, null= True)
 
     class Meta:

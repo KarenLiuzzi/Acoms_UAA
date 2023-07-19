@@ -1,0 +1,402 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% comment %} agregado {% endcomment %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block title %}Crear Cita{% endblock title %}
+
+{% block breadcrumb %}
+    {% comment %} <div>
+        <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
+        <p>AcOMs</p>  
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#">Event List</a></li>
+    </ul> {% endcomment %}
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<form method="post">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">
+                {% if action == 'add' %}
+                <i class="bi bi-plus-lg"></i>
+                {% else %}
+                    <i class="fas fa-edit"></i>
+                {% endif %}
+                {{ title }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Cita</h3>
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" name="action" value="{{ action }}">
+                            <div class="form-group">
+                                <label class="label" for="id_facultad">Facultad</label> 
+                                {{ form.id_facultad}} 
+                                <span class="text-danger">{{ form.errors.id_facultad }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_materia">Materia</label>
+                                {{ form.id_materia}}
+                                <span class="text-danger">{{ form.errors.id_materia }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_funcionario_docente_encargado">Docente</label>
+                                {{ form.id_funcionario_docente_encargado }}
+                                <span class="text-danger">{{ form.errors.id_funcionario_docente_encargado }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="motivo">Motivo</label>
+                                <textarea placeholder= "Describa el motivo de la cita..." class="form-control" rows="4" cols="50" name="motivo" required="True" maxlength="500"></textarea>                                
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="nro_curso">Nro. Curso</label>
+                                {{ form.nro_curso }}
+                                <span class="text-danger">{{ form.errors.motivo }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-boxes"></i> Detalle de participantes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Buscador de participantes:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search"
+                                           placeholder="Ingrese número de cédula del participante..." autocomplete="off">
+                                    <span class="input-group-append">
+                                    <button type="button" class="btn btn-danger btn-flat btnClearSearch" title="Cancelar"><i class="bi bi-x-lg"></i></button>
+                                  </span>
+                                </div>
+                            </div>
+                            <hr>
+                            <button type="button" class="btn btn-danger btn-xs btn-flat btnRemoveAll">
+                                <i class="bi bi-trash2"></i> Eliminar todos los participantes
+                            </button>
+                            <hr>
+                            <table class="table table-bordered" id="tblParticipantes">
+                                <thead>
+                                <tr>
+                                    <th>Opción</th>
+                                    <th>Participante</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="col-md-12">
+                <div class="tile">    
+                    <div class="tile-body">
+                        <div class="table-responsive">
+                            <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 102.281px;">Fecha</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.312px;">Dia</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Horario</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Opciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>       
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary btn-flat">
+                <i class="bi bi-calendar-check"></i> Guardar registro
+            </button>
+            <a href="{{ index }}" class="btn btn-danger btn-flat">
+                <i class="bi bi-calendar-x"></i> Cancelar
+            </a>
+        </div>
+    </div>
+</form>
+
+{% endblock content %}
+
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <link href="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.js' %}"></script>
+
+    <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script> 
+
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+    <script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+
+    <!-- Jquery Confirm -->
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+    <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+    <!-- Functions -->
+    <script src="{% static 'js/functions.js' %}"></script>
+
+    <script>   
+
+        var tblParticipantes;
+        var actividad_academica = {
+            items: {
+                id_facultad: '',
+                id_materia: '',
+                id_funcionario_docente_encargado: '',
+                motivo: '',
+                nro_curso: '',
+                participantes: []
+            },
+
+            add: function (item) {
+                this.items.participantes.push(item);
+                this.list();
+            },
+            verificar_participante: function (valor) {
+                var encontrado= false;
+                for (var i = 0; i < this.items.participantes.length; i++) {
+                    if (this.items.participantes[i]["id"] === valor) {
+                      encontrado = true;
+                      break;
+                    }
+                }
+                  
+                  if (encontrado) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+            },
+            list: function () {
+                
+                tblParticipantes = $('#tblParticipantes').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    data: this.items.participantes,
+                    columns: [
+                        {"data": "id"},
+                        {"data": "value"},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return '<a rel="remove" class="btn btn-danger btn-xs btn-flat" style="color: white;" title="Eliminar" id="' + data + '"><i class="bi bi-dash"></i></a>';
+                            }
+                        },
+                    ]
+
+                });
+            },
+        };
+      
+
+        $(document).ready(function() {
+
+
+            //cuando se cargue la pagina traer todas las facultades
+            actualizarfacultad();
+
+            function actualizarfacultad() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'facultad'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_facultad').html(data);
+                        actualizarmateria();
+                    }
+                });
+            }
+
+             //actualizar el campo de la materia de acuerdo a la facultad seleccionada
+             function actualizarmateria() {
+                var selected_option = $('#id_id_facultad').val();
+                //console.log(selected_option)
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'id_facultad': selected_option,
+                        'campo': 'materia'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_materia').html(data);
+                        actualizarfuncionariodocente();
+                    }
+                
+                });
+            }
+            //ejecutar si cambia la facultad para actualizar materia y func/doc
+            $('#id_id_facultad').change(function() {
+                actualizarmateria()
+                actualizarfuncionariodocente()
+            });    
+
+            //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
+            function actualizarfuncionariodocente() {
+                var selected_option = $('#id_id_materia').val();
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'id_materia': selected_option,
+                        'campo': 'funcionariodocente'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_funcionario_docente_encargado').html(data);
+                    }
+                });
+            }
+
+            //ejecutar si cambia la materia para actualiar fun/doc
+            $('#id_id_materia').change(function() {
+                actualizarfuncionariodocente()
+            });    
+
+
+            //aplicar formato select2 a todos los dropdowns
+            $('.select2').select2({
+                theme: "bootstrap4",
+                language: 'es'
+            });
+
+
+            // search participantes
+
+            $('input[name="search"]').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'POST',
+                        data: {
+                            'action': 'search_participantes',
+                            'term': request.term
+                        },
+                        dataType: 'json',
+                    }).done(function (data) {
+                        response(data);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        //alert(textStatus + ': ' + errorThrown);
+                    }).always(function (data) {
+
+                    });
+                },
+                delay: 500,
+                minLength: 1,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    console.clear();
+                    var validar;
+                    validar= actividad_academica.verificar_participante(ui.item["id"])
+                    if (validar) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'El participante ya fue agregado en la lista!',
+                        });
+                    } 
+                    else{
+                        actividad_academica.add(ui.item);
+                        $(this).val('');    
+                    }                    
+                }
+            });
+
+            
+
+            //elimina todos los participantes
+            $('.btnRemoveAll').on('click', function () {
+                if (actividad_academica.items.participantes.length === 0) return false;
+                alert_action('Notificación', '¿Estas seguro de eliminar todos los participantes?', function () {
+                    actividad_academica.items.participantes = [];
+                    actividad_academica.list();
+                });
+            });
+
+            //eliminar por item de participante
+            $('#tblParticipantes tbody')
+                .on('click', 'a[rel="remove"]', function () {
+                    var tr = tblParticipantes.cell($(this).closest('td, li')).index();
+                    alert_action('Notificación', '¿Estas seguro de eliminar el participante?', function () {
+                        actividad_academica.items.participantes.splice(tr.row, 1);
+                        actividad_academica.list();
+                    });
+                })
+
+            //actualizar las busqueda de CI
+            $('.btnClearSearch').on('click', function () {
+                $('input[name="search"]').val('').focus();
+            });
+
+
+            // Cita submit, asignacion de atributos para enviar
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+
+                //if(vents.items.products.length === 0){
+                //    message_error('Debe al menos tener un item en su detalle de venta');
+                //    return false;
+                //}
+
+                actividad_academica.items.motivo = $('input[name="motivo"]').val();
+                //actividad_academica.items.cli = $('select[name="cli"]').val();
+                var parameters = new FormData();
+                parameters.append('action', $('input[name="action"]').val());
+                parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
+                submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, function () {
+                    location.href = '/calenders/';
+                });
+            });
+
+        });
+
+        actividad_academica.list();
+
+    </script>
+
+    
+{% endblock extrascripts %}
