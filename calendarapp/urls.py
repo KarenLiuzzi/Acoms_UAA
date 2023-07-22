@@ -1,5 +1,5 @@
 from django.urls import path
-from calendarapp.views.other_views import formCalendarioFuncDoc, EditCalendarioFuncDoc, tipo_cita ,AddCalendarioFuncDoc, delCalendarioFuncDoc, tutoria, ori_academica, actualizar_campo, ActividadAcademicaCreateView #ListCalendarioFuncDoc
+from calendarapp.views.other_views import formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita ,AddCalendarioFuncDoc, delCalendarioFuncDoc, tutoria, ori_academica, actualizar_campo, ActividadAcademicaCreateView #ListCalendarioFuncDoc
 
 from . import views
 
@@ -48,5 +48,7 @@ urlpatterns = [
     
     path('actualizar_campo/', actualizar_campo, name='actualizar_campo'),
     #path('buscar_participante/', obtener_participante),
+    
+    path('obtener_horarios_cita/', obtener_horarios_cita),
 
 ]

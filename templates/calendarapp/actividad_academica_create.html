@@ -11,7 +11,7 @@
 {% block breadcrumb %}
     {% comment %} <div>
         <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
-        <p>AcOMs</p>  
+        <p>AcOMs</p>
     </div>
     <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
@@ -21,7 +21,7 @@
 
 {% block content %}
 
-<form method="post">
+<form method="post" id="tutoria">
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">
@@ -43,8 +43,8 @@
                         <div class="card-body">
                             <input type="hidden" name="action" value="{{ action }}">
                             <div class="form-group">
-                                <label class="label" for="id_facultad">Facultad</label> 
-                                {{ form.id_facultad}} 
+                                <label class="label" for="id_facultad">Facultad</label>
+                                {{ form.id_facultad}}
                                 <span class="text-danger">{{ form.errors.id_facultad }}</span>
                             </div>
                             <div class="form-group">
@@ -59,12 +59,17 @@
                             </div>
                             <div class="form-group">
                                 <label class="label" for="motivo">Motivo</label>
-                                <textarea placeholder= "Describa el motivo de la cita..." class="form-control" rows="4" cols="50" name="motivo" required="True" maxlength="500"></textarea>                                
+                                <textarea placeholder= "Describa el motivo de la cita..." class="form-control" rows="4" cols="50" name="motivo" required="True" maxlength="500"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="nro_curso">Nro. Curso</label>
-                                {{ form.nro_curso }}
-                                <span class="text-danger">{{ form.errors.motivo }}</span>
+                                <div class="input-group">
+                                    {{ form.nro_curso }}
+                                    <span class="text-danger">{{ form.errors.motivo }}</span>
+                                    <button type="button" class="btn btn-primary" name="BuscarHorarios">
+                                        Buscar Horarios Disponibles
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -73,7 +78,7 @@
                 <div class="col-lg-5">
                     <div class="card card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-boxes"></i> Detalle de participantes</h3>
+                            <h3 class="card-title"><i class="fas fa-boxes"></i>Participantes adicionales</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
@@ -108,19 +113,21 @@
         </div>
 
             <div class="col-md-12">
-                <div class="tile">    
+                <div class="tile">
                     <div class="tile-body">
                         <div class="table-responsive">
-                            <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                            <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
+                                        <table class="table table-hover table-bordered dataTable no-footer" id="tblHorarios" role="grid" aria-describedby="sampleTable_info">
                                             <thead>
                                                 <tr role="row">
-                                                    <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 102.281px;">Fecha</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.312px;">Dia</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Horario</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Opciones</th>
+                                                    <th>Fecha</th>
+                                                    <th>Dia</th>
+                                                    <th>Horario Inicio</th>
+                                                    <th>Horario Fin</th>
+                                                    <th>Mes</th>
+                                                    <th>Opción</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -132,12 +139,12 @@
                         </div>
                     </div>
                 </div>
-            </div>       
+            </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary btn-flat">
+            {% comment %} <button type="submit" class="btn btn-primary btn-flat">
                 <i class="bi bi-calendar-check"></i> Guardar registro
-            </button>
+            </button> {% endcomment %}
             <a href="{{ index }}" class="btn btn-danger btn-flat">
                 <i class="bi bi-calendar-x"></i> Cancelar
             </a>
@@ -150,16 +157,16 @@
 {% block extrascripts %}
     <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <link href="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.css' %}" rel="stylesheet"/>
     <script src="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.js' %}"></script>
 
     <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
     <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
-    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script> 
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
 
     <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
@@ -174,7 +181,13 @@
     <!-- Functions -->
     <script src="{% static 'js/functions.js' %}"></script>
 
-    <script>   
+    <script>
+
+        var hora_inicio;
+        var hora_fin;
+        var convocatoria;
+        var tblHorarios;
+        var mi_form= $('#tutoria')
 
         var tblParticipantes;
         var actividad_academica = {
@@ -184,7 +197,10 @@
                 id_funcionario_docente_encargado: '',
                 motivo: '',
                 nro_curso: '',
-                participantes: []
+                participantes: [],
+                convocatoria: '',
+                datetime_inicio_estimado: '',
+                datetime_fin_estimado: ''
             },
 
             add: function (item) {
@@ -199,7 +215,7 @@
                       break;
                     }
                 }
-                  
+
                   if (encontrado) {
                     return true;
                   } else {
@@ -207,7 +223,7 @@
                   }
             },
             list: function () {
-                
+
                 tblParticipantes = $('#tblParticipantes').DataTable({
                     responsive: true,
                     autoWidth: false,
@@ -223,7 +239,7 @@
                             class: 'text-center',
                             orderable: false,
                             render: function (data, type, row) {
-                                return '<a rel="remove" class="btn btn-danger btn-xs btn-flat" style="color: white;" title="Eliminar" id="' + data + '"><i class="bi bi-dash"></i></a>';
+                                return '<a rel="remove" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
                             }
                         },
                     ]
@@ -231,9 +247,24 @@
                 });
             },
         };
-      
 
         $(document).ready(function() {
+
+            // Configuración inicial de DataTable horarios con las columnas especificadas
+            tblHorarios= $('#tblHorarios').DataTable({
+                responsive: true,
+                autoWidth: false,
+                destroy: true,
+                columns: [
+                    {"data": "fecha"},
+                    {"data": "dia"},
+                    {"data": "hora_inicio"},
+                    {"data": "hora_fin"},
+                    {"data": "mes"},
+                    {},
+                ],
+                data: [] // Datos vacíos para crear una tabla sin contenido
+            });
 
 
             //cuando se cargue la pagina traer todas las facultades
@@ -268,14 +299,14 @@
                         $('#id_id_materia').html(data);
                         actualizarfuncionariodocente();
                     }
-                
+
                 });
             }
             //ejecutar si cambia la facultad para actualizar materia y func/doc
             $('#id_id_facultad').change(function() {
                 actualizarmateria()
                 actualizarfuncionariodocente()
-            });    
+            });
 
             //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
             function actualizarfuncionariodocente() {
@@ -296,7 +327,7 @@
             //ejecutar si cambia la materia para actualiar fun/doc
             $('#id_id_materia').change(function() {
                 actualizarfuncionariodocente()
-            });    
+            });
 
 
             //aplicar formato select2 a todos los dropdowns
@@ -307,7 +338,6 @@
 
 
             // search participantes
-
             $('input[name="search"]').autocomplete({
                 source: function (request, response) {
                     $.ajax({
@@ -338,15 +368,85 @@
                             title: 'Alerta!',
                             content: 'El participante ya fue agregado en la lista!',
                         });
-                    } 
+                    }
                     else{
                         actividad_academica.add(ui.item);
-                        $(this).val('');    
-                    }                    
+                        $(this).val('');
+                    }
                 }
             });
 
-            
+            //funcion para agregar los componentes a la tabla de horarios
+            function actualizar_horarios(listaDiccionarios) {
+
+                tblHorarios= $('#tblHorarios').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    data: listaDiccionarios,
+                    columns: [
+                        {"data": "fecha"},
+                        {"data": "dia"},
+                        {"data": "hora_inicio"},
+                        {"data": "hora_fin"},
+                        {"data": "mes"},
+                        {"data": "convocatoria"},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [-1],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return '<button type="button" class="btn btn-primary btn-flat btn-submit"><i class="bi bi-calendar-check"></i>Registrar Cita</button>';
+                            }
+                        },
+                    ]
+                });
+                
+            }
+
+            // search horarios
+            $('button[name="BuscarHorarios"]').on('click', function (event, ui) {
+                //obtenemos el parametro de func/doc
+                var id_func_doc= $('#id_id_funcionario_docente_encargado').val()
+                if (id_func_doc == null ) {
+
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'Favor seleccione un Docente!',
+                    });
+
+                }
+                else {
+                    $.ajax({
+                        url: '/obtener_horarios_cita/',
+                        data: {
+                            'tipo_acti_academica': 'tutoria',
+                            'id_func_doc': id_func_doc
+                        },
+                        dataType: 'json',
+                    }).done(function (data) {
+                        //convertimos el str a un objeto de lista de diccionarios y pasamos 
+                        var listaDiccionarios = JSON.parse(data)
+
+                        if (listaDiccionarios.length === 0) {
+                        }
+                        else{
+                            actualizar_horarios(listaDiccionarios)
+                        }
+
+
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $.alert({
+                            title: 'Error!',
+                            content: textStatus + ': ' + errorThrown ,
+                        });
+                    }).always(function (data) {
+
+                    });
+                }
+            });
 
             //elimina todos los participantes
             $('.btnRemoveAll').on('click', function () {
@@ -372,18 +472,36 @@
                 $('input[name="search"]').val('').focus();
             });
 
+            // Capturar los datos de la fila del td de horarios cuando se haga clic en el botón
+            $('#tblHorarios').on('click', '.btn-submit' ,function() {
+                var fila = $(this).closest('tr');
+                var datosFila = tblHorarios.row(fila).data();
+                hora_inicio= datosFila.fecha + ' ' + datosFila.hora_inicio
+                hora_fin= datosFila.fecha + ' ' + datosFila.hora_fin
+                convocatoria= datosFila.convocatoria
+                //enviamos el formulario
+                mi_form.submit();
+            });
+
 
             // Cita submit, asignacion de atributos para enviar
             $('form').on('submit', function (e) {
                 e.preventDefault();
 
-                //if(vents.items.products.length === 0){
-                //    message_error('Debe al menos tener un item en su detalle de venta');
-                //    return false;
-                //}
+                //primero debemos validar que los campo obligatorios esten cargados 
 
-                actividad_academica.items.motivo = $('input[name="motivo"]').val();
-                //actividad_academica.items.cli = $('select[name="cli"]').val();
+                //seleccionamos los datos del formulario
+                actividad_academica.items.id_facultad = $('select[name="id_facultad"]').val();
+                actividad_academica.items.id_materia = $('select[name="id_materia"]').val();
+                actividad_academica.items.id_funcionario_docente_encargado = $('select[name="id_funcionario_docente_encargado"]').val();
+                actividad_academica.items.motivo = $('textarea[name="motivo"]').val();
+                actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
+
+                // traer los datos de la seleccion de horario
+                actividad_academica.items.convocatoria =convocatoria;
+                actividad_academica.items.datetime_inicio_estimado = hora_inicio;
+                actividad_academica.items.datetime_fin_estimado = hora_fin;
+
                 var parameters = new FormData();
                 parameters.append('action', $('input[name="action"]').val());
                 parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
@@ -395,8 +513,9 @@
         });
 
         actividad_academica.list();
+        //horarios.list();
 
     </script>
 
-    
+
 {% endblock extrascripts %}
