@@ -110,14 +110,14 @@
                                             <td>
                                                 <div>
                                                     <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-primary"  hx-target="#dialog" hx-get="{% url 'calendarapp:detalles_cita' id_cita=event.id_cita %}" title="Detalles"> {% comment %} hx-get="{% url 'calendarapp:edit_cal_func_doc' pk=registro.id_horario_semestral %}" {% endcomment %}
+                                                    <button type="button" class="btn btn-primary"  hx-target="#dialog" hx-get="{% url 'calendarapp:detalles_cita' id_cita=event.id_cita %}" title="Detalles"> {% comment %} hx-get="{% url 'calendarapp:detalles_cita' id_cita=event.id_cita %}" {% endcomment %}
                                                         <i class="bi bi-eye-fill"></i>
                                                     </button> 
                                                     
                                                     <!-- Button trigger modal -->
                                                     {% if event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' %}
 
-                                                        <button type="button" class="btn btn-primary" hx-target="#dialog" title="Editar"> <i class="bi bi-pencil-fill"></i> </button>
+                                                        <a class="btn btn-primary"  title="Editar" href="{% url 'calendarapp:modificar_cita' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
 
                                                         <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button> 
 

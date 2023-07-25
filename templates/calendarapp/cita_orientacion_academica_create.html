@@ -1,0 +1,495 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% comment %} agregado {% endcomment %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block title %}Crear Cita{% endblock title %}
+
+{% block breadcrumb %}
+    {% comment %} <div>
+        <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
+        <p>AcOMs</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#">Event List</a></li>
+    </ul> {% endcomment %}
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<form method="post" id="orientacion_academica">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">
+                {% if action == 'add' %}
+                <i class="bi bi-plus-lg"></i>
+                {% else %}
+                    <i class="fas fa-edit"></i>
+                {% endif %}
+                {{ title }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Cita</h3>
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" name="action" value="{{ action }}">
+                            <div class="form-group">
+                                <label class="label" for="id_facultad">Facultad</label>
+                                {{ form.id_facultad}}
+                                <span class="text-danger">{{ form.errors.id_facultad }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_funcionario_docente_encargado">Funcionario</label>
+                                {{ form.id_funcionario_docente_encargado }}
+                                <span class="text-danger">{{ form.errors.id_funcionario_docente_encargado }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="motivo">Motivo</label>
+                                <textarea placeholder= "Describa el motivo de la cita..." class="form-control" rows="4" cols="50" name="motivo" required="True" maxlength="500"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="nro_curso">Nro. Curso</label>
+                                <div class="input-group">
+                                    {{ form.nro_curso }}
+                                    <span class="text-danger">{{ form.errors.motivo }}</span>
+                                    <button type="button" class="btn btn-primary" name="BuscarHorarios">
+                                        Buscar Horarios Disponibles
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-boxes"></i>Participantes adicionales</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Buscador de participantes:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search"
+                                           placeholder="Ingrese número de cédula del participante..." autocomplete="off">
+                                    <span class="input-group-append">
+                                    <button type="button" class="btn btn-danger btn-flat btnClearSearch" title="Cancelar"><i class="bi bi-x-lg"></i></button>
+                                  </span>
+                                </div>
+                            </div>
+                            <hr>
+                            <button type="button" class="btn btn-danger btn-xs btn-flat btnRemoveAll">
+                                <i class="bi bi-trash2"></i> Eliminar todos los participantes
+                            </button>
+                            <hr>
+                            <table class="table table-bordered" id="tblParticipantes">
+                                <thead>
+                                <tr>
+                                    <th>Opción</th>
+                                    <th>Participante</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="col-md-12">
+                <div class="tile">
+                    <div class="tile-body">
+                        <div class="table-responsive">
+                            <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-hover table-bordered dataTable no-footer" id="tblHorarios" role="grid" aria-describedby="sampleTable_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>Fecha</th>
+                                                    <th>Dia</th>
+                                                    <th>Horario Inicio</th>
+                                                    <th>Horario Fin</th>
+                                                    <th>Mes</th>
+                                                    <th>Opción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="card-footer">
+
+            <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i>Cancelar</button>
+
+        </div>
+    </div>
+</form>
+
+{% endblock content %}
+
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.js' %}"></script>
+
+    <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+    <script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+
+    <!-- Jquery Confirm -->
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+    <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+    <!-- Functions -->
+    <script src="{% static 'js/functions.js' %}"></script>
+
+    <script>
+
+        var hora_inicio;
+        var hora_fin;
+        var convocatoria;
+        var tblHorarios;
+        var mi_form= $('#orientacion_academica')
+
+        var tblParticipantes;
+        var actividad_academica = {
+            items: {
+                id_facultad: '',
+                id_funcionario_docente_encargado: '',
+                motivo: '',
+                nro_curso: '',
+                participantes: [],
+                convocatoria: '',
+                datetime_inicio_estimado: '',
+                datetime_fin_estimado: ''
+            },
+
+            add: function (item) {
+                this.items.participantes.push(item);
+                this.list();
+            },
+            verificar_participante: function (valor) {
+                var encontrado= false;
+                for (var i = 0; i < this.items.participantes.length; i++) {
+                    if (this.items.participantes[i]["id"] === valor) {
+                      encontrado = true;
+                      break;
+                    }
+                }
+
+                  if (encontrado) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+            },
+            list: function () {
+
+                tblParticipantes = $('#tblParticipantes').DataTable({
+                    searching: false,
+                    paging: false,
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    data: this.items.participantes,
+                    columns: [
+                        {"data": "id"},
+                        {"data": "value"},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return '<a rel="remove" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                            }
+                        },
+                    ]
+
+                });
+            },
+        };
+
+        $(document).ready(function() {
+
+            // Configuración inicial de DataTable horarios con las columnas especificadas
+            tblHorarios= $('#tblHorarios').DataTable({
+                responsive: true,
+                autoWidth: false,
+                destroy: true,
+                columns: [
+                    {"data": "fecha"},
+                    {"data": "dia"},
+                    {"data": "hora_inicio"},
+                    {"data": "hora_fin"},
+                    {"data": "mes"},
+                    {},
+                ],
+                data: [] // Datos vacíos para crear una tabla sin contenido
+            });
+
+
+            //cuando se cargue la pagina traer todas las facultades y funcionarios/docentes
+            actualizarfacultad();
+            actualizarfuncionariodocente();
+
+            function actualizarfacultad() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'facultad'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_facultad').html(data);
+                    }
+                });
+            }
+
+            //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
+            function actualizarfuncionariodocente() {
+                var selected_option = $('#id_id_facultad').val();
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'id_facultad': selected_option,
+                        'campo': 'todos_funcionarios_docentes'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_funcionario_docente_encargado').html(data);
+                    }
+                });
+            }
+
+
+            //aplicar formato select2 a todos los dropdowns
+            $('.select2').select2({
+                theme: "bootstrap4",
+                language: 'es'
+            });
+
+
+            // search participantes
+            $('input[name="search"]').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'POST',
+                        data: {
+                            'action': 'search_participantes',
+                            'term': request.term
+                        },
+                        dataType: 'json',
+                    }).done(function (data) {
+                        response(data);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        //alert(textStatus + ': ' + errorThrown);
+                    }).always(function (data) {
+
+                    });
+                },
+                delay: 500,
+                minLength: 1,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    console.clear();
+                    var validar;
+                    validar= actividad_academica.verificar_participante(ui.item["id"])
+                    if (validar) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'El participante ya fue agregado en la lista!',
+                        });
+                    }
+                    else{
+                        actividad_academica.add(ui.item);
+                        $(this).val('');
+                    }
+                }
+            });
+
+            //funcion para agregar los componentes a la tabla de horarios
+            function actualizar_horarios(listaDiccionarios) {
+
+                tblHorarios= $('#tblHorarios').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    data: listaDiccionarios,
+                    columns: [
+                        {"data": "fecha"},
+                        {"data": "dia"},
+                        {"data": "hora_inicio"},
+                        {"data": "hora_fin"},
+                        {"data": "mes"},
+                        {"data": "convocatoria"},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [-1],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return '<button type="button" class="btn btn-primary btn-flat btn-submit"><i class="bi bi-calendar-check"></i>Registrar Cita</button>';
+                            }
+                        },
+                    ]
+                });
+                
+            }
+
+            // search horarios
+            $('button[name="BuscarHorarios"]').on('click', function (event, ui) {
+                //obtenemos el parametro de func/doc
+                var id_func_doc= $('#id_id_funcionario_docente_encargado').val()
+                if (id_func_doc == null ) {
+
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'Favor seleccione un Docente!',
+                    });
+
+                }
+                else {
+                    $.ajax({
+                        url: '/obtener_horarios_cita/',
+                        data: {
+                            'tipo_acti_academica': 'ori_academica',
+                            'id_func_doc': id_func_doc
+                        },
+                        dataType: 'json',
+                    }).done(function (data) {
+                        //convertimos el str a un objeto de lista de diccionarios y pasamos 
+                        var listaDiccionarios = JSON.parse(data)
+
+                        if (listaDiccionarios.length === 0) {
+                            $.alert({
+                                title: 'Alerta!',
+                                content: 'El Funcionario no posee horarios disponibles en este momento.',
+                            });
+                        }
+                        else{
+                            actualizar_horarios(listaDiccionarios)
+                        }
+
+
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $.alert({
+                            title: 'Error!',
+                            content: textStatus + ': ' + errorThrown ,
+                        });
+                    }).always(function (data) {
+
+                    });
+                }
+            });
+
+            //elimina todos los participantes
+            $('.btnRemoveAll').on('click', function () {
+                if (actividad_academica.items.participantes.length === 0) return false;
+                alert_action('Notificación', '¿Estas seguro de eliminar todos los participantes?', function () {
+                    actividad_academica.items.participantes = [];
+                    actividad_academica.list();
+                });
+            });
+
+            //eliminar por item de participante
+            $('#tblParticipantes tbody')
+                .on('click', 'a[rel="remove"]', function () {
+                    var tr = tblParticipantes.cell($(this).closest('td, li')).index();
+                    alert_action('Notificación', '¿Estas seguro de eliminar el participante?', function () {
+                        actividad_academica.items.participantes.splice(tr.row, 1);
+                        actividad_academica.list();
+                    });
+                })
+
+            //actualizar las busqueda de CI
+            $('.btnClearSearch').on('click', function () {
+                $('input[name="search"]').val('').focus();
+            });
+
+            // Capturar los datos de la fila del td de horarios cuando se haga clic en el botón
+            $('#tblHorarios').on('click', '.btn-submit' ,function() {
+                var fila = $(this).closest('tr');
+                var datosFila = tblHorarios.row(fila).data();
+                hora_inicio= datosFila.fecha + ' ' + datosFila.hora_inicio
+                hora_fin= datosFila.fecha + ' ' + datosFila.hora_fin
+                convocatoria= datosFila.convocatoria
+                //enviamos el formulario
+                mi_form.submit();
+            });
+
+
+            // Cita submit, asignacion de atributos para enviar
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+
+                //primero debemos validar que los campo obligatorios esten cargados 
+
+                //seleccionamos los datos del formulario
+                actividad_academica.items.id_facultad = $('select[name="id_facultad"]').val();
+                actividad_academica.items.id_funcionario_docente_encargado = $('select[name="id_funcionario_docente_encargado"]').val();
+                actividad_academica.items.motivo = $('textarea[name="motivo"]').val();
+                actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
+
+                // traer los datos de la seleccion de horario
+                actividad_academica.items.convocatoria =convocatoria;
+                actividad_academica.items.datetime_inicio_estimado = hora_inicio;
+                actividad_academica.items.datetime_fin_estimado = hora_fin;
+
+                var parameters = new FormData();
+                parameters.append('action', $('input[name="action"]').val());
+                parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
+                submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de solicitar la cita?', parameters, function () {
+                    location.href = '/running-event-list/OriAcademica/';
+                });
+            });
+
+            //boton de cancelar
+            $('.btnCancelar').on('click', function () {
+                alert_action('Notificación', '¿Estas seguro de cancelar el proceso?', function () {
+                    window.location.href= '/running-event-list/OriAcademica/'
+                });
+            });
+
+        });
+
+        actividad_academica.list();
+        //horarios.list();
+
+    </script>
+
+
+{% endblock extrascripts %}

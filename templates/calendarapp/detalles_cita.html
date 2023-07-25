@@ -33,9 +33,19 @@
           </div>
           <div class="row">
             <div class="col-md-20">
-              <label class="label" for="receptor">Receptor:</label>
-              {% if cita.id_cita.id_persona_receptor %}
-                {{ cita.id_cita.id_persona_receptor.nombre|add:' '|title}}{{ cita.id_cita.id_persona_receptor.apellido|title }} 
+              <label class="label" for="receptor">Solicitante:</label>
+              {% if cita.id_cita.id_persona_alta %}
+                {{ cita.id_cita.id_persona_alta.nombre|add:' '|title}}{{ cita.id_cita.id_persona_alta.apellido|title }} 
+              {% else %}
+                ----------
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="receptor">Motivo:</label>
+              {% if cita.id_cita.motivo %}
+                {{ cita.id_cita.motivo}} 
               {% else %}
                 ----------
               {% endif %}
@@ -93,6 +103,19 @@
               {% endif %}
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-md-20">
+              <label class="label" for="tipo">Tipo Cita:</label>
+              {% if cita.es_tutoria %}
+                Tutoría
+              {% elif cita.es_orientacion_academica %}
+                Orientación Académica
+              {% endif %}
+
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-md-20">
               <label class="label" for="participantes">Participantes:</label>
