@@ -48,8 +48,8 @@ def CancelarCita(request, id_cita):
                     storage.discard(message)
                 
             try:
-                record = Event.objects.get(id_actividad_academica=id_cita)
                 #indicar aqui el ID correspondiente al 
+                record = Event.objects.get(id_actividad_academica=id_cita)
                 estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
                 record.id_estado_actividad_academica= estado
                 record.save()

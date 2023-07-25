@@ -17,7 +17,10 @@ En resumen, models.Manager es un componente clave de Django que proporciona una 
 
 class EventManager(models.Manager):
     """ Event manager. select_related: Sin embargo, debes tener en cuenta que esta optimización solo funciona para relaciones ForeignKey y OneToOneField. Si estás trabajando con relaciones ManyToManyField, deberás utilizar el método prefetch_related para optimizar las consultas. """
-
+    #retornar todos los campos de un event
+    # def get_cita(self, id):
+    #     cita= Event.objects.filter(id_actividad_academica= id).values('id_estado_actividad_academica', 'id_actividad_academica').first
+    #     return cita
     #este se usa para traer tanto las citas de tipo tutoria como de orientacion academica
     #def get_all_events(self, user):
     def get_all_events(self):
@@ -94,8 +97,8 @@ class Event(EventAbstract):
     def __str__(self):
         return self.id_actividad_academica.__str__() 
 
-    def get_absolute_url(self):
-        return reverse("calendarapp:event-detail", args=(self.id_actividad_academica,))
+    # def get_absolute_url(self):
+    #     return reverse("calendarapp:event-detail", args=(self.id_actividad_academica,))
     
     """Este código Django define un método get_html_url dentro de un modelo de la aplicación calendarapp. Este método utiliza el decorador @property para indicar que se trata de una propiedad calculada dinámicamente, en lugar de un campo de base de datos almacenado en la instancia del modelo.
 
@@ -107,10 +110,10 @@ Finalmente, el método devuelve la cadena de la etiqueta HTML completa con el en
 
 Este método puede ser utilizado por otros componentes de la aplicación que necesiten representar los eventos en forma de enlaces HTML. Por ejemplo, puede ser utilizado para generar enlaces de eventos en una vista de calendario o en una lista de eventos."""
 
-    @property
-    def get_html_url(self):
-        url = reverse("calendarapp:event-detail", args=(self.id_actividad_academica,))
-        return f'<a href="{url}"> {self.id_actividad_academica} </a>'
+    # @property
+    # def get_html_url(self):
+    #     url = reverse("calendarapp:event-detail", args=(self.id_actividad_academica,))
+    #     return f'<a href="{url}"> {self.id_actividad_academica} </a>'
     
     class Meta:
         verbose_name_plural = "Actividades Academicas"
@@ -134,6 +137,12 @@ class DetalleActividadAcademica(models.Model):
     #             name='unicos_participantes'
     #         )
     #     ]
+    
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['value'] = self.id_participante.nombre + ' ' + self.id_participante.apellido 
+        return item
+    
 
 class UnidadMedida(models.Model):
     id_unidad_medida = models.AutoField(primary_key=True)

@@ -75,12 +75,21 @@
                             </div>
                             <div class="row">
                               <div class="col-md-20">
-                                <label class="label" for="receptor">Receptor:</label>
-                                <label class="label" id="receptor"></label>
+                                <label class="label" for="solicitante">Solicitante:</label>
+                                <label class="label" id="solicitante"></label>
 
 
                               </div>
                             </div>
+                            <div class="row">
+                              <div class="col-md-20">
+                                <label class="label" for="motivo">Motivo:</label>
+                                <label class="label" id="motivo"></label>
+
+
+                              </div>
+                            </div>
+
                             <div class="row">
                               <div class="col-md-20">
                                 <label class="label" for="estado">Estado:</label>
@@ -125,9 +134,18 @@
                                 <label class="label" for="nro_curso">Nro Curso:</label>
                                 <label class="label" id="curso"></label>
 
-
                               </div>
                             </div>
+
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label" for="tipo">Tipo Cita:</label>
+                                  <label class="label" id="tipo"></label>
+  
+  
+                                </div>
+                            </div>
+                            
                             <div class="row">
                               <div class="col-md-20">
                                 <label class="label" for="participantes">Participantes:</label>
@@ -212,11 +230,6 @@
 
           
           select: function(arg) {
-            //console.log('seleccion')
-            //estas tres lineas comento xq no es necesario esta funcionalidad 
-            //var modal = document.getElementById('eventModal')
-            //modal.style.display = 'block'
-            //calendar.unselect()
           },
           // THIS KEY WON'T WORK IN PRODUCTION!!!
           // To make your own Google API key, follow the directions here:
@@ -232,33 +245,21 @@
             var horario = info.event.extendedProps.horario;
             var fecha = info.event.extendedProps.fecha;
             var encargado = info.event.extendedProps.encargado;
-            var receptor = info.event.extendedProps.receptor;
+            //var receptor = info.event.extendedProps.receptor;
+            var solicitante = info.event.extendedProps.solicitante;
+            var motivo = info.event.extendedProps.motivo;
             var estado = info.event.extendedProps.estado;
             var convocatoria = info.event.extendedProps.convocatoria;
             var facultad = info.event.extendedProps.facultad;
             var materia = info.event.extendedProps.materia;
             var observacion = info.event.extendedProps.observacion;
             var curso = info.event.extendedProps.curso;
+            var tipo = info.event.extendedProps.tipo;
             var participantes = info.event.extendedProps.participantes;
             
 
             // Mostrar el modal con los detalles del evento
-            mostrarModal(horario, fecha, encargado, receptor, estado, convocatoria, facultad, materia, observacion, curso, participantes);
-
-            // Construir la URL con el ID de la cita en la ruta
-            //var url = "{% url 'calendarapp:detalles_cita' id_cita=10 %}";
-
-           // Crear un elemento de botón
-          //var button = document.getElementById('prueba-btn');          
-          //button.setAttribute('hx-get', url);
-          // Hacer clic en el botón
-          //button.click();
-
-          //var modal = document.getElementById('eventModal')
-          //modal.style.display = 'block'
-          //calendar.unselect()
-
-          //horario
+            mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes);
 
           },
 
@@ -286,7 +287,7 @@
         calendar.render();
       });
 
-      function mostrarModal(horario, fecha, encargado, receptor, estado, convocatoria, facultad, materia, observacion, curso, participantes) {
+      function mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes) {
         // Obtener el modal
 
         var modal = document.getElementById('eventModal')
@@ -297,13 +298,15 @@
         var modalHorario = modal.querySelector('#horario');
         var modalHfecha = modal.querySelector('#fecha');
         var modalencargado = modal.querySelector('#encargado');
-        var modalreceptor = modal.querySelector('#receptor');
+        var modalsolicitante = modal.querySelector('#solicitante');
+        var modalmotivo = modal.querySelector('#motivo');
         var modalestado = modal.querySelector('#estado');
         var modalconvocatoria = modal.querySelector('#convocatoria');
         var modalfacultad= modal.querySelector('#facultad');
         var modalmateria = modal.querySelector('#materia');
         var modalobservacion = modal.querySelector('#observacion');
         var modalcurso = modal.querySelector('#curso');
+        var modaltipo = modal.querySelector('#tipo');
         var modalparticipantes = modal.querySelector('#participantes');
         modalparticipantes.innerHTML = '';
 
@@ -315,7 +318,7 @@
           // Iterar sobre cada valor en el array
           participantes.forEach(function(value) {
             // Crear un elemento de lista y agregarlo a la lista
-            console.log(value)
+            //console.log(value)
             var liElement = document.createElement('li');
             liElement.textContent = value["id_participante__nombre"] + " " + value["id_participante__apellido"];
             modalparticipantes.appendChild(liElement);
@@ -330,13 +333,16 @@
         modalHorario.textContent = horario;
         modalHfecha.textContent = fecha;
         modalencargado.textContent = encargado;
-        modalreceptor.textContent = receptor;
+        modalsolicitante.textContent = solicitante;
+        modalmotivo.textContent = motivo;
         modalestado.textContent = estado;
         modalconvocatoria.textContent = convocatoria;
         modalfacultad.textContent = facultad;
         modalmateria.textContent = materia;
         modalobservacion.textContent = observacion;
         modalcurso.textContent = curso;
+        modaltipo.textContent = tipo;
+        
         //modalparticipantes= participantes;
 
     

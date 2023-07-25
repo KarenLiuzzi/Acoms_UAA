@@ -28,7 +28,7 @@
                 {% if action == 'add' %}
                 <i class="bi bi-plus-lg"></i>
                 {% else %}
-                    <i class="fas fa-edit"></i>
+                <i class="bi bi-calendar4-event"></i>
                 {% endif %}
                 {{ title }}
             </h3>
@@ -145,9 +145,8 @@
             {% comment %} <button type="submit" class="btn btn-primary btn-flat">
                 <i class="bi bi-calendar-check"></i> Guardar registro
             </button> {% endcomment %}
-            <a href="{{ index }}" class="btn btn-danger btn-flat">
-                <i class="bi bi-calendar-x"></i> Cancelar
-            </a>
+            <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i>Cancelar</button>
+
         </div>
     </div>
 </form>
@@ -181,15 +180,17 @@
     <!-- Functions -->
     <script src="{% static 'js/functions.js' %}"></script>
 
-    <script>
+    <script>       
 
         var hora_inicio;
         var hora_fin;
         var convocatoria;
         var tblHorarios;
         var mi_form= $('#tutoria')
-
         var tblParticipantes;
+        var lista_participantes = {{ det|safe }}
+        var lista_horario = {{ horario|safe }}
+
         var actividad_academica = {
             items: {
                 id_facultad: '',
@@ -225,6 +226,8 @@
             list: function () {
 
                 tblParticipantes = $('#tblParticipantes').DataTable({
+                    searching: false,
+                    paging: false,
                     responsive: true,
                     autoWidth: false,
                     destroy: true,
@@ -246,26 +249,22 @@
 
                 });
             },
+            
+            actualizar_participantes: function (lista_participantes) {
+                
+                //Iteramos uno a uno
+                for (var i = 0; i < lista_participantes.length; i++) {
+                    var newItem = lista_participantes[i]
+                    console.log(newItem)
+                    this.items.participantes.push(newItem);
+                }
+                this.list();
+            },
         };
 
+
+
         $(document).ready(function() {
-
-            // Configuración inicial de DataTable horarios con las columnas especificadas
-            tblHorarios= $('#tblHorarios').DataTable({
-                responsive: true,
-                autoWidth: false,
-                destroy: true,
-                columns: [
-                    {"data": "fecha"},
-                    {"data": "dia"},
-                    {"data": "hora_inicio"},
-                    {"data": "hora_fin"},
-                    {"data": "mes"},
-                    {},
-                ],
-                data: [] // Datos vacíos para crear una tabla sin contenido
-            });
-
 
             //cuando se cargue la pagina traer todas las facultades
             actualizarfacultad();
@@ -350,6 +349,7 @@
                         dataType: 'json',
                     }).done(function (data) {
                         response(data);
+                        console.log(data)
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         //alert(textStatus + ': ' + errorThrown);
                     }).always(function (data) {
@@ -360,7 +360,7 @@
                 minLength: 1,
                 select: function (event, ui) {
                     event.preventDefault();
-                    console.clear();
+                    //console.clear();
                     var validar;
                     validar= actividad_academica.verificar_participante(ui.item["id"])
                     if (validar) {
@@ -371,19 +371,54 @@
                     }
                     else{
                         actividad_academica.add(ui.item);
+                        console.log(ui.item)
                         $(this).val('');
                     }
                 }
             });
 
-            //funcion para agregar los componentes a la tabla de horarios
-            function actualizar_horarios(listaDiccionarios) {
+            //Para agregar los componentes a la tabla de horarios
+            if (lista_horario.length === 0){
+
+                console.log('no detecto')
+                tblHorarios= $('#tblHorarios').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    columns: [
+                        {"data": "fecha"},
+                        {"data": "dia"},
+                        {"data": "hora_inicio"},
+                        {"data": "hora_fin"},
+                        {"data": "mes"},
+                        {},
+                    ],
+                    data: [] // Datos vacíos para crear una tabla sin contenido
+                });
+
+            }
+            else {
+                
+                console.log(lista_horario)
+                //si no esta vacio vamos a iterar para extraer los valores que nos interesan
+                var newData = [];
+                for (var i = 0; i < lista_horario.length; i++) {
+                    var newItem = {
+                        fecha: lista_horario[i].fecha,
+                        dia: lista_horario[i].dia,
+                        hora_inicio: lista_horario[i].hora_inicio,
+                        hora_fin: lista_horario[i].hora_fin,
+                        mes: lista_horario[i].mes,
+                        convocatoria: lista_horario[i].convocatoria,
+                    };
+                    newData.push(newItem);
+                }
 
                 tblHorarios= $('#tblHorarios').DataTable({
                     responsive: true,
                     autoWidth: false,
                     destroy: true,
-                    data: listaDiccionarios,
+                    data: newData,
                     columns: [
                         {"data": "fecha"},
                         {"data": "dia"},
@@ -403,8 +438,8 @@
                         },
                     ]
                 });
-                
             }
+    
 
             // search horarios
             $('button[name="BuscarHorarios"]').on('click', function (event, ui) {
@@ -431,6 +466,10 @@
                         var listaDiccionarios = JSON.parse(data)
 
                         if (listaDiccionarios.length === 0) {
+                            $.alert({
+                                title: 'Alerta!',
+                                content: 'El Docente no posee horarios disponibles en este momento.',
+                            });
                         }
                         else{
                             actualizar_horarios(listaDiccionarios)
@@ -505,16 +544,29 @@
                 var parameters = new FormData();
                 parameters.append('action', $('input[name="action"]').val());
                 parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
-                submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de realizar la siguiente acción?', parameters, function () {
-                    location.href = '/calenders/';
+                submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de solicitar la cita?', parameters, function () {
+                    location.href = '/running-event-list/Tutoria/';
+                });
+            });
+
+            //boton de cancelar
+            $('.btnCancelar').on('click', function () {
+                alert_action('Notificación', '¿Estas seguro de cancelar el proceso?', function () {
+                    window.location.href= '/running-event-list/Tutoria/'
                 });
             });
 
         });
 
-        actividad_academica.list();
-        //horarios.list();
+        if (lista_participantes.length === 0){
+            actividad_academica.list();
+        }
+        else {
 
+            actividad_academica.actualizar_participantes(lista_participantes)
+        }
+
+        
     </script>
 
 
