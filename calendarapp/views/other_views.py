@@ -578,7 +578,7 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
         except Exception as e:
             data['error'] = str(e)
             #probar
-        return JsonResponse(data, safe=False, json_dumps_params=[{"showMessage": "Registro Guardado."}])
+        return JsonResponse(data, safe=False) #, json_dumps_params=[{"showMessage": "Registro Guardado."}]
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -653,6 +653,8 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
+                    #para que no cambie mas 
+                    cita.datetime_registro= cita.datetime_registro 
                     cita.save()
                     
                     #traemos la instancia de la actividad academica
@@ -779,6 +781,25 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
+    
+    def get_datos_cita(self):
+        data = []
+        try:
+            #obtenemos todos los datos de la instancia acti academ, incluido el campo de motivo de la tabla cita
+            ins_cita = Cita.objects.filter(id_cita= self.get_object().id_actividad_academica).select_related("id_cita")
+            for item in ins_cita:
+                id_facultad= item.id_cita.id_facultad.id_facultad
+                id_funcionario_docente_encargado= item.id_cita.id_funcionario_docente_encargado
+                #traemos solo el id del func_doc
+                id_funcionario_docente_encargado= list(FuncionarioDocente.objects.filter(id_funcionario_docente= id_funcionario_docente_encargado).values('id_funcionario_docente'))[0]['id_funcionario_docente']
+                id_materia= item.id_cita.id_materia.id_materia
+                nro_curso= item.id_cita.nro_curso
+                motivo= item.motivo
+                auxiliar= {'id_facultad': id_facultad, 'id_funcionario_docente_encargado': id_funcionario_docente_encargado, 'id_materia': id_materia, 'nro_curso': nro_curso, 'motivo': motivo}
+            data.append(auxiliar)                
+        except:
+            pass
+        return data
 
     def get_details_participantes(self):
         data = []
@@ -834,7 +855,7 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
         context['action'] = 'edit'
         context['det'] = json.dumps(self.get_details_participantes())
         context['horario'] = json.dumps(self.get_datos_horario())
-        
+        context['cita'] = json.dumps(self.get_datos_cita())
         return context
 
     
@@ -1033,7 +1054,7 @@ def obtener_horarios_cita(request):
         actividades_academicas= Cita.objects.filter(Q(id_cita__datetime_inicio_estimado__gt=fecha_hoy) | Q(id_cita__datetime_inicio_real__gt=fecha_hoy), es_orientacion_academica=True, id_cita__id_funcionario_docente_encargado= func_doc, id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__contains='pendiente').values('id_cita__datetime_inicio_estimado')
 
     else:
-        actividades_academicas= Cita.Cita.none()
+        actividades_academicas= Cita.objects.none()
     
     #print(actividades_academicas,'actividades academicas')
 
@@ -1041,6 +1062,7 @@ def obtener_horarios_cita(request):
     lista_provisoria= []
 
     if actividades_academicas.exists(): #preguntamos si posee datos 
+        print('entro')
         for item in actividades_academicas:
                 fecha= item['id_cita__datetime_inicio_estimado']            
                 lista_provisoria.append({'fecha': fecha,'hora_inicio': fecha})
@@ -1062,7 +1084,6 @@ def obtener_horarios_cita(request):
     '''caso si tiene registros de calendario y hay casos para excluir se procede a hacer la exclusion
     preguntamos si es que ambos dt estan con datos entonces hacemos la exclusion'''
     if (not dt_aa.empty and not df2.empty):
-        
         # Convertir en tipos de datos correctos para poder operar
         df2['fecha'] = pd.to_datetime(df2['fecha']).dt.date
         df2['dia'] = df2['dia'].astype(str)
@@ -1104,11 +1125,10 @@ def obtener_horarios_cita(request):
         
     # caso si el fun/doc no tiene ningun calendario disponible devolver resultado vacio
     elif (df2.empty):
-        
         horarios_disponibles= pd.DataFrame()
         
     #Finalmente devolvemos un JSON 
-    horarios_disponibles.to_excel("C:/Users/beatr/Documents/horarios_disponibles.xlsx", index=False)
+    #horarios_disponibles.to_excel("C:/Users/beatr/Documents/horarios_disponibles.xlsx", index=False)
 
     '''El método to_json() también admite otros formatos de orientación, como 'split', 'index', 'columns', 'values' y 'table', para adaptarse 
     a diferentes necesidades de estructura JSON. Puedes revisar la documentación de pandas para obtener más detalles sobre estos formatos.'''
