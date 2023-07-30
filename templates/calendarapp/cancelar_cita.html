@@ -1,4 +1,5 @@
-<form hx-post= "{{request.path}}" class="modal-content">
+{% load static %}
+<form hx-post= "{{request.path}}" class="modal-content" id="formcancel">
     {% csrf_token %}
       <div class='modal-header text-center'>
         <h3 class="modal-title w-100">Cancelar Cita</h3> 
@@ -16,16 +17,70 @@
 
         <div class="col-md-12">
             <div class="form-group">
-              <label class="label" for="hora_fin">Está seguro que desea cancelar la cita?</label>
+              <label class="label">Está seguro que desea cancelar la cita?</label>
             </div>
         </div>
-    
+      </div>
+
+      <div class="col-md-12">
+        <textarea placeholder= "Describa el motivo..." class="form-control" rows="4" cols="50" name="motivo" required="True" maxlength="500"></textarea>
+      </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Aceptar</button>
+          <button type="button" class="btn btn-primary" id="cancelar">Aceptar</button>
         </div>  
             
       </div>
 </form>  
 
- 
+<!-- Jquery Confirm -->
+<link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+<script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+<!-- Functions -->
+<script src="{% static 'js/functions.js' %}"></script>
+
+<script>
+  
+  $(document).ready(function() {
+      // Obtener el formulario y el botón de cancelar
+      var form = document.getElementById('formcancel');
+      var botonCancelar = document.getElementById('cancelar');
+      
+      // Agregar el evento click al botón de cancelar
+      botonCancelar.addEventListener('click', function() {
+          // Obtener el valor del campo "motivo"
+          var motivo_cancelacion = $('textarea[name="motivo"]').val();
+
+          if (motivo_cancelacion == "") {
+            $.alert({
+              title: 'Alerta!',
+              content: 'Favor agregar un motivo!',
+          });
+          }
+
+          else {          
+            // Agregar el motivo al atributo hx-post del formulario
+            //form.setAttribute('hx-post', form.getAttribute('hx-post') + '?motivo=' + encodeURIComponent(motivo_cancelacion));
+
+
+            $.ajax({
+              url: form.getAttribute('hx-post'),
+              type: 'POST',
+              data: {
+                  'motivo': motivo_cancelacion
+              },
+              dataType: 'json',
+            }).done(function (data) {
+                location.reload();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert(textStatus + ': ' + errorThrown);
+            }).always(function (data) {
+
+            });
+          }
+          
+      });
+  });
+</script>
+

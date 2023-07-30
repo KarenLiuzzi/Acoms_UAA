@@ -218,7 +218,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
             elif event.es_tutoria:
                 tipo= "Tutoría"
             
-            print(tipo)
+            #print(tipo)
             
             #Participantes
             #participantes= [{"hola": "karen", "hola2": "liuzzi"}, {"hola": "luis", "hola2": "diaz"}]
@@ -582,7 +582,7 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Solicitud de una Cita'
+        context['title'] = 'Solicitud de una Cita para Tutoría'
         context['entity'] = 'Tutoría'
         context['list_url'] = self.success_url
         context['action'] = 'add'
@@ -653,8 +653,6 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
-                    #para que no cambie mas 
-                    cita.datetime_registro= cita.datetime_registro 
                     cita.save()
                     
                     #traemos la instancia de la actividad academica
@@ -687,7 +685,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Solicitud de una Cita'
+        context['title'] = 'Solicitud de una Cita para Orientación Académica'
         context['entity'] = 'Orientación Academica'
         context['list_url'] = self.success_url
         context['action'] = 'add'
@@ -752,6 +750,8 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
+                    #para que no cambie mas 
+                    cita.datetime_registro= cita.datetime_registro 
                     cita.save()
                     
                     
@@ -849,7 +849,7 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edición de una Cita'
+        context['title'] = 'Edición de una Cita de Tutoría'
         context['entity'] = 'Tutoría'
         context['list_url'] = self.success_url
         context['action'] = 'edit'
@@ -858,7 +858,173 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
         context['cita'] = json.dumps(self.get_datos_cita())
         return context
 
+#Clase de editar de una cita tipo Orientacion Academica
+class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
+    model = Event
+    form_class = ActividadAcademicaForm
+    template_name = 'calendarapp/cita_orientacion_academica_edit.html'
+    success_url = 'running-event-list/orientacionAcademica/'
+    #permission_required = 'erp.change_sale'
+    url_redirect = success_url
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'search_participantes':
+                data = []
+                participantes = Persona.objects.filter(documento__icontains=request.POST['term'])[0:10]
+                for i in participantes:
+                    item = i.toJSON()
+                    item['value'] = i.nombre + ' ' + i.apellido
+                    data.append(item)
+            elif action == 'edit':
+                with transaction.atomic():
+                    actividad_academica = json.loads(request.POST['actividad_academica'])
+                    cita = self.get_object() #obtenemos la instancia del objecto
+                    #buscamos el id del estado pendiente
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='pendiente').first()
+                    
+                    #buscamos el primer departamento el cual esta asociado la facultad -- esto con la logica actual
+                    ins_departamento =  Departamento.objects.filter(id_facultad= actividad_academica['id_facultad']).first()
+                    
+                    ''' con la logica posterior
+                    #buscamos el primer departamento al cual esta asociado el funcionario docente  
+                    dep_func_doc= FuncionarioDocente.objects.filter(id_funcionario_docente = actividad_academica['id_funcionario_docente_encargado']).values("id_departamento").first()
+                    dep_func_doc= dep_func_doc["id_departamento'"]
+                    ins_departamento=  Departamento.objects.get(id_departamento= dep_func_doc)
+                    '''
+        
+                    #obtenemos la persona que esta dando de alta 
+                    current_user = request.user
+                    dict = model_to_dict(current_user)
+                    id_persona=  dict["id_persona"]
+                    #convertimos nuestras fechas en formato datetime 
+                    fecha_hora_inicio = datetime.strptime(actividad_academica['datetime_inicio_estimado'], '%d-%m-%Y %H:%M:%S')
+                    fecha_hora_fin = datetime.strptime(actividad_academica['datetime_fin_estimado'], '%d-%m-%Y %H:%M:%S')
+                    #obtener las instancias de los objectos 
+                    ins_convocatoria= Convocatoria.objects.get(id_convocatoria= actividad_academica['convocatoria'])
+                    ins_facultad= Facultad.objects.get(id_facultad= actividad_academica['id_facultad'])
+                    ins_func_doc_encargado= FuncionarioDocente.objects.get(id_funcionario_docente= actividad_academica['id_funcionario_docente_encargado'])
+                    ins_persona= Persona.objects.get(id= id_persona)
+                    
+                    cita.id_estado_actividad_academica = id_estado
+                    cita.id_departamento= ins_departamento
+                    cita.id_convocatoria = ins_convocatoria
+                    cita.id_facultad= ins_facultad
+                    cita.id_funcionario_docente_encargado= ins_func_doc_encargado
+                    cita.id_persona_alta= ins_persona
+                    cita.datetime_inicio_estimado= fecha_hora_inicio
+                    cita.datetime_fin_estimado= fecha_hora_fin
+                    cita.nro_curso= actividad_academica['nro_curso']
+                    #para que no cambie mas 
+                    cita.datetime_registro= cita.datetime_registro 
+                    cita.save()
+                    
+                    #traemos la instancia de la actividad academica
+                    ins_actividad_academica= Event.objects.get(id_actividad_academica= cita.id_actividad_academica)
+                    
+                    # #tambien damos de alta el modelo hijo de cita
+                    cita_hijo= Cita.objects.get(id_cita= ins_actividad_academica)
+                    cita_hijo.motivo= actividad_academica['motivo']
+                    cita_hijo.save()
+                    
+                    #eliminamos todos los detalles de participantes
+                    for i in DetalleActividadAcademica.objects.filter(id_actividad_academica= self.get_object().id_actividad_academica):
+                        i.delete()
+                    
+                    # #guardamos el detalle de participantes
+                    for i in actividad_academica['participantes']:
+                        det_acti = DetalleActividadAcademica()
+                        det_acti.id_actividad_academica= ins_actividad_academica
+                        #obtenemos el id persona del participante
+                        ins_participante= Persona.objects.get(id= i['id'])
+                        det_acti.id_participante= ins_participante
+                        det_acti.save()                    
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
     
+    def get_datos_cita(self):
+        data = []
+        try:
+            #obtenemos todos los datos de la instancia acti academ, incluido el campo de motivo de la tabla cita
+            ins_cita = Cita.objects.filter(id_cita= self.get_object().id_actividad_academica).select_related("id_cita")
+            for item in ins_cita:
+                id_facultad= item.id_cita.id_facultad.id_facultad
+                id_funcionario_docente_encargado= item.id_cita.id_funcionario_docente_encargado
+                #traemos solo el id del func_doc
+                id_funcionario_docente_encargado= list(FuncionarioDocente.objects.filter(id_funcionario_docente= id_funcionario_docente_encargado).values('id_funcionario_docente'))[0]['id_funcionario_docente']
+                nro_curso= item.id_cita.nro_curso
+                motivo= item.motivo
+                auxiliar= {'id_facultad': id_facultad, 'id_funcionario_docente_encargado': id_funcionario_docente_encargado, 'nro_curso': nro_curso, 'motivo': motivo}
+            data.append(auxiliar)                
+        except:
+            pass
+        return data
+
+    def get_details_participantes(self):
+        data = []
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            participantes= DetalleActividadAcademica.objects.filter(id_actividad_academica=self.get_object().id_actividad_academica).values('id_participante')
+            participantes= list(participantes)
+            for i in participantes:
+                id= i['id_participante']
+                #obtenemos la persona
+                id_persona= Persona.objects.get(id= id)
+                item= id_persona.toJSON()
+                item['value'] = id_persona.nombre + ' ' + id_persona.apellido
+                data.append(item)
+                
+        except:
+            pass
+        return data
+    
+    def get_datos_horario(self):
+        data = []
+        try:
+            # Mapear el número de mes al nombre en español
+            meses_espanol = {
+                'January': 'Enero', 'February': 'Febrero', 'March': 'Marzo', 'April': 'Abril', 'May': 'Mayo', 'June': 'Junio',
+                'July': 'Julio', 'August': 'Agosto', 'September': 'Septiembre', 'October': 'Octubre', 'November': 'Noviembre', 'December': 'Diciembre'
+            }
+
+            dias_espanol = {
+            'Monday': 'Lunes', 'Tuesday': 'Martes', 'Wednesday': 'Miércoles',
+            'Thursday': 'Jueves', 'Friday': 'Viernes', 'Saturday': 'Sábado'
+            }
+            
+            cita= Event.objects.get(id_actividad_academica=self.get_object().id_actividad_academica)
+            fecha= cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
+            hora_inicio= cita.datetime_inicio_estimado.strftime('%H:%M:%S')
+            hora_fin= cita.datetime_fin_estimado.strftime('%H:%M:%S')
+            dia= dias_espanol[cita.datetime_inicio_estimado.strftime('%A')]
+            convo= cita.id_convocatoria.id_convocatoria
+            mes= meses_espanol[cita.datetime_inicio_estimado.strftime('%B')]
+            
+            data.append({"fecha": fecha, "hora_inicio": hora_inicio, "hora_fin": hora_fin, "dia": dia, "convocatoria": convo, "mes": mes})
+            
+        except:
+            pass
+        return data
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edición de una Cita de Orientación Académica'
+        context['entity'] = 'Orientación Académica'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        context['det'] = json.dumps(self.get_details_participantes())
+        context['horario'] = json.dumps(self.get_datos_horario())
+        context['cita'] = json.dumps(self.get_datos_cita())
+        return context  
         
 
 def obtener_horarios_cita(request):
@@ -1062,7 +1228,7 @@ def obtener_horarios_cita(request):
     lista_provisoria= []
 
     if actividades_academicas.exists(): #preguntamos si posee datos 
-        print('entro')
+        #print('entro')
         for item in actividades_academicas:
                 fecha= item['id_cita__datetime_inicio_estimado']            
                 lista_provisoria.append({'fecha': fecha,'hora_inicio': fecha})

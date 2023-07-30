@@ -112,7 +112,6 @@ class SignUpForm(forms.ModelForm):
     def clean_documento(self):
         doc = self.cleaned_data.get("documento")
         nro_doc=  Persona.objects.filter(documento= doc)
-        print(nro_doc)
         user_doc = User.objects.filter(documento= doc)
         #validamos si existe una persona con el nro de docuento en nuestra base de datos
         if nro_doc.count() == 0:

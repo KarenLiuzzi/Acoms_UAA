@@ -6,7 +6,7 @@
 
 {% endblock %}
 
-{% block title %}Crear Cita{% endblock title %}
+{% block title %}Editar Cita{% endblock title %}
 
 {% block breadcrumb %}
     {% comment %} <div>
@@ -28,7 +28,7 @@
                 {% if action == 'add' %}
                 <i class="bi bi-plus-lg"></i>
                 {% else %}
-                <i class="bi bi-calendar4-event"></i>
+                <i class="bi bi-pen"></i>
                 {% endif %}
                 {{ title }}
             </h3>
@@ -355,7 +355,7 @@
             //ejecutar si cambia la materia para actualiar fun/doc
             $('#id_id_materia').change(function() {
                 actualizarfuncionariodocente()
-                validar_cambio();
+                //validar_cambio();
             });
 
             //ejecutar si cambia el func_doc actualizar tabla horario

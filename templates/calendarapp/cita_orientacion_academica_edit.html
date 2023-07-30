@@ -6,7 +6,7 @@
 
 {% endblock %}
 
-{% block title %}Crear Cita{% endblock title %}
+{% block title %}Editar Cita{% endblock title %}
 
 {% block breadcrumb %}
     {% comment %} <div>
@@ -175,14 +175,26 @@
 
     <script>
 
+        // Logica para actualizar el datatable de horarios,
+        // 1 - si el usuario aprieta por primera vez el boton de buscar horarios siendo el docente el mismo que el ya solicitado entonces en la tabla 
+        //se debe acoplar los horarios al horario que ya solicito el ususario
+        // 2 - si el ususario aprieta el boton de buscar horarios y el docente es diferente al ya solicitado entonces pisar totalmente la tabla 
+        //de horarios
+        // 3 - si el usuario aprieta por 2da vez o mas el boton de buscar horarios siendo el docente nuevamente el mismo que el ya solicitado entonces 
+        // se crea la tabla de horarios con el ya solicitado y los nuevos horarios 
+
+        var band_boton_horario= 0
         var band_boton_selects= 0
         var hora_inicio;
         var hora_fin;
         var convocatoria;
         var tblHorarios;
         var mi_form= $('#orientacion_academica')
-
         var tblParticipantes;
+        var lista_participantes = {{ det|safe }}
+        var lista_horario = {{ horario|safe }}
+        var lista_cita = {{ cita|safe }}
+
         var actividad_academica = {
             items: {
                 id_facultad: '',
@@ -240,9 +252,21 @@
 
                 });
             },
+            actualizar_participantes: function (lista_participantes) {
+                
+                //Iteramos uno a uno
+                for (var i = 0; i < lista_participantes.length; i++) {
+                    var newItem = lista_participantes[i]
+                    this.items.participantes.push(newItem);
+                }
+                this.list();
+            }         
         };
 
         $(document).ready(function() {
+
+            //cargamos el campo de motivo
+            $('textarea[name="motivo"]').val(lista_cita[0]['motivo']);
 
             function reiniciar_tblHorarios() {
                 
@@ -290,6 +314,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_facultad').html(data);
+                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
+                        if (band_boton_selects == 0){
+                            $('#id_id_facultad').val(lista_cita[0]['id_facultad']);
+                        }
                         band_boton_selects= band_boton_selects + 1
                         validar_cambio();
                         actualizarfuncionariodocente();
@@ -309,6 +337,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_funcionario_docente_encargado').html(data);
+                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
+                        if (band_boton_selects == 1) {
+                            $('#id_id_funcionario_docente_encargado').val(lista_cita[0]['id_funcionario_docente_encargado']);
+                        }
                         band_boton_selects= band_boton_selects + 1
                         validar_cambio();
                     }
@@ -372,6 +404,52 @@
                 }
             });
 
+            //Para agregar los componentes a la tabla de horarios
+            if (lista_horario.length === 0){
+                reiniciar_tblHorarios()
+            }
+            else {
+                
+                //si no esta vacio vamos a iterar para extraer los valores que nos interesan
+                var newData = [];
+                for (var i = 0; i < lista_horario.length; i++) {
+                    var newItem = {
+                        fecha: lista_horario[i].fecha,
+                        dia: lista_horario[i].dia,
+                        hora_inicio: lista_horario[i].hora_inicio,
+                        hora_fin: lista_horario[i].hora_fin,
+                        mes: lista_horario[i].mes,
+                        convocatoria: lista_horario[i].convocatoria,
+                    };
+                    newData.push(newItem);
+                }
+
+                tblHorarios= $('#tblHorarios').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    data: newData,
+                    columns: [
+                        {"data": "fecha"},
+                        {"data": "dia"},
+                        {"data": "hora_inicio"},
+                        {"data": "hora_fin"},
+                        {"data": "mes"},
+                        {"data": "convocatoria"},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [-1],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return '<button type="button" class="btn btn-primary btn-flat btn-submit"><i class="bi bi-calendar-check"></i>Actualizar Cita</button>';
+                            }
+                        },
+                    ]
+                });
+            }
+
             //funcion para agregar los componentes a la tabla de horarios
             function actualizar_horarios(listaDiccionarios) {
 
@@ -433,7 +511,50 @@
                             });
                         }
                         else{
-                            actualizar_horarios(listaDiccionarios)
+                             //si aprieta el boton por primera vez y si el funcionario docente es el mismo que el ya solicitado
+                             if (id_func_doc == lista_cita[0]['id_funcionario_docente_encargado'] && band_boton_horario == 0 ){
+                                // actualizar la tabla completa y agregar el que ya fue solicitado
+                                //console.log('primera vez mismo encargado')
+                                var newItem = {
+                                    fecha: lista_horario[0].fecha,
+                                    dia: lista_horario[0].dia,
+                                    hora_inicio: lista_horario[0].hora_inicio,
+                                    hora_fin: lista_horario[0].hora_fin,
+                                    mes: lista_horario[0].mes,
+                                    convocatoria: lista_horario[0].convocatoria,
+                                };
+                                //console.log(newItem)
+                                //agregagamos en la primera posición
+                                listaDiccionarios.unshift(newItem);
+                                actualizar_horarios(listaDiccionarios)
+
+                            }
+
+                            //si aprieta el boton mas de una vez y si el funcionario docente es el mismo que el ya solicitado
+                            
+                            if (id_func_doc == lista_cita[0]['id_funcionario_docente_encargado'] && band_boton_horario > 0 ){
+                                // actualizar la tabla completa y agregar el que ya fue solicitado
+                                //console.log('mas de una vez mismo encargado')
+                                var newItem = {
+                                    'fecha': lista_horario[0].fecha,
+                                    'dia': lista_horario[0].dia,
+                                    'hora_inicio': lista_horario[0].hora_inicio,
+                                    'hora_fin': lista_horario[0].hora_fin,
+                                    'mes': lista_horario[0].mes,
+                                    'convocatoria': lista_horario[0].convocatoria
+                                };
+                                //console.log(newItem)
+                                //agregagamos en la primera posición
+                                listaDiccionarios.unshift(newItem);
+                                actualizar_horarios(listaDiccionarios)
+
+                            }
+
+                            //si apieta el boton y si el funcionario docente es diferente que el ya solicitado
+                            if (id_func_doc != lista_cita[0]['id_funcionario_docente_encargado']){
+                                //console.log('diferente encargado')
+                                actualizar_horarios(listaDiccionarios)
+                            }
                         }
 
 
@@ -443,6 +564,8 @@
                             content: textStatus + ': ' + errorThrown ,
                         });
                     }).always(function (data) {
+                        //capturamos el nro de vez que ya apreto el boton el ususario para buscar los horarios
+                        band_boton_horario= band_boton_horario + 1
 
                     });
                 }
@@ -518,8 +641,13 @@
 
         });
 
-        actividad_academica.list();
-        //horarios.list();
+        if (lista_participantes.length === 0){
+            actividad_academica.list();
+        }
+        else {
+
+            actividad_academica.actualizar_participantes(lista_participantes)
+        }
 
     </script>
 

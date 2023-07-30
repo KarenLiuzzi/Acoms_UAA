@@ -183,6 +183,9 @@ class Cita(models.Model):
     es_orientacion_academica = models.BooleanField(default=False)
     es_notificable = models.BooleanField(default=True)
     motivo= models.CharField(max_length=500, null= True)
+    motivo_cancelacion = models.CharField(max_length=500, null= True)
+    motivo_rechazo = models.CharField(max_length=500, null= True)
+    
 
     class Meta:
             constraints = [
