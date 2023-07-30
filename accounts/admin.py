@@ -49,8 +49,7 @@ class UserFormCreate(forms.ModelForm):
             #print("paso asignacion persona")
 
         else:
-            #raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
-            print("no paso la asignacion de persona")
+            raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
         return id_persona
     
     def clean_documento(self):

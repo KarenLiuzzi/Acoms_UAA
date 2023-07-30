@@ -7,6 +7,8 @@ from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActiv
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
+from django.db import transaction
+from django.views.decorators.csrf import csrf_exempt
 
 class AllEventsListView(ListView):
     """ All event list views """
@@ -37,9 +39,11 @@ def DetalleCita(request, id_cita):
     contexto= {'cita': cita, 'detalles': detalles}
     return render(request,'calendarapp/detalles_cita.html', context= contexto)
 
-@login_required
+@csrf_exempt
 def CancelarCita(request, id_cita):
     if request.method == "POST":
+        
+            campo = request.POST.get('motivo')
         
             # Eliminar todos los mensajes de error
             storage = messages.get_messages(request)
@@ -48,12 +52,17 @@ def CancelarCita(request, id_cita):
                     storage.discard(message)
                 
             try:
-                #indicar aqui el ID correspondiente al 
-                record = Event.objects.get(id_actividad_academica=id_cita)
-                estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
-                record.id_estado_actividad_academica= estado
-                record.save()
-                return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Cancelada."})})
+                
+                with transaction.atomic():
+                    record = Event.objects.get(id_actividad_academica=id_cita)
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
+                    record.id_estado_actividad_academica= estado
+                    record.save()
+                    #motivo_cancelacion
+                    record_cita= Cita.objects.get(id_cita= id_cita)
+                    record_cita.motivo_cancelacion= campo
+                    record_cita.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Cancelada."})})
 
             except:
                 messages.error(request, 'Ocurrió un error al intentar cancelar la cita.')

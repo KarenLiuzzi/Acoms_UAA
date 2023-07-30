@@ -72,20 +72,21 @@ class ResetPassConfirmView(View):
             password_reset_token = kwargs.get('password_reset_token', None)
             #si los datos son correctos se procede a validar si el token aun es valido para poder mostrar el formulario, caso contrario se direcciona al template de error
             if pk is not None or password_reset_token is not None:
-                print("Value of 'pk' argument:", pk)
-                print("Value of 'password_reset_token' argument:", password_reset_token)
+                #print("Value of 'pk' argument:", pk)
+                #print("Value of 'password_reset_token' argument:", password_reset_token)
                 user= User.objects.get(pk= pk)
                 reset_token_generator_object= ForgotPasswordTokenGenerator()
                 if not reset_token_generator_object.check_token(user, password_reset_token):
-                    print('Token Invalido')
+                    #print('Token Invalido')
                     #redireccionamos a la pantalla de error
                     return render(request, "accounts/error_token.html")
             else:
-                print("No 'pk' argument was provided.")
-                print("No 'password_reset_token' argument was provided.")                
+                pass
+                #print("No 'pk' argument was provided.")
+                #print("No 'password_reset_token' argument was provided.")                
                 
         except Exception as e:
-            print(e)
+            #print(e)
             #redireccionamos a la pantalla de error
             return render(request, "accounts/error_token.html")
         return render(request, self.template_name, context)
@@ -100,8 +101,8 @@ class ResetPassConfirmView(View):
             password_reset_token = kwargs.get('password_reset_token', None)
             #si los datos son correctos procedemos a guardar el objeto actualizado
             if pk is not None or password_reset_token is not None:
-                print("Value of 'pk' argument:", pk)
-                print("Value of 'password_reset_token' argument:", password_reset_token)
+                #print("Value of 'pk' argument:", pk)
+                #print("Value of 'password_reset_token' argument:", password_reset_token)
                 user= User.objects.get(pk= pk)
                 user.set_password(forms.cleaned_data["password1"])
                 user.save()
@@ -125,11 +126,12 @@ def enviarcorreo(forgot_password_urls, destinatario):
         #si es necesario hacer la obtencion del token con una variable global 
         sg= SendGridAPIClient(os.environ.get('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'))
         response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+        #print(response.status_code)
+        #print(response.body)
+        #print(response.headers)
     except Exception as e:
-        print(e)
+        pass
+        #print(e)
 
 #@login_required
 #este me esta causando errores!

@@ -1,5 +1,5 @@
 from django.urls import path
-from calendarapp.views.other_views import formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita ,AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, TutoriaCreateView, OrientacionAcademicaCreateView, TutoriaUpdateView #ListCalendarioFuncDoc
+from calendarapp.views.other_views import formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita ,AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, TutoriaCreateView, OrientacionAcademicaCreateView, TutoriaUpdateView, OrientacionAcademicaUpdateView #ListCalendarioFuncDoc
 
 from calendarapp.views import CalendarView, CalendarViewNew, AllEventsListView, RunningEventsListView, DetalleCita, CancelarCita
 
@@ -28,28 +28,18 @@ urlpatterns = [
     #     views.EventMemberDeleteView.as_view(),
     #     name="remove_event",
     # ),
-    path("all-event-list/", AllEventsListView.as_view(), name="all_events"),
-    path(
-        "running-event-list/<str:tipo_cita>/",
-        RunningEventsListView.as_view(),
-        name="running_events",
-    ),
     
+    #Citas
+    path("tipoCita/", tipo_cita, name="tipo_cita"),
+    path('actualizar_campo/', actualizar_campo, name='actualizar_campo'),
     path("detallesCita/<int:id_cita>/", DetalleCita, name="detalles_cita"),
     path("cita/cancelar/<int:id_cita>/", CancelarCita, name="cancelar_cita"),
-    path("modificarCita/<int:pk>/", TutoriaUpdateView.as_view(), name="modificar_cita"),
-    #AGREGADOS DE PRUEBA
-    
-    
-    #path("tutoria/", tutoria, name="tuto"),
-    #prueba
     path("tutoria/", TutoriaCreateView.as_view(), name="tuto"),
     path("orientacionAcademica/", OrientacionAcademicaCreateView.as_view(), name="academica"),
-    path("tipoCita/", tipo_cita, name="tipo_cita"),
-    
-    path('actualizar_campo/', actualizar_campo, name='actualizar_campo'),
-    #path('buscar_participante/', obtener_participante),
-    
+    path("modificarCitaTutoria/<int:pk>/", TutoriaUpdateView.as_view(), name="modificar_cita_tutoria"),
+    path("modificarCitaOriAcademica/<int:pk>/", OrientacionAcademicaUpdateView.as_view(), name="modificar_cita_ori_academica"),
     path('obtener_horarios_cita/', obtener_horarios_cita),
+    path("all-event-list/", AllEventsListView.as_view(), name="all_events"),
+    path("running-event-list/<str:tipo_cita>/",RunningEventsListView.as_view(),name="running_events"),
 
 ]

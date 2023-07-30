@@ -18,7 +18,7 @@ elif tipo== "ori_academica":
 else:
     actividades_academicas= []
     
-print(actividades_academicas)
+#print(actividades_academicas)
 
 #convertimos a un dt 
 dt_aa= pd.DataFrame(actividades_academicas)

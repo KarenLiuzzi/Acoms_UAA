@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}Event List{% endblock title %}
+{% block title %}Citas{% endblock title %}
 
 {% block breadcrumb %}
     {% comment %} <div>
@@ -71,6 +71,7 @@
                                                 </td>
 
                                                 <td>{{ event.id_cita.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ event.id_cita.id_funcionario_docente_encargado|title }}</td>
+
                                                 <td>
                                                     <div>
                                                         <!-- Button trigger modal -->
@@ -79,19 +80,19 @@
                                                         </button> 
                                                         
                                                         <!-- Button trigger modal -->
-                                                        {% if event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' %}
-
-                                                            <a class="btn btn-primary"  title="Editar" href="{% url 'calendarapp:modificar_cita' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
-
-                                                            <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button> 
-
+                                                        {% if event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' and event.es_tutoria %}
+                                                        <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
+                                                        <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                        
+                                                        {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' and event.es_orientacion_academica %}
+                                                            <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
+                                                            <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                        
                                                         {% else %}
-
                                                             <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
-
                                                             <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button>
-
                                                         {% endif %}
+                                                        
                                                     </div>
                                                 </td>
                                             </tr>
@@ -112,5 +113,10 @@
 {% block extrascripts %}
     <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    <script type="text/javascript">$('#sampleTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
+        },
+    });</script>  
+
 {% endblock extrascripts %}
