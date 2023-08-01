@@ -37,7 +37,24 @@
                 </div> 
             </div>{% endcomment %}
             <div class="col-md-12">
-                <div id="calendar"></div>
+
+              <div style="display: flex; justify-content: space-between; padding-left: 20px; padding-top: 15px; padding-right: 30px; padding-bottom: 25px;">
+                <!-- Elementos a la izquierda -->
+                  <div>
+                    <i class="bi bi-circle-fill" style="color: rgb(131, 97, 205)"></i> <text style="color: #555555"> Tutoria </text>
+                    <i class="bi bi-circle-fill" style="color: rgb(89, 141, 214)"></i> <text style="color: #555555">Orientación Académica</text>
+                  </div>
+                
+                  <!-- Elementos a la derecha -->
+                  <div>
+                    <i class="bi bi-circle-fill" style="color: #dcd91f;"></i> <text style="color: #555555">Pendiente</text>
+                    <i class="bi bi-circle-fill" style="color: #ba0f4e;"></i> <text style="color: #555555">Cancelado</text>
+                    <i class="bi bi-circle-fill" style="color: #0cc55c;"></i> <text style="color: #555555">Finalizado</text>
+                  </div>
+              </div>
+
+            <div id="calendar"></div>
+                
             </div>
 
             <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -185,7 +202,7 @@
           headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
             //right: 'dayGridMonth,list',
 
           },
@@ -270,20 +287,86 @@
           //cambiamos el color de los cuadros dependiendo si es tutoria u orintacion acadmica
           eventClassNames: function(arg) {
             // Acceder al atributo personalizado del evento
-            var customAttribute = arg.event.extendedProps.tipo_cita;
+            var tipo = arg.event.extendedProps.tipo_cita;
+            var estado = arg.event.extendedProps.estado;    
+            var eventClassList = [];
 
-            if (customAttribute === 'ori_academica') {
-              return 'event-color-red';
-            } else if (customAttribute === 'tutoria') {
-              return 'event-color-blue';
+            if (tipo === 'ori_academica' & estado == 'Pendiente') {
+              eventClassList.push('event-color-blue');
+              eventClassList.push('event-border-color-yellow');
+
+            } else if (tipo === 'ori_academica' & estado == 'Cancelado') {
+              eventClassList.push('event-color-blue');
+              eventClassList.push('event-border-color-red');
+            }
+            else if (tipo === 'ori_academica' & estado == 'Finalizado') {
+              eventClassList.push('event-color-blue');
+              eventClassList.push('event-border-color-green');
+            }
+
+            else if (tipo === 'tutoria' & estado == 'Cancelado') {
+              eventClassList.push('event-color-purple');
+              eventClassList.push('event-border-color-red');
+            }
+            else if (tipo === 'tutoria' & estado == 'Pendiente') {
+              eventClassList.push('event-color-purple');
+              eventClassList.push('event-border-color-yellow');
+            }
+            else if (tipo === 'tutoria' & estado == 'Finalizado') {
+              eventClassList.push('event-color-purple');
+              eventClassList.push('event-border-color-green');
             }
       
             // Si no se cumple ninguna condición, no se agrega ninguna clase adicional al evento
-            return '';
+            return eventClassList;
           },
 
+          eventDidMount: function(info) {
+            var icon = info.event.extendedProps.icon;
+            var tipo = info.event.extendedProps.tipo_cita;
+            var estado = info.event.extendedProps.estado;    
+
+            if (info.event.extendedProps.icon) {
+            }
+            else{
+              //
+              if (calendar.view.type != "dayGridMonth") {
+
+                if (tipo === 'ori_academica' & estado == 'Pendiente') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;'>•</i>");
+
+                } else if (tipo === 'ori_academica' & estado == 'Cancelado') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;'>•</i>");
+
+                }
+                else if (tipo === 'ori_academica' & estado == 'Finalizado') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
+
+                }else if (tipo === 'tutoria' & estado == 'Cancelado') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;'>•</i>");
+
+                }else if (tipo === 'tutoria' & estado == 'Pendiente') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;'>•</i>");
+
+                }else if (tipo === 'tutoria' & estado == 'Finalizado') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
+                
+                }                  
+              } //else if (calendar.view.type = "list") {
+                //$(info.el).find('.fc-list-event-dot').remove();
+                //$(info.el).find('fc-list-event-graphic').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
+            }  
+              
+          },
         });
 
+        
         calendar.render();
       });
 
