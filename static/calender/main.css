@@ -1444,10 +1444,41 @@ A VERTICAL event
     color: inherit; /* natural color for navlinks */
   }
 
-  .event-color-red {
-    background-color: red;
+  .event-color-purple {
+    background-color: rgb(131, 97, 205);
   }
   
   .event-color-blue {
-    background-color: blue;
+    background-color: rgb(89, 141, 214);
   }
+
+.event-border-color-yellow .fc-daygrid-event-dot{
+  
+  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #dcd91f);
+}
+
+.event-border-color-red .fc-daygrid-event-dot{
+  
+  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #ba0f4e);
+}
+
+.event-border-color-green .fc-daygrid-event-dot{
+  
+  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #0cc55c);
+  
+}
+
+.list-event-border-color-green .fc .fc-list-event-dot{
+
+  border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #0cc55c);
+}
+
+.list-event-border-color-red  .fc .fc-list-event-dot{
+
+  border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #ba0f4e);
+}
+
+.list-event-border-color-yellow .fc .fc-list-event-dot{
+
+  border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #dcd91f);
+}
