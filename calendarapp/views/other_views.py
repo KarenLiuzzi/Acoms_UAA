@@ -18,10 +18,10 @@ from calendarapp.models.calendario import HorarioSemestral, Dia, Convocatoria
 from calendarapp.forms import HorarioSemestralForm, ActividadAcademicaForm
 from accounts.models.user import FuncionarioDocente, Persona, Materia, Departamento, User, Facultad
 from calendarapp.models import EventMember, Event
-from calendarapp.models.event import Parametro, Cita, EstadoActividadAcademica
+from calendarapp.models.event import Parametro, Cita, EstadoActividadAcademica, Tutoria, OrientacionAcademica
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
@@ -255,7 +255,6 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     "curso": curso,
                     "tipo": tipo,
                     "participantes": participantes_lista
-
                 }
                 
             )
@@ -388,6 +387,8 @@ def delCalendarioFuncDoc(request, pk):
 
 #agregados de pruebas
 
+
+
 def tipo_cita(request):
     return render(request,'calendarapp/tipo_actividad_academica.html')
 
@@ -487,6 +488,82 @@ def actualizar_campo(request):
 #             results= []
 
 #     return JsonResponse(results, safe=False)
+
+
+
+#clase de vista de cita de tipo tutoria
+class CitaOrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
+    model = Cita
+    template_name = 'calendarapp/detalles_cita_orientacion_academica.html'
+    #permission_required = 'erp.view_sale'
+    context_object_name= 'cita'
+    
+
+    def get_details_participantes(self):
+        data = {}
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            participantes= DetalleActividadAcademica.objects.filter(id_actividad_academica=self.get_object().id_cita)
+            data= participantes      
+        except:
+            pass
+        return data
+    
+    def get_details_orientacion_academica(self):
+        data = Tutoria.objects.none()
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            tutoria= OrientacionAcademica.objects.filter(id_orientacion_academica=self.get_object().id_cita)
+            data= tutoria
+                    
+        except:
+            pass
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Detalles de Cita de Orientación Académica'
+        #context['modificar_url'] = reverse_lazy('erp:sale_create')
+        context['participantes'] =  self.get_details_participantes()
+        context['orientacion_academica'] =  self.get_details_orientacion_academica()
+        return context
+
+#clase de vista de cita de tipo tutoria
+class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
+    model = Cita
+    template_name = 'calendarapp/detalles_cita_tutoria.html'
+    #permission_required = 'erp.view_sale'
+    context_object_name= 'cita'
+    
+
+    def get_details_participantes(self):
+        data = {}
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            participantes= DetalleActividadAcademica.objects.filter(id_actividad_academica=self.get_object().id_cita)
+            data= participantes      
+        except:
+            pass
+        return data
+    
+    def get_details_tutoria(self):
+        data = Tutoria.objects.none()
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            tutoria= Tutoria.objects.filter(id_tutoria=self.get_object().id_cita)
+            data= tutoria
+                    
+        except:
+            pass
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Detalles de Cita de Tutoría'
+        #context['modificar_url'] = reverse_lazy('erp:sale_create')
+        context['participantes'] =  self.get_details_participantes()
+        context['tutoria'] =  self.get_details_tutoria()
+        return context  
 
 #clase de creacion para una cita de tipo tutoria
 class TutoriaCreateView(LoginRequiredMixin, CreateView):

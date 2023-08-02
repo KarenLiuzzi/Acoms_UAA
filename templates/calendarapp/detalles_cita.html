@@ -132,10 +132,27 @@
           </div>
         </div>
     </div>
-      
-      <div class="modal-footer">
+{% comment %} 
+    <div class="row justify-content-end">
+      <div class="col-md-4"> <!-- Ajusta el tamaño de la columna según tus necesidades -->
         <button type="button mt-2" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+          <a class="btn btn-primary mt-2" href="">
+              Más Detalles
+          </a>
       </div>
+    </div> {% endcomment %}
+      
+    <div class="modal-footer">
+      <div class="mt-2">
+        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cerrar</button>
+        {% if cita.es_tutoria %}
+        <a type="button" class="btn btn-primary" href="{% url 'calendarapp:more_detalles_cita_tutoria' cita.id_cita %}">Más Detalles</a>
+        {% elif cita.es_orientacion_academica %}
+              <a type="button" class="btn btn-primary" href="{% url 'calendarapp:more_detalles_ori_academica' cita.id_cita %}">Más Detalles</a>
+        {% endif %}
+      </div>
+    </div>
 
 </div>  
 

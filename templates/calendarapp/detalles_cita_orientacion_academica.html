@@ -1,0 +1,196 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %} {{ title }} {% endblock title %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="bi bi-search"></i>
+            {{ title }}
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Cita</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="label texto-destacado">Facultad: </label>
+                            {{ cita.id_cita.id_facultad }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Departamento: </label>
+                            {{ cita.id_cita.id_departamento.descripcion_departamento }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Estado:</label>
+                            {{ cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica }}
+                        </div>
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Convocatoria:</label>
+                            {{ cita.id_cita.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title}}{{ cita.id_cita.id_convocatoria.anho|title }}
+                        </div>
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Encargado:</label>
+                            {{ cita.id_cita.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ cita.id_cita.id_funcionario_docente_encargado|title }} 
+                        </div>
+
+                        <div class="form-group">
+                        <label class="label texto-destacado">Solicitante:</label>
+                            {% if cita.id_cita.id_persona_alta %}
+                                {{ cita.id_cita.id_persona_alta.nombre|add:' '|title}}{{ cita.id_cita.id_persona_alta.apellido|title }} 
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Fecha de alta:</label>
+                            {{ cita.id_cita.datetime_registro|date:"d/m/Y" }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Fecha estimada:</label>
+
+                            {% if cita.id_cita.datetime_inicio_estimado %}
+                                {{ cita.id_cita.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ cita.id_cita.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ cita.id_cita.datetime_fin_estimado|time:"H:i" }}
+                            {% else %}
+                                ----------
+                            {% endif %} 
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Fecha real:</label>
+                            {% if cita.id_cita.datetime_fin_real %}
+                            {{ cita.id_cita.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ cita.id_cita.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ cita.id_cita.datetime_fin_real|time:"H:i" }}
+                            {% else %}
+                                ----------
+                            {% endif %} 
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Materia:</label>
+                            {% if cita.id_cita.id_materia %}
+                                {{ cita.id_cita.id_materia.descripcion_materia|title}}
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Encargado:</label>
+                            {{ cita.id_cita.id_facultad }}
+                            <span class="text-danger">{{ form.errors.id_funcionario_docente_encargado }}</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Motivo:</label>
+                            {% if cita.motivo %}
+                                {{ cita.motivo|title}}
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        </div>
+
+                        
+                        <div class="form-group">
+                            <label class="label texto-destacado">Nro. Curso: </label>
+                                {% if cita.id_cita.nro_curso %}
+                                    {{ cita.id_cita.nro_curso|title}}
+                                {% else %}
+                                    ----------
+                                {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Observación:</label>
+                            {% if cita.id_cita.observacion %}
+                                {{ cita.id_cita.observacion|title}}
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        </div>
+
+                        {% if cita.id_cita.motivo_cancelacion %}
+                            <div class="form-group">
+                                <label class="label texto-destacado">Motivo de Cancelación: </label>
+                                    {{ cita.id_cita.motivo_cancelacion|title}}
+                            </div>
+                        {% endif %}
+
+                        {% if cita.id_cita.motivo_rechazo %}
+                            <div class="form-group">
+                                <label class="label texto-destacado">Motivo de Rechazo: </label>
+                                    {{ cita.id_cita.motivo_rechazo|title}}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="bi bi-people"></i> Participantes adicionales</h3>
+                    </div>
+                    <div class="card-body">
+                        
+                        <table class="table table-bordered" id="tblParticipantes">
+                            <thead>
+                            <tr>
+                                <th>Participante</th>
+                                <th>Documento</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% if participantes.exists %}
+                                    {% for event in participantes %}
+                                        <tr role="row" class="odd">
+                                            <td>{{ event.id_participante.nombre|title|add:' ' }}{{ event.id_participante.apellido|title }} </td> 
+                                            <td> {{ event.id_participante.documento }} </td> 
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        {% if participantes.exists == False %}
+                            <label> Sin participantes... </label> 
+                        {% endif %} 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' %}
+    
+        <div class="card-footer">
+            <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificarCitaOriAcademica' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Editar Cita</a>
+        </div>
+    {% endif %}
+   
+</div>
+
+{% endblock content %}
+
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
+        },
+    });</script>
+{% endblock extrascripts %}

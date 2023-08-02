@@ -167,17 +167,18 @@
                               <div class="col-md-20">
                                 <label class="label" for="participantes">Participantes:</label>
                                 <ul id="participantes">
-                                {% comment %} {% if detalles %}
-                                  <ul id="participantes">
-                                    {% for value in detalles %}
-                                      <li>{{ value.id_participante.nombre|add:' '|title}}{{ value.id_participante.apellido|title }}</li>
-                                    {% endfor %}
-                                  </ul>
-                                {% else %}
-                                  <p>Sin participantes...</p>
-                                {% endif %} {% endcomment %}
                               </div>
                             </div>
+                            
+                            <div class="row justify-content-end" id="container">
+                              <div class="col-md-4"> <!-- Ajusta el tamaño de la columna según tus necesidades -->
+                                  <a class="btn btn-primary mt-2" href="" id="id_cita" title="Más Detalles">
+                                    <i class="bi bi-eye-fill" ></i>
+                                  </a>
+                              </div>
+                            </div>
+
+
                           </div>
                       </div>
                         
@@ -276,7 +277,7 @@
             
 
             // Mostrar el modal con los detalles del evento
-            mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes);
+            mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita);
 
           },
 
@@ -316,7 +317,8 @@
               eventClassList.push('event-color-purple');
               eventClassList.push('event-border-color-green');
             }
-      
+              
+
             // Si no se cumple ninguna condición, no se agrega ninguna clase adicional al evento
             return eventClassList;
           },
@@ -358,9 +360,7 @@
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
                 
                 }                  
-              } //else if (calendar.view.type = "list") {
-                //$(info.el).find('.fc-list-event-dot').remove();
-                //$(info.el).find('fc-list-event-graphic').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
+              } 
             }  
               
           },
@@ -370,7 +370,7 @@
         calendar.render();
       });
 
-      function mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes) {
+      function mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita) {
         // Obtener el modal
 
         var modal = document.getElementById('eventModal')
@@ -391,6 +391,7 @@
         var modalcurso = modal.querySelector('#curso');
         var modaltipo = modal.querySelector('#tipo');
         var modalparticipantes = modal.querySelector('#participantes');
+        var modalid_cita = modal.querySelector('#id_cita');
         modalparticipantes.innerHTML = '';
 
         //var modalDescripcion = modal.querySelector('.modal-body .descripcion');
@@ -425,7 +426,73 @@
         modalobservacion.textContent = observacion;
         modalcurso.textContent = curso;
         modaltipo.textContent = tipo;
+
+        // Obtener el elemento <div> con el ID "container" para insertar nuestros botones dinamicamente
+        const container = document.getElementById("container");
+
+        //verificar
+        if (tipo == 'Tutoría'){
+          modalid_cita.href= '/moredetallesCitaTutoria/'+ id_cita
+
+          if (estado == "Pendiente") {
+            console.log(estado)
+            //eliminar el elemento si es que ya existe
+            var existingNewLink = document.getElementById("editar_tutoria");
+            if (existingNewLink) {
+                // Si el elemento existe, eliminarlo del <div>
+                container.removeChild(existingNewLink);
+            }
+            // Crear un nuevo elemento <a>
+            const newLink = document.createElement("a");
+            newLink.className = "btn btn-primary mt-2";
+              
+            newLink.href = '/modificarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
+            newLink.title = "Editar";
+
+            // Crear un nuevo elemento <i> para el icono
+            const newIcon = document.createElement("i");
+            newIcon.className = "bi bi-pencil-fill"; // Clase para el icono 
+
+            // Agregar el icono al elemento <a>
+            newLink.appendChild(newIcon);
+
+            // Agregar el nuevo elemento <a> al <div>
+            container.appendChild(newLink);
+          }
+
+        } else if (tipo == 'Orientacion Académica'){
+          modalid_cita.href= '/moredetallesCitaOriAcadem/'+ event.id_cita
+
+          if (estado == "Pendiente") {
+            var existingLink = document.getElementById("editar_ori_academica");
+            if (existingLink) {
+                // Si el elemento existe, eliminarlo del <div>
+                container.removeChild(existingLink);
+            }
+
+            console.log(estado)
+            // Crear un nuevo elemento <a>
+            const link = document.createElement("a");
+            link.className = "btn btn-primary mt-2";
+            link.id = "editar_ori_academica";
+            link.href = '/modificar_cita_ori_academica/'+ id_cita; // Agrega aquí la URL deseada
+            link.title = "Editar";
+
+            // Crear un nuevo elemento <i> para el icono
+            const icon = document.createElement("i");
+            icon.className = "bi bi-pencil-fill"; // Clase para el icono 
+
+            // Agregar el icono al elemento <a>
+              link.appendChild(icon);
+
+            // Agregar el nuevo elemento <a> al <div>
+            container.appendChild(link);
+          }
+
+        }
         
+        
+        ///'/moredetallesCita/?pk=?'+ id_cita
         //modalparticipantes= participantes;
 
     

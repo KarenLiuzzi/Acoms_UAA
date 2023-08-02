@@ -1468,12 +1468,19 @@ A VERTICAL event
   
 }
 
-.list-event-border-color-green .fc .fc-list-event-dot{
+.list-event-border-color-green  .fc .fc-list-event-dot{
 
-  border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #0cc55c);
+  display: inline-block;
+    box-sizing: content-box;
+    width: 0;
+    height: 0;
+    border: 5px solid #0cc55c;
+    border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #0cc55c);
+    border-radius: 5px;
+    border-radius: calc(var(--fc-list-event-dot-width, 10px) / 2);
 }
 
-.list-event-border-color-red  .fc .fc-list-event-dot{
+.list-event-border-color-red   .fc .fc-list-event-dot{
 
   border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #ba0f4e);
 }

@@ -8406,3 +8406,8 @@ textarea.form-control {
         border: 1px solid transparent;
         background: #6807f9;
         color: #fff; }
+
+.texto-destacado {
+  font-weight: bold;
+  color: #009688;
+}        
