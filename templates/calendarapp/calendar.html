@@ -22,20 +22,6 @@
 <div class="row">
     <div class="col-md-12">
         <div class="tile row">
-            {% comment %}<div class="col-md-3">
-                 <div id="external-events">
-                    <h4 class="mb-4">Citas activas</h4>
-                    {% for event in events %}
-                      <div class="fc-event">
-                          <h3>{{ event.observacion }}</h3>
-                          <p>Inicio: {{ event.datetime_inicio_estimado }}</p>
-                          <p>Fin: {{ event.datetime_fin_estimado }}</p>
-                      </div>
-                    {% empty %}
-                      <p>Ninguna Cita activa encontrada...</p>
-                    {% endfor %}
-                </div> 
-            </div>{% endcomment %}
             <div class="col-md-12">
 
               <div style="display: flex; justify-content: space-between; padding-left: 20px; padding-top: 15px; padding-right: 30px; padding-bottom: 25px;">
@@ -48,6 +34,7 @@
                   <!-- Elementos a la derecha -->
                   <div>
                     <i class="bi bi-circle-fill" style="color: #dcd91f;"></i> <text style="color: #555555">Pendiente</text>
+                    <i class="bi bi-circle-fill" style="color: #d89219;"></i> <text style="color: #555555">Confirmado</text>
                     <i class="bi bi-circle-fill" style="color: #ba0f4e;"></i> <text style="color: #555555">Cancelado</text>
                     <i class="bi bi-circle-fill" style="color: #0cc55c;"></i> <text style="color: #555555">Finalizado</text>
                   </div>
@@ -58,130 +45,117 @@
             </div>
 
             <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary">
-                            <h5 class="modal-title text-white" id="exampleModalLongTitle"> Detalles de Cita</h5>
-                            <button id="modalClose1" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header bg-primary">
+                          <h5 class="modal-title text-white" id="exampleModalLongTitle">Detalles de Cita</h5>
+                          <button id="modalClose1" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
 
-                        <div class="modal-body">
-                          <div class="container">
+                      <div class="modal-body">
+                        <div class="container">
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="fecha">Fecha:</label>
-                                <label class="label" id="fecha"></label>
-                              </div>
+                                <div class="col-md-6">
+                                    <label class="label-bold text-primary" for="fecha">Fecha:</label>
+                                    <label class="label" id="fecha"></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-bold text-primary" for="horario">Horario:</label>
+                                    <label class="label" id="horario"></label>
+                                </div>
                             </div>
-                            <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="horario">Horario: </label>
-                                <label class="label" id="horario"></label>
 
-                              </div>
-                            </div>
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="encargado">Encargado:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="encargado">Encargado:</label>
                                 <label class="label" id="encargado"></label>
-
-
                               </div>
                             </div>
+
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="solicitante">Solicitante:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="solicitante">Solicitante:</label>
                                 <label class="label" id="solicitante"></label>
-
-
                               </div>
                             </div>
+
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="motivo">Motivo:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="motivo">Motivo:</label>
                                 <label class="label" id="motivo"></label>
-
-
                               </div>
                             </div>
 
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="estado">Estado:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="estado">Estado:</label>
                                 <label class="label" id="estado"></label>
-
-
                               </div>
                             </div>
+
                             <div class="row">
-                              <div class="col-md-20">
-                                <label for="convocatoria">Convocatoria:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="convocatoria">Convocatoria:</label>
                                 <label class="label" id="convocatoria"></label>
-
-
                               </div>
                             </div>
+
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="facultad">Facultad:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="facultad">Facultad:</label>
                                 <label class="label" id="facultad"></label>
-
                               </div>
                             </div>
+
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="materia">Materia:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="materia">Materia:</label>
                                 <label class="label" id="materia"></label>
-
-
                               </div>
                             </div>
+
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="observacion">Observación:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="observacion">Observación:</label>
                                 <label class="label" id="observacion"></label>
-
-
                               </div>
                             </div>
-                            <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="nro_curso">Nro Curso:</label>
-                                <label class="label" id="curso"></label>
 
+                            <div class="row">
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="nro_curso">Nro Curso:</label>
+                                <label class="label" id="curso"></label>
                               </div>
                             </div>
 
                               <div class="row">
-                                <div class="col-md-20">
-                                  <label class="label" for="tipo">Tipo Cita:</label>
+                                <div class="col-md-6">
+                                  <label class="label-bold text-primary" for="tipo">Tipo Cita:</label>
                                   <label class="label" id="tipo"></label>
-  
-  
                                 </div>
                             </div>
                             
                             <div class="row">
-                              <div class="col-md-20">
-                                <label class="label" for="participantes">Participantes:</label>
+                              <div class="col-md-6">
+                                <label class="label-bold text-primary" for="participantes">Participantes:</label>
                                 <ul id="participantes">
                               </div>
                             </div>
-                            
-                            <div class="row justify-content-end" id="container">
-                              <div class="col-md-4"> <!-- Ajusta el tamaño de la columna según tus necesidades -->
+
+                            <div class="row justify-content-end mt-2">
+                              <div class="col-md-6" id="container">
                                   <a class="btn btn-primary mt-2" href="" id="id_cita" title="Más Detalles">
-                                    <i class="bi bi-eye-fill" ></i>
+                                      <i class="bi bi-eye-fill"></i>
+                                  </a>
+                                  <a class="btn btn-primary mt-2" href="" id="id_iniciar_cita" title="Iniciar cita">
+                                    <i class="bi bi-caret-right-fill"></i>
                                   </a>
                               </div>
-                            </div>
-
-
+                          </div>
                           </div>
                       </div>
-                        
                     </div>
                 </div>
             </div>
@@ -305,18 +279,30 @@
               eventClassList.push('event-border-color-green');
             }
 
+            else if (tipo === 'ori_academica' & estado == 'Confirmado') {
+              eventClassList.push('event-color-blue');
+              eventClassList.push('event-border-color-orange');
+            }
+
             else if (tipo === 'tutoria' & estado == 'Cancelado') {
               eventClassList.push('event-color-purple');
               eventClassList.push('event-border-color-red');
             }
+
             else if (tipo === 'tutoria' & estado == 'Pendiente') {
               eventClassList.push('event-color-purple');
               eventClassList.push('event-border-color-yellow');
             }
+            
             else if (tipo === 'tutoria' & estado == 'Finalizado') {
               eventClassList.push('event-color-purple');
               eventClassList.push('event-border-color-green');
             }
+            
+            else if (tipo === 'tutoria' & estado == 'Confirmado') {
+              eventClassList.push('event-color-purple');
+              eventClassList.push('event-border-color-orange');
+            };
               
 
             // Si no se cumple ninguna condición, no se agrega ninguna clase adicional al evento
@@ -338,7 +324,8 @@
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;'>•</i>");
 
-                } else if (tipo === 'ori_academica' & estado == 'Cancelado') {
+                } 
+                else if (tipo === 'ori_academica' & estado == 'Cancelado') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;'>•</i>");
 
@@ -346,20 +333,33 @@
                 else if (tipo === 'ori_academica' & estado == 'Finalizado') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
+                }
+                
+                else if (tipo === 'ori_academica' & estado == 'Confirmado') {
 
-                }else if (tipo === 'tutoria' & estado == 'Cancelado') {
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #d89219;'>•</i>");
+                }
+
+                else if (tipo === 'tutoria' & estado == 'Cancelado') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;'>•</i>");
 
-                }else if (tipo === 'tutoria' & estado == 'Pendiente') {
+                }
+                else if (tipo === 'tutoria' & estado == 'Pendiente') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;'>•</i>");
 
-                }else if (tipo === 'tutoria' & estado == 'Finalizado') {
+                }
+                else if (tipo === 'tutoria' & estado == 'Finalizado') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
                 
-                }                  
+                }
+                else if (tipo === 'tutoria' & estado == 'Confirmado') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #d89219;'>•</i>");
+                
+                }                    
               } 
             }  
               
@@ -392,6 +392,7 @@
         var modaltipo = modal.querySelector('#tipo');
         var modalparticipantes = modal.querySelector('#participantes');
         var modalid_cita = modal.querySelector('#id_cita');
+        var modaliniciar_cita = modal.querySelector('#id_iniciar_cita');
         modalparticipantes.innerHTML = '';
 
         //var modalDescripcion = modal.querySelector('.modal-body .descripcion');
@@ -430,22 +431,28 @@
         // Obtener el elemento <div> con el ID "container" para insertar nuestros botones dinamicamente
         const container = document.getElementById("container");
 
+        
+
         //verificar
         if (tipo == 'Tutoría'){
           modalid_cita.href= '/moredetallesCitaTutoria/'+ id_cita
+          modaliniciar_cita.href = '/iniciarCitaTutoria/'+ id_cita
+
+          //eliminar los elementos si es que ya existen
+          if (document.getElementById("editar_tutoria")) {
+              container.removeChild(document.getElementById("editar_tutoria"));
+          }
+          if (document.getElementById("editar_ori_academica")) {
+            container.removeChild(document.getElementById("editar_ori_academica"));
+          }
 
           if (estado == "Pendiente") {
             console.log(estado)
-            //eliminar el elemento si es que ya existe
-            var existingNewLink = document.getElementById("editar_tutoria");
-            if (existingNewLink) {
-                // Si el elemento existe, eliminarlo del <div>
-                container.removeChild(existingNewLink);
-            }
+            
             // Crear un nuevo elemento <a>
             const newLink = document.createElement("a");
             newLink.className = "btn btn-primary mt-2";
-              
+            newLink.id = "editar_tutoria";
             newLink.href = '/modificarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
             newLink.title = "Editar";
 
@@ -463,13 +470,15 @@
         } else if (tipo == 'Orientacion Académica'){
           modalid_cita.href= '/moredetallesCitaOriAcadem/'+ event.id_cita
 
-          if (estado == "Pendiente") {
-            var existingLink = document.getElementById("editar_ori_academica");
-            if (existingLink) {
-                // Si el elemento existe, eliminarlo del <div>
-                container.removeChild(existingLink);
-            }
+          //eliminar los elementos si es que ya existen
+          if (document.getElementById("editar_ori_academica")) {
+            container.removeChild(document.getElementById("editar_ori_academica"));
+          }
+          if (document.getElementById("editar_tutoria")) {
+            container.removeChild(document.getElementById("editar_tutoria"));
+          }
 
+          if (estado == "Pendiente") {
             console.log(estado)
             // Crear un nuevo elemento <a>
             const link = document.createElement("a");

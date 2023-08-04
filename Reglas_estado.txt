@@ -1,0 +1,5 @@
+Reglas de cambios de estado
+una cita solo puede ser modificada si este sigue con estado pendiente
+no se puede modificar cuando ya esta aprobado 
+solo se puede iniciar una cita que este o bien confirmada o pendiente(xq se puede olvidar el usuario de confirmar)
+se puede cancelar una cita si esta confirmada o pendiente

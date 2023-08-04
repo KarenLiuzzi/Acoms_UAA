@@ -1,0 +1,516 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% comment %} agregado {% endcomment %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block title %}Iniciar Cita Tutoría{% endblock title %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<form method="post" id="tutoria">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">
+                {% if action == 'iniciar' %}
+                <i class="bi bi-caret-right-square"></i>
+                {% endif %}
+                {{ title }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Cita</h3>
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" name="action" value="{{ action }}">
+                            <div class="form-group">
+                                <label class="label" for="id_facultad">Facultad</label>
+                                {{ form.id_facultad}}
+                                <span class="text-danger">{{ form.errors.id_facultad }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_materia">Materia</label>
+                                {{ form.id_materia}}
+                                <span class="text-danger">{{ form.errors.id_materia }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_funcionario_docente_encargado">Docente</label>
+                                {{ form.id_funcionario_docente_encargado }}
+                                <span class="text-danger">{{ form.errors.id_funcionario_docente_encargado }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="motivo">Motivo</label>
+                                <textarea placeholder= "Describa el motivo de la cita..." class="form-control" rows="4" cols="50" name="motivo" required="True" maxlength="500"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="nro_curso">Nro. Curso</label>
+                                <div class="input-group">
+                                    {{ form.nro_curso }}
+                                    <span class="text-danger">{{ form.errors.motivo }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label" for="hora_inicio">Hora de inicio</label> <label> (Cambiar según sea necesario)</label> 
+                                <div class="input-group">
+                                    <input type="time" class="form-control" id="hora_inicio" name="hora_inicio">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label" for="hora_fin">Hora de fin</label> <label> (Cambiar según sea necesario)</label> 
+                                <div class="input-group">
+                                    <input type="time" class="form-control" id="hora_fin" name="hora_fin">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-people"></i> Participantes adicionales</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Buscador de participantes:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search"
+                                           placeholder="Ingrese número de cédula del participante..." autocomplete="off">
+                                    <span class="input-group-append">
+                                    <button type="button" class="btn btn-danger btn-flat btnClearSearch" title="Cancelar"><i class="bi bi-x-lg"></i></button>
+                                  </span>
+                                </div>
+                            </div>
+                            <hr>
+                            <button type="button" class="btn btn-danger btn-xs btn-flat btnRemoveAll">
+                                <i class="bi bi-trash2"></i> Eliminar todos los participantes
+                            </button>
+                            <hr>
+                            <table class="table table-bordered" id="tblParticipantes">
+                                <thead>
+                                <tr>
+                                    <th>Opción</th>
+                                    <th>Participante</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-person-video3"></i> Datos de la Tutoría</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="label" for="id_tipo_tutoria">Tipo de Tutoría</label>
+                                <select name="id_tipo_tutoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tutoria" data-select2-id="id_id_tipo_tutoria" tabindex="-1" aria-hidden="true"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="nombre_trabajo_grado">Nombre de Trabajo de Grado</label>
+                                <textarea placeholder= "Opcional, en caso de tratarse de una tutoría de trabajo de grado..." class="form-control" rows="4" cols="30" name="nombre_trabajo_grado" maxlength="200"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="observacion">Observación</label>
+                                <textarea placeholder= "Desea agregar algún comentario adicional?..." class="form-control" rows="4" cols="50" name="observacion" maxlength="500"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary btn-flat">
+                <i class="bi bi-calendar-check"></i> Finalizar cita
+            </button> 
+            <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i> Cancelar</button>
+    
+        </div>
+    </div>
+</form>
+
+{% endblock content %}
+
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/jquery-ui-1.12.1/jquery-ui.min.js' %}"></script>
+
+    <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+    <script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+
+    <!-- Jquery Confirm -->
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+    <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+    <!-- Functions -->
+    <script src="{% static 'js/functions.js' %}"></script>
+
+    <script>       
+        var band_boton_selects= 0
+        var mi_form= $('#tutoria')
+        var tblParticipantes;
+        var lista_participantes = {{ det|safe }}
+        var lista_cita = {{ cita|safe }}
+
+        var actividad_academica = {
+            items: {
+                id_facultad: '',
+                id_materia: '',
+                id_funcionario_docente_encargado: '',
+                motivo: '',
+                nro_curso: '',
+                participantes: [],
+                convocatoria: '',
+                datetime_inicio_real: '',
+                datetime_fin_real: '',
+                observacion: '',
+                nombre_trabajo_grado: '',
+                id_tipo_tutoria: ''
+            },
+
+            add: function (item) {
+                this.items.participantes.push(item);
+                this.list();
+            },
+            verificar_participante: function (valor) {
+                var encontrado= false;
+                for (var i = 0; i < this.items.participantes.length; i++) {
+                    if (this.items.participantes[i]["id"] === valor) {
+                      encontrado = true;
+                      break;
+                    }
+                }
+
+                  if (encontrado) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+            },
+            list: function () {
+
+                tblParticipantes = $('#tblParticipantes').DataTable({
+                    searching: false,
+                    paging: false,
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    data: this.items.participantes,
+                    columns: [
+                        {"data": "id"},
+                        {"data": "value"},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return '<a rel="remove" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                            }
+                        },
+                    ]
+
+                });
+            },
+            
+            actualizar_participantes: function (lista_participantes) {
+                
+                //Iteramos uno a uno
+                for (var i = 0; i < lista_participantes.length; i++) {
+                    var newItem = lista_participantes[i]
+                    this.items.participantes.push(newItem);
+                }
+                this.list();
+            }            
+        };
+
+        $(document).ready(function() {
+
+            //cargamos el campo de motivo
+            $('textarea[name="motivo"]').val(lista_cita[0]['motivo']);
+
+            //cuando se cargue la pagina traer todas las facultades
+            actualizarfacultad();
+            actualizartipo_tutoria();
+            cambiarValorHora();
+
+
+            function cambiarValorHora() {
+                // Obtener el elemento input
+                var inicio = document.getElementById('hora_inicio');
+                var fin = document.getElementById('hora_fin');
+            
+                // Cambiar el valor del input
+                inicio.value = lista_cita[0]['hora_inicio'];
+                fin.value = lista_cita[0]['hora_fin'];
+              }
+
+
+            function actualizartipo_tutoria() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'tipo_tutoria'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_tipo_tutoria').html(data);
+                    }
+                });
+            }
+
+            function actualizarfacultad() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'facultad'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_facultad').html(data);
+                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
+                        if (band_boton_selects == 0){
+                            $('#id_id_facultad').val(lista_cita[0]['id_facultad']);
+                        }
+                        band_boton_selects= band_boton_selects + 1
+                        actualizarmateria();
+                    }
+                });
+            }
+
+             //actualizar el campo de la materia de acuerdo a la facultad seleccionada
+             function actualizarmateria() {
+                var selected_option = $('#id_id_facultad').val();
+                //console.log(selected_option)
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'id_facultad': selected_option,
+                        'campo': 'materia'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_materia').html(data);
+                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
+                        if (band_boton_selects == 1){
+                            $('#id_id_materia').val(lista_cita[0]['id_materia']);
+                        }
+                        band_boton_selects= band_boton_selects + 1
+                        actualizarfuncionariodocente();
+                    }
+
+                });
+            }
+            //ejecutar si cambia la facultad para actualizar materia y func/doc
+            $('#id_id_facultad').change(function() {
+                actualizarmateria()
+                actualizarfuncionariodocente()
+            });
+
+            //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
+            function actualizarfuncionariodocente() {
+                var selected_option = $('#id_id_materia').val();
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'id_materia': selected_option,
+                        'campo': 'funcionariodocente'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_funcionario_docente_encargado').html(data);
+                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
+                        if (band_boton_selects == 2) {
+                            $('#id_id_funcionario_docente_encargado').val(lista_cita[0]['id_funcionario_docente_encargado']);
+                        }
+                        band_boton_selects= band_boton_selects + 1
+                    }
+                });
+            }
+
+            //ejecutar si cambia la materia para actualiar fun/doc
+            $('#id_id_materia').change(function() {
+                actualizarfuncionariodocente()
+            });
+
+            //aplicar formato select2 a todos los dropdowns
+            $('.select2').select2({
+                theme: "bootstrap4",
+                language: 'es'
+            });
+
+
+            // search participantes
+            $('input[name="search"]').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'POST',
+                        data: {
+                            'action': 'search_participantes',
+                            'term': request.term
+                        },
+                        dataType: 'json',
+                    }).done(function (data) {
+                        response(data);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        //alert(textStatus + ': ' + errorThrown);
+                    }).always(function (data) {
+
+                    });
+                },
+                delay: 500,
+                minLength: 1,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    //console.clear();
+                    var validar;
+                    validar= actividad_academica.verificar_participante(ui.item["id"])
+                    if (validar) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'El participante ya fue agregado en la lista!',
+                        });
+                    }
+                    else{
+                        actividad_academica.add(ui.item);
+                        $(this).val('');
+                    }
+                }
+            });
+
+            //elimina todos los participantes
+            $('.btnRemoveAll').on('click', function () {
+                if (actividad_academica.items.participantes.length === 0) return false;
+                alert_action('Notificación', '¿Estas seguro de eliminar todos los participantes?', function () {
+                    actividad_academica.items.participantes = [];
+                    actividad_academica.list();
+                });
+            });
+
+            //eliminar por item de participante
+            $('#tblParticipantes tbody')
+                .on('click', 'a[rel="remove"]', function () {
+                    var tr = tblParticipantes.cell($(this).closest('td, li')).index();
+                    alert_action('Notificación', '¿Estas seguro de eliminar el participante?', function () {
+                        actividad_academica.items.participantes.splice(tr.row, 1);
+                        actividad_academica.list();
+                    });
+                })
+
+            //actualizar las busqueda de CI
+            $('.btnClearSearch').on('click', function () {
+                $('input[name="search"]').val('').focus();
+            });
+            
+
+            // Cita submit, asignacion de atributos para enviar
+            $('form').on('submit', function (e) {
+
+                e.preventDefault();                
+                //primero debemos validar que los campo obligatorios esten cargados 
+                //capturamos el valor de las horas
+                var inputInicio = document.getElementById('hora_inicio').value;
+                var inputFin = document.getElementById('hora_fin').value;
+
+                // Convertir las cadenas de texto en objetos Date usados para comparar los horario
+                var horaInicio = new Date("1970-01-01T" + inputInicio + ":00");
+                var horaFin = new Date("1970-01-01T" + inputFin + ":00");
+
+                // Obtener los componentes de la fecha actual
+                var fechaActual = new Date();
+                var anio = fechaActual.getFullYear();
+                var mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Se suma 1 al mes porque los meses en JavaScript son base 0
+                var dia = String(fechaActual.getDate()).padStart(2, '0');
+                var seg = ':00';
+                
+                //usados para guardar en la BD
+                var fechaFinalInicio = `${anio}-${mes}-${dia} ${inputInicio}${seg}`;
+                var fechaFinalFin = `${anio}-${mes}-${dia} ${inputFin}${seg}`;
+
+                // Comparar las horas
+                if (horaFin <= horaInicio) {
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'La hora de fin debe ser mayor que la hora de inicio.',
+                    });
+
+                } else {
+
+                    //seleccionamos los datos del formulario
+                    actividad_academica.items.id_facultad = $('select[name="id_facultad"]').val();
+                    actividad_academica.items.id_materia = $('select[name="id_materia"]').val();
+                    actividad_academica.items.id_funcionario_docente_encargado = $('select[name="id_funcionario_docente_encargado"]').val();
+                    actividad_academica.items.motivo = $('textarea[name="motivo"]').val();
+                    actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
+                    actividad_academica.items.observacion = $('textarea[name="observacion"]').val();
+                    
+                    //datos de tutoria
+                    actividad_academica.items.nombre_trabajo_grado = $('textarea[name="nombre_trabajo_grado"]').val();
+                    actividad_academica.items.id_tipo_tutoria = $('select[name="id_tipo_tutoria"]').val();
+                    actividad_academica.items.datetime_inicio_real = fechaFinalInicio;
+                    actividad_academica.items.datetime_fin_real = fechaFinalFin;
+
+
+                    var parameters = new FormData();
+                    parameters.append('action', $('input[name="action"]').val());
+                    parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
+                    submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de solicitar la cita?', parameters, function () {
+                        location.href = '/running-event-list/Tutoria/';
+                    });
+                    
+                }
+            });
+
+            //boton de cancelar
+            $('.btnCancelar').on('click', function () {
+                alert_action('Notificación', '¿Estas seguro de cancelar el proceso?', function () {
+                    window.location.href= '/running-event-list/Tutoria/'
+                });
+            });
+
+        });
+
+        if (lista_participantes.length === 0){
+            actividad_academica.list();
+        }
+        else {
+
+            actividad_academica.actualizar_participantes(lista_participantes)
+        }
+
+    </script>
+
+
+{% endblock extrascripts %}

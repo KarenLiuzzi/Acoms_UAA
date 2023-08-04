@@ -80,7 +80,7 @@ class Event(EventAbstract):
     datetime_fin_estimado = models.DateTimeField()
     datetime_inicio_real = models.DateTimeField(null= True, blank=True)
     datetime_fin_real = models.DateTimeField(null= True, blank=True)
-    datetime_registro = models.DateTimeField(auto_now=True)
+    datetime_registro = models.DateTimeField() #auto_now=True
     observacion= models.CharField(max_length=500, null= True, blank=True)
     nro_curso= models.CharField(max_length=30, null= True, blank=True)
     #comento esto
