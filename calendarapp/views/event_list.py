@@ -72,3 +72,32 @@ def CancelarCita(request, id_cita):
     else:
         
         return render(request, "calendarapp/cancelar_cita.html", context = {"id_cita": id_cita})
+    
+    
+    
+@csrf_exempt
+def AprobarCita(request, id_cita):
+    if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
+            try:
+                
+                    record = Event.objects.get(id_actividad_academica=id_cita)
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Confirmado').first()
+                    record.id_estado_actividad_academica= estado
+                    record.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Confirmada."})})
+
+            except:
+                messages.error(request, 'Ocurrió un error al intentar confirmar la cita.')
+                
+                return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})
+                
+    else:
+        
+        return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})

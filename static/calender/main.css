@@ -1468,24 +1468,8 @@ A VERTICAL event
   
 }
 
-.list-event-border-color-green  .fc .fc-list-event-dot{
+.event-border-color-orange .fc-daygrid-event-dot{
 
-  display: inline-block;
-    box-sizing: content-box;
-    width: 0;
-    height: 0;
-    border: 5px solid #0cc55c;
-    border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #0cc55c);
-    border-radius: 5px;
-    border-radius: calc(var(--fc-list-event-dot-width, 10px) / 2);
-}
+  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #d89219);
 
-.list-event-border-color-red   .fc .fc-list-event-dot{
-
-  border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #ba0f4e);
-}
-
-.list-event-border-color-yellow .fc .fc-list-event-dot{
-
-  border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #dcd91f);
 }

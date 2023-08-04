@@ -1,0 +1,33 @@
+{% load static %}
+<form hx-post= "{{request.path}}" class="modal-content">
+    {% csrf_token %}
+      <div class='modal-header text-center'>
+        <h3 class="modal-title w-100">Cancelar Cita</h3> 
+      </div>
+
+      <p class="or">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <span class="text-danger"> {{ message }} </span>
+                {% endfor %}
+            </ul>
+        {% endif %} 
+      </p> 
+
+        <div class="col-md-12">
+            <div class="form-group">
+              <label class="label">Está seguro que desea confirmar la cita?</label>
+            </div>
+        </div>
+      </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="cancelar">Aceptar</button>
+        </div>  
+            
+      </div>
+</form>  
+
+
