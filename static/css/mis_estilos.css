@@ -2,3 +2,9 @@
     font-weight: bold;
     color: #009688;
   }
+
+
+  /* Agregar margen a la clase "add-space" */
+.add-space {
+  margin-left: 5px; /* Puedes ajustar el valor según necesites */
+}
