@@ -552,11 +552,11 @@ class CitaOrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
         return data
     
     def get_details_orientacion_academica(self):
-        data = Tutoria.objects.none()
+        data = OrientacionAcademica.objects.none()
         try:
             #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
-            tutoria= OrientacionAcademica.objects.filter(id_orientacion_academica=self.get_object().id_cita)
-            data= tutoria
+            orientacion_academica= OrientacionAcademica.objects.filter(id_orientacion_academica=self.get_object().id_cita).first()
+            data= orientacion_academica
                     
         except:
             pass
