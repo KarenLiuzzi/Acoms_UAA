@@ -461,7 +461,7 @@ def actualizar_campo(request):
         options = ''
         for item in queryset:
             #options += f'<option value="{item.id_funcionario_docente}">{item.id_funcionario_docente.id_funcionario_docente.nombre} {item.id_funcionario_docente.id_funcionario_docente.apellido}</option>'
-             options += f'<option value="{item["id_funcionario_docente"]}">{item["id_funcionario_docente__nombre"]} {item["id_funcionario_docente__apellido"]}</option>'
+            options += f'<option value="{item["id_funcionario_docente"]}">{item["id_funcionario_docente__nombre"]} {item["id_funcionario_docente__apellido"]}</option>'
     
     elif campo == "tipo_tutoria":
         queryset= ""
@@ -514,12 +514,14 @@ def actualizar_campo(request):
         
         #traemos el id del func_doc
         queryset= ""
-        funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user.id).values('id_funcionario_docente').first()
+        funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user.id).values('id_funcionario_docente', 'id_funcionario_docente__nombre', 'id_funcionario_docente__apellido')
         queryset= funcionario_docente
 
         # Pasar los datos del queryset a datos HTML
         options = ''
-        options= queryset
+        for item in queryset:
+            options += f'<option value="{item["id_funcionario_docente"]}">{item["id_funcionario_docente__nombre"]} {item["id_funcionario_docente__apellido"]}</option>'
+    
         
     # elif campo == "funcdoc_logeado_materias": #usado para el add de tutoria
         
@@ -547,7 +549,55 @@ def actualizar_campo(request):
         options = ''
         for item in queryset:
             options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'
+    
+    if campo == "facultad_func_doc":
+        
+        #obtenemos el usuario que solicita
+        current_user = request.user
+        
+        #traemos el id del func_doc
+        queryset= ""
+        #traemos los departamentos del func_doc
+        departamentos=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user.id).values('id_departamento').first()
+        #traemos las facultades de los departmantos
+        facultades= Departamento.objects.filter(id_departamento__in = departamentos).filter("id_facultad").first()
+        queryset= ""
+        queryset= Facultad.objects.filter(id_facultad= facultades)
+        
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            options += f'<option value="{item.id_facultad}">{item.descripcion_facultad}</option>'
 
+    if campo == "convocatoria":
+        
+        # Obtén la fecha actual
+        fecha_actual = datetime.now().date()
+        queryset= ""
+        #traemos la convocatoria actual
+        prueba= Convocatoria.objects.filter(id_convocatoria= 1).values('fecha_fin')
+        queryset= Convocatoria.objects.filter(fecha_fin__gte = fecha_actual)
+        
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            options += f'<option value="{item.id_convocatoria}">{item.id_semestre.descripcion_semestre} {item.anho} </option>'
+            
+    if campo == "personas":
+     
+        queryset= ""
+        queryset= Persona.objects.all()
+        
+        # Pasar los datos del queryset a datos HTML
+        contador = 0
+        options = ''
+        for item in queryset:
+            if contador == 0:
+                options += f'<option value=""></option>'
+                options += f'<option value="{item.id}">{item.nombre} {item.apellido} {item.documento}</option>'
+            else:
+                 options += f'<option value="{item.id}">{item.nombre} {item.apellido} {item.documento}</option>'  
+                
     return JsonResponse(options, safe=False)
 
 # def obtener_participante(request):
@@ -708,6 +758,7 @@ class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
                     cita.id_materia= ins_materia
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
                     cita.id_persona_alta= ins_persona
+                    cita.id_persona_solicitante= ins_persona
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
@@ -813,6 +864,7 @@ class CitaOrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     cita.id_facultad= ins_facultad
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
                     cita.id_persona_alta= ins_persona
+                    cita.id_persona_solicitante= ins_persona
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
@@ -1798,14 +1850,15 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                     dict = model_to_dict(current_user)
                     id_persona=  dict["id_persona"]
                     #convertimos nuestras fechas en formato datetime 
-                    fecha_hora_inicio = datetime.strptime(actividad_academica['datetime_inicio_estimado'], '%d-%m-%Y %H:%M:%S')
-                    fecha_hora_fin = datetime.strptime(actividad_academica['datetime_fin_estimado'], '%d-%m-%Y %H:%M:%S')
+                    fecha_hora_inicio = datetime.strptime(actividad_academica['datetime_inicio_estimado'], '%Y-%m-%d %H:%M:%S')
+                    fecha_hora_fin = datetime.strptime(actividad_academica['datetime_fin_estimado'], '%Y-%m-%d %H:%M:%S')
                     #obtener las instancias de los objectos 
                     ins_convocatoria= Convocatoria.objects.get(id_convocatoria= actividad_academica['convocatoria'])
                     ins_facultad= Facultad.objects.get(id_facultad= actividad_academica['id_facultad'])
                     ins_materia= Materia.objects.get(id_materia= id_materia)
                     ins_func_doc_encargado= FuncionarioDocente.objects.get(id_funcionario_docente= actividad_academica['id_funcionario_docente_encargado'])
                     ins_persona= Persona.objects.get(id= id_persona)
+                    ins_solicitante= Persona.objects.get(id= actividad_academica['id_solicitante'])
                     
                     cita.id_estado_actividad_academica = id_estado
                     cita.id_departamento= ins_departamento
@@ -1814,9 +1867,13 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                     cita.id_materia= ins_materia
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
                     cita.id_persona_alta= ins_persona
+                    cita.id_persona_solicitante= ins_solicitante
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
+                    cita.datetime_inicio_real= fecha_hora_inicio
+                    cita.datetime_fin_real= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
+                    cita.observacion= actividad_academica['observacion']
                     cita.datetime_registro= datetime.now()
                     cita.save()
                     
@@ -1825,12 +1882,10 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                     
                     # #tambien damos de alta el hijo de Event (tutoria)
                     tutoria= Tutoria()
-                    tutoria.id_cita= ins_actividad_academica
-                    tutoria.es_tutoria= True
-                    #traemos el parametro actual 
-                    id_parametro = Parametro.objects.filter(es_tutoria= True, id_unidad_medida__descripcion_unidad_medida__contains='minutos').first()
-                    tutoria.id_parametro= id_parametro
-                    tutoria.motivo= actividad_academica['motivo']
+                    tutoria.id_tutoria= ins_actividad_academica
+                    ins_tipo_tutoria=  TipoTutoria.objects.get(id_tipo_tutoria= actividad_academica['id_tipo_tutoria'])
+                    tutoria.id_tipo_tutoria= ins_tipo_tutoria
+                    tutoria.nombre_trabajo= actividad_academica['nombre_trabajo'] 
                     tutoria.save()
                     
                     # #guardamos el detalle de participantes

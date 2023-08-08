@@ -30,7 +30,7 @@
                 <div class="col-lg-7">
                     <div class="card card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Tutoría</h3>
+                            <h3 class="card-title"><i class="bi bi-person-video3"></i> Datos de la Tutoría</h3>
                         </div>
                         <div class="card-body">
                             <input type="hidden" name="action" value="{{ action }}">
@@ -64,6 +64,7 @@
                                 <label class="label" for="hora_inicio">Inicio</label> 
                                 <div class="input-group">
                                     <input type="datetime-local" class="form-control" id="hora_inicio" name="hora_inicio">
+                                    <a href="#" id="ahora_inicio">  Ahora </a>
                                 </div>
                             </div>
 
@@ -71,15 +72,20 @@
                                 <label class="label" for="hora_fin">Fin</label> 
                                 <div class="input-group">
                                     <input type="datetime-local" class="form-control" id="hora_fin" name="hora_fin">
+                                    <a href="#" id="ahora_fin">  Ahora </a>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_tipo_tutoria">Solicitante</label>
+                                <select name="id_solicitante" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_solicitante" data-select2-id="id_id_solicitante" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="id_tipo_tutoria">Tipo de Tutoría</label>
                                 <select name="id_tipo_tutoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tutoria" data-select2-id="id_id_tipo_tutoria" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="nombre_trabajo_grado">Nombre de Trabajo de Grado</label>
-                                <textarea placeholder= "Opcional, en caso de tratarse de una tutoría de trabajo de grado..." class="form-control" rows="4" cols="30" name="nombre_trabajo_grado" maxlength="200"></textarea>
+                                <label class="label" for="nombre_trabajo_grado">Nombre de Trabajo</label>
+                                <textarea placeholder= "Opcional, en caso de tratarse de una tutoría de trabajo de grado o tésis..." class="form-control" rows="4" cols="30" name="nombre_trabajo" maxlength="200"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="observacion">Observación</label>
@@ -92,7 +98,7 @@
                 <div class="col-lg-5">
                     <div class="card card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-boxes"></i>Participantes adicionales</h3>
+                            <h3 class="card-title"><i class="bi bi-people"></i> Participantes adicionales</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
@@ -130,7 +136,7 @@
             <button type="submit" class="btn btn-primary btn-flat">
                 <i class="bi bi-calendar-check"></i> Guardar registro
             </button> 
-            <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i>Cancelar</button>
+            <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i> Cancelar</button>
 
         </div>
     </div>
@@ -166,14 +172,13 @@
     <script src="{% static 'js/functions.js' %}"></script>
 
     <script>
+        // Obtén una referencia al enlace y al elemento input
+        var ahoraInicioLink = document.getElementById("ahora_inicio");
+        var horaInicioInput = document.getElementById("hora_inicio");
+        var ahoraFinLink = document.getElementById("ahora_fin");
+        var horaFinInput = document.getElementById("hora_fin");
 
-        var band_boton_selects= 0
-        var hora_inicio;
-        var hora_fin;
-        var convocatoria;
-        var tblHorarios;
         var mi_form= $('#tutoria')
-
         var tblParticipantes;
         var actividad_academica = {
             items: {
@@ -181,12 +186,14 @@
                 id_materia: '',
                 id_funcionario_docente_encargado: '',
                 id_solicitante: '',
-                motivo: '',
                 nro_curso: '',
                 participantes: [],
                 convocatoria: '',
                 datetime_inicio_estimado: '',
-                datetime_fin_estimado: ''
+                datetime_fin_estimado: '',
+                id_tipo_tutoria: '',
+                nombre_trabajo: '',
+                observacion: ''
             },
 
             add: function (item) {
@@ -238,8 +245,43 @@
 
         $(document).ready(function() {
 
+            // Agrega un evento de clic al enlace
+            ahoraInicioLink.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaInicioInput.value = fechaHoraActual;
+            });
+
+            // Agrega un evento de clic al enlace
+            ahoraFinLink.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaFinInput.value = fechaHoraActual;
+            });
+
             //cuando se cargue la pagina traer todas las facultades
             actualizarfacultad();
+            actualizarconvocatoria();
+            actualizartipo_tutoria();
+            actualizar_personas();
 
             //primero debemos actualizar el docente y en base a eso la facultad y en base a eso las materias del profesor 
 
@@ -253,65 +295,108 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_facultad').html(data);
-                        band_boton_selects= band_boton_selects + 1
+                        actualizarfuncionariodocente()
+                       
+                    }
+                });
+                 //cuando este en produccion favor cambiar la facultad para que traiga por las facultades que corresponden al departamento del funcionario docente
+                //$.ajax({
+                //    url: '/actualizar_campo/',
+                //    data: {
+                //        'campo': 'facultad_func_doc'
+                //    },
+                //    dataType: 'json',
+                //    success: function(data) {
+                //        $('#id_id_facultad').html(data);
+                //        band_boton_selects= band_boton_selects + 1
+                //        actualizarfuncionariodocente()
+                //    }
+                //});
+
+            }
+
+            function actualizarconvocatoria() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'convocatoria'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_convocatoria').html(data);
+                       
                     }
                 });
             }
-            
-            //ejecutar si cambia la facultad para actualizar materia y func/doc
-            $('#id_id_facultad').change(function() {
-                actualizarfuncionariodocente()
-            });
+
+            function actualizartipo_tutoria() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'tipo_tutoria'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_tipo_tutoria').html(data);
+                    }
+                });
+            }
+
+            function actualizar_personas() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'personas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_solicitante').html(data);
+                    }
+                });
+            }
 
             //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
             function actualizarfuncionariodocente() {
                 //debemos seleccionar el id del funcionario docente que este actualmente logeado, si no no hacer nada 
-                if (band_boton_selects== 1) {
-                    $.ajax({
-                        url: '/actualizar_campo/',
-                        data: {
-                            'campo': 'funcionariodocente_logeado'
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            // Convertir a diccionario
-                            var diccionario = Object.assign({}, data);
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'funcionariodocente_logeado'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        // Convertir a diccionario
+                        var diccionario = Object.assign({}, data);
 
-                            // Verificar si el diccionario tiene datos
-                            var tieneDatos = Object.keys(diccionario).length > 0;
-                                if (tieneDatos) {
-                                    console.log(diccionario.id_funcionario_docente)
-                                    $('#id_id_funcionario_docente_encargado').val(diccionario.id_funcionario_docente)
-                                    band_boton_selects= band_boton_selects + 1
-                                    //habilitar una vez que el func_doc tenta asignado un departamento
-                                    //$.ajax({
-                                    //    url: '/actualizar_campo/',
-                                    //    data: {
-                                    //        'campo': 'funcdoc_logeado_materias',
-                                    //        'func_doc'= diccionario.id_funcionario_docente
-        
-                                    //    },
-                                    //    dataType: 'json',
-                                    //    success: function(datos) {
-                                            // Convertir a diccionario
-                                    //        diccionario = Object.assign({}, datos);
-        
-                                            // Verificar si el diccionario tiene datos
-                                    //        var tieneDatos = Object.keys(diccionario).length > 0;
-                                    //            if (tieneDatos) {
-                                    //                $('#id_id_materia').html(datos)
-                                    //            }
-                                    //    }
-                                    //});
-                                    //traemos las materias que esten asociadas al funcionario docente
-                                    actualizarmaterias_func_doce(diccionario.id_funcionario_docente)
-                                }
-                        }
-                    });
-                    
-                }
-
-                        
+                        // Verificar si el diccionario tiene datos
+                        var tieneDatos = Object.keys(diccionario).length > 0;
+                            if (tieneDatos) {
+                                $('#id_id_funcionario_docente_encargado').html(data);
+                                //habilitar una vez que el func_doc tenta asignado un departamento
+                                //$.ajax({
+                                //    url: '/actualizar_campo/',
+                                //    data: {
+                                //        'campo': 'funcdoc_logeado_materias',
+                                //        'func_doc'= diccionario.id_funcionario_docente
+    
+                                //    },
+                                //    dataType: 'json',
+                                //    success: function(datos) {
+                                        // Convertir a diccionario
+                                //        diccionario = Object.assign({}, datos);
+    
+                                        // Verificar si el diccionario tiene datos
+                                //        var tieneDatos = Object.keys(diccionario).length > 0;
+                                //            if (tieneDatos) {
+                                //                $('#id_id_materia').html(datos)
+                                //            }
+                                //    }
+                                //});
+                                //traemos las materias que esten asociadas al funcionario docente
+                                actualizarmaterias_func_doce($('#id_id_funcionario_docente_encargado').val())
+                            }
+                    }
+                });                        
             }
             //actualizar las materias que esten asociadas al funcionario docente
             function actualizarmaterias_func_doce(func_doc) {
@@ -332,20 +417,9 @@
                                 $('#id_id_materia').html(data);
 
                             }
-                        band_boton_selects= band_boton_selects + 1
                      }       
                 });
             }
-
-            //ejecutar si cambia la materia para actualiar fun/doc
-            $('#id_id_materia').change(function() {
-                actualizarfuncionariodocente()
-            });
-
-             //ejecutar si cambia el func doce para actualiar materias
-             $('#id_id_funcionario_docente_encargado').change(function() {
-                actualizarmaterias_func_doce($('#id_id_funcionario_docente_encargado').val())
-            });
 
             //aplicar formato select2 a todos los dropdowns
             $('.select2').select2({
@@ -424,31 +498,75 @@
                 e.preventDefault();
 
                 //primero debemos validar que los campo obligatorios esten cargados 
+                //validar que el fin no sean menor o igual a Inicio
 
-                //seleccionamos los datos del formulario
-                actividad_academica.items.id_facultad = $('select[name="id_facultad"]').val();
-                actividad_academica.items.id_materia = $('select[name="id_materia"]').val();
-                actividad_academica.items.id_funcionario_docente_encargado = $('select[name="id_funcionario_docente_encargado"]').val();
-                actividad_academica.items.motivo = $('textarea[name="motivo"]').val();
-                actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
+                var horaInicioValue = horaInicioInput.value;
+                var horaFinValue = horaFinInput.value;
 
-                // traer los datos de la seleccion de horario
-                actividad_academica.items.convocatoria =convocatoria;
-                actividad_academica.items.datetime_inicio_estimado = hora_inicio;
-                actividad_academica.items.datetime_fin_estimado = hora_fin;
+                if (horaInicioValue && horaFinValue) {
 
-                var parameters = new FormData();
-                parameters.append('action', $('input[name="action"]').val());
-                parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
-                submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de solicitar la cita?', parameters, function () {
-                    location.href = '/running-event-list/Tutoria/';
-                });
+                    var horaInicio = new Date(horaInicioValue);
+                    horaInicioFinal = horaInicio.getFullYear() + "-" +
+                    ("0" + (horaInicio.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaInicio.getDate()).slice(-2) + " " +
+                    ("0" + horaInicio.getHours()).slice(-2) + ":" +
+                    ("0" + horaInicio.getMinutes()).slice(-2) + ":00";
+                    var horaFin = new Date(horaFinValue);
+                    horaFinFinal = horaFin.getFullYear() + "-" +
+                    ("0" + (horaFin.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaFin.getDate()).slice(-2) + " " +
+                    ("0" + horaFin.getHours()).slice(-2) + ":" +
+                    ("0" + horaFin.getMinutes()).slice(-2) + ":00";
+
+                    if (horaFin <= horaInicio) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'La hora de fin debe ser mayor que la hora de inicio.',
+                        });
+
+                    } else {
+                         //validar que tenga cargado un id_solicitante
+                        if ($('select[name="id_solicitante"]').val() == "" ){
+
+                            $.alert({
+                                title: 'Alerta!',
+                                content: 'Debe seleccionar un solicitante.',
+                            });
+                        }
+                        else {
+                            //seleccionamos los datos del formulario
+                            actividad_academica.items.id_facultad = $('select[name="id_facultad"]').val();
+                            actividad_academica.items.id_materia = $('select[name="id_materia"]').val();
+                            actividad_academica.items.id_funcionario_docente_encargado = $('select[name="id_funcionario_docente_encargado"]').val();
+                            actividad_academica.items.id_solicitante = $('select[name="id_solicitante"]').val();
+                            actividad_academica.items.convocatoria = $('select[name="id_convocatoria"]').val();
+                            actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
+                            actividad_academica.items.datetime_inicio_estimado = horaInicioFinal
+                            actividad_academica.items.datetime_fin_estimado = horaFinFinal
+                            actividad_academica.items.id_tipo_tutoria = $('select[name="id_tipo_tutoria"]').val();
+                            actividad_academica.items.nombre_trabajo = $('textarea[name="nombre_trabajo"]').val();
+                            actividad_academica.items.observacion = $('textarea[name="observacion"]').val();
+
+                            var parameters = new FormData();
+                            parameters.append('action', $('input[name="action"]').val());
+                            parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
+                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de finalizar la tutoría?', parameters, function () {
+                                location.href = '/running-acti_academ-list/Tutoria/';
+                            });
+                        }
+                    }
+                } else {
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'Los campos de hora inicio y fin deben estar cargados.',
+                    });
+                }
             });
 
             //boton de cancelar
             $('.btnCancelar').on('click', function () {
                 alert_action('Notificación', '¿Estas seguro de cancelar el proceso?', function () {
-                    window.location.href= '/running-event-list/Tutoria/'
+                    window.location.href= '/running-acti_academ-list/Tutoria/'
                 });
             });
 
