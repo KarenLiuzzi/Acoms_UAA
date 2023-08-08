@@ -149,7 +149,7 @@
                                   <a class="btn btn-primary mt-2" href="" id="id_cita" title="Más Detalles">
                                       <i class="bi bi-eye-fill"></i>
                                   </a>
-                                  <a class="btn btn-primary mt-2" href="" id="id_iniciar_cita" title="Iniciar cita">
+                                  <a class="btn btn-primary mt-2" href="#" id="id_iniciar_cita" title="Iniciar cita" disabled="true">
                                     <i class="bi bi-caret-right-fill"></i>
                                   </a>
                               </div>
@@ -431,8 +431,6 @@
         // Obtener el elemento <div> con el ID "container" para insertar nuestros botones dinamicamente
         const container = document.getElementById("container");
 
-        
-
         //verificar
         if (tipo == 'Tutoría'){
           modalid_cita.href= '/moredetallesCitaTutoria/'+ id_cita
@@ -447,7 +445,6 @@
           }
 
           if (estado == "Pendiente") {
-            console.log(estado)
             
             // Crear un nuevo elemento <a>
             const newLink = document.createElement("a");
@@ -480,7 +477,6 @@
           }
 
           if (estado == "Pendiente") {
-            console.log(estado)
             // Crear un nuevo elemento <a>
             const link = document.createElement("a");
             link.className = "btn btn-primary mt-2";

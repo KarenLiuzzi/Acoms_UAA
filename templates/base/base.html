@@ -151,8 +151,24 @@
                         </li>
                     </ul>
                 </li>
+
+                <li class="treeview">
+                    <a class="app-menu__item" href="#" data-toggle="treeview"><i class="bi bi-people app-menu__icon fa fa-th-list"></i><span class="app-menu__label"> Actividades Académicas</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li>
+                            <a class="treeview-item" href="{% url 'calendarapp:running_acti_academ' tipo_cita="Tutoria" %}"><i class="icon fa fa-circle-o"></i> Tutorías</a>
+                        </li>
+                        <li>
+                            <a class="treeview-item" href="{% url 'calendarapp:running_acti_academ' tipo_cita="OriAcademica" %}"><i class="icon fa fa-circle-o"></i> Orientaciones Académicas</a>
+                        </li>
+                        <li>
+                            <a class="treeview-item" href="{% url 'calendarapp:all_acti_academ' %}"><i class="icon fa fa-circle-o"></i>Todo</a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li>
-                    <a class="app-menu__item" href="{% url 'calendarapp:form_cal_func_doc' %}"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Administrar Calendario</span></a>
+                    <a class="app-menu__item" href="{% url 'calendarapp:form_cal_func_doc' %}"><i class="bi bi-calendar app-menu__icon fa fa-file-code-o bi bi-calendar"></i><span class="app-menu__label">Administrar Calendario</span></a>
                 </li>
             </ul>
         </aside>

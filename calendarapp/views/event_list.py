@@ -20,6 +20,15 @@ class AllEventsListView(ListView):
         #return Event.objects.get_all_events(user=self.request.user)
         return Event.objects.get_all_events()
 
+class ActividadesAcademicasListView(ListView):
+    """ All event list views """
+
+    template_name = "calendarapp/actividades_academicas_list.html"
+    model = Event
+
+    def get_queryset(self):
+        #return Event.objects.get_all_events(user=self.request.user)
+        return Event.objects.get_all_acti_academ()
 
 class RunningEventsListView(ListView):
     """ Running events list view """
@@ -31,6 +40,17 @@ class RunningEventsListView(ListView):
         parametro = self.kwargs['tipo_cita']
         #return Event.objects.get_running_events(user=self.request.user) 
         return Event.objects.get_running_events(tipo_cita= parametro)
+    
+class RunningActividadesAcademicasListView(ListView):
+    """ Running events list view """
+
+    template_name = "calendarapp/actividades_academicas_list.html"
+    model = Event
+
+    def get_queryset(self):
+        parametro = self.kwargs['tipo_cita']
+        #return Event.objects.get_running_events(user=self.request.user) 
+        return Event.objects.get_running_acti_academ(tipo_cita= parametro)
 
 def DetalleCita(request, id_cita):
     cita= Cita.objects.filter(id_cita= id_cita).select_related("id_cita").first()

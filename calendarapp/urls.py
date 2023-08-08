@@ -1,8 +1,8 @@
 from django.urls import path
-from calendarapp.views.other_views import formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita ,AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, TutoriaCreateView, OrientacionAcademicaCreateView, TutoriaUpdateView, OrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, TutoriaIniciarView, OrientacionAcademicaIniciarView#ListCalendarioFuncDoc
+from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita, tipo_acti_academ, AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, CitaTutoriaCreateView, CitaOrientacionAcademicaCreateView, CitaTutoriaUpdateView, CitaOrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, CitaTutoriaIniciarView, CitaOrientacionAcademicaIniciarView#ListCalendarioFuncDoc
 
 from calendarapp.views import CalendarView, CalendarViewNew, AllEventsListView, RunningEventsListView, DetalleCita, CancelarCita
-from calendarapp.views.event_list import AprobarCita
+from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView
 
 app_name = "calendarapp"
 
@@ -34,17 +34,24 @@ urlpatterns = [
     path("tipoCita/", tipo_cita, name="tipo_cita"),
     path('actualizar_campo/', actualizar_campo, name='actualizar_campo'),
     path("detallesCita/<int:id_cita>/", DetalleCita, name="detalles_cita"),
-    path("cita/confirmar/<int:id_cita>/", CancelarCita, name="cancelar_cita"),
-    path("cita/cancelar/<int:id_cita>/", AprobarCita, name="confirmar_cita"),
-    path("tutoria/", TutoriaCreateView.as_view(), name="tuto"),
-    path("orientacionAcademica/", OrientacionAcademicaCreateView.as_view(), name="academica"),
-    path("modificarCitaTutoria/<int:pk>/", TutoriaUpdateView.as_view(), name="modificar_cita_tutoria"),
-    path("modificarCitaOriAcademica/<int:pk>/", OrientacionAcademicaUpdateView.as_view(), name="modificar_cita_ori_academica"),
+    path("cita/confirmar/<int:id_cita>/", AprobarCita, name="confirmar_cita"),
+    path("cita/cancelar/<int:id_cita>/", CancelarCita, name="cancelar_cita"),
+    path("tutoria/", CitaTutoriaCreateView.as_view(), name="tuto"),
+    path("orientacionAcademica/", CitaOrientacionAcademicaCreateView.as_view(), name="academica"),
+    path("modificarCitaTutoria/<int:pk>/", CitaTutoriaUpdateView.as_view(), name="modificar_cita_tutoria"),
+    path("modificarCitaOriAcademica/<int:pk>/", CitaOrientacionAcademicaUpdateView.as_view(), name="modificar_cita_ori_academica"),
     path('obtener_horarios_cita/', obtener_horarios_cita),
     path("all-event-list/", AllEventsListView.as_view(), name="all_events"),
     path("running-event-list/<str:tipo_cita>/",RunningEventsListView.as_view(),name="running_events"), 
     path("moredetallesCitaTutoria/<int:pk>/", CitaTutoriaDetalle.as_view() , name="more_detalles_cita_tutoria"),
     path("moredetallesCitaOriAcadem/<int:pk>/", CitaOrientacionAcademicaDetalle.as_view() , name="more_detalles_ori_academica"),
-    path("iniciarCitaTutoria/<int:pk>/", TutoriaIniciarView.as_view() , name="iniciar_cita_tutoria"),
-    path("iniciarCitaOrientacionAcademica/<int:pk>/", OrientacionAcademicaIniciarView.as_view() , name="iniciar_cita_ori_academ"),
+    path("iniciarCitaTutoria/<int:pk>/", CitaTutoriaIniciarView.as_view() , name="iniciar_cita_tutoria"),
+    path("iniciarCitaOrientacionAcademica/<int:pk>/", CitaOrientacionAcademicaIniciarView.as_view() , name="iniciar_cita_ori_academ"),
+    
+    #Actividades Academicas
+    path("tipoActiAcadem/", tipo_acti_academ, name="tipo_acti_academ"),
+    path("all-acti_academ-list/", ActividadesAcademicasListView.as_view(), name="all_acti_academ"),
+    path("running-acti_academ-list/<str:tipo_cita>/",RunningActividadesAcademicasListView.as_view(),name="running_acti_academ"), 
+    path("actiAcademTutoria/", TutoriaCreateView.as_view(), name="acti_academ_tutoria"),
+    
 ]
