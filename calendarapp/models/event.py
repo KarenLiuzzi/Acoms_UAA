@@ -99,7 +99,7 @@ class Event(EventAbstract):
     id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='departamento')
     id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='funcionario_docente_encarcado')
    #comento esto
-    #id_persona_receptor= models.ForeignKey(Persona, on_delete=models.SET_NULL, related_name='persona_receptor', blank=True, null=True)
+    id_persona_solicitante= models.ForeignKey(Persona, on_delete=models.SET_NULL, blank=True, null=True)
     id_persona_alta= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_alta')
     datetime_inicio_estimado = models.DateTimeField()
     datetime_fin_estimado = models.DateTimeField()

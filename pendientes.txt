@@ -5,4 +5,5 @@
 - cuidado con el firts value del ABM de caldendario fucnionario docente
 - cambiar la forma de traer  el departamento al cual esta asociado el funcionario docente en CitaOrientacionAcademicaCreateView y 
 - cambiar la forma de traer en las tutorias y orientaciones las materias asignadas al docente, por el departament asignado a los mismos en 
+-cambiar la forma de traer la facultad en la carga de tutoria
 tutoria_create
