@@ -388,6 +388,9 @@ def delCalendarioFuncDoc(request, pk):
 #agregados de pruebas
 
 def tipo_cita(request):
+    return render(request,'calendarapp/tipo_cita.html')
+
+def tipo_acti_academ(request):
     return render(request,'calendarapp/tipo_actividad_academica.html')
 
 def ori_academica(request):
@@ -503,7 +506,47 @@ def actualizar_campo(request):
                 options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'
             else:
                 options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'       
+    
+    elif campo == "funcionariodocente_logeado": #usado para el add de tutoria
         
+        #obtenemos el usuario que solicita
+        current_user = request.user
+        
+        #traemos el id del func_doc
+        queryset= ""
+        funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user.id).values('id_funcionario_docente').first()
+        queryset= funcionario_docente
+
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        options= queryset
+        
+    # elif campo == "funcdoc_logeado_materias": #usado para el add de tutoria
+        
+    #     selected_option= ""
+    #     selected_option = request.GET.get('func_doc')
+    #     #obtenemos primeramente el departamento asignado al funcionario logeado
+    #     departamentos =  FuncionarioDocente.objects.filter(id_funcionario_docente= selected_option).values("id_departamento")
+    #     queryset= Materia.objects.filter(id_departamento__in = departamentos)
+        
+    #     # Pasar los datos del queryset a datos HTML
+    #     options = ''
+    #     for item in queryset:
+    #         options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'
+    
+    elif campo == "funcdoc_logeado_materias": #usado para el add de tutoria
+        
+        selected_option= ""
+        selected_option = request.GET.get('func_doc')
+        #obtenemos las materias asignadas al usuario actual
+        usuario =  User.objects.filter(id= selected_option).first()
+        materias_asignadas = usuario.materia_func_doc.all()
+        queryset= Materia.objects.filter(id_materia__in = materias_asignadas)
+        
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'
 
     return JsonResponse(options, safe=False)
 
@@ -608,7 +651,7 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
         return context  
 
 #clase de creacion para una cita de tipo tutoria
-class TutoriaCreateView(LoginRequiredMixin, CreateView):
+class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/cita_tutoria_create.html'
@@ -709,7 +752,7 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
         return context
 
 #clase de creacion para una cita de tipo Orientacion Academica
-class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
+class CitaOrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/cita_orientacion_academica_create.html'
@@ -813,7 +856,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
         return context
 
 #Clase de editar de una cita tipo Tutoria
-class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
+class CitaTutoriaUpdateView(LoginRequiredMixin, UpdateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/cita_tutoria_edit.html'
@@ -978,7 +1021,7 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 #Clase de editar de una cita tipo Orientacion Academica
-class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
+class CitaOrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/cita_orientacion_academica_edit.html'
@@ -1145,7 +1188,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
 
 
 #Clase de ininciar una cita tipo Tutoria
-class TutoriaIniciarView(LoginRequiredMixin, UpdateView):
+class CitaTutoriaIniciarView(LoginRequiredMixin, UpdateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/iniciar_cita_tutoria.html'
@@ -1285,7 +1328,7 @@ class TutoriaIniciarView(LoginRequiredMixin, UpdateView):
 
 
 #Clase parta iniciar una cita tipo Orientacion Academica
-class OrientacionAcademicaIniciarView(LoginRequiredMixin, UpdateView):
+class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, UpdateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/iniciar_cita_orientacion_academica.html'
@@ -1711,3 +1754,105 @@ def obtener_horarios_cita(request):
     # print(horarios_disponibles)
 
     return JsonResponse(horarios_disponibles, safe=False)
+
+
+#clase de creacion para una actividad academica de tipo tutoria
+class TutoriaCreateView(LoginRequiredMixin, CreateView):
+    model = Event
+    form_class = ActividadAcademicaForm
+    template_name = 'calendarapp/tutoria_create.html'
+    success_url = 'running-acti_academ-list/Tutoria/' #reverse_lazy('calendarapp:calenders')
+    #permission_required = 'erp.add_sale'
+    url_redirect = success_url
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
+    
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'search_participantes':
+                data = []
+                participantes = Persona.objects.filter(documento__icontains=request.POST['term'])[0:10]
+                for i in participantes:
+                    item = i.toJSON()
+                    item['value'] = i.nombre + ' ' + i.apellido
+                    data.append(item)
+            elif action == 'add':
+                #realizamos todo al mismo tiempo
+                with transaction.atomic():
+                    actividad_academica = json.loads(request.POST['actividad_academica'])
+                    cita = Event()
+                    #buscamos el id del estado pendiente
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='finalizado').first()
+                    #buscamos el departamento al cual esta asociado la materia
+                    id_materia= actividad_academica['id_materia']
+                    id_departamento= Materia.objects.filter(id_materia= id_materia).values("id_departamento").first()
+                    id_departamento= id_departamento["id_departamento"]
+                    ins_departamento= Departamento.objects.get(id_departamento= id_departamento)
+                    #obtenemos la persona que esta dando de alta 
+                    current_user = request.user
+                    dict = model_to_dict(current_user)
+                    id_persona=  dict["id_persona"]
+                    #convertimos nuestras fechas en formato datetime 
+                    fecha_hora_inicio = datetime.strptime(actividad_academica['datetime_inicio_estimado'], '%d-%m-%Y %H:%M:%S')
+                    fecha_hora_fin = datetime.strptime(actividad_academica['datetime_fin_estimado'], '%d-%m-%Y %H:%M:%S')
+                    #obtener las instancias de los objectos 
+                    ins_convocatoria= Convocatoria.objects.get(id_convocatoria= actividad_academica['convocatoria'])
+                    ins_facultad= Facultad.objects.get(id_facultad= actividad_academica['id_facultad'])
+                    ins_materia= Materia.objects.get(id_materia= id_materia)
+                    ins_func_doc_encargado= FuncionarioDocente.objects.get(id_funcionario_docente= actividad_academica['id_funcionario_docente_encargado'])
+                    ins_persona= Persona.objects.get(id= id_persona)
+                    
+                    cita.id_estado_actividad_academica = id_estado
+                    cita.id_departamento= ins_departamento
+                    cita.id_convocatoria = ins_convocatoria
+                    cita.id_facultad= ins_facultad
+                    cita.id_materia= ins_materia
+                    cita.id_funcionario_docente_encargado= ins_func_doc_encargado
+                    cita.id_persona_alta= ins_persona
+                    cita.datetime_inicio_estimado= fecha_hora_inicio
+                    cita.datetime_fin_estimado= fecha_hora_fin
+                    cita.nro_curso= actividad_academica['nro_curso']
+                    cita.datetime_registro= datetime.now()
+                    cita.save()
+                    
+                    #traemos la instancia de la actividad academica
+                    ins_actividad_academica= Event.objects.get(id_actividad_academica= cita.id_actividad_academica)
+                    
+                    # #tambien damos de alta el hijo de Event (tutoria)
+                    tutoria= Tutoria()
+                    tutoria.id_cita= ins_actividad_academica
+                    tutoria.es_tutoria= True
+                    #traemos el parametro actual 
+                    id_parametro = Parametro.objects.filter(es_tutoria= True, id_unidad_medida__descripcion_unidad_medida__contains='minutos').first()
+                    tutoria.id_parametro= id_parametro
+                    tutoria.motivo= actividad_academica['motivo']
+                    tutoria.save()
+                    
+                    # #guardamos el detalle de participantes
+                    for i in actividad_academica['participantes']:
+                        det_acti = DetalleActividadAcademica()
+                        det_acti.id_actividad_academica= ins_actividad_academica
+                        #obtenemos el id persona del participante
+                        ins_participante= Persona.objects.get(id= i['id'])
+                        det_acti.id_participante= ins_participante
+                        det_acti.save()
+                    
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+            #probar
+        return JsonResponse(data, safe=False)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Registro de una Tutoría'
+        context['entity'] = 'Tutoría'
+        context['list_url'] = self.success_url
+        context['action'] = 'add'
+        return context

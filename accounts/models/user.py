@@ -109,7 +109,7 @@ class Alumno(models.Model):
 
 class FuncionarioDocente(models.Model):
     id_funcionario_docente= models.ForeignKey(Persona, on_delete=models.PROTECT, primary_key=True, related_name='funcionario_docente')
-    #id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='departamento_funcionario_docente')
+    #id_departamento= models.ForeignKey(Departamento, on_delete=models.SET_NULL, null= True, related_name='departamento_funcionario_docente')
     
     def __str__(self):
          return '%s %s' % (self.id_funcionario_docente.nombre, self.id_funcionario_docente.apellido)

@@ -5,6 +5,7 @@ from django.forms import model_to_dict
 from calendarapp.models import EventAbstract
 from accounts.models import User
 from django.db.models import Q, CheckConstraint
+from itertools import chain
 
 """models.Manager es una clase de Django que proporciona un mecanismo para realizar consultas a la base de datos y realizar operaciones en los modelos de manera más fácil y eficiente. Cada modelo de Django tiene al menos un objeto Manager asociado a él de forma predeterminada.
 
@@ -30,6 +31,17 @@ class EventManager(models.Manager):
 
         return events
     """como hacer un inner join con dos modelos y obtener columnas seleccionadas con filtros especificos en django"""
+    
+    def get_all_acti_academ(self):
+        
+        #events = Event.objects.all() #.filter(user=user, is_active=True, is_deleted=False)
+        tutorias = Tutoria.objects.select_related("id_tutoria")
+        orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica")
+        
+        # Combinar los dos querysets en una sola variable
+        events= list(chain(tutorias, orientaciones))
+
+        return events
 
     #este usamos para traer un solo tipo de cita, ya sea de tipo tutoria u orientacion academica -- ver como modificar
     #def get_running_events(self, user):
@@ -49,7 +61,20 @@ class EventManager(models.Manager):
             end_time__gte=datetime.now().date(),
         ).order_by("start_time")"""
         return running_events
+    
+    def get_running_acti_academ(self, tipo_cita):
+        if tipo_cita == 'Tutoria':
+            running_events = Tutoria.objects.select_related("id_tutoria")
+            
+        elif tipo_cita== "OriAcademica":
+            running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica")
+        else: 
+            tutorias = Tutoria.objects.select_related("id_tutoria")
+            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica")
+            running_events = list(chain(tutorias, orientaciones))
 
+        return running_events
+    
 """Vamos a considerar que Event es la tabla de Actividad Academica"""
 """Modificaremos los nombres de los campos para que concidan con las de nuestro modelo"""
 class EstadoActividadAcademica(models.Model):
@@ -85,12 +110,6 @@ class Event(EventAbstract):
     nro_curso= models.CharField(max_length=30, null= True, blank=True)
     #comento esto
     #participante_acti_academ= models.ManyToManyField(Persona, blank=True, help_text='Los participantes de la actividad academica', related_name='participante_acti_academica', through= 'DetalleActividadAcademica')
-
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
-    # title = models.CharField(max_length=200, unique=True)
-    # description = models.TextField()
-    # start_time = models.DateTimeField()
-    # end_time = models.DateTimeField()
 
     objects = EventManager()
 

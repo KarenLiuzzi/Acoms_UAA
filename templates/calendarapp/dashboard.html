@@ -12,7 +12,7 @@
         <div class="widget-small primary coloured-icon">
             <i class="icon fa fa-files-o fa-3x"></i>
             <div class="info">
-                <h4>Total Completed Events</h4>
+                <h5>Actividades académicas Finalizadas</h5>
                 <p><b>{{ total_event }}</b></p>
             </div>
         </div>
@@ -21,7 +21,7 @@
         <div class="widget-small info coloured-icon">
             <i class="icon fa fa-thumbs-o-up fa-3x"></i>
             <div class="info">
-                <h4>Total Running Events</h4>
+                <h5>Actividades académicas confirmadas</h5>
                 <p><b>{{ running_events.count }}</b></p>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="widget-small warning coloured-icon">
             <i class="icon fa fa-users fa-3x"></i>
             <div class="info">
-                <h4>Total Participants</h4>
+                <h5>Total Participantes</h5>
                 <p><b>10</b></p>
             </div>
         </div>
@@ -39,8 +39,8 @@
         <div class="widget-small danger coloured-icon">
             <i class="icon fa fa-star fa-3x"></i>
             <div class="info">
-                <h4>Stars</h4>
-                <p><b>500</b></p>
+                <h5>Actividades académicas Canceladas</h5>
+                <p><b>5</b></p>
             </div>
         </div>
     </div>
@@ -67,6 +67,7 @@
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Horario</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Estado</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.141px;">Funcionario/Docente</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.312px;">Tipo</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Opciones</th>
                                         </tr>
                                     </thead>
@@ -99,6 +100,14 @@
                                             </td>
 
                                             <td>{{ event.id_cita.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ event.id_cita.id_funcionario_docente_encargado|title }}</td>
+                                            <td>
+                                                {% if event.es_tutoria %}
+                                                    Cita tutoría
+                                                {% else %}
+                                                    Cita Orientación Académica
+                                                {% endif %} 
+                                            </td>
+                                            
                                             <td>
                                                 <div>
                                                     <!-- Button trigger modal -->
