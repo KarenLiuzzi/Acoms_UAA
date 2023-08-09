@@ -17,11 +17,7 @@
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">
-                {% if action == 'add' %}
                 <i class="bi bi-plus-lg"></i>
-                {% else %}
-                    <i class="fas fa-edit"></i>
-                {% endif %}
                 {{ title }}
             </h3>
         </div>
@@ -33,7 +29,6 @@
                             <h3 class="card-title"><i class="bi bi-person-video3"></i> Datos de la Tutoría</h3>
                         </div>
                         <div class="card-body">
-                            <input type="hidden" name="action" value="{{ action }}">
                             <div class="form-group">
                                 <label class="label" for="id_facultad">Facultad</label>
                                 {{ form.id_facultad}}
@@ -129,22 +124,130 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-people"></i> Tareas</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="tile">
+                                    <div>
+                                        <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Taarea">
+                                            Agregar Tarea
+                                        </button>
+                                    </div>
+                                    <br>
+
+                                    <div class="tile-body">
+                                        <div class="table-responsive">
+                                            <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <table class="table table-hover table-bordered dataTable no-footer" id="tblTareas" role="grid" aria-describedby="sampleTable_info">
+                                                            <thead>
+                                                                <tr role="row">
+                                                                    <th>Inicio</th>
+                                                                    <th>Vencimiento</th>
+                                                                    <th>Responsable</th>
+                                                                    <th>Tipo Tarea</th>
+                                                                    <th>Estado</th>
+                                                                    <th>Observación</th>
+                                                                    <th>Opción</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary btn-flat">
-                <i class="bi bi-calendar-check"></i> Guardar registro
+            <button type="button" class="btn btn-primary btn-flat btnRegistrarTutoria" title="Tutoría quedará abierta">
+                <i class="bi bi-calendar-check"></i> Registrar Tutoría
+            </button> 
+            <button type="button" class="btn btn-primary btn-flat btnRegistrarFinalizarTutoria" title="Tutoría quedará finalizada">
+                <i class="bi bi-calendar-check"></i> Registrar y Finalizar Tutoría
             </button> 
             <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i> Cancelar</button>
 
         </div>
     </div>
+
+    <div id="modaltareas" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div id="dialog" class="modal-dialog modal-dialog-centered" role="document"> 
+            <div class="modal-content">
+                <div class='modal-header text-center'>
+                    <h3 class="modal-title w-100"> Crear Tarea</h3> 
+                    <button id="modalClose2" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group">
+                            <label class="label" for="hora_inicio_tarea">Inicio</label> 
+                                <input type="datetime-local" class="form-control" id="hora_inicio_tarea" name="hora_inicio_tarea">
+                                <a href="#" id="ahora_inicio_tarea">  Ahora </a>
+                        </div>
+        
+                        <div class="form-group">
+                            <label class="label" for="hora_fin_tarea">Fin</label>
+                                <input type="datetime-local" class="form-control" id="hora_fin_tarea" name="hora_fin_tarea">
+                                <a href="#" id="ahora_fin_tarea">  Ahora </a>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label class="label" for="id_responsable_tarea">Responsable</label>
+                            <select name="id_responsable_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_responsable_tarea" data-select2-id="id_id_responsable_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label" for="id_tipo_tarea">Tipo de Tarea</label>
+                            <select name="id_tipo_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tarea" data-select2-id="id_id_tipo_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label" for="id_tipo_tarea">Estado de Tarea</label>
+                            <select name="id_estado_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_estado_tarea" data-select2-id="id_id_estado_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+            
+                        <div class="form-group">
+                            <label class="label" for="observacion_tarea">Observación</label>
+                            <textarea placeholder= "Desea agregar algún comentario adicional?..." class="form-control" rows="3" cols="25" name="observacion_tarea" maxlength="500"></textarea>
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose1"> Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="modalguardar"> Guardar</button>
+                        </div>  
+
+                    </div>       
+                </div>  
+            </div>
+        </div>
+    </div>
+
 </form>
 
 {% endblock content %}
 
 {% block extrascripts %}
+
     <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
 
@@ -177,7 +280,17 @@
         var horaInicioInput = document.getElementById("hora_inicio");
         var ahoraFinLink = document.getElementById("ahora_fin");
         var horaFinInput = document.getElementById("hora_fin");
+        var ahoraInicioLinkTarea = document.getElementById("ahora_inicio_tarea");
+        var horaInicioInputTarea = document.getElementById("hora_inicio_tarea");
+        var ahoraFinLinkTarea = document.getElementById("ahora_fin_tarea");
+        var horaFinInputTarea = document.getElementById("hora_fin_tarea");
 
+        var modal = document.getElementById('modaltareas')
+        const cerrarmodal = document.getElementById('modalClose1');
+        const cerrarmodal2 = document.getElementById('modalClose2');
+        const guardarmodal = document.getElementById('modalguardar');
+        
+        var tblTareas;
         var mi_form= $('#tutoria')
         var tblParticipantes;
         var actividad_academica = {
@@ -188,6 +301,7 @@
                 id_solicitante: '',
                 nro_curso: '',
                 participantes: [],
+                tareas: [],
                 convocatoria: '',
                 datetime_inicio_estimado: '',
                 datetime_fin_estimado: '',
@@ -236,14 +350,35 @@
                             render: function (data, type, row) {
                                 return '<a rel="remove" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
                             }
-                        },
+                        }
                     ]
-
                 });
             },
         };
 
         $(document).ready(function() {
+
+            //funcion para crear tabla vacia de tareas
+            function reiniciar_tblTareas() {
+                // generar tabla de tareas 
+                tblTareas = $('#tblTareas').DataTable({
+                    searching: true,
+                    paging: true,
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    columns: [
+                        {"data": "inicio"},
+                        {"data": "vencimiento"},
+                        {"data": "responsable"},
+                        {"data": "tipo_tarea"},
+                        {"data": "estado"},
+                        {"data": "observacion"},
+                        {},
+                    ],
+                    data: [] // Datos vacíos para crear una tabla sin contenido
+                });
+            }
 
             // Agrega un evento de clic al enlace
             ahoraInicioLink.addEventListener("click", function(event) {
@@ -259,6 +394,21 @@
 
                 // Actualiza el valor del input con la fecha y hora actual
                 horaInicioInput.value = fechaHoraActual;
+            });
+
+            ahoraInicioLinkTarea.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaInicioInputTarea.value = fechaHoraActual;
             });
 
             // Agrega un evento de clic al enlace
@@ -277,11 +427,30 @@
                 horaFinInput.value = fechaHoraActual;
             });
 
+            ahoraFinLinkTarea.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaFinInputTarea.value = fechaHoraActual;
+            });
+
             //cuando se cargue la pagina traer todas las facultades
+            reiniciar_tblTareas();
             actualizarfacultad();
             actualizarconvocatoria();
             actualizartipo_tutoria();
             actualizar_personas();
+            actualizar_tipo_tarea();
+            actualizar_estado_tarea();
+            
 
             //primero debemos actualizar el docente y en base a eso la facultad y en base a eso las materias del profesor 
 
@@ -351,9 +520,38 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_solicitante').html(data);
+                        $('#id_id_responsable_tarea').html(data);
                     }
                 });
             }
+
+            function actualizar_tipo_tarea() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'tipo_tareas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_tipo_tarea').html(data);
+                    }
+                });
+            }
+
+            function actualizar_estado_tarea() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'estado_tareas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_estado_tarea').html(data);
+                    }
+                });
+            }
+
+            
 
             //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
             function actualizarfuncionariodocente() {
@@ -493,10 +691,8 @@
             });
 
 
-            // Cita submit, asignacion de atributos para enviar
-            $('form').on('submit', function (e) {
-                e.preventDefault();
-
+            // Registrar una tutoria sin finalizar, asignacion de atributos para enviar
+            $('.btnRegistrarTutoria').on('click', function () {
                 //primero debemos validar que los campo obligatorios esten cargados 
                 //validar que el fin no sean menor o igual a Inicio
 
@@ -525,7 +721,7 @@
                         });
 
                     } else {
-                         //validar que tenga cargado un id_solicitante
+                        //validar que tenga cargado un id_solicitante
                         if ($('select[name="id_solicitante"]').val() == "" ){
 
                             $.alert({
@@ -548,9 +744,9 @@
                             actividad_academica.items.observacion = $('textarea[name="observacion"]').val();
 
                             var parameters = new FormData();
-                            parameters.append('action', $('input[name="action"]').val());
+                            parameters.append('action', 'add');
                             parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
-                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de finalizar la tutoría?', parameters, function () {
+                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de registrar la tutoría?', parameters, function () {
                                 location.href = '/running-acti_academ-list/Tutoria/';
                             });
                         }
@@ -570,6 +766,129 @@
                 });
             });
 
+            //boton de agregar tarea
+            $('.btnRegistrarTarea').on('click', function () {
+                modal.style.display = 'block'
+            });
+
+            //boton de cerrar modal tarea
+            cerrarmodal.addEventListener('click',()=>{
+                limpiar_campos_tarea();
+                modal.style.display = 'none';
+              });
+
+            //boton de guardar modal tarea
+            guardarmodal.addEventListener('click',()=>{
+                var horaInicioValueTarea = horaInicioInputTarea.value;
+                var horaFinValueTarea = horaFinInputTarea.value;
+
+                if (horaInicioValueTarea && horaFinValueTarea) {
+
+
+                    var horaIniciotarea = new Date(horaInicioValueTarea);
+                    horaInicioFinalTarea = horaIniciotarea.getFullYear() + "-" +
+                    ("0" + (horaIniciotarea.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaIniciotarea.getDate()).slice(-2) + " " +
+                    ("0" + horaIniciotarea.getHours()).slice(-2) + ":" +
+                    ("0" + horaIniciotarea.getMinutes()).slice(-2) + ":00";
+                    var horaFintarea = new Date(horaFinValueTarea);
+                    horaFinFinalTarea = horaFintarea.getFullYear() + "-" +
+                    ("0" + (horaFintarea.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaFintarea.getDate()).slice(-2) + " " +
+                    ("0" + horaFintarea.getHours()).slice(-2) + ":" +
+                    ("0" + horaFintarea.getMinutes()).slice(-2) + ":00";
+
+                    if (horaFintarea <= horaIniciotarea) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'La hora de fin debe ser mayor que la hora de inicio.',
+                        });
+
+                    } else {
+                        //validar que tenga cargado un id_solicitante
+                        if ($('select[name="id_responsable_tarea"]').val() == "" ){
+
+                            $.alert({
+                                title: 'Alerta!',
+                                content: 'Debe seleccionar un responsable.',
+                            });
+                        }
+                        else {
+                            //procedemos a capturar todos los datos de los campos
+                            inicio= horaInicioFinalTarea 
+                            vencimiento= horaFinFinalTarea
+                            respons= document.getElementById('id_id_responsable_tarea');
+                            responsable= respons.options[respons.selectedIndex].text;
+                            responsable_id = $('select[name="id_responsable_tarea"]').val();
+                            tip_tar= document.getElementById('id_id_responsable_tarea'); 
+                            tipo_tarea= tip_tar.options[tip_tar.selectedIndex].text;
+                            id_tipo_tarea= $('select[name="id_tipo_tarea"]').val();
+                            estad= document.getElementById('id_id_estado_tarea'); 
+                            estado= estad.options[estad.selectedIndex].text; 
+                            id_estado = $('select[name="id_estado_tarea"]').val();
+                            observacion= $('textarea[name="observacion_tarea"]').val();
+
+                            tareas= [{'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion}]
+                            //agregamos en la tabla de tareas
+                            tblTareas = $('#tblTareas').DataTable({
+                                searching: true,
+                                paging: true,
+                                responsive: true,
+                                autoWidth: false,
+                                destroy: true,
+                                data: tareas,
+                                columns: [
+                                    {"data": "inicio"},
+                                    {"data": "vencimiento"},
+                                    {"data": "responsable"},
+                                    {"data": "tipo_tarea"},
+                                    {"data": "estado"},
+                                    {"data": "observacion"},
+                                    {},
+                                ],
+                                columnDefs: [
+                                    {
+                                        targets: [-1],
+                                        class: 'text-center',
+                                        orderable: false,
+                                        render: function (data, type, row) {
+                                            return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                        }
+                                    },
+                                ]
+
+                            });
+
+                            //limpiamos los campos completados
+                            limpiar_campos_tarea();
+                            //cerramos el modal y actualizamos el tb de tareas
+                            modal.style.display = 'none';
+                        }
+                    }
+                    
+                } else {
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'Los campos de hora inicio y fin deben estar cargados.',
+                    });
+                }
+            });
+            
+            //boton 2 de cerrar modal tarea
+            cerrarmodal2.addEventListener('click',()=>{
+                limpiar_campos_tarea();
+                modal.style.display = 'none';
+            });
+
+            function limpiar_campos_tarea(){
+                //inicio y fin 
+                horaInicioInputTarea.value= ''
+                horaFinInputTarea.value= ''
+                //responsalbe
+                $('select[name="id_responsable_tarea"]').val('');
+                //observacion
+                $('textarea[name="observacion_tarea"]').val('');
+            }
         });
 
         actividad_academica.list();

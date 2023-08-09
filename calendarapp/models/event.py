@@ -286,24 +286,25 @@ class EstadoTarea(models.Model):
 class Tarea(models.Manager):
 
     id_tarea = models.AutoField(primary_key=True)
-    id_tarea_relacionada = models.ForeignKey('self', on_delete=models.CASCADE, related_name='subtarea', null=True, blank=True)
-    id_funcionario_docente_finalizacion = models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='func_doc_tarea', null=True, blank=True)
-    id_funcionario_docente_alta = models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='func_doc_tarea_alta')
-    id_tutoria = models.ForeignKey(Tutoria, on_delete=models.PROTECT, related_name='tarea_tutoria', null=True, blank=True)
-    id_orientacion_academica = models.ForeignKey(Tutoria, on_delete=models.PROTECT, related_name='tarea_tutoria', null=True, blank=True)
+    #id_tarea_relacionada = models.ForeignKey('self', on_delete=models.CASCADE, related_name='subtarea', null=True, blank=True)
+    id_persona_finalizacion = models.ForeignKey(Persona,  related_name='persona_tarea_finalizacion', on_delete=models.SET_NULL, null= True)
+    id_persona_alta = models.ForeignKey(Persona, related_name='persona_tarea_alta', on_delete=models.SET_NULL, null= True)
+    id_persona_responsable = models.ForeignKey(Persona, related_name='persona_tarea_responsalbe', on_delete=models.SET_NULL, null= True)
+    id_tutoria = models.ForeignKey(Tutoria, related_name='tarea_tutoria', on_delete=models.SET_NULL, null= True)
+    id_orientacion_academica = models.ForeignKey(OrientacionAcademica, related_name='tarea_ori_academ', on_delete=models.SET_NULL, null= True)
     id_estado_tarea = models.ForeignKey(EstadoTarea, on_delete=models.PROTECT, related_name='tarea_estado')
-    id_tipo_tarea = models.ForeignKey(TipoTarea, on_delete=models.PROTECT, related_name='tarea_estado')
-    datetime_inicio =models.DateTimeField(null= True)
-    datetime_vencimiento = models.DateTimeField()
-    datetime_alta  =models.DateTimeField(auto_now=True)
+    id_tipo_tarea = models.ForeignKey(TipoTarea, on_delete=models.PROTECT, related_name='tarea_tipo')
+    datetime_inicio = models.DateTimeField(null= True)
+    datetime_vencimiento = models.DateTimeField(null= True)
+    datetime_alta = models.DateTimeField()
     datetime_finalizacion = models.DateTimeField(null= True)
-    datetime_ultima_modificacion = models.DateTimeField(null= True)
+    datetime_ultima_modificacion = models.DateTimeField(auto_now=True)
     observacion = models.CharField(max_length=500)
-    es_notificable = models.BooleanField(default=False)
+    es_notificable = models.BooleanField(default=True)
 
 
-    def __str__(self):
-        return self.id_tarea_relacionada
+    # def __str__(self):
+    #     return self.id_tarea_relacionada
     
     class Meta:
         verbose_name_plural = "Tareas"
