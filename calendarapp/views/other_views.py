@@ -18,7 +18,7 @@ from calendarapp.models.calendario import HorarioSemestral, Dia, Convocatoria
 from calendarapp.forms import HorarioSemestralForm, ActividadAcademicaForm
 from accounts.models.user import FuncionarioDocente, Persona, Materia, Departamento, User, Facultad
 from calendarapp.models import EventMember, Event
-from calendarapp.models.event import Parametro, Cita, EstadoActividadAcademica, Tutoria, OrientacionAcademica, TipoTutoria, TipoOrientacionAcademica, Motivo
+from calendarapp.models.event import Parametro, Cita, EstadoActividadAcademica, Tutoria, OrientacionAcademica, EstadoTarea ,TipoTutoria, TipoTarea ,TipoOrientacionAcademica, Motivo
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
@@ -597,6 +597,24 @@ def actualizar_campo(request):
                 options += f'<option value="{item.id}">{item.nombre} {item.apellido} {item.documento}</option>'
             else:
                  options += f'<option value="{item.id}">{item.nombre} {item.apellido} {item.documento}</option>'  
+                 
+                 
+    if campo == "tipo_tareas":
+        
+        queryset= TipoTarea.objects.all()
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            options += f'<option value="{item.id_tipo_tarea}">{item.descripcion_tipo_tarea} </option>'    
+            
+    if campo == "estado_tareas":
+        
+        queryset= EstadoTarea.objects.all()
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            options += f'<option value="{item.id_estado_tarea}">{item.descripcion_estado_tarea} </option>'            
+    
                 
     return JsonResponse(options, safe=False)
 
@@ -1837,9 +1855,9 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                 #realizamos todo al mismo tiempo
                 with transaction.atomic():
                     actividad_academica = json.loads(request.POST['actividad_academica'])
-                    cita = Event()
+                    tutoria = Event()
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='finalizado').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='pendiente').first()
                     #buscamos el departamento al cual esta asociado la materia
                     id_materia= actividad_academica['id_materia']
                     id_departamento= Materia.objects.filter(id_materia= id_materia).values("id_departamento").first()
@@ -1860,33 +1878,33 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                     ins_persona= Persona.objects.get(id= id_persona)
                     ins_solicitante= Persona.objects.get(id= actividad_academica['id_solicitante'])
                     
-                    cita.id_estado_actividad_academica = id_estado
-                    cita.id_departamento= ins_departamento
-                    cita.id_convocatoria = ins_convocatoria
-                    cita.id_facultad= ins_facultad
-                    cita.id_materia= ins_materia
-                    cita.id_funcionario_docente_encargado= ins_func_doc_encargado
-                    cita.id_persona_alta= ins_persona
-                    cita.id_persona_solicitante= ins_solicitante
-                    cita.datetime_inicio_estimado= fecha_hora_inicio
-                    cita.datetime_fin_estimado= fecha_hora_fin
-                    cita.datetime_inicio_real= fecha_hora_inicio
-                    cita.datetime_fin_real= fecha_hora_fin
-                    cita.nro_curso= actividad_academica['nro_curso']
-                    cita.observacion= actividad_academica['observacion']
-                    cita.datetime_registro= datetime.now()
-                    cita.save()
+                    tutoria.id_estado_actividad_academica = id_estado
+                    tutoria.id_departamento= ins_departamento
+                    tutoria.id_convocatoria = ins_convocatoria
+                    tutoria.id_facultad= ins_facultad
+                    tutoria.id_materia= ins_materia
+                    tutoria.id_funcionario_docente_encargado= ins_func_doc_encargado
+                    tutoria.id_persona_alta= ins_persona
+                    tutoria.id_persona_solicitante= ins_solicitante
+                    tutoria.datetime_inicio_estimado= fecha_hora_inicio
+                    tutoria.datetime_fin_estimado= fecha_hora_fin
+                    #tutoria.datetime_inicio_real= fecha_hora_inicio
+                    #tutoria.datetime_fin_real= fecha_hora_fin
+                    tutoria.nro_curso= actividad_academica['nro_curso']
+                    tutoria.observacion= actividad_academica['observacion']
+                    tutoria.datetime_registro= datetime.now()
+                    tutoria.save()
                     
                     #traemos la instancia de la actividad academica
-                    ins_actividad_academica= Event.objects.get(id_actividad_academica= cita.id_actividad_academica)
+                    ins_actividad_academica= Event.objects.get(id_actividad_academica= tutoria.id_actividad_academica)
                     
                     # #tambien damos de alta el hijo de Event (tutoria)
-                    tutoria= Tutoria()
-                    tutoria.id_tutoria= ins_actividad_academica
+                    tutoria_hijo= Tutoria()
+                    tutoria_hijo.id_tutoria= ins_actividad_academica
                     ins_tipo_tutoria=  TipoTutoria.objects.get(id_tipo_tutoria= actividad_academica['id_tipo_tutoria'])
-                    tutoria.id_tipo_tutoria= ins_tipo_tutoria
-                    tutoria.nombre_trabajo= actividad_academica['nombre_trabajo'] 
-                    tutoria.save()
+                    tutoria_hijo.id_tipo_tutoria= ins_tipo_tutoria
+                    tutoria_hijo.nombre_trabajo= actividad_academica['nombre_trabajo'] 
+                    tutoria_hijo.save()
                     
                     # #guardamos el detalle de participantes
                     for i in actividad_academica['participantes']:
@@ -1909,5 +1927,4 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
         context['title'] = 'Registro de una Tutoría'
         context['entity'] = 'Tutoría'
         context['list_url'] = self.success_url
-        context['action'] = 'add'
         return context
