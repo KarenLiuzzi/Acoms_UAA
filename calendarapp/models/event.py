@@ -283,7 +283,7 @@ class EstadoTarea(models.Model):
     class Meta:
         verbose_name_plural = "Estados de tarea"
 
-class Tarea(models.Manager):
+class Tarea(models.Model):
 
     id_tarea = models.AutoField(primary_key=True)
     #id_tarea_relacionada = models.ForeignKey('self', on_delete=models.CASCADE, related_name='subtarea', null=True, blank=True)
@@ -294,7 +294,8 @@ class Tarea(models.Manager):
     id_orientacion_academica = models.ForeignKey(OrientacionAcademica, related_name='tarea_ori_academ', on_delete=models.SET_NULL, null= True)
     id_estado_tarea = models.ForeignKey(EstadoTarea, on_delete=models.PROTECT, related_name='tarea_estado')
     id_tipo_tarea = models.ForeignKey(TipoTarea, on_delete=models.PROTECT, related_name='tarea_tipo')
-    datetime_inicio = models.DateTimeField(null= True)
+    datetime_inicio_estimado = models.DateTimeField(null= True)
+    datetime_inicio_real = models.DateTimeField(null= True)
     datetime_vencimiento = models.DateTimeField(null= True)
     datetime_alta = models.DateTimeField()
     datetime_finalizacion = models.DateTimeField(null= True)

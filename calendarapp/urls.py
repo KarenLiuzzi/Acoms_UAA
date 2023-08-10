@@ -1,5 +1,5 @@
 from django.urls import path
-from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita, tipo_acti_academ, AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, CitaTutoriaCreateView, CitaOrientacionAcademicaCreateView, CitaTutoriaUpdateView, CitaOrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, CitaTutoriaIniciarView, CitaOrientacionAcademicaIniciarView#ListCalendarioFuncDoc
+from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita, tipo_acti_academ, AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, CitaTutoriaCreateView, CitaOrientacionAcademicaCreateView, CitaTutoriaUpdateView, CitaOrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, CitaTutoriaIniciarView, CitaOrientacionAcademicaIniciarView, OrientacionAcademicaCreateView#ListCalendarioFuncDoc
 
 from calendarapp.views import CalendarView, CalendarViewNew, AllEventsListView, RunningEventsListView, DetalleCita, CancelarCita
 from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView
@@ -53,5 +53,6 @@ urlpatterns = [
     path("all-acti_academ-list/", ActividadesAcademicasListView.as_view(), name="all_acti_academ"),
     path("running-acti_academ-list/<str:tipo_cita>/",RunningActividadesAcademicasListView.as_view(),name="running_acti_academ"), 
     path("actiAcademTutoria/", TutoriaCreateView.as_view(), name="acti_academ_tutoria"),
+    path("actiAcademOrientacion/", OrientacionAcademicaCreateView.as_view(), name="acti_academ_orientacion"),
     
 ]

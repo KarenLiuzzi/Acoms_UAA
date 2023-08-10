@@ -41,7 +41,7 @@
             if (tutoiaRadio.checked) {
               href = "{% url 'calendarapp:acti_academ_tutoria' %}";
             } else if (oriAcadeRadio.checked) {
-              href = "{% url 'calendarapp:academica' %}";
+              href = "{% url 'calendarapp:acti_academ_orientacion' %}";
             }
             if (href !== "") {
               window.location.href = href;
