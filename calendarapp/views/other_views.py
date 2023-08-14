@@ -725,7 +725,7 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
 #clase de vista de tipo orientacion academica
 class OrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     model = OrientacionAcademica
-    template_name = 'calendarapp/detalles_cita_orientacion_academica.html'
+    template_name = 'calendarapp/detalles_orientacion_academica.html'
     #permission_required = 'erp.view_sale'
     context_object_name= 'orientacion_academica'
     queryset= OrientacionAcademica.objects.select_related("id_orientacion_academica")
@@ -733,7 +733,7 @@ class OrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = Tarea.objects.none()
         try:
-            orientacion_academica= Tarea.objects.filter(id_orientacion_academica=self.get_object().id_orientacion_academica)
+            orientacion_academica= Tarea.objects.filter(id_orientacion_academica=self.get_object())
             data= orientacion_academica
         except:
             pass
@@ -781,7 +781,20 @@ class TutoriaDetalle(LoginRequiredMixin, DetailView):
         try:
             #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
             participantes= DetalleActividadAcademica.objects.filter(id_actividad_academica=self.get_object().id_tutoria)
-            data= participantes      
+            data= {'id_actividad_academica': participantes}
+            print(data)
+        except:
+            pass
+        return data
+    
+    def get_ins_event(self):
+        data = {}
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            event= Event.objects.get(id_actividad_academica= self.get_object().id_tutoria.id_actividad_academica)
+            print(event)
+            print(type(event))
+            data= event      
         except:
             pass
         return data
@@ -792,6 +805,7 @@ class TutoriaDetalle(LoginRequiredMixin, DetailView):
         #context['modificar_url'] = reverse_lazy('erp:sale_create')
         context['participantes'] =  self.get_details_participantes()
         context['tareas'] =  self.get_tareas()
+        context['event'] =  self.get_ins_event()
         return context
 
 #clase de creacion para una cita de tipo tutoria
@@ -2387,4 +2401,138 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
         context['title'] = 'Registro de una Orientación Académica'
         context['entity'] = 'Orientación Académica'
         context['list_url'] = self.success_url
+        return context
+    
+    
+#Clase de editar de una actividad academica tipo Tutoria
+class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
+    model = Event
+    form_class = ActividadAcademicaForm
+    template_name = 'calendarapp/tutoria_edit.html'
+    success_url = 'running-acti_academ-list/Tutoria/'
+    #permission_required = 'erp.change_sale'
+    url_redirect = success_url
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'search_participantes':
+                data = []
+                participantes = Persona.objects.filter(documento__icontains=request.POST['term'])[0:10]
+                for i in participantes:
+                    item = i.toJSON()
+                    item['value'] = i.nombre + ' ' + i.apellido
+                    data.append(item)
+            elif action == 'edit':
+                with transaction.atomic():
+                    actividad_academica = json.loads(request.POST['actividad_academica'])
+                    tutoria = self.get_object() #obtenemos la instancia del objecto
+                    #buscamos el id del estado pendiente
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='pendiente').first()
+                    #buscamos el departamento al cual esta asociado la materia
+                    id_materia= actividad_academica['id_materia']
+                    id_departamento= Materia.objects.filter(id_materia= id_materia).values("id_departamento").first()
+                    id_departamento= id_departamento["id_departamento"]
+                    ins_departamento= Departamento.objects.get(id_departamento= id_departamento)
+                    #obtenemos la persona que esta dando de alta 
+                    current_user = request.user
+                    dict = model_to_dict(current_user)
+                    id_persona=  dict["id_persona"]
+                    #convertimos nuestras fechas en formato datetime 
+                    fecha_hora_inicio = datetime.strptime(actividad_academica['datetime_inicio_estimado'], '%d-%m-%Y %H:%M:%S')
+                    fecha_hora_fin = datetime.strptime(actividad_academica['datetime_fin_estimado'], '%d-%m-%Y %H:%M:%S')
+                    #obtener las instancias de los objectos 
+                    ins_convocatoria= Convocatoria.objects.get(id_convocatoria= actividad_academica['convocatoria'])
+                    ins_facultad= Facultad.objects.get(id_facultad= actividad_academica['id_facultad'])
+                    ins_materia= Materia.objects.get(id_materia= id_materia)
+                    ins_func_doc_encargado= FuncionarioDocente.objects.get(id_funcionario_docente= actividad_academica['id_funcionario_docente_encargado'])
+                    ins_persona= Persona.objects.get(id= id_persona)
+                    
+                    tutoria.id_estado_actividad_academica = id_estado
+                    tutoria.id_departamento= ins_departamento
+                    tutoria.id_convocatoria = ins_convocatoria
+                    tutoria.id_facultad= ins_facultad
+                    tutoria.id_materia= ins_materia
+                    tutoria.id_funcionario_docente_encargado= ins_func_doc_encargado
+                    tutoria.id_persona_alta= ins_persona
+                    tutoria.datetime_inicio_estimado= fecha_hora_inicio
+                    tutoria.datetime_fin_estimado= fecha_hora_fin
+                    tutoria.nro_curso= actividad_academica['nro_curso']
+                    tutoria.save()
+                    
+                    
+                    #traemos la instancia de la actividad academica
+                    ins_actividad_academica= Event.objects.get(id_actividad_academica= tutoria.id_actividad_academica)
+                    
+                    #tambien modificamos el modelo hijo de tutoria
+                    tutoria_hijo = Tutoria.objects.get(id_tutoria = self.get_object().id_actividad_academica)
+                    ins_tipo_tutoria=  TipoTutoria.objects.get(id_tipo_tutoria= actividad_academica['id_tipo_tutoria'])
+                    tutoria_hijo.id_tipo_tutoria= ins_tipo_tutoria
+                    tutoria_hijo.nombre_trabajo= actividad_academica['nombre_trabajo'] 
+                    tutoria_hijo.save()
+                    
+                    #eliminamos todos los detalles de participantes
+                    for i in DetalleActividadAcademica.objects.filter(id_actividad_academica= self.get_object().id_actividad_academica):
+                        i.delete()
+                        
+                    # #guardamos el detalle de participantes
+                    for i in actividad_academica['participantes']:
+                        det_acti = DetalleActividadAcademica()
+                        det_acti.id_actividad_academica= ins_actividad_academica
+                        #obtenemos el id persona del participante
+                        ins_participante= Persona.objects.get(id= i['id'])
+                        det_acti.id_participante= ins_participante
+                        det_acti.save()
+                    
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+    
+    def get_datos_tutoria(self):
+        data = []
+        try:
+            #obtenemos todos los datos de la instancia acti academ tutoria
+            ins_tutoria = Tutoria.objects.filter(id_tutoria= self.get_object().id_actividad_academica).first()
+            print(ins_tutoria)
+            id_tipo_tutoria = ins_tutoria.id_tipo_tutoria
+            nombre_trabajo = ins_tutoria.nombre_trabajo
+            auxiliar= {'id_tipo_tutoria': id_tipo_tutoria, 'nombre_trabajo': nombre_trabajo}
+            data.append(auxiliar)                
+        except:
+            pass
+        return data
+
+    def get_details_participantes(self):
+        data = []
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            participantes= DetalleActividadAcademica.objects.filter(id_actividad_academica=self.get_object().id_actividad_academica).values('id_participante')
+            participantes= list(participantes)
+            for i in participantes:
+                id= i['id_participante']
+                #obtenemos la persona
+                id_persona= Persona.objects.get(id= id)
+                item= id_persona.toJSON()
+                item['value'] = id_persona.nombre + ' ' + id_persona.apellido
+                data.append(item)
+                
+        except:
+            pass
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edición de una Tutoría'
+        context['entity'] = 'Tutoría'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        context['det'] = json.dumps(self.get_details_participantes())
+        #context['tutoria'] = json.dumps(self.get_datos_tutoria())
         return context
