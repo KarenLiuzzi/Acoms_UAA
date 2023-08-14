@@ -648,7 +648,7 @@ def actualizar_campo(request):
 
 
 
-#clase de vista de cita de tipo tutoria
+#clase de vista de cita de tipo orientacion academica
 class CitaOrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     model = Cita
     template_name = 'calendarapp/detalles_cita_orientacion_academica.html'
@@ -721,6 +721,78 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
         context['participantes'] =  self.get_details_participantes()
         context['tutoria'] =  self.get_details_tutoria()
         return context  
+
+#clase de vista de tipo orientacion academica
+class OrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
+    model = OrientacionAcademica
+    template_name = 'calendarapp/detalles_cita_orientacion_academica.html'
+    #permission_required = 'erp.view_sale'
+    context_object_name= 'orientacion_academica'
+    queryset= OrientacionAcademica.objects.select_related("id_orientacion_academica")
+    
+    def get_tareas(self):
+        data = Tarea.objects.none()
+        try:
+            orientacion_academica= Tarea.objects.filter(id_orientacion_academica=self.get_object().id_orientacion_academica)
+            data= orientacion_academica
+        except:
+            pass
+        return data
+    
+    def get_details_participantes(self):
+        data = {}
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            participantes= DetalleActividadAcademica.objects.filter(id_actividad_academica=self.get_object().id_orientacion_academica)
+            data= participantes      
+        except:
+            pass
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Detalles de Orientación Académica'
+        #context['modificar_url'] = reverse_lazy('erp:sale_create')
+        context['participantes'] =  self.get_details_participantes()
+        context['tareas'] =  self.get_tareas()
+        return context
+    
+
+#clase de vista de tipo tutoria 
+class TutoriaDetalle(LoginRequiredMixin, DetailView):
+    model = Tutoria
+    template_name = 'calendarapp/detalles_tutoria.html'
+    #permission_required = 'erp.view_sale'
+    context_object_name= 'tutoria'
+    queryset= Tutoria.objects.select_related("id_tutoria")
+    
+    def get_tareas(self):
+        data = {}
+        try:
+            tarea= Tarea.objects.filter(id_tutoria= self.get_object())            
+            data= tarea
+        except:
+            pass
+        
+        return data
+    
+    def get_details_participantes(self):
+        data = {}
+        try:
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
+            participantes= DetalleActividadAcademica.objects.filter(id_actividad_academica=self.get_object().id_tutoria)
+            data= participantes      
+        except:
+            pass
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Detalles de Tutoría'
+        #context['modificar_url'] = reverse_lazy('erp:sale_create')
+        context['participantes'] =  self.get_details_participantes()
+        context['tareas'] =  self.get_tareas()
+        return context
 
 #clase de creacion para una cita de tipo tutoria
 class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):

@@ -1,0 +1,266 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %} {{ title }} {% endblock title %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="bi bi-search"></i>
+            {{ title }}
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Tutoría
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="label texto-destacado">Facultad: </label>
+                            {{ tutoria.id_tutoria.id_facultad }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Departamento: </label>
+                            {{ tutoria.id_tutoria.id_departamento.descripcion_departamento }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Estado:</label>
+                            {{ tutoria.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica }}
+                        </div>
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Convocatoria:</label>
+                            {{ tutoria.id_tutoria.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title}}{{ tutoria.id_tutoria.id_convocatoria.anho|title }}
+                        </div>
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Encargado:</label>
+                            {{ tutoria.id_tutoria.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ tutoria.id_tutoria.id_funcionario_docente_encargado|title }} 
+                        </div>
+
+                        <div class="form-group">
+                        <label class="label texto-destacado">Solicitante:</label>
+                            {% if tutoria.id_tutoria.id_persona_alta %}
+                                {{ tutoria.id_tutoria.id_persona_alta.nombre|add:' '|title}}{{ tutoria.id_tutoria.id_persona_alta.apellido|title }} 
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Fecha de alta:</label>
+                            {{ tutoria.id_tutoria.datetime_registro|date:"d/m/Y" }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Fecha estimada:</label>
+
+                            {% if tutoria.id_tutoria.datetime_inicio_estimado %}
+                                {{ tutoria.id_tutoria.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_estimado|time:"H:i" }}
+                            {% else %}
+                                ----------
+                            {% endif %} 
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Fecha real:</label>
+                            {% if tutoria.id_tutoria.datetime_fin_real %}
+                            {{ tutoria.id_tutoria.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_real|time:"H:i" }}
+                            {% else %}
+                                ----------
+                            {% endif %} 
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado" >Materia:</label>
+                            {% if tutoria.id_tutoria.id_materia %}
+                                {{ tutoria.id_tutoria.id_materia.descripcion_materia|title}}
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Motivo:</label>
+                            {% if tutoria.motivo %}
+                                {{ tutoria.motivo|title}}
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        </div>
+
+                        
+                        <div class="form-group">
+                            <label class="label texto-destacado">Nro. Curso: </label>
+                                {% if tutoria.id_tutoria.nro_curso %}
+                                    {{ tutoria.id_tutoria.nro_curso|title}}
+                                {% else %}
+                                    ----------
+                                {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label texto-destacado">Observación:</label>
+                            {% if tutoria.id_tutoria.observacion %}
+                                {{ tutoria.id_tutoria.observacion|title}}
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        </div>
+
+                        {% if tutoria.id_tipo_tutoria %}
+                            <div class="form-group">
+                                <label class="label texto-destacado">Tipo Tutoría: </label>
+                                    {{ tutoria.id_tipo_tutoria.descripcion_tipo_tutoria|title}}
+                            </div>
+                        {% endif %}
+
+                        {% if tutoria.nombre_trabajo %}
+                            <div class="form-group">
+                                <label class="label texto-destacado">Nombre Trabajo: </label>
+                                    {{ tutoria.nombre_trabajo|title}}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="bi bi-people"></i> Participantes adicionales</h3>
+                    </div>
+                    <div class="card-body">
+                        
+                        <table class="table table-bordered" id="tblParticipantes">
+                            <thead>
+                            <tr>
+                                <th>Participante</th>
+                                <th>Documento</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% if participantes.exists %}
+                                    {% for event in participantes %}
+                                        <tr role="row" class="odd">
+                                            <td>{{ event.id_participante.nombre|title|add:' ' }}{{ event.id_participante.apellido|title }} </td> 
+                                            <td> {{ event.id_participante.documento }} </td> 
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        {% if participantes.exists == False %}
+                            <label> Sin participantes... </label> 
+                        {% endif %} 
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="bi bi-journal-text"></i> Tareas</h3>
+                    </div>
+                    <div class="card-body">
+                        
+                        <table class="table table-bordered" id="tblParticipantes">
+                            <thead>
+                            <tr>
+                                <th>Inicio</th>
+                                <th>Vencimiento</th>
+                                <th>Responsable</th>
+                                <th>Tipo Tarea</th>
+                                <th>Estado</th>
+                                <th>Finalizado por</th>
+                                <th>Ultima modificación</th>
+                                <th>Observación</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% if tareas.exists %}
+                                    {% for tarea in tareas %}
+                                        <tr role="row" class="odd">
+                                            <td>
+                                                {% if tarea.datetime_inicio_real %}
+                                                    {{ tarea.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_inicio_real|time:"H:i" }}
+                                                {% else %}
+                                                    {{ tarea.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_inicio_estimado|time:"H:i" }}
+                                                {% endif %}
+                                            </td>
+
+                                            <td>
+                                                {% if tarea.datetime_finalizacion %}
+                                                    {{ tarea.datetime_finalizacion|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_finalizacion|time:"H:i" }}
+                                                {% else %}
+                                                    {{ tarea.datetime_vencimiento|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_vencimiento|time:"H:i" }}
+                                                {% endif %}
+                                            </td>
+                                            <td>  {{ tarea.id_persona_responsable.nombre|add:' '|title}}{{ tarea.id_persona_responsable.apellido|title }}  </td> 
+                                            <td>  {{ tarea.id_tipo_tarea.descripcion_tipo_tarea|title}}  </td> 
+                                            <td>  {{ tarea.id_estado_tarea.descripcion_estado_tarea|title}}  </td>
+                                            <td> {{ tarea.id_persona_finalizacion.nombre|add:' '|title}}{{ tarea.id_persona_finalizacion.apellido|title }} </td>
+                                            <td>  {{ tarea.datetime_ultima_modificacion|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_ultima_modificacion|time:"H:i" }}  </td>
+                                            <td>  {{ tarea.observacion }}  </td> 
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        {% if tareas.exists == False %}
+                            <label> Sin Tareas... </label> 
+                        {% endif %} 
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' %}
+    
+        <div class="card-footer">
+            <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Editar Cita</a>
+        
+            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> Cancelar Cita </button>
+       
+            <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=cita.id_cita %}"> Confirmar Cita </button>
+        
+        </div>
+
+    {% endif %}
+
+    {% if tutoria.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Iniciada' %}
+
+        <div class="card-footer">
+            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" > Cancelar Cita </button> {% comment %} hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}" {% endcomment %}
+            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Finlizr" > Finalizar Tutoría </button>
+        
+        </div>
+    {% endif %}
+
+   
+</div>
+
+{% endblock content %}
+
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript">$('#sampleTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
+        },
+    });</script>
+{% endblock extrascripts %}
