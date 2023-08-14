@@ -20,37 +20,37 @@
             <div class="col-lg-7">
                 <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Tutoría
+                        <h3 class="card-title"><i class="bi bi-person-rolodex"></i> Datos de la Orientación Académica
                         </h3>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
                             <label class="label texto-destacado">Facultad: </label>
-                            {{ tutoria.id_tutoria.id_facultad }}
+                            {{ orientacion_academica.id_orientacion_academica.id_facultad }}
                         </div>
 
                         <div class="form-group">
                             <label class="label texto-destacado">Departamento: </label>
-                            {{ tutoria.id_tutoria.id_departamento.descripcion_departamento }}
+                            {{ orientacion_academica.id_orientacion_academica.id_departamento.descripcion_departamento }}
                         </div>
 
                         <div class="form-group">
                             <label class="label texto-destacado" >Estado:</label>
-                            {{ tutoria.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica }}
+                            {{ orientacion_academica.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica }}
                         </div>
                         <div class="form-group">
                             <label class="label texto-destacado" >Convocatoria:</label>
-                            {{ tutoria.id_tutoria.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title}}{{ tutoria.id_tutoria.id_convocatoria.anho|title }}
+                            {{ orientacion_academica.id_orientacion_academica.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title}}{{ orientacion_academica.id_orientacion_academica.id_convocatoria.anho|title }}
                         </div>
                         <div class="form-group">
                             <label class="label texto-destacado" >Encargado:</label>
-                            {{ tutoria.id_tutoria.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ tutoria.id_tutoria.id_funcionario_docente_encargado|title }} 
+                            {{ orientacion_academica.id_orientacion_academica.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ orientacion_academica.id_orientacion_academica.id_funcionario_docente_encargado|title }} 
                         </div>
 
                         <div class="form-group">
                         <label class="label texto-destacado">Solicitante:</label>
-                            {% if tutoria.id_tutoria.id_persona_alta %}
-                                {{ tutoria.id_tutoria.id_persona_alta.nombre|add:' '|title}}{{ tutoria.id_tutoria.id_persona_alta.apellido|title }} 
+                            {% if orientacion_academica.id_orientacion_academica.id_persona_alta %}
+                                {{ orientacion_academica.id_orientacion_academica.id_persona_alta.nombre|add:' '|title}}{{ orientacion_academica.id_orientacion_academica.id_persona_alta.apellido|title }} 
                             {% else %}
                                 ----------
                             {% endif %}
@@ -58,14 +58,14 @@
 
                         <div class="form-group">
                             <label class="label texto-destacado">Fecha de alta:</label>
-                            {{ tutoria.id_tutoria.datetime_registro|date:"d/m/Y" }}
+                            {{ orientacion_academica.id_orientacion_academica.datetime_registro|date:"d/m/Y" }}
                         </div>
 
                         <div class="form-group">
                             <label class="label texto-destacado" >Fecha estimada:</label>
 
-                            {% if tutoria.id_tutoria.datetime_inicio_estimado %}
-                                {{ tutoria.id_tutoria.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_estimado|time:"H:i" }}
+                            {% if orientacion_academica.id_orientacion_academica.datetime_inicio_estimado %}
+                                {{ orientacion_academica.id_orientacion_academica.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_estimado|time:"H:i" }}
                             {% else %}
                                 ----------
                             {% endif %} 
@@ -73,8 +73,8 @@
 
                         <div class="form-group">
                             <label class="label texto-destacado">Fecha real:</label>
-                            {% if tutoria.id_tutoria.datetime_fin_real %}
-                            {{ tutoria.id_tutoria.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_real|time:"H:i" }}
+                            {% if orientacion_academica.id_orientacion_academica.datetime_fin_real %}
+                            {{ orientacion_academica.id_orientacion_academica.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_real|time:"H:i" }}
                             {% else %}
                                 ----------
                             {% endif %} 
@@ -83,27 +83,16 @@
 
                         <div class="form-group">
                             <label class="label texto-destacado" >Materia:</label>
-                            {% if tutoria.id_tutoria.id_materia %}
-                                {{ tutoria.id_tutoria.id_materia.descripcion_materia|title}}
+                            {% if orientacion_academica.id_orientacion_academica.id_materia %}
+                                {{ orientacion_academica.id_orientacion_academica.id_materia.descripcion_materia|title}}
                             {% else %}
                                 ----------
                             {% endif %}
                         </div>
-
-                        <div class="form-group">
-                            <label class="label texto-destacado">Motivo:</label>
-                            {% if tutoria.motivo %}
-                                {{ tutoria.motivo|title}}
-                            {% else %}
-                                ----------
-                            {% endif %}
-                        </div>
-
-                        
                         <div class="form-group">
                             <label class="label texto-destacado">Nro. Curso: </label>
-                                {% if tutoria.id_tutoria.nro_curso %}
-                                    {{ tutoria.id_tutoria.nro_curso|title}}
+                                {% if orientacion_academica.id_orientacion_academica.nro_curso %}
+                                    {{ orientacion_academica.id_orientacion_academica.nro_curso|title}}
                                 {% else %}
                                     ----------
                                 {% endif %}
@@ -111,26 +100,22 @@
 
                         <div class="form-group">
                             <label class="label texto-destacado">Observación:</label>
-                            {% if tutoria.id_tutoria.observacion %}
-                                {{ tutoria.id_tutoria.observacion|title}}
+                            {% if orientacion_academica.id_orientacion_academica.observacion %}
+                                {{ orientacion_academica.id_orientacion_academica.observacion|title}}
                             {% else %}
                                 ----------
                             {% endif %}
                         </div>
 
-                        {% if tutoria.id_tipo_tutoria %}
-                            <div class="form-group">
-                                <label class="label texto-destacado">Tipo Tutoría: </label>
-                                    {{ tutoria.id_tipo_tutoria.descripcion_tipo_tutoria|title}}
-                            </div>
-                        {% endif %}
+                        <div class="form-group">
+                            <label class="label texto-destacado">Tipo Orientación Académica: </label>
+                                {{ orientacion_academica.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica|title}}
+                        </div>
 
-                        {% if tutoria.nombre_trabajo %}
-                            <div class="form-group">
-                                <label class="label texto-destacado">Nombre Trabajo: </label>
-                                    {{ tutoria.nombre_trabajo|title}}
-                            </div>
-                        {% endif %}
+                        <div class="form-group">
+                            <label class="label texto-destacado">Motivo:</label>
+                                {{ orientacion_academica.id_motivo.descripcion_motivo }}
+                        </div>
 
                     </div>
                 </div>
@@ -234,12 +219,11 @@
         </div>
     </div>
 
-    {% if tutoria.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Iniciada' %}
-    {{ event.id_actividad_academica }}
+    {% if orientacion_academica.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Iniciada' %}
         <div class="card-footer">
-            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_tutoria=tutoria.id_tutoria id_ori_academ=0 %}" > <i class="bi bi-x-lg"></i> Cancelar Tutoría </button> {% comment %} hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_cita=cita.id_cita %}" {% endcomment %}
-            <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Finalizar" hx-get="{% url 'calendarapp:finalizar_actividad_academica' id_tutoria=tutoria.id_tutoria id_ori_academ=0 %}"> <i class="bi bi-check-lg"></i> Finalizar Tutoría </button> 
-            <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificar_tutoria' pk=tutoria.id_tutoria %}"> <i class="bi bi-pencil" ></i> Editar Tutoría </a> 
+            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_tutoria=0 id_ori_academ=orientacion_academica.id_orientacion_academica %}" > <i class="bi bi-x-lg"></i> Cancelar Orientación Académica </button> 
+            <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Finalizar" hx-get="{% url 'calendarapp:finalizar_actividad_academica' id_tutoria=0 id_ori_academ=orientacion_academica.id_orientacion_academica %}"> <i class="bi bi-check-lg"></i> Finalizar Orientación Académica </button> 
+            <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Editar" > <i class="bi bi-pencil"></i> Editar Orientación Académica </button>
         </div>
     {% endif %}
 
@@ -256,5 +240,4 @@
             url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
         },
     });</script>
-
 {% endblock extrascripts %}

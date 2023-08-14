@@ -110,8 +110,80 @@ def CancelarCita(request, id_cita):
         
         return render(request, "calendarapp/cancelar_cita.html", context = {"id_cita": id_cita})
     
+def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
+    if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
+            try:
+                
+                if id_tutoria > 0:
+                    #obtenemos la instancia de tutoria a cancelar
+                    tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
+                    print(tutoria)
+                    #obtenemos instancia de estado cancelado
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
+                    tutoria.id_estado_actividad_academica= estado
+                    tutoria.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
+                else:
+                    #obtenemos la instancia de orientacion academica a cancelar
+                    orientacion_academica= Event.objects.get(id_actividad_academica= id_ori_academ)
+                    #obtenemos instancia de estado cancelado
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
+                    orientacion_academica.id_estado_actividad_academica= estado
+                    orientacion_academica.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
+            except:
+                messages.error(request, 'Ocurrió un error al intentar cancelar la Actividad Académica.')
+                
+                return render(request, "calendarapp/cancelar_actividad_academica.html", context = {"id_tutoria": id_tutoria, "id_ori_academ": id_ori_academ})
+                
+    else:
+        
+        return render(request, "calendarapp/cancelar_actividad_academica.html", context = {"id_tutoria": id_tutoria, "id_ori_academ": id_ori_academ})  
+
+def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
+    if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
+            try:
+                
+                if id_tutoria > 0:
+                    #obtenemos la instancia de tutoria a cancelar
+                    tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
+                    #obtenemos instancia de estado cancelado
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizado').first()
+                    tutoria.id_estado_actividad_academica= estado
+                    tutoria.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
+                else:
+                    #obtenemos la instancia de orientacion academica a cancelar
+                    orientacion_academica= Event.objects.get(id_actividad_academica= id_ori_academ)
+                    #obtenemos instancia de estado cancelado
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizado').first()
+                    orientacion_academica.id_estado_actividad_academica= estado
+                    orientacion_academica.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
+            except:
+                messages.error(request, 'Ocurrió un error al intentar finalizar la Actividad Académica.')
+                
+                return render(request, "calendarapp/finalizar_actividad_academica.html", context = {"id_tutoria": id_tutoria, "id_ori_academ": id_ori_academ})
+                
+    else:
+        
+        return render(request, "calendarapp/finalizar_actividad_academica.html", context = {"id_tutoria": id_tutoria, "id_ori_academ": id_ori_academ})  
     
-    
+        
 @csrf_exempt
 def AprobarCita(request, id_cita):
     if request.method == "POST":

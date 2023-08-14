@@ -221,8 +221,8 @@
             <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cerrar</button>
             {% if tutoria %}
                 <a type="button" class="btn btn-primary" href="{% url 'calendarapp:more_detalles_tutoria' tutoria.id_tutoria %}">Más Detalles</a> {% comment %} href="{% url 'calendarapp:more_detalles_tutoria' tutoria.id_tutoria %}" {% endcomment %}
-            {% elif else %}
-                <a type="button" class="btn btn-primary" >Más Detalles</a> {% comment %} href="{% url 'calendarapp:more_detalles_ori_academica' cita.id_cita %}" {% endcomment %}
+            {% else %}
+                <a type="button" class="btn btn-primary" href="{% url 'calendarapp:more_detalles_ori_academica' orientacion_academica.id_orientacion_academica %}" >Más Detalles</a> {% comment %} href="{% url 'calendarapp:more_detalles_ori_academica' cita.id_cita %}" {% endcomment %}
             {% endif %}
       </div>
     </div>
