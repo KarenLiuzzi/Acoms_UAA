@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.db import models
+from django.db.models import F
 from django.urls import reverse
 from django.forms import model_to_dict
 from calendarapp.models import EventAbstract
@@ -34,9 +35,9 @@ class EventManager(models.Manager):
     
     def get_all_acti_academ(self):
         
-        #events = Event.objects.all() #.filter(user=user, is_active=True, is_deleted=False)
-        tutorias = Tutoria.objects.select_related("id_tutoria")
-        orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica")
+        #events = Event.objects.all() #.filter(user=user, is_active=True, is_deleted=False), cambiamos el nombre de la columna por un alias
+        tutorias = Tutoria.objects.select_related("id_tutoria").annotate(id_actividad_academica=F("id_tutoria")).filter(id_cita= None)
+        orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").annotate(id_actividad_academica=F("id_orientacion_academica")).filter(id_cita= None)
         
         # Combinar los dos querysets en una sola variable
         events= list(chain(tutorias, orientaciones))
@@ -64,13 +65,13 @@ class EventManager(models.Manager):
     
     def get_running_acti_academ(self, tipo_cita):
         if tipo_cita == 'Tutoria':
-            running_events = Tutoria.objects.select_related("id_tutoria")
+            running_events = Tutoria.objects.select_related("id_tutoria").annotate(id_actividad_academica=F("id_tutoria")).filter(id_cita= None)
             
         elif tipo_cita== "OriAcademica":
-            running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica")
+            running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").annotate(id_actividad_academica=F("id_orientacion_academica")).filter(id_cita= None)
         else: 
-            tutorias = Tutoria.objects.select_related("id_tutoria")
-            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica")
+            tutorias = Tutoria.objects.select_related("id_tutoria").annotate(id_actividad_academica=F("id_tutoria")).filter(id_cita= None)
+            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").annotate(id_actividad_academica=F("id_orientacion_academica")).filter(id_cita= None)
             running_events = list(chain(tutorias, orientaciones))
 
         return running_events

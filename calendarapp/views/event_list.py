@@ -3,7 +3,7 @@ from django.forms import model_to_dict
 from django.views.generic import ListView
 from django.shortcuts import render
 from calendarapp.models import Event
-from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica
+from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica, Tutoria, OrientacionAcademica
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
@@ -25,6 +25,7 @@ class ActividadesAcademicasListView(ListView):
 
     template_name = "calendarapp/actividades_academicas_list.html"
     model = Event
+    context_object_name= "lista_actividades"
 
     def get_queryset(self):
         #return Event.objects.get_all_events(user=self.request.user)
@@ -46,6 +47,7 @@ class RunningActividadesAcademicasListView(ListView):
 
     template_name = "calendarapp/actividades_academicas_list.html"
     model = Event
+    context_object_name= "lista_actividades"
 
     def get_queryset(self):
         parametro = self.kwargs['tipo_cita']
@@ -58,6 +60,21 @@ def DetalleCita(request, id_cita):
     detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_cita)
     contexto= {'cita': cita, 'detalles': detalles}
     return render(request,'calendarapp/detalles_cita.html', context= contexto)
+
+def DetalleActividadesAcademicas(request, id_tutoria, id_ori_academ):
+    tutoria= []
+    orientacion_academica= []
+    if id_tutoria > 0:
+        tutoria= Tutoria.objects.filter(id_tutoria= id_tutoria).select_related("id_tutoria").first()
+        #detalles pude enviar uno o varios registros
+        detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_tutoria)
+    else:
+        orientacion_academica= OrientacionAcademica.objects.filter(id_orientacion_academica= id_ori_academ).select_related("id_orientacion_academica").first()
+        #detalles pude enviar uno o varios registros
+        detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_ori_academ)
+    
+    contexto= {'tutoria': tutoria, 'detalles': detalles, 'orientacion_academica': orientacion_academica}
+    return render(request,'calendarapp/detalles_actividad_academica.html', context= contexto)
 
 @csrf_exempt
 def CancelarCita(request, id_cita):

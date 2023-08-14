@@ -30,12 +30,143 @@
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.312px;">Dia</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Horario</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Estado</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.141px;">Funcionario/Docente</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.141px;">Solicitante</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.312px;">Tipo</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {% for event in lista_actividades %}
+                                            <tr role="row" class="odd">
+                                                {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
+                                                <td>
+                                                    {% if event.id_tutoria %}
+                                                        {% if event.id_tutoria.datetime_inicio_real %}
+                                                            {{ event.id_tutoria.datetime_inicio_real|date:"d/m/Y" }} 
+                                                        {% else %}
+                                                            {{ event.id_tutoria.datetime_inicio_estimado|date:"d/m/Y" }} 
+                                                        {% endif %} 
+                                                    {% else %}
+                                                        {% if event.id_orientacion_academica.datetime_inicio_real %}
+                                                            {{ event.id_orientacion_academica.datetime_inicio_real|date:"d/m/Y" }} 
+                                                        {% else %}
+                                                            {{ event.id_orientacion_academica.datetime_inicio_estimado|date:"d/m/Y" }}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% load humanize %}
+                                                    {% if event.id_tutoria %}
+                                                        {% if event.id_tutoria.datetime_inicio_real %}
+                                                        {{ event.id_tutoria.datetime_inicio_real|naturalday|title  }}
+                                                        {% else %}
+                                                            {{ event.id_tutoria.datetime_inicio_estimado|naturalday|title  }}
+                                                        {% endif %} 
+                                                    {% else %}
+                                                        {% if event.id_orientacion_academica.datetime_inicio_real %}
+                                                        {{ event.id_orientacion_academica.datetime_inicio_real|naturalday|title  }}
+                                                        {% else %}
+                                                            {{ event.id_orientacion_academica.datetime_inicio_estimado|naturalday|title  }}
+                                                        {% endif %} 
+                                                    {% endif %} 
+
+                                                </td>
+                                                <td>
+                                                    {% if event.id_tutoria %}
+                                                        {% if event.id_tutoria.datetime_fin_real %}
+                                                            {{ event.id_tutoria.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ event.id_tutoria.datetime_fin_real|time:"H:i" }}
+                                                        {% else %}
+                                                            {{ event.id_tutoria.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ event.id_tutoria.datetime_fin_estimado|time:"H:i" }}
+                                                        {% endif %} 
+                                                    {% else %}
+                                                        {% if event.id_orientacion_academica.datetime_fin_real %}
+                                                            {{ event.id_orientacion_academica.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ event.id_orientacion_academica.datetime_fin_real|time:"H:i" }}
+                                                        {% else %}
+                                                            {{ event.id_orientacion_academica.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ event.id_orientacion_academica.datetime_fin_estimado|time:"H:i" }}
+                                                        {% endif %} 
+                                                    {% endif %} 
+
+                                                </td>
+                                                <td>
+                                                    {% if event.id_tutoria %}
+                                                        {{ event.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica}}                                            
+                                                    {% else %}
+                                                        {{ event.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica}}
+                                                    {% endif %} 
+                                                
+                                                    </td>
+
+                                                <td>
+                                                    {% if event.id_tutoria %}
+                                                        {{ event.id_tutoria.id_persona_solicitante.nombre|add:' '|title}}{{ event.id_tutoria.id_persona_solicitante.apellido|title }}
+                                                    {% else %}
+                                                        {{ event.id_orientacion_academica.id_persona_solicitante.nombre|add:' '|title}}{{ event.id_orientacion_academica.id_persona_solicitante.apellido|title }}
+                                                    {% endif %} 
+                                                    </td>
+                                                <td>
+                                                    {% if event.id_tutoria %}
+                                                        Tutoría
+                                                    {% else %}
+                                                        Orientación Académica
+                                                    {% endif %} 
+                                                </td>
+
+                                                <td>
+                                                    <div>
+                                                        {% if event.id_tutoria %}
+                                                            <!-- Button trigger modal -->
+                                                            <button type="button" class="btn btn-primary"  hx-target="#dialog" title="Detalles" hx-get="{% url 'calendarapp:detalles_acti_academ' id_tutoria=event.id_tutoria id_ori_academ=0 %}"> 
+                                                                <i class="bi bi-eye-fill"></i>
+                                                            </button> 
+                                                            
+                                                            <!-- Button trigger modal -->
+                                                            {% if event.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' %}
+                                                                <a class="btn btn-primary" title="Editar" > <i class="bi bi-pencil-fill"></i> </a> {% comment %} href="{% url 'calendarapp:modificar_cita_tutoria' pk=event.id_tutoria.id_actividad_academica %}"> {% endcomment %}
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" > <i class="bi bi-x-circle-fill"></i> </button> {% comment %} hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_tutoria.id_actividad_academica %}"{% endcomment %}
+                                                                <button type="button" class="btn btn-primary" hx-target="#dialog" title="Confirmar Cita" > <i class="bi bi-calendar-check"></i> {% comment %} hx-get="{% url 'calendarapp:confirmar_cita' id_cita=event.id_tutoria.id_actividad_academica %}"{% endcomment %}
+
+                                                            {% elif event.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmado'%}
+                                                                <a class="btn btn-primary" title="Iniciar Cita" > <i class="bi bi-caret-right-fill"></i> </a> {% comment %} href="{% url 'calendarapp:iniciar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}" {% endcomment %}
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" > <i class="bi bi-x-circle-fill"></i> </button> {% comment %} hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"{% endcomment %}
+
+                                                            {% else %}
+                                                                <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
+                                                                <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {% endif %}
+
+
+                                                        {% else %}
+
+                                                            <!-- Button trigger modal -->
+                                                            <button type="button" class="btn btn-primary"  hx-target="#dialog" title="Detalles" hx-get="{% url 'calendarapp:detalles_acti_academ' id_tutoria=0 id_ori_academ=event.id_orientacion_academica %}"> {% comment %} hx-get="{% url 'calendarapp:detalles_acti_academ' id_cita=event.id_cita %}" {% endcomment %}
+                                                                <i class="bi bi-eye-fill"></i>
+                                                            </button> 
+
+                                                            {% if event.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente'%}
+                                                                <a class="btn btn-primary" title="Editar" > <i class="bi bi-pencil-fill"></i> </a> {% comment %}  href="{% url 'calendarapp:modificar_cita_ori_academica' pk=event.id_cita.id_actividad_academica %}" {% endcomment %}
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" > <i class="bi bi-x-circle-fill"></i> </button> {% comment %} hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}" {% endcomment %}
+                                                                <button type="button" class="btn btn-primary" hx-target="#dialog" title="Confirmar Cita" > <i class="bi bi-calendar-check"></i> {% comment %} hx-get="{% url 'calendarapp:confirmar_cita' id_cita=event.id_cita.id_actividad_academica %}" {% endcomment %}
+                                                                
+                                                            {% elif event.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmado'%}
+                                                                <a class="btn btn-primary" title="Iniciar Cita" > <i class="bi bi-caret-right-fill"></i> </a> {% comment %} href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=event.id_cita.id_actividad_academica %}" {% endcomment %}
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" > <i class="bi bi-x-circle-fill"></i> </button> {% comment %} hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}" {% endcomment %}
+                                                                
+                                                            {% else %}
+                                                                <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
+                                                                <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {% endif %}
+
+
+                                                        {% endif %} 
+
+                                                        
+                                                        
+                                                    </div>
+
+                                                    
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
                                         
                                     </tbody>
                                 </table>

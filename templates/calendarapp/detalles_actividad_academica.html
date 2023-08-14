@@ -1,0 +1,231 @@
+<div class="modal-content">
+    <div class='modal-header text-center'>
+      <h3 class="modal-title w-100">Detalles de Actividad Académica</h3> 
+    </div>
+
+    <div class="modal-body">
+        <div class="container">
+          <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="fecha">Fecha:</label>
+                    {% if tutoria %}
+                        {% if tutoria.id_tutoria.datetime_inicio_real %}
+                            {{ tutoria.id_tutoria.datetime_inicio_real|date:"d/m/Y" }}
+                        {% else %}
+                            {{ tutoria.id_tutoria.datetime_inicio_estimado|date:"d/m/Y" }}
+                        {% endif %} 
+                        
+                    {% else %}
+                        {% if orientacion_academica.id_orientacion_academica.datetime_inicio_real %}
+                            {{ orientacion_academica.id_orientacion_academica.datetime_inicio_real|date:"d/m/Y" }}
+                        {% else %}
+                            {{ orientacion_academica.id_orientacion_academica.datetime_inicio_estimado|date:"d/m/Y" }}
+                        {% endif %} 
+                    {% endif %} 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-20">
+                <label class="label" for="horario">Horario:</label>
+                    {% if tutoria %}
+                        {% if tutoria.id_tutoria.datetime_fin_real %}
+                            {{ tutoria.id_tutoria.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_real|time:"H:i" }}
+                        {% else %}
+                            {{ tutoria.id_tutoria.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_estimado|time:"H:i" }}
+                        {% endif %} 
+                    {% else %}
+                        {% if orientacion_academica.id_orientacion_academica.datetime_fin_real %}
+                            {{ orientacion_academica.id_orientacion_academica.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_real|time:"H:i" }}
+                        {% else %}
+                            {{ orientacion_academica.id_orientacion_academica.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_estimado|time:"H:i" }}
+                        {% endif %} 
+                    {% endif %} 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="receptor">Solicitante:</label>
+                        {% if tutoria %}
+                            {% if tutoria.id_tutoria.id_persona_alta %}
+                                {{ tutoria.id_tutoria.id_persona_alta.nombre|add:' '|title}}{{ tutoria.id_tutoria.id_persona_alta.apellido|title }} 
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        {% else %}
+                            {% if orientacion_academica.id_orientacion_academica.id_persona_alta %}
+                                {{ orientacion_academica.id_orientacion_academica.id_persona_alta.nombre|add:' '|title}}{{ orientacion_academica.id_orientacion_academica.id_persona_alta.apellido|title }} 
+                            {% else %}
+                                ----------
+                            {% endif %}
+
+                        {% endif %} 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="estado">Estado:</label>
+                        {% if tutoria %}
+                            {{ tutoria.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica|title}}
+                        {% else %}
+                            {{ orientacion_academica.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica|title}}
+                        {% endif %} 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-20">
+                    <label for="convocatoria">Convocatoria:</label>
+                        {% if tutoria %}
+                            {{ tutoria.id_tutoria.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title}}{{ tutoria.id_tutoria.id_convocatoria.anho|title }}
+                        {% else %}
+                            {{ orientacion_academica.id_orientacion_academica.id_estado_actividad_academica.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title}}{{ orientacion_academica.id_orientacion_academica.id_estado_actividad_academica.id_convocatoria.anho|title }}
+                        {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="facultad">Facultad:</label>
+                    {% if tutoria %}
+                        {% if tutoria.id_tutoria.id_facultad %}
+                            {{ tutoria.id_tutoria.id_facultad.descripcion_facultad|title}}
+                        {% else %}
+                            ----------
+                        {% endif %}
+                    {% else %}
+                        {% if orientacion_academica.id_orientacion_academica.id_facultad %}
+                            {{ orientacion_academica.id_orientacion_academica.id_facultad.descripcion_facultad|title}}
+                        {% else %}
+                            ----------
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="materia">Materia:</label>
+                    {% if tutoria %}
+                        {% if tutoria.id_tutoria.id_materia %}
+                            {{ tutoria.id_tutoria.id_materia.descripcion_materia|title}}
+                        {% else %}
+                            ----------
+                        {% endif %}
+                    {% else %}
+                        {% if orientacion_academica.id_orientacion_academica.id_materia %}
+                            {{ orientacion_academica.id_orientacion_academica.id_materia.descripcion_materia|title}}
+                        {% else %}
+                            ----------
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="observacion">Observación:</label>
+                        {% if tutoria %}
+                            {% if tutoria.id_tutoria.observacion %}
+                                {{ tutoria.id_tutoria.observacion|title}}
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        {% else %}
+                            {% if orientacion_academica.id_orientacion_academica.observacion %}
+                                {{ orientacion_academica.id_orientacion_academica.observacion|title}}
+                            {% else %}
+                                ----------
+                            {% endif %}
+                        {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="nro_curso">Nro Curso:</label>
+                    {% if tutoria %}
+                        {% if tutoria.id_tutoria.nro_curso %}
+                            {{ tutoria.id_tutoria.nro_curso|title}}
+                        {% else %}
+                            ----------
+                        {% endif %}
+                    {% else %}
+                        {% if orientacion_academica.id_orientacion_academica.nro_curso %}
+                            {{ orientacion_academica.id_orientacion_academica.nro_curso|title}}
+                        {% else %}
+                            ----------
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="tipo">Tipo actividad académica:</label>
+                    {% if tutoria %}
+                        Tutoría
+                    {% else %}
+                        Orientación Académica
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if tutoria %}
+                <div class="row">
+                    <div class="col-md-20">
+                        <label class="label" for="tipo">Tipo Tutoría:</label>
+                        {{ tutoria.id_tipo_tutoria.descripcion_tipo_tutoria }}
+                    </div>
+                </div>   
+                {% if tutoria.nombre_trabajo %}
+                    <div class="row">
+                        <div class="col-md-20">
+                            <label class="label" for="tipo">Nombre de trabajo:</label>
+                            {{ tutoria.nombre_trabajo }}
+                        </div>
+                    </div>   
+                {% endif %}
+
+            {% else %}
+
+                <div class="row">
+                    <div class="col-md-20">
+                        <label class="label" for="tipo">Motivo:</label>
+                        {{ orientacion_academica.id_motivo.descripcion_motivo }}
+                    </div>
+                </div>   
+                <div class="row">
+                    <div class="col-md-20">
+                        <label class="label" for="tipo">Tipo Orientación:</label>
+                        {{ orientacion_academica.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica }}
+                    </div>
+                </div>   
+
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-20">
+                    <label class="label" for="participantes">Participantes:</label>
+                    {% if detalles %}
+                        <ul>
+                        {% for value in detalles %}
+                            <li>{{ value.id_participante.nombre|add:' '|title}}{{ value.id_participante.apellido|title }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Sin participantes...</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+      
+    <div class="modal-footer">
+      <div class="mt-2">
+            <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cerrar</button>
+            {% if tutoria %}
+                <a type="button" class="btn btn-primary" href="{% url 'calendarapp:more_detalles_tutoria' tutoria.id_tutoria %}">Más Detalles</a> {% comment %} href="{% url 'calendarapp:more_detalles_tutoria' tutoria.id_tutoria %}" {% endcomment %}
+            {% elif else %}
+                <a type="button" class="btn btn-primary" >Más Detalles</a> {% comment %} href="{% url 'calendarapp:more_detalles_ori_academica' cita.id_cita %}" {% endcomment %}
+            {% endif %}
+      </div>
+    </div>
+
+</div>  
+
