@@ -1,8 +1,8 @@
 from django.urls import path
-from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita, tipo_acti_academ, AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, CitaTutoriaCreateView, CitaOrientacionAcademicaCreateView, CitaTutoriaUpdateView, CitaOrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, CitaTutoriaIniciarView, CitaOrientacionAcademicaIniciarView, OrientacionAcademicaCreateView, TutoriaDetalle, OrientacionAcademicaDetalle, TutoriaUpdateView#ListCalendarioFuncDoc
+from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita, tipo_acti_academ, AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, CitaTutoriaCreateView, CitaOrientacionAcademicaCreateView, CitaTutoriaUpdateView, CitaOrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, CitaTutoriaIniciarView, CitaOrientacionAcademicaIniciarView, OrientacionAcademicaCreateView, TutoriaDetalle, OrientacionAcademicaDetalle, TutoriaUpdateView, TareasView#ListCalendarioFuncDoc
 
 from calendarapp.views import CalendarView, CalendarViewNew, AllEventsListView, RunningEventsListView, DetalleCita, CancelarCita
-from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView, DetalleActividadesAcademicas, CancelarActividadAcademica, FinalizarActividadAcademica
+from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView, DetalleActividadesAcademicas, CancelarActividadAcademica, FinalizarActividadAcademica, CancelarTarea, IniciarTarea, FinalizarTarea
 
 app_name = "calendarapp"
 
@@ -60,5 +60,13 @@ urlpatterns = [
     path("actividad_academica/cancelar/<int:id_tutoria>/<int:id_ori_academ>/", CancelarActividadAcademica, name="cancelar_actividad_academica"),
     path("actividad_academica/finalizar/<int:id_tutoria>/<int:id_ori_academ>/", FinalizarActividadAcademica, name="finalizar_actividad_academica"),
     path("modificarTutoria/<int:pk>/", TutoriaUpdateView.as_view(), name="modificar_tutoria"),
+    
+    
+    #Tareas
+    path("tareas/", TareasView.as_view(), name="tareas"),
+    path("cita/finalizar/<int:id_tarea>/", FinalizarTarea, name="finalizar_cita"),
+    path("cita/iniciar/<int:id_tarea>/", IniciarTarea, name="iniciar_cita"),
+    path("cita/cancelar/<int:id_tarea>/", CancelarTarea, name="cancelar_cita"),
+    
     
 ]

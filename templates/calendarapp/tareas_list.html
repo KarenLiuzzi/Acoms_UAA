@@ -1,0 +1,189 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="tile-body">
+                <div class="table-responsive">
+                    <div class="tile">
+                        {% comment %} <div>
+                            <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Taarea">
+                                <i class="bi bi-plus-lg"></i> Agregar Tarea
+                            </button>
+                        </div>
+                        <br> {% endcomment %}
+
+                        <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-hover table-bordered dataTable no-footer" id="tblTareas" role="grid" aria-describedby="sampleTable_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th></th>
+                                                <th>Inicio</th>
+                                                <th>Vencimiento</th>
+                                                <th>Responsable</th>
+                                                <th>Tipo</th>
+                                                <th>Estado</th>
+                                                <th>Observación</th>
+                                                <th>Actividad Académica</th>
+                                                <th>ID Actividad</th>
+                                                <th>Opción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block extrascripts %}
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+<script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+    <script> 
+
+        var tblTareas;
+        var lista_tarea = {{ tarea|safe }}
+
+       
+
+        $(document).ready(function() {
+
+
+            function format(t) {
+                var html = '<table class="table">';
+                html += '<thead>';
+                html += '<tr><th scope="col">Finalizado por</th>';
+                html += '<th scope="col">Registrado por</th>';
+                html += '<th scope="col">Fecha alta</th>';
+                html += '<th scope="col">Fecha Inicio real</th>';
+                html += '<th scope="col">Fecha Fin real</th>';
+                html += '<th scope="col">Ultima modificación</th></tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                    html+='<tr>'
+                    html+='<td>'+t.persona_finalizacion+'</td>'
+                    html+='<td>'+t.persona_alta+'</td>'
+                    html+='<td>'+t.datetime_alta+'</td>'
+                    html+='<td>'+t.datetime_inicio_real+'</td>'
+                    html+='<td>'+t.datetime_finalizacion+'</td>'
+                    html+='<td>'+t.datetime_ultima_modificacion+'</td>'
+                    html+='</tr>';
+                html += '</tbody>';
+                return html;
+            }
+
+            tblTareas = $('#tblTareas').DataTable({
+                responsive: true,
+                //scrollX: true,
+                autoWidth: false,
+                destroy: true,
+                deferRender: true,
+                data: lista_tarea,
+                columns: [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ''
+                    },
+                    {"data": "datetime_inicio_estimado"},
+                    {"data": "datetime_vencimiento"},
+                    {"data": "persona_responsable"},
+                    {"data": "tipo_tarea"},
+                    {"data": "estado_tarea"},
+                    {"data": "observacion"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            if ((row.id_tutoria == '') && (row.id_orientacion_academica != '') ){
+                                return "Orientación Académica";
+                            } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '')) {
+                                return "Tutoría";
+                            } else {
+                                return ""
+                            }
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            if ((row.id_tutoria == '') && (row.id_orientacion_academica != '') ){
+                                return row.id_orientacion_academica;
+                            } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '')) {
+                                return  row.id_tutoria;
+                            } else {
+                                return ""
+                            }
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            if ((row.estado_tarea === "Pendiente") && ((row.id_orientacion_academica == '') && (row.id_tutoria != ''))){
+                                return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                            } else if ((row.estado_tarea === "Iniciada") && ((row.id_orientacion_academica == '') && (row.id_tutoria != ''))){
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea"><i class="bi bi-check2"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                            } 
+                            else if ((row.estado_tarea === "Pendiente") && ((row.id_tutoria == '') && (row.id_orientacion_academica != ''))){
+                                return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>';
+                            } else if ((row.estado_tarea === "Iniciada") && ((row.id_tutoria == '') && (row.id_orientacion_academica != ''))){
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea"><i class="bi bi-check2"></i></a>  <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
+                            }
+                            else if ((row.estado_tarea === "Pendiente") && ((row.id_orientacion_academica == '') && (row.id_tutoria == ''))){
+                                return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>';
+                            } else if ((row.estado_tarea === "Iniciada") && ((row.id_orientacion_academica == '') && (row.id_tutoria == ''))){
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea"><i class="bi bi-check2"></i></a>';
+                            } else if ((row.estado_tarea === "Pendiente") && ((row.id_tutoria == '') && (row.id_orientacion_academica == ''))){
+                                return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>';
+                            } else if ((row.estado_tarea === "Iniciada") && ((row.id_tutoria == '') && (row.id_orientacion_academica == ''))){
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea"><i class="bi bi-check2"></i></a>'; 
+                            } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '')){
+                                return '<a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                            }  else if ((row.id_tutoria == '') && (row.id_orientacion_academica != '')){
+                                return '<a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
+                            } else {
+                                return '';
+                            }
+                    }
+                }
+                    //{"data": "id_tarea"},
+                ]
+            });
+
+            $('#tblTareas tbody')
+                .on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var row = tblTareas.row(tr);
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                });
+
+        });
+
+    </script>
+
+{% endblock extrascripts %}
+
+

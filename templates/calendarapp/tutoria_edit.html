@@ -16,11 +16,7 @@
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">
-                {% if action == 'add' %}
-                <i class="bi bi-plus-lg"></i>
-                {% else %}
                 <i class="bi bi-pen"></i>
-                {% endif %}
                 {{ title }}
             </h3>
         </div>
@@ -29,19 +25,13 @@
                 <div class="col-lg-7">
                     <div class="card card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Tutoría</h3>
+                            <h3 class="card-title"><i class="bi bi-person-video3"></i> Datos de la Tutoría</h3>
                         </div>
                         <div class="card-body">
-                            <input type="hidden" name="action" value="{{ action }}">
                             <div class="form-group">
                                 <label class="label" for="id_facultad">Facultad</label>
                                 {{ form.id_facultad}}
                                 <span class="text-danger">{{ form.errors.id_facultad }}</span>
-                            </div>
-                            <div class="form-group">
-                                <label class="label" for="id_materia">Materia</label>
-                                {{ form.id_materia}}
-                                <span class="text-danger">{{ form.errors.id_materia }}</span>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="id_funcionario_docente_encargado">Docente</label>
@@ -49,18 +39,51 @@
                                 <span class="text-danger">{{ form.errors.id_funcionario_docente_encargado }}</span>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="motivo">Motivo</label>
-                                <textarea placeholder= "Describa el motivo de la cita..." class="form-control" rows="4" cols="50" name="motivo" required="True" maxlength="500"></textarea>
+                                <label class="label" for="id_materia">Materia</label>
+                                {{ form.id_materia}}
+                                <span class="text-danger">{{ form.errors.id_materia }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_convocatoria">Convocatoria</label>
+                                <select name="id_convocatoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_convocatoria" data-select2-id="id_id_convocatoria" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="nro_curso">Nro. Curso</label>
                                 <div class="input-group">
                                     {{ form.nro_curso }}
                                     <span class="text-danger">{{ form.errors.motivo }}</span>
-                                    <button type="button" class="btn btn-primary" name="BuscarHorarios">
-                                        Buscar Horarios Disponibles
-                                    </button>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="hora_inicio">Inicio</label> 
+                                <div class="input-group">
+                                    <input type="datetime-local" class="form-control" id="hora_inicio" name="hora_inicio">
+                                    <a href="#" id="ahora_inicio">  Ahora </a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label" for="hora_fin">Fin</label> 
+                                <div class="input-group">
+                                    <input type="datetime-local" class="form-control" id="hora_fin" name="hora_fin">
+                                    <a href="#" id="ahora_fin">  Ahora </a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_tipo_tutoria">Solicitante</label>
+                                <select name="id_solicitante" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_solicitante" data-select2-id="id_id_solicitante" tabindex="-1" aria-hidden="true"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="id_tipo_tutoria">Tipo de Tutoría</label>
+                                <select name="id_tipo_tutoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tutoria" data-select2-id="id_id_tipo_tutoria" tabindex="-1" aria-hidden="true"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="nombre_trabajo_grado">Nombre de Trabajo</label>
+                                <textarea placeholder= "Opcional, en caso de tratarse de una tutoría de trabajo de grado o tésis..." class="form-control" rows="4" cols="30" name="nombre_trabajo" maxlength="200"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="observacion">Observación</label>
+                                <textarea placeholder= "Desea agregar algún comentario adicional?..." class="form-control" rows="4" cols="50" name="observacion" maxlength="500"></textarea>
                             </div>
                         </div>
                     </div>
@@ -103,27 +126,46 @@
             </div>
         </div>
 
-            <div class="col-md-12">
-                <div class="tile">
-                    <div class="tile-body">
-                        <div class="table-responsive">
-                            <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <table class="table table-hover table-bordered dataTable no-footer" id="tblHorarios" role="grid" aria-describedby="sampleTable_info">
-                                            <thead>
-                                                <tr role="row">
-                                                    <th>Fecha</th>
-                                                    <th>Dia</th>
-                                                    <th>Horario Inicio</th>
-                                                    <th>Horario Fin</th>
-                                                    <th>Mes</th>
-                                                    <th>Opción</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
+        <div class="col-md-12">
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="bi bi-journal-text"></i> Tareas</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="tile">
+                            <div>
+                                <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Taarea">
+                                    <i class="bi bi-plus-lg"></i> Agregar Tarea
+                                </button>
+                                <button type="button" class="btn btn-danger btn-xs btn-flat btnRemoveAllTareas">
+                                    <i class="bi bi-trash2"></i> Eliminar todas las tareas
+                                </button>
+                            </div>
+                            <br>
+
+                            <div class="tile-body">
+                                <div class="table-responsive">
+                                    <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table class="table table-hover table-bordered dataTable no-footer" id="tblTareas" role="grid" aria-describedby="sampleTable_info">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th>Inicio</th>
+                                                            <th>Vencimiento</th>
+                                                            <th>Responsable</th>
+                                                            <th>Tipo Tarea</th>
+                                                            <th>Estado</th>
+                                                            <th>Observación</th>
+                                                            <th>Opción</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -131,13 +173,72 @@
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="card-footer">
-            {% comment %} <button type="submit" class="btn btn-primary btn-flat">
-                <i class="bi bi-calendar-check"></i> Guardar registro
-            </button> {% endcomment %}
-            <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i>Cancelar</button>
+            <button type="button" class="btn btn-primary btn-flat btnActualizarTutoria" title="Tutoría seguirá Iniciada">
+                <i class="bi bi-calendar-check"></i> Actualizar Tutoría
+            </button> 
+            <button type="button" class="btn btn-primary btn-flat btnActualizarFinalizarTutoria" title="Tutoría quedará Finalizada">
+                <i class="bi bi-calendar-check"></i> Actualizar y Finalizar Tutoría
+            </button> 
+            <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i> Cancelar</button>
 
+        </div>
+    </div>
+
+    <div id="modaltareas" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div id="dialog" class="modal-dialog modal-dialog-centered" role="document"> 
+            <div class="modal-content">
+                <div class='modal-header text-center'>
+                    <h3 class="modal-title w-100"> Crear Tarea</h3> 
+                    <button id="modalClose2" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group">
+                            <label class="label" for="hora_inicio_tarea">Inicio</label> 
+                                <input type="datetime-local" class="form-control" id="hora_inicio_tarea" name="hora_inicio_tarea">
+                                <a href="#" id="ahora_inicio_tarea">  Ahora </a>
+                        </div>
+        
+                        <div class="form-group">
+                            <label class="label" for="hora_fin_tarea">Fin</label>
+                                <input type="datetime-local" class="form-control" id="hora_fin_tarea" name="hora_fin_tarea">
+                                <a href="#" id="ahora_fin_tarea">  Ahora </a>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label class="label" for="id_responsable_tarea">Responsable</label>
+                            <select name="id_responsable_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_responsable_tarea" data-select2-id="id_id_responsable_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label" for="id_tipo_tarea">Tipo de Tarea</label>
+                            <select name="id_tipo_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tarea" data-select2-id="id_id_tipo_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label" for="id_tipo_tarea">Estado de Tarea</label>
+                            <select name="id_estado_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_estado_tarea" data-select2-id="id_id_estado_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+            
+                        <div class="form-group">
+                            <label class="label" for="observacion_tarea">Observación</label>
+                            <textarea placeholder= "Desea agregar algún comentario adicional?..." class="form-control" rows="3" cols="25" name="observacion_tarea" maxlength="500"></textarea>
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose1"> Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="modalguardar"> Guardar</button>
+                        </div>  
+
+                    </div>       
+                </div>  
+            </div>
         </div>
     </div>
 </form>
@@ -172,38 +273,48 @@
     <script src="{% static 'js/functions.js' %}"></script>
 
     <script>       
+        // Obtén una referencia al enlace y al elemento input
+        var ahoraInicioLink = document.getElementById("ahora_inicio");
+        var horaInicioInput = document.getElementById("hora_inicio");
+        var ahoraFinLink = document.getElementById("ahora_fin");
+        var horaFinInput = document.getElementById("hora_fin");
+        var ahoraInicioLinkTarea = document.getElementById("ahora_inicio_tarea");
+        var horaInicioInputTarea = document.getElementById("hora_inicio_tarea");
+        var ahoraFinLinkTarea = document.getElementById("ahora_fin_tarea");
+        var horaFinInputTarea = document.getElementById("hora_fin_tarea");
 
-        // Logica para actualizar el datatable de horarios,
-        // 1 - si el usuario aprieta por primera vez el boton de buscar horarios siendo el docente el mismo que el ya solicitado entonces en la tabla 
-        //se debe acoplar los horarios al horario que ya solicito el ususario
-        // 2 - si el ususario aprieta el boton de buscar horarios y el docente es diferente al ya solicitado entonces pisar totalmente la tabla 
-        //de horarios
-        // 3 - si el usuario aprieta por 2da vez o mas el boton de buscar horarios siendo el docente nuevamente el mismo que el ya solicitado entonces 
-        // se crea la tabla de horarios con el ya solicitado y los nuevos horarios 
+        var modal = document.getElementById('modaltareas')
+        const cerrarmodal = document.getElementById('modalClose1');
+        const cerrarmodal2 = document.getElementById('modalClose2');
+        const guardarmodal = document.getElementById('modalguardar');
 
-        var band_boton_horario= 0
         var band_boton_selects= 0
         var hora_inicio;
         var hora_fin;
         var convocatoria;
-        var tblHorarios;
+        var tblTareas;
         var mi_form= $('#tutoria')
         var tblParticipantes;
         var lista_participantes = {{ det|safe }}
-        var lista_horario = []
-        var lista_cita = []
+        var lista_tutoria = {{ tutoria|safe }}
+        var lista_event = {{ event|safe }}
+        var lista_tarea = {{ tarea|safe }}
 
         var actividad_academica = {
             items: {
                 id_facultad: '',
                 id_materia: '',
                 id_funcionario_docente_encargado: '',
-                motivo: '',
+                id_solicitante: '',
                 nro_curso: '',
                 participantes: [],
+                tareas: [],
                 convocatoria: '',
                 datetime_inicio_estimado: '',
-                datetime_fin_estimado: ''
+                datetime_fin_estimado: '',
+                id_tipo_tutoria: '',
+                nombre_trabajo: '',
+                observacion: ''
             },
 
             add: function (item) {
@@ -251,7 +362,116 @@
 
                 });
             },
-            
+            list_tarea: function () {
+                tblTareas = $('#tblTareas').DataTable({
+                    searching: true,
+                    paging: true,
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    data: this.items.tareas,
+                    columns: [
+                        {"data": "inicio"},
+                        {"data": "vencimiento"},
+                        {"data": "responsable"},
+                        {"data": "tipo_tarea"},
+                        {"data": "estado"},
+                        {"data": "observacion"},
+                        {},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var fechainicio = new Date(data);
+                                var dia = fechainicio.getDate().toString().padStart(2, '0');
+                                var mes = (fechainicio.getMonth() + 1).toString().padStart(2, '0');
+                                var anho = fechainicio.getFullYear().toString();
+                                var horas = fechainicio.getHours().toString().padStart(2, '0');
+                                var minutos = fechainicio.getMinutes().toString().padStart(2, '0');
+                                var segundos = fechainicio.getSeconds().toString().padStart(2, '0');
+                                
+                                var fechaInicioFormateada = dia + '-' + mes + '-' + anho + ' ' + horas + ':' + minutos + ':' + segundos;
+                                
+                                return '<text name="InicioTarea" value="' + data + '">' + fechaInicioFormateada + '</text>';
+                            }
+                        },
+                        {
+                            targets: [1],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var fechafin = new Date(data);
+                                var dia = fechafin.getDate().toString().padStart(2, '0');
+                                var mes = (fechafin.getMonth() + 1).toString().padStart(2, '0');
+                                var anho = fechafin.getFullYear().toString();
+                                var horas = fechafin.getHours().toString().padStart(2, '0');
+                                var minutos = fechafin.getMinutes().toString().padStart(2, '0');
+                                var segundos = fechafin.getSeconds().toString().padStart(2, '0');
+                                
+                                var fechaFinFormateada = dia + '-' + mes + '-' + anho + ' ' + horas + ':' + minutos + ':' + segundos;
+                                
+                                return '<text name="FinTarea" value="' + data + '">' + fechaFinFormateada + '</text>';
+                            }
+                        },
+                        {
+                            targets: [2],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var inicio = data;
+                                var datos = inicio.split('|');
+                                var responsable = datos[0]; 
+                                var id_responsable = datos[1]; 
+                                return '<text name="ResponsalbeTarea" value="' + id_responsable + '">' + responsable + '</text>';
+                            }
+                        },
+                        {
+                            targets: [3],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var tipo = data;
+                                var datos = tipo.split('|');
+                                var tipo_tarea = datos[0]; 
+                                var id_tarea = datos[1]; 
+                                return '<text name="TipoTarea" value="' + id_tarea +'">' + tipo_tarea + '</text>';
+                            }
+                        },
+                        {
+                            targets: [4],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var estado = data;
+                                var datos = estado.split('|');
+                                var estado_tarea = datos[0]; 
+                                var id_estado_tarea = datos[1]; 
+                                return '<text name="EstadoTarea" value="' + id_estado_tarea + '">' + estado_tarea + '</text>';
+                            }
+                        },
+                        {
+                            targets: [5],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                return '<text name="Observacion" value="'+ data +'">' + data + '</text>';
+                            }
+                        },
+                        {
+                            targets: [-1],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                            }
+                        },
+                    ]
+
+                });
+            },            
             actualizar_participantes: function (lista_participantes) {
                 
                 //Iteramos uno a uno
@@ -260,17 +480,176 @@
                     this.items.participantes.push(newItem);
                 }
                 this.list();
-            }            
+            }, 
+            addtarea: function (item) {
+                this.items.tareas.push(item);
+                //this.list_tarea();
+            },
+            verificar_tarea: function (valor) {
+                var tareaExistente = this.items.tareas.some(function(tarea) {
+                    return JSON.stringify(tarea) === JSON.stringify(valor);
+                  });
+                  
+                  if (tareaExistente) {
+                    return false; //La tarea ya existe en el arreglo de tareas.
+                  } else {
+                    return true; //La tarea es nueva y puede ser agregada.
+                  }
+            },         
         };
 
         $(document).ready(function() {
 
-            //cargamos el campo de motivo
-            $('textarea[name="motivo"]').val(lista_cita[0]['motivo']);
+            function cargar_tareas() {
+                if (lista_tarea.length > 0) {
 
-            //cuando se cargue la pagina traer todas las facultades
+                    // Recorrer la lista de datos
+                    for (var i = 0; i < lista_tarea.length; i++) {
+                        var tarea = lista_tarea[i];
+                        //tarea.id_tarea;
+                        //tarea.persona_alta;
+                        var responsable_id= tarea.id_persona_responsable
+                        var responsable= tarea.persona_responsable
+                        var id_estado= tarea.id_estado_tarea;
+                        var estado= tarea.estado_tarea;
+                        var id_tipo_tarea= tarea.id_tipo_tarea;
+                        var tipo_tarea = tarea.tipo_tarea;
+                        var inicio = tarea.datetime_inicio_estimado;
+                        //tarea.datetime_inicio_real;
+                        var vencimiento= tarea.datetime_vencimiento;
+                        //tarea.datetime_alta;
+                        //tarea.datetime_finalizacion;
+                        var observacion= tarea.observacion;
+                        //cargamos los datos
+                        tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion}
+                        //agregamos en la tabla de tareas
+                        actividad_academica.addtarea(tareas)
+                    }
+                    actividad_academica.list_tarea();
+                } else {
+                    reiniciar_tblTareas();
+                }
+
+            }
+
+            //cargamos los campos de tipo textarea
+            $('textarea[name="nombre_trabajo"]').val(lista_tutoria[0]['nombre_trabajo']);
+            $('textarea[name="observacion"]').val(lista_event[0]['observacion']);
+
+            // Convertir la cadena a un objeto datetime
+            var aux_fecha_inicio= new Date(lista_event[0]['datetime_inicio_estimado']);
+            var aux_fecha_fin= new Date(lista_event[0]['datetime_fin_estimado']);
+
+            // Formatear la fecha y hora en un formato reconocido por el input datetime-local
+            var formattedaux_fecha_inicio = aux_fecha_inicio.getFullYear() + "-" +
+            ("0" + (aux_fecha_inicio.getMonth() + 1)).slice(-2) + "-" +
+            ("0" + aux_fecha_inicio.getDate()).slice(-2) + "T" +
+            ("0" + aux_fecha_inicio.getHours()).slice(-2) + ":" +
+            ("0" + aux_fecha_inicio.getMinutes()).slice(-2);
+
+            var formattedaux_fecha_fin = aux_fecha_fin.getFullYear() + "-" +
+            ("0" + (aux_fecha_fin.getMonth() + 1)).slice(-2) + "-" +
+            ("0" + aux_fecha_fin.getDate()).slice(-2) + "T" +
+            ("0" + aux_fecha_fin.getHours()).slice(-2) + ":" +
+            ("0" + aux_fecha_fin.getMinutes()).slice(-2);
+
+            horaInicioInput.value= formattedaux_fecha_inicio
+            horaFinInput.value= formattedaux_fecha_fin
+
+
+            //funcion para crear tabla vacia de tareas
+            function reiniciar_tblTareas() {
+                // generar tabla de tareas 
+                tblTareas = $('#tblTareas').DataTable({
+                    searching: true,
+                    paging: true,
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    columns: [
+                        {"data": "inicio"},
+                        {"data": "vencimiento"},
+                        {"data": "responsable"},
+                        {"data": "tipo_tarea"},
+                        {"data": "estado"},
+                        {"data": "observacion"},
+                        {},
+                    ],
+                    data: [] // Datos vacíos para crear una tabla sin contenido
+                });
+            }
+
+            // Agrega un evento de clic al enlace
+            ahoraInicioLink.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaInicioInput.value = fechaHoraActual;
+            });
+
+            ahoraInicioLinkTarea.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaInicioInputTarea.value = fechaHoraActual;
+            });
+
+            // Agrega un evento de clic al enlace
+            ahoraFinLink.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaFinInput.value = fechaHoraActual;
+            });
+
+            ahoraFinLinkTarea.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaFinInputTarea.value = fechaHoraActual;
+            });
+
+            //cuando se cargue la pagina traer todos los demas items
             actualizarfacultad();
+            actualizar_tipo_tarea();
+            actualizar_estado_tarea();
+            cargar_tareas();
 
+            //primero debemos actualizar el docente y en base a eso la facultad y en base a eso las materias del profesor 
+
+            //tenemos que traer todas las facultades de los departamentos que esten asignados al funcionario docente
             function actualizarfacultad() {
                 $.ajax({
                     url: '/actualizar_campo/',
@@ -280,81 +659,184 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_facultad').html(data);
-                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
                         if (band_boton_selects == 0){
-                            $('#id_id_facultad').val(lista_cita[0]['id_facultad']);
+                            $('#id_id_facultad').val(lista_event[0]['id_facultad']);
                         }
-                        band_boton_selects= band_boton_selects + 1
-                        actualizarmateria();
-                        validar_cambio();
+                        band_boton_selects += 1
+                        actualizarfuncionariodocente()
+                       
                     }
                 });
+                 //cuando este en produccion favor cambiar la facultad para que traiga por las facultades que corresponden al departamento del funcionario docente
+                //$.ajax({
+                //    url: '/actualizar_campo/',
+                //    data: {
+                //        'campo': 'facultad_func_doc'
+                //    },
+                //    dataType: 'json',
+                //    success: function(data) {
+                //        $('#id_id_facultad').html(data);
+                //        band_boton_selects= band_boton_selects + 1
+                //        actualizarfuncionariodocente()
+                //    }
+                //});
+
             }
 
-             //actualizar el campo de la materia de acuerdo a la facultad seleccionada
-             function actualizarmateria() {
-                var selected_option = $('#id_id_facultad').val();
-                //console.log(selected_option)
+             //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
+             function actualizarfuncionariodocente() {
+                //debemos seleccionar el id del funcionario docente que este actualmente logeado, si no no hacer nada 
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'id_facultad': selected_option,
-                        'campo': 'materia'
+                        'campo': 'funcionariodocente_logeado'
                     },
                     dataType: 'json',
                     success: function(data) {
-                        $('#id_id_materia').html(data);
-                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
-                        if (band_boton_selects == 1){
-                            $('#id_id_materia').val(lista_cita[0]['id_materia']);
-                        }
-                        band_boton_selects= band_boton_selects + 1
-                        actualizarfuncionariodocente();
-                        validar_cambio();
+                        // Convertir a diccionario
+                        var diccionario = Object.assign({}, data);
+
+                        // Verificar si el diccionario tiene datos
+                        var tieneDatos = Object.keys(diccionario).length > 0;
+                            if (tieneDatos) {
+                                $('#id_id_funcionario_docente_encargado').html(data);
+                                //habilitar una vez que el func_doc tenta asignado un departamento
+                                //$.ajax({
+                                //    url: '/actualizar_campo/',
+                                //    data: {
+                                //        'campo': 'funcdoc_logeado_materias',
+                                //        'func_doc'= diccionario.id_funcionario_docente
+    
+                                //    },
+                                //    dataType: 'json',
+                                //    success: function(datos) {
+                                        // Convertir a diccionario
+                                //        diccionario = Object.assign({}, datos);
+    
+                                        // Verificar si el diccionario tiene datos
+                                //        var tieneDatos = Object.keys(diccionario).length > 0;
+                                //            if (tieneDatos) {
+                                //                $('#id_id_materia').html(datos)
+                                //            }
+                                //    }
+                                //});
+                                //traemos las materias que esten asociadas al funcionario docente
+                                if (band_boton_selects == 1){
+                                    $('#id_id_funcionario_docente_encargado').val(lista_event[0]['id_funcionario_docente_encargado']);
+                                }
+                                band_boton_selects += 1
+                                actualizarmaterias_func_doce($('#id_id_funcionario_docente_encargado').val())
+                            }
                     }
-
-                });
+                });                        
             }
-            //ejecutar si cambia la facultad para actualizar materia y func/doc
-            $('#id_id_facultad').change(function() {
-                actualizarmateria()
-                actualizarfuncionariodocente()
-            });
 
-            //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
-            function actualizarfuncionariodocente() {
-                var selected_option = $('#id_id_materia').val();
+            //actualizar las materias que esten asociadas al funcionario docente
+            function actualizarmaterias_func_doce(func_doc) {
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'id_materia': selected_option,
-                        'campo': 'funcionariodocente'
+                        'campo': 'funcdoc_logeado_materias',
+                        'func_doc': func_doc
                     },
                     dataType: 'json',
                     success: function(data) {
-                        $('#id_id_funcionario_docente_encargado').html(data);
-                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
-                        if (band_boton_selects == 2) {
-                            $('#id_id_funcionario_docente_encargado').val(lista_cita[0]['id_funcionario_docente_encargado']);
+                        // Convertir a diccionario
+                        var diccionario = Object.assign({}, data);
+
+                        // Verificar si el diccionario tiene datos
+                        var tieneDatos = Object.keys(diccionario).length > 0;
+                            if (tieneDatos) {
+                                $('#id_id_materia').html(data);
+                                if (band_boton_selects == 2){
+                                    $('#id_id_materia').val(lista_event[0]['id_materia']);
+                                } 
+                                band_boton_selects += 1
+                            }
+                            actualizarconvocatoria();
+                     }       
+                });
+            }
+
+            function actualizarconvocatoria() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'convocatoria'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_convocatoria').html(data);
+                        if (band_boton_selects == 3){
+                            $('#id_id_convocatoria').val(lista_event[0]['id_convocatoria']);
                         }
-                        band_boton_selects= band_boton_selects + 1
-                        validar_cambio();
+                        band_boton_selects += 1
+                        actualizartipo_tutoria();                       
                     }
                 });
             }
 
-            //ejecutar si cambia la materia para actualiar fun/doc
-            $('#id_id_materia').change(function() {
-                actualizarfuncionariodocente()
-                //validar_cambio();
-            });
+            function actualizartipo_tutoria() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'tipo_tutoria'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_tipo_tutoria').html(data);
+                        if (band_boton_selects == 4){
+                            $('#id_id_tipo_tutoria').val(lista_tutoria[0]['id_tipo_tutoria']);
+                        }
+                        band_boton_selects += 1
+                        actualizar_personas();
+                    }
+                });
+            }
 
-            //ejecutar si cambia el func_doc actualizar tabla horario
-            $('#id_id_funcionario_docente_encargado').change(function() {
-                band_boton_selects= band_boton_selects + 1
-                validar_cambio();
-            });
+            function actualizar_personas() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'personas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_solicitante').html(data);
+                        if (band_boton_selects == 5){
+                            $('#id_id_solicitante').val(lista_event[0]['id_persona_solicitante']);
+                        }
+                        band_boton_selects += 1
+                        $('#id_id_responsable_tarea').html(data);
+                    }
+                });
+            }
 
+            function actualizar_tipo_tarea() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'tipo_tareas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_tipo_tarea').html(data);
+                    }
+                });
+            }
+
+            function actualizar_estado_tarea() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'estado_tareas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_estado_tarea').html(data);
+                    }
+                });
+            }
 
             //aplicar formato select2 a todos los dropdowns
             $('.select2').select2({
@@ -402,191 +884,19 @@
                 }
             });
 
-            function reiniciar_tblHorarios() {
-                
-                tblHorarios= $('#tblHorarios').DataTable({
-                    responsive: true,
-                    autoWidth: false,
-                    destroy: true,
-                    columns: [
-                        {"data": "fecha"},
-                        {"data": "dia"},
-                        {"data": "hora_inicio"},
-                        {"data": "hora_fin"},
-                        {"data": "mes"},
-                        {},
-                    ],
-                    data: [] // Datos vacíos para crear una tabla sin contenido
+
+            //elimina todas las tareas
+            $('.btnRemoveAllTareas').on('click', function () {
+                if (actividad_academica.items.tareas.length === 0) return false;
+                alert_action('Notificación', '¿Estás seguro de eliminar todas las tareas?', function () {
+                    actividad_academica.items.tareas = [];
+                    actividad_academica.list();
                 });
+            });
 
-            }
-
-            //Para agregar los componentes a la tabla de horarios
-            if (lista_horario.length === 0){
-                reiniciar_tblHorarios()
-            }
-            else {
-                
-                //si no esta vacio vamos a iterar para extraer los valores que nos interesan
-                var newData = [];
-                for (var i = 0; i < lista_horario.length; i++) {
-                    var newItem = {
-                        fecha: lista_horario[i].fecha,
-                        dia: lista_horario[i].dia,
-                        hora_inicio: lista_horario[i].hora_inicio,
-                        hora_fin: lista_horario[i].hora_fin,
-                        mes: lista_horario[i].mes,
-                        convocatoria: lista_horario[i].convocatoria,
-                    };
-                    newData.push(newItem);
-                }
-
-                tblHorarios= $('#tblHorarios').DataTable({
-                    responsive: true,
-                    autoWidth: false,
-                    destroy: true,
-                    data: newData,
-                    columns: [
-                        {"data": "fecha"},
-                        {"data": "dia"},
-                        {"data": "hora_inicio"},
-                        {"data": "hora_fin"},
-                        {"data": "mes"},
-                        {"data": "convocatoria"},
-                    ],
-                    columnDefs: [
-                        {
-                            targets: [-1],
-                            class: 'text-center',
-                            orderable: false,
-                            render: function (data, type, row) {
-                                return '<button type="button" class="btn btn-primary btn-flat btn-submit"><i class="bi bi-calendar-check"></i>Actualizar Cita</button>';
-                            }
-                        },
-                    ]
-                });
-            }
-
-            //funcion para agregar los componentes a la tabla de horarios
-            function actualizar_horarios(listaDiccionarios) {
-
-                tblHorarios= $('#tblHorarios').DataTable({
-                    responsive: true,
-                    autoWidth: false,
-                    destroy: true,
-                    data: listaDiccionarios,
-                    columns: [
-                        {"data": "fecha"},
-                        {"data": "dia"},
-                        {"data": "hora_inicio"},
-                        {"data": "hora_fin"},
-                        {"data": "mes"},
-                        {"data": "convocatoria"},
-                    ],
-                    columnDefs: [
-                        {
-                            targets: [-1],
-                            class: 'text-center',
-                            orderable: false,
-                            render: function (data, type, row) {
-                                return '<button type="button" class="btn btn-primary btn-flat btn-submit"><i class="bi bi-calendar-check"></i>Actualizar Cita</button>';
-                            }
-                        },
-                    ]
-                });
-                
-            }
-
-            // search horarios
-            $('button[name="BuscarHorarios"]').on('click', function (event, ui) {
-                //obtenemos el parametro de func/doc
-                var id_func_doc= $('#id_id_funcionario_docente_encargado').val()
-                if (id_func_doc == null ) {
-
-                    $.alert({
-                        title: 'Alerta!',
-                        content: 'Favor seleccione un Docente!',
-                    });
-
-                }
-                else {
-
-                    $.ajax({
-                        url: '/obtener_horarios_cita/',
-                        data: {
-                            'tipo_acti_academica': 'tutoria',
-                            'id_func_doc': id_func_doc
-                        },
-                        dataType: 'json',
-                    }).done(function (data) {
-                        //convertimos el str a un objeto de lista de diccionarios y pasamos 
-                        var listaDiccionarios = JSON.parse(data)
-
-                        if (listaDiccionarios.length === 0) {
-                            $.alert({
-                                title: 'Alerta!',
-                                content: 'El Docente no posee horarios disponibles en este momento.',
-                            });
-                        }
-                        else{
-
-                            //si aprieta el boton por primera vez y si el funcionario docente es el mismo que el ya solicitado
-                            if (id_func_doc == lista_cita[0]['id_funcionario_docente_encargado'] && band_boton_horario == 0 ){
-                                // actualizar la tabla completa y agregar el que ya fue solicitado
-                                //console.log('primera vez mismo encargado')
-                                var newItem = {
-                                    fecha: lista_horario[0].fecha,
-                                    dia: lista_horario[0].dia,
-                                    hora_inicio: lista_horario[0].hora_inicio,
-                                    hora_fin: lista_horario[0].hora_fin,
-                                    mes: lista_horario[0].mes,
-                                    convocatoria: lista_horario[0].convocatoria,
-                                };
-                                //console.log(newItem)
-                                //agregagamos en la primera posición
-                                listaDiccionarios.unshift(newItem);
-                                actualizar_horarios(listaDiccionarios)
-
-                            }
-
-                            //si aprieta el boton mas de una vez y si el funcionario docente es el mismo que el ya solicitado
-                            
-                            if (id_func_doc == lista_cita[0]['id_funcionario_docente_encargado'] && band_boton_horario > 0 ){
-                                // actualizar la tabla completa y agregar el que ya fue solicitado
-                                //console.log('mas de una vez mismo encargado')
-                                var newItem = {
-                                    'fecha': lista_horario[0].fecha,
-                                    'dia': lista_horario[0].dia,
-                                    'hora_inicio': lista_horario[0].hora_inicio,
-                                    'hora_fin': lista_horario[0].hora_fin,
-                                    'mes': lista_horario[0].mes,
-                                    'convocatoria': lista_horario[0].convocatoria
-                                };
-                                //console.log(newItem)
-                                //agregagamos en la primera posición
-                                listaDiccionarios.unshift(newItem);
-                                actualizar_horarios(listaDiccionarios)
-
-                            }
-
-                            //si apieta el boton y si el funcionario docente es diferente que el ya solicitado
-                            if (id_func_doc != lista_cita[0]['id_funcionario_docente_encargado']){
-                                //console.log('diferente encargado')
-                                actualizar_horarios(listaDiccionarios)
-                            }
-                        }
-
-
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        $.alert({
-                            title: 'Error!',
-                            content: textStatus + ': ' + errorThrown ,
-                        });
-                    }).always(function (data) {
-                        //capturamos el nro de vez que ya apreto el boton el ususario para buscar los horarios
-                        band_boton_horario= band_boton_horario + 1
-                    });
-                }
+             //capturar todas las tareas
+             $('.btncaptureAllTareas').on('click', function () {
+                capturar_tareas();
             });
 
             //elimina todos los participantes
@@ -613,63 +923,301 @@
                 $('input[name="search"]').val('').focus();
             });
 
-            // Capturar los datos de la fila del td de horarios cuando se haga clic en el botón
-            $('#tblHorarios').on('click', '.btn-submit' ,function() {
-                var fila = $(this).closest('tr');
-                var datosFila = tblHorarios.row(fila).data();
-                hora_inicio= datosFila.fecha + ' ' + datosFila.hora_inicio
-                hora_fin= datosFila.fecha + ' ' + datosFila.hora_fin
-                convocatoria= datosFila.convocatoria
-                //enviamos el formulario
-                mi_form.submit();
+            //eliminar por item de tarea
+            $('#tblTareas tbody')
+                .on('click', 'a[rel="removetarea"]', function () {
+                    var tr = tblTareas.cell($(this).closest('td, li')).index();
+                    alert_action('Notificación', '¿Estas seguro de eliminar la tarea?', function () {
+                        actividad_academica.items.tareas.splice(tr.row, 1);
+                        actividad_academica.list_tarea();
+                    });
+                })
+
+            
+            // Registrar una tutoria sin finalizar, asignacion de atributos para enviar
+            $('.btnActualizarTutoria').on('click', function () {
+                //primero debemos validar que los campo obligatorios esten cargados 
+                //validar que el fin no sean menor o igual a Inicio
+
+                var horaInicioValue = horaInicioInput.value;
+                var horaFinValue = horaFinInput.value;
+
+                if (horaInicioValue && horaFinValue) {
+
+                    var horaInicio = new Date(horaInicioValue);
+                    horaInicioFinal = horaInicio.getFullYear() + "-" +
+                    ("0" + (horaInicio.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaInicio.getDate()).slice(-2) + " " +
+                    ("0" + horaInicio.getHours()).slice(-2) + ":" +
+                    ("0" + horaInicio.getMinutes()).slice(-2) + ":00";
+                    var horaFin = new Date(horaFinValue);
+                    horaFinFinal = horaFin.getFullYear() + "-" +
+                    ("0" + (horaFin.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaFin.getDate()).slice(-2) + " " +
+                    ("0" + horaFin.getHours()).slice(-2) + ":" +
+                    ("0" + horaFin.getMinutes()).slice(-2) + ":00";
+
+                    if (horaFin <= horaInicio) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'La hora de fin debe ser mayor que la hora de inicio.',
+                        });
+
+                    } else {
+                        //validar que tenga cargado un id_solicitante
+                        if ($('select[name="id_solicitante"]').val() == "" ){
+
+                            $.alert({
+                                title: 'Alerta!',
+                                content: 'Debe seleccionar un solicitante.',
+                            });
+                        }
+                        else {
+                            //seleccionamos los datos del formulario
+                            actividad_academica.items.id_facultad = $('select[name="id_facultad"]').val();
+                            actividad_academica.items.id_materia = $('select[name="id_materia"]').val();
+                            actividad_academica.items.id_funcionario_docente_encargado = $('select[name="id_funcionario_docente_encargado"]').val();
+                            actividad_academica.items.id_solicitante = $('select[name="id_solicitante"]').val();
+                            actividad_academica.items.convocatoria = $('select[name="id_convocatoria"]').val();
+                            actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
+                            actividad_academica.items.datetime_inicio_estimado = horaInicioFinal
+                            actividad_academica.items.datetime_fin_estimado = horaFinFinal
+                            actividad_academica.items.id_tipo_tutoria = $('select[name="id_tipo_tutoria"]').val();
+                            actividad_academica.items.nombre_trabajo = $('textarea[name="nombre_trabajo"]').val();
+                            actividad_academica.items.observacion = $('textarea[name="observacion"]').val();
+
+                            //reasignamos los datos de las tareas de la tabla 
+                            actividad_academica.items.tareas= capturar_tareas();
+
+                            var parameters = new FormData();
+                            parameters.append('action', 'edit');
+                            parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
+                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de registrar la tutoría?', parameters, function () {
+                                location.href = '/running-acti_academ-list/Tutoria/';
+                            });
+                        }
+                    }
+                } else {
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'Los campos de hora inicio y fin deben estar cargados.',
+                    });
+                }
             });
 
-            //cualquier accion ya sea si cambia facultad, materia u docente debe limpiar el tb de horarios xq o si no dara chance de solicitar un horarios que puede no corresponder
-            function validar_cambio(){
-                if (band_boton_selects > 3) {
-                    // Verificar si el DataTable tiene elementos
-                    if (tblHorarios.data().any()) {
-                        //console.log('El DataTable tiene elementos.');
-                        reiniciar_tblHorarios();
-                    }
-                }
-            }
-            
 
-            // Cita submit, asignacion de atributos para enviar
-            $('form').on('submit', function (e) {
-                e.preventDefault();
 
+             // Registrar una tutoria y finalizar, asignacion de atributos para enviar
+             $('.btnRegistrarActualizarTutoria').on('click', function () {
                 //primero debemos validar que los campo obligatorios esten cargados 
+                //validar que el fin no sean menor o igual a Inicio
 
-                //seleccionamos los datos del formulario
-                actividad_academica.items.id_facultad = $('select[name="id_facultad"]').val();
-                actividad_academica.items.id_materia = $('select[name="id_materia"]').val();
-                actividad_academica.items.id_funcionario_docente_encargado = $('select[name="id_funcionario_docente_encargado"]').val();
-                actividad_academica.items.motivo = $('textarea[name="motivo"]').val();
-                actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
+                var horaInicioValue = horaInicioInput.value;
+                var horaFinValue = horaFinInput.value;
 
-                // traer los datos de la seleccion de horario
-                actividad_academica.items.convocatoria =convocatoria;
-                actividad_academica.items.datetime_inicio_estimado = hora_inicio;
-                actividad_academica.items.datetime_fin_estimado = hora_fin;
+                if (horaInicioValue && horaFinValue) {
 
-                var parameters = new FormData();
-                parameters.append('action', $('input[name="action"]').val());
-                parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
-                submit_with_ajax(window.location.pathname, 'Notificación', '¿Estas seguro de solicitar la cita?', parameters, function () {
-                    location.href = '/running-event-list/Tutoria/';
-                });
+                    var horaInicio = new Date(horaInicioValue);
+                    horaInicioFinal = horaInicio.getFullYear() + "-" +
+                    ("0" + (horaInicio.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaInicio.getDate()).slice(-2) + " " +
+                    ("0" + horaInicio.getHours()).slice(-2) + ":" +
+                    ("0" + horaInicio.getMinutes()).slice(-2) + ":00";
+                    var horaFin = new Date(horaFinValue);
+                    horaFinFinal = horaFin.getFullYear() + "-" +
+                    ("0" + (horaFin.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaFin.getDate()).slice(-2) + " " +
+                    ("0" + horaFin.getHours()).slice(-2) + ":" +
+                    ("0" + horaFin.getMinutes()).slice(-2) + ":00";
 
-                
+                    if (horaFin <= horaInicio) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'La hora de fin debe ser mayor que la hora de inicio.',
+                        });
+
+                    } else {
+                        //validar que tenga cargado un id_solicitante
+                        if ($('select[name="id_solicitante"]').val() == "" ){
+
+                            $.alert({
+                                title: 'Alerta!',
+                                content: 'Debe seleccionar un solicitante.',
+                            });
+                        }
+                        else {
+                            //seleccionamos los datos del formulario
+                            actividad_academica.items.id_facultad = $('select[name="id_facultad"]').val();
+                            actividad_academica.items.id_materia = $('select[name="id_materia"]').val();
+                            actividad_academica.items.id_funcionario_docente_encargado = $('select[name="id_funcionario_docente_encargado"]').val();
+                            actividad_academica.items.id_solicitante = $('select[name="id_solicitante"]').val();
+                            actividad_academica.items.convocatoria = $('select[name="id_convocatoria"]').val();
+                            actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
+                            actividad_academica.items.datetime_inicio_estimado = horaInicioFinal
+                            actividad_academica.items.datetime_fin_estimado = horaFinFinal
+                            actividad_academica.items.id_tipo_tutoria = $('select[name="id_tipo_tutoria"]').val();
+                            actividad_academica.items.nombre_trabajo = $('textarea[name="nombre_trabajo"]').val();
+                            actividad_academica.items.observacion = $('textarea[name="observacion"]').val();
+
+                            //reasignamos los datos de las tareas de la tabla 
+                            actividad_academica.items.tareas= capturar_tareas();
+
+                            var parameters = new FormData();
+                            parameters.append('action', 'editfinalizar');
+                            parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
+                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de registrar y finalizar la tutoría?', parameters, function () {
+                                location.href = '/running-acti_academ-list/Tutoria/';
+                            });
+                        }
+                    }
+                } else {
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'Los campos de hora inicio y fin deben estar cargados.',
+                    });
+                }
             });
 
             //boton de cancelar
             $('.btnCancelar').on('click', function () {
                 alert_action('Notificación', '¿Estas seguro de cancelar el proceso?', function () {
-                    window.location.href= '/running-event-list/Tutoria/'
+                    window.location.href= '/running-acti_academ-list/Tutoria/'
                 });
             });
+
+            //boton de agregar tarea
+            $('.btnRegistrarTarea').on('click', function () {
+                modal.style.display = 'block'
+            });
+
+            //boton de cerrar modal tarea
+            cerrarmodal.addEventListener('click',()=>{
+                limpiar_campos_tarea();
+                modal.style.display = 'none';
+              });
+
+            //boton de guardar modal tarea
+            guardarmodal.addEventListener('click',()=>{
+                var horaInicioValueTarea = horaInicioInputTarea.value;
+                var horaFinValueTarea = horaFinInputTarea.value;
+
+                if (horaInicioValueTarea && horaFinValueTarea) {
+
+
+                    var horaIniciotarea = new Date(horaInicioValueTarea);
+                    horaInicioFinalTarea = horaIniciotarea.getFullYear() + "-" +
+                    ("0" + (horaIniciotarea.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaIniciotarea.getDate()).slice(-2) + " " +
+                    ("0" + horaIniciotarea.getHours()).slice(-2) + ":" +
+                    ("0" + horaIniciotarea.getMinutes()).slice(-2) + ":00";
+                    var horaFintarea = new Date(horaFinValueTarea);
+                    horaFinFinalTarea = horaFintarea.getFullYear() + "-" +
+                    ("0" + (horaFintarea.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaFintarea.getDate()).slice(-2) + " " +
+                    ("0" + horaFintarea.getHours()).slice(-2) + ":" +
+                    ("0" + horaFintarea.getMinutes()).slice(-2) + ":00";
+
+                    if (horaFintarea <= horaIniciotarea) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'La hora de fin debe ser mayor que la hora de inicio.',
+                        });
+
+                    } else {
+                        //validar que tenga cargado un id_solicitante
+                        if ($('select[name="id_responsable_tarea"]').val() == "" ){
+
+                            $.alert({
+                                title: 'Alerta!',
+                                content: 'Debe seleccionar un responsable.',
+                            });
+                        }
+                        else {
+                            //procedemos a capturar todos los datos de los campos
+                            inicio= horaInicioFinalTarea 
+                            vencimiento= horaFinFinalTarea
+                            respons= document.getElementById('id_id_responsable_tarea');
+                            responsable= respons.options[respons.selectedIndex].text;
+                            responsable_id = $('select[name="id_responsable_tarea"]').val();
+                            tip_tar= document.getElementById('id_id_tipo_tarea'); 
+                            tipo_tarea= tip_tar.options[tip_tar.selectedIndex].text;
+                            id_tipo_tarea= $('select[name="id_tipo_tarea"]').val();
+                            estad= document.getElementById('id_id_estado_tarea'); 
+                            estado= estad.options[estad.selectedIndex].text; 
+                            id_estado = $('select[name="id_estado_tarea"]').val();
+                            observacion= $('textarea[name="observacion_tarea"]').val();
+
+                            tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion}
+                            //agregamos en la tabla de tareas
+                            //primero validamos 
+                            var validar= actividad_academica.verificar_tarea(tareas)
+                            if (validar == true ) {
+                                actividad_academica.addtarea(tareas)
+                                actividad_academica.list_tarea();
+                            } else {
+                                $.alert({
+                                    title: 'Alerta!',
+                                    content: 'La tarea ya se encuentra en la lista!',
+                                });
+
+                            }
+                            
+                            
+
+                            //limpiamos los campos completados
+                            limpiar_campos_tarea();
+                            //cerramos el modal y actualizamos el tb de tareas
+                            modal.style.display = 'none';
+                        }
+                    }
+                    
+                } else {
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'Los campos de hora inicio y fin deben estar cargados.',
+                    });
+                }
+            });
+            
+            //boton 2 de cerrar modal tarea
+            cerrarmodal2.addEventListener('click',()=>{
+                limpiar_campos_tarea();
+                modal.style.display = 'none';
+            });
+
+            function limpiar_campos_tarea(){
+                //inicio y fin 
+                horaInicioInputTarea.value= ''
+                horaFinInputTarea.value= ''
+                //responsalbe
+                $('select[name="id_responsable_tarea"]').val(null).trigger('change');;
+                //observacion
+                $('textarea[name="observacion_tarea"]').val('');
+            }
+
+            //debemos capturar todos los valores de los campos de la tabla de tareas y volver a asignar a la lista tareas dentro del table para poder enviar
+            function capturar_tareas() {
+
+                lista_tareas= []
+
+                //validamos que la lista tenga tareas antes de capturar los datos de las columnas
+                if (actividad_academica.items.tareas.length > 0) {
+
+                    $('#tblTareas tbody tr').each(function() {
+                        var col1Value = $(this).find('text[name="InicioTarea"]').attr('value');
+                        var col2Value = $(this).find('text[name="FinTarea"]').attr('value');
+                        var col3Value = $(this).find('text[name="ResponsalbeTarea"]').attr('value');
+                        var col4Value = $(this).find('text[name="TipoTarea"]').attr('value');
+                        var col5Value = $(this).find('text[name="EstadoTarea"]').attr('value');
+                        var col6Value = $(this).find('text[name="Observacion"]').attr('value');
+
+                        //insertamos en la lista para devolver
+                        lista_tareas.push({'inicio': col1Value, 'vencimiento': col2Value, 'responsable': col3Value, 'tipo_tarea': col4Value, 'estado': col5Value, 'observacion': col6Value})
+                    });
+                }
+
+                return lista_tareas
+            }
 
         });
 
@@ -682,7 +1230,11 @@
         }
 
         
-        
+//agregar mas columnas de las tareas 
+//pasar todos los campos de las tareas
+
+
+
     </script>
 
 
