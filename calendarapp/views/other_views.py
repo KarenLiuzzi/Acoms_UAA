@@ -229,7 +229,6 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
             
             if participantes_filtro.exists():
                 participantes= participantes_filtro
-                print(participantes)
             else:
                 participantes= []
 
@@ -2412,7 +2411,7 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
     success_url = 'running-acti_academ-list/Tutoria/'
     #permission_required = 'erp.change_sale'
     url_redirect = success_url
-
+    
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -2489,19 +2488,62 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
                         det_acti.id_participante= ins_participante
                         det_acti.save()
                     
+                    #eliminamos todas las tareas y la volvemos a crear
+                    for i in Tarea.objects.filter(id_tutoria= self.get_object().id_actividad_academica):
+                        i.delete()
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
+
+    def get_datos_event(self):
+        data = []
+        try:
+            #obtenemos todos los datos de la instancia acti academ tutoria
+            ins_evet = Event.objects.get(id_actividad_academica= self.get_object().id_actividad_academica)
+            id_estado_actividad_academica= ins_evet.id_estado_actividad_academica.id_estado_actividad_academica
+            id_convocatoria= ins_evet.id_convocatoria.id_convocatoria
+            id_facultad= ins_evet.id_facultad.id_facultad
+            if ins_evet.id_materia:
+                id_materia= ins_evet.id_materia.id_materia
+            else:
+                id_materia= ''
+            id_departamento= ins_evet.id_departamento.id_departamento
+            id_funcionario_docente_encargado= ins_evet.id_funcionario_docente_encargado.id_funcionario_docente.id
+            if ins_evet.id_persona_solicitante:
+                id_persona_solicitante= ins_evet.id_persona_solicitante.id
+            else:
+                id_persona_solicitante= ''
+            id_persona_alta= ins_evet.id_persona_alta.id
+            datetime_inicio_estimado= ins_evet.datetime_inicio_estimado.strftime('%d-%m-%Y %H:%M:%S')
+            datetime_fin_estimado = ins_evet.datetime_fin_estimado.strftime('%d-%m-%Y %H:%M:%S')
+            if ins_evet.datetime_inicio_real:
+                datetime_inicio_real = ins_evet.datetime_inicio_real.strftime('%d-%m-%Y %H:%M:%S')
+            else:
+                datetime_inicio_real = ''
+            if ins_evet.datetime_fin_real:
+                datetime_fin_real = ins_evet.datetime_fin_real.strftime('%d-%m-%Y %H:%M:%S')
+            else:
+                datetime_fin_real = ''
+            datetime_registro = ins_evet.datetime_registro.strftime('%d-%m-%Y %H:%M:%S')
+            observacion= ins_evet.observacion
+            nro_curso= ins_evet.nro_curso
+            auxiliar= {'id_estado_actividad_academica': id_estado_actividad_academica, 'id_convocatoria': id_convocatoria, 
+            'id_facultad': id_facultad, 'id_materia': id_materia, 'id_departamento': id_departamento, 'id_funcionario_docente_encargado': id_funcionario_docente_encargado, 
+            'id_persona_solicitante': id_persona_solicitante, 'id_persona_alta': id_persona_alta, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_fin_estimado': datetime_fin_estimado,
+            'datetime_fin_estimado':datetime_fin_estimado, 'datetime_inicio_real': datetime_inicio_real, 'datetime_fin_real': datetime_fin_real, 'datetime_registro': datetime_registro, 'observacion': observacion, 'nro_curso': nro_curso}
+            data.append(auxiliar)                
+        except:
+            pass
+        return data
     
     def get_datos_tutoria(self):
         data = []
         try:
             #obtenemos todos los datos de la instancia acti academ tutoria
             ins_tutoria = Tutoria.objects.filter(id_tutoria= self.get_object().id_actividad_academica).first()
-            print(ins_tutoria)
-            id_tipo_tutoria = ins_tutoria.id_tipo_tutoria
+            id_tipo_tutoria = ins_tutoria.id_tipo_tutoria.id_tipo_tutoria
             nombre_trabajo = ins_tutoria.nombre_trabajo
             auxiliar= {'id_tipo_tutoria': id_tipo_tutoria, 'nombre_trabajo': nombre_trabajo}
             data.append(auxiliar)                
@@ -2527,12 +2569,147 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
             pass
         return data
     
+    def get_datos_tareas(self):
+        data = []
+        try:
+            #obtenemos todos los datos de la instancia acti academ tutoria
+            tareas = Tarea.objects.filter(id_tutoria= self.get_object().id_actividad_academica)
+            tareas_lista = list(tareas)
+            if tareas_lista:
+                for tarea in tareas_lista:
+                    id_tarea = tarea.id_tarea
+                    if tarea.id_persona_finalizacion:
+                        id_persona_finalizacion = tarea.id_persona_finalizacion.id
+                        persona_finalizacion= tarea.id_persona_finalizacion.nombre + ' ' + tarea.id_persona_finalizacion.apellido
+                    else:
+                        id_persona_finalizacion= ''
+                        persona_finalizacion= ''
+                    id_persona_alta = tarea.id_persona_alta.id
+                    persona_alta= tarea.id_persona_alta.nombre + ' ' + tarea.id_persona_alta.apellido
+                    if tarea.id_persona_responsable:
+                        id_persona_responsable = tarea.id_persona_responsable.id
+                        persona_responsable= tarea.id_persona_responsable.nombre + ' ' + tarea.id_persona_responsable.apellido
+                    else: 
+                        id_persona_responsable= ''
+                        persona_responsable= ''
+                    id_tutoria = tarea.id_tutoria.id_tutoria.id_actividad_academica
+                    id_estado_tarea = tarea.id_estado_tarea.id_estado_tarea
+                    estado_tarea= tarea.id_estado_tarea.descripcion_estado_tarea
+                    id_tipo_tarea = tarea.id_tipo_tarea.id_tipo_tarea
+                    tipo_tarea= tarea.id_tipo_tarea.descripcion_tipo_tarea
+                    datetime_inicio_estimado = tarea.datetime_inicio_estimado.strftime('%d-%m-%Y %H:%M:%S')
+                    if tarea.datetime_inicio_real:
+                        datetime_inicio_real = tarea.datetime_inicio_real.strftime('%d-%m-%Y %H:%M:%S')
+                    else:
+                        datetime_inicio_real= ''
+                    datetime_vencimiento = tarea.datetime_vencimiento.strftime('%d-%m-%Y %H:%M:%S')
+                    datetime_alta = tarea.datetime_alta.strftime('%d-%m-%Y %H:%M:%S')
+                    if tarea.datetime_finalizacion:
+                        datetime_finalizacion = tarea.datetime_finalizacion.strftime('%d-%m-%Y %H:%M:%S')
+                    else:
+                        datetime_finalizacion= ''
+                    datetime_ultima_modificacion = tarea.datetime_ultima_modificacion.strftime('%d-%m-%Y %H:%M:%S')
+                    observacion = tarea.observacion
+                    
+                    auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
+                    'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_tutoria': id_tutoria, 
+                    'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
+                    'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}
+                    print(auxiliar)
+                    
+                    data.append(auxiliar)                
+        except:
+            pass
+        return data
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Edición de una Tutoría'
         context['entity'] = 'Tutoría'
         context['list_url'] = self.success_url
-        context['action'] = 'edit'
         context['det'] = json.dumps(self.get_details_participantes())
-        #context['tutoria'] = json.dumps(self.get_datos_tutoria())
+        context['tutoria'] = json.dumps(self.get_datos_tutoria())
+        context['event'] = self.get_datos_event()
+        context['tarea'] = self.get_datos_tareas()
+        return context
+    
+    
+class TareasView(LoginRequiredMixin, ListView):
+    #login_url = "accounts:signin"
+    model = Tarea
+    template_name = 'calendarapp/tareas_list.html'
+    
+    def get_datos_tareas(self):
+        data = []
+        try:
+            #obtenemos todos los datos de la instancia acti academ tutoria
+            tareas = Tarea.objects.all()#filter(id_tutoria= self.get_object().id_actividad_academica)
+            # Convertir el queryset a JSON en formato de cadena (str)
+            tareas_lista= serializers.serialize('json', tareas)
+            # Convertir la cadena JSON a un diccionario
+            tareas_lista = json.loads(tareas_lista)
+            if tareas_lista:
+                for tarea in tareas_lista:
+                    id_tarea = tarea['pk']
+                    if tarea['fields']['id_persona_finalizacion']:
+                        id_persona_finalizacion = tarea['fields']['id_persona_finalizacion']
+                        persona_finalizacion=  Persona.objects.filter(id= id_persona_finalizacion).values('nombre', 'apellido').first()
+                        persona_finalizacion= persona_finalizacion['nombre'] + ' ' + persona_finalizacion['apellido']
+                    else:
+                        id_persona_finalizacion= ''
+                        persona_finalizacion= ''
+                    id_persona_alta = tarea['fields']['id_persona_alta']
+                    persona_alta= Persona.objects.filter(id= id_persona_alta).values('nombre', 'apellido').first()
+                    persona_alta= persona_alta['nombre'] + ' ' + persona_alta['apellido']
+                    if tarea['fields']['id_persona_responsable']:
+                        id_persona_responsable = tarea['fields']['id_persona_responsable']
+                        persona_responsable= Persona.objects.filter(id= id_persona_responsable).values('nombre', 'apellido').first()
+                        persona_responsable= persona_responsable['nombre'] + ' ' + persona_responsable['apellido']
+                    else: 
+                        id_persona_responsable= ''
+                        persona_responsable= ''
+                    if tarea['fields']['id_tutoria']:
+                        id_tutoria = tarea['fields']['id_tutoria']
+                    else:
+                        id_tutoria = ''
+                    if tarea['fields']['id_orientacion_academica']:
+                        id_orientacion_academica = tarea['fields']['id_orientacion_academica']
+                    else:
+                        id_orientacion_academica = ''
+                    id_estado_tarea = tarea['fields']['id_estado_tarea']
+                    #traer la descripcion de la tarea
+                    estado_tarea= EstadoTarea.objects.filter(id_estado_tarea= id_estado_tarea).values('descripcion_estado_tarea').first()
+                    estado_tarea= estado_tarea['descripcion_estado_tarea']
+                    id_tipo_tarea = tarea['fields']['id_tipo_tarea']
+                    tipo_tarea= TipoTarea.objects.filter(id_tipo_tarea= id_tipo_tarea).values('descripcion_tipo_tarea').first()
+                    tipo_tarea= tipo_tarea['descripcion_tipo_tarea']
+                    datetime_inicio_estimado = datetime.fromisoformat(tarea['fields']['datetime_inicio_estimado']).strftime('%d-%m-%Y %H:%M:%S')
+                    if tarea['fields']['datetime_inicio_real']:
+                        datetime_inicio_real= datetime.fromisoformat(tarea['fields']['datetime_inicio_real']).strftime('%d-%m-%Y %H:%M:%S')
+                    else:
+                        datetime_inicio_real= ''
+                    datetime_vencimiento = datetime.fromisoformat(tarea['fields']['datetime_vencimiento']).strftime('%d-%m-%Y %H:%M:%S')
+                    datetime_alta = datetime.fromisoformat(tarea['fields']['datetime_alta']).strftime('%d-%m-%Y %H:%M:%S')
+                    if tarea['fields']['datetime_finalizacion']:
+                        datetime_finalizacion = datetime.fromisoformat(tarea['fields']['datetime_finalizacion']).strftime('%d-%m-%Y %H:%M:%S')
+                    else:
+                        datetime_finalizacion= ''
+                    datetime_ultima_modificacion =  datetime.fromisoformat(tarea['fields']['datetime_ultima_modificacion']).strftime('%d-%m-%Y %H:%M:%S')
+                    observacion = tarea['fields']['observacion']
+                    
+                    auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
+                    'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_tutoria': id_tutoria, 
+                    'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
+                    'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion, 'id_orientacion_academica': id_orientacion_academica}               
+                    data.append(auxiliar)    
+                    
+        except:
+            pass
+        return data
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tarea'] = json.dumps(self.get_datos_tareas())
         return context

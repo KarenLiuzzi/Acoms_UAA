@@ -3,7 +3,7 @@ from django.forms import model_to_dict
 from django.views.generic import ListView
 from django.shortcuts import render
 from calendarapp.models import Event
-from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica, Tutoria, OrientacionAcademica
+from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica, Tutoria, OrientacionAcademica, Tarea, EstadoTarea
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
@@ -210,3 +210,84 @@ def AprobarCita(request, id_cita):
     else:
         
         return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})
+    
+
+def FinalizarTarea(request, id_tarea):
+    if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
+            try:
+                
+                    record = Tarea.objects.get(id_tarea=id_tarea)
+                    estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Finalizada').first()
+                    record.id_estado_tarea= estado
+                    record.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Finalizada."})})
+
+            except:
+                messages.error(request, 'Ocurrió un error al intentar finalizar la tarea.')
+                
+                return render(request, "calendarapp/finalizar_tarea.html", context = {"id_tarea": id_tarea})
+                
+    else:
+        
+        return render(request, "calendarapp/finalizar_tarea.html", context = {"id_tarea": id_tarea})
+    
+
+def IniciarTarea(request, id_tarea):
+    if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
+            try:
+                
+                    record = Tarea.objects.get(id_tarea=id_tarea)
+                    estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Iniciada').first()
+                    record.id_estado_tarea= estado
+                    record.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Iniciada."})})
+
+            except:
+                messages.error(request, 'Ocurrió un error al intentar iniciar la tarea.')
+                
+                return render(request, "calendarapp/iniciar_tarea.html", context = {"id_tarea": id_tarea})
+                
+    else:
+        
+        return render(request, "calendarapp/iniciar_tarea.html", context = {"id_tarea": id_tarea})
+    
+    
+def CancelarTarea(request, id_tarea):
+    if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
+            try:
+                
+                    record = Tarea.objects.get(id_tarea=id_tarea)
+                    estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Cancelada').first()
+                    record.id_estado_tarea= estado
+                    record.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Iniciada."})})
+
+            except:
+                messages.error(request, 'Ocurrió un error al intentar cancelar la tarea.')
+                
+                return render(request, "calendarapp/cancelar_tarea.html", context = {"id_tarea": id_tarea})
+                
+    else:
+        
+        return render(request, "calendarapp/cancelar_tarea.html", context = {"id_tarea": id_tarea})

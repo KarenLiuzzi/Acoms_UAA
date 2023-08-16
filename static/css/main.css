@@ -16740,3 +16740,12 @@ be a descendant of the grid when it is being dragged.
   font-weight: bold;
   color: #009688;
 }        
+
+
+td.details-control {
+  background: url('../lib/datatables-1.10.20/images/details_open.png') no-repeat center center;
+  cursor: pointer;
+}
+tr.shown td.details-control {
+  background: url('../lib/datatables-1.10.20/images/details_close.png') no-repeat center center;
+}

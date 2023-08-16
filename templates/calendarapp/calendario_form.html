@@ -86,7 +86,11 @@ modificar el formulario base de ABM
 {% block extrascripts %}
     <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+    <script type="text/javascript">$('#sampleTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
+        },
+    });</script>
 
 {% endblock extrascripts %}
 

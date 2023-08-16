@@ -8,3 +8,12 @@
 .add-space {
   margin-left: 5px; /* Puedes ajustar el valor según necesites */
 }
+
+
+td.details-control {
+  background: url('../lib/datatables-1.10.20/images/details_open.png') no-repeat center center;
+  cursor: pointer;
+}
+tr.shown td.details-control {
+  background: url('../lib/datatables-1.10.20/images/details_close.png') no-repeat center center;
+}
