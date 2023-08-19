@@ -5,6 +5,7 @@ from django.shortcuts import render
 from calendarapp.models import Event
 from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica, Tutoria, OrientacionAcademica, Tarea, EstadoTarea
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 from django.contrib import messages
 from django.http import HttpResponse
 from django.db import transaction
@@ -210,84 +211,56 @@ def AprobarCita(request, id_cita):
     else:
         
         return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})
-    
 
-def FinalizarTarea(request, id_tarea):
-    if request.method == "POST":
-        
-            # Eliminar todos los mensajes de error
-            storage = messages.get_messages(request)
-            for message in storage:
-                if message.level == messages.ERROR:
-                    storage.discard(message)
-                
-            try:
-                
-                    record = Tarea.objects.get(id_tarea=id_tarea)
-                    estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Finalizada').first()
-                    record.id_estado_tarea= estado
-                    record.save()
-                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Finalizada."})})
-
-            except:
-                messages.error(request, 'Ocurrió un error al intentar finalizar la tarea.')
-                
-                return render(request, "calendarapp/finalizar_tarea.html", context = {"id_tarea": id_tarea})
-                
-    else:
-        
-        return render(request, "calendarapp/finalizar_tarea.html", context = {"id_tarea": id_tarea})
-    
-
-def IniciarTarea(request, id_tarea):
-    if request.method == "POST":
-        
-            # Eliminar todos los mensajes de error
-            storage = messages.get_messages(request)
-            for message in storage:
-                if message.level == messages.ERROR:
-                    storage.discard(message)
-                
-            try:
-                
-                    record = Tarea.objects.get(id_tarea=id_tarea)
-                    estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Iniciada').first()
-                    record.id_estado_tarea= estado
-                    record.save()
-                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Iniciada."})})
-
-            except:
-                messages.error(request, 'Ocurrió un error al intentar iniciar la tarea.')
-                
-                return render(request, "calendarapp/iniciar_tarea.html", context = {"id_tarea": id_tarea})
-                
-    else:
-        
-        return render(request, "calendarapp/iniciar_tarea.html", context = {"id_tarea": id_tarea})
-    
-    
+@csrf_exempt
 def CancelarTarea(request, id_tarea):
-    if request.method == "POST":
-        
-            # Eliminar todos los mensajes de error
-            storage = messages.get_messages(request)
-            for message in storage:
-                if message.level == messages.ERROR:
-                    storage.discard(message)
-                
-            try:
-                
-                    record = Tarea.objects.get(id_tarea=id_tarea)
-                    estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Cancelada').first()
-                    record.id_estado_tarea= estado
-                    record.save()
-                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Iniciada."})})
+    if request.method == "POST":                
+        try:
+            record = Tarea.objects.get(id_tarea=id_tarea)
+            print(record)
+            estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Cancelada').first()
+            print(estado)
+            record.id_estado_tarea= estado
+            record.save()
+            data= json.dumps([{"name": 200}])
+            return HttpResponse(data)
 
-            except:
-                messages.error(request, 'Ocurrió un error al intentar cancelar la tarea.')
-                
-                return render(request, "calendarapp/cancelar_tarea.html", context = {"id_tarea": id_tarea})
-                
-    else:
+        except Exception as e:
+            print(str(e))
+            data= json.dumps([{"name": 500}])
+            return HttpResponse(data)    
         
-        return render(request, "calendarapp/cancelar_tarea.html", context = {"id_tarea": id_tarea})
+@csrf_exempt
+def FinalizarTarea(request, id_tarea):
+    if request.method == "POST":                
+            try:
+                record = Tarea.objects.get(id_tarea=id_tarea)
+                estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Finalizada').first()
+                record.id_estado_tarea= estado
+                record.datetime_finalizacion= datetime.now()
+                record.save()
+                data= json.dumps([{"name": 200}])
+                return HttpResponse(data)
+
+            except Exception as e:
+               print(str(e))
+               data= json.dumps([{"name": 500}])
+               return HttpResponse(data)
+            
+@csrf_exempt
+def IniciarTarea(request, id_tarea):
+    if request.method == "POST":                
+            try:
+                record = Tarea.objects.get(id_tarea=id_tarea)
+                estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Iniciada').first()
+                record.id_estado_tarea= estado
+                record.datetime_inicio_real= datetime.now()
+                record.save()
+                data= json.dumps([{"name": 200}])
+                return HttpResponse(data)
+
+            except Exception as e:
+               print(str(e))
+               data= json.dumps([{"name": 500}])
+               return HttpResponse(data)
+                
