@@ -64,9 +64,9 @@ urlpatterns = [
     
     #Tareas
     path("tareas/", TareasView.as_view(), name="tareas"),
-    path("cita/finalizar/<int:id_tarea>/", FinalizarTarea, name="finalizar_cita"),
-    path("cita/iniciar/<int:id_tarea>/", IniciarTarea, name="iniciar_cita"),
-    path("cita/cancelar/<int:id_tarea>/", CancelarTarea, name="cancelar_cita"),
+    path("tarea/finalizar/<int:id_tarea>/", FinalizarTarea, name="finalizar_tarea"),
+    path("tarea/iniciar/<int:id_tarea>/", IniciarTarea, name="iniciar_tarea"),
+    path("tarea/cancelar/<int:id_tarea>/", CancelarTarea, name="cancelar_tarea"),
     
     
 ]

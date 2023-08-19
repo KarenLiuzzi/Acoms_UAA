@@ -56,6 +56,12 @@
 <script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
 <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+ <!-- Jquery Confirm -->
+ <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+ <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+ <!-- Functions -->
+ <script src="{% static 'js/functions.js' %}"></script>
+
     <script> 
 
         var tblTareas;
@@ -137,23 +143,26 @@
                         "data": null,
                         "render": function(data, type, row) {
                             if ((row.estado_tarea === "Pendiente") && ((row.id_orientacion_academica == '') && (row.id_tutoria != ''))){
-                                return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
                             } else if ((row.estado_tarea === "Iniciada") && ((row.id_orientacion_academica == '') && (row.id_tutoria != ''))){
-                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea"><i class="bi bi-check2"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
                             } 
                             else if ((row.estado_tarea === "Pendiente") && ((row.id_tutoria == '') && (row.id_orientacion_academica != ''))){
-                                return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>';
+
+                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>';
                             } else if ((row.estado_tarea === "Iniciada") && ((row.id_tutoria == '') && (row.id_orientacion_academica != ''))){
-                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea"><i class="bi bi-check2"></i></a>  <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>  <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
                             }
                             else if ((row.estado_tarea === "Pendiente") && ((row.id_orientacion_academica == '') && (row.id_tutoria == ''))){
-                                return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>';
+    
+                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>';
                             } else if ((row.estado_tarea === "Iniciada") && ((row.id_orientacion_academica == '') && (row.id_tutoria == ''))){
-                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea"><i class="bi bi-check2"></i></a>';
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>';
                             } else if ((row.estado_tarea === "Pendiente") && ((row.id_tutoria == '') && (row.id_orientacion_academica == ''))){
-                                return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>';
+                 
+                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>';
                             } else if ((row.estado_tarea === "Iniciada") && ((row.id_tutoria == '') && (row.id_orientacion_academica == ''))){
-                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea"><i class="bi bi-check2"></i></a>'; 
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>'; 
                             } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '')){
                                 return '<a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
                             }  else if ((row.id_tutoria == '') && (row.id_orientacion_academica != '')){
@@ -165,6 +174,30 @@
                 }
                     //{"data": "id_tarea"},
                 ]
+            });
+
+            $('a[rel="iniciar"]').on('click', function () {
+                var parameters= new FormData()
+                var iniciar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
+                submit_with_ajax(iniciar_link, 'Notificación', '¿Estás seguro de iniciar la tarea?',  parameters, function () {
+                    location.href = window.location.pathname;
+                });
+            });
+
+            $('a[rel="cancelar"]').on('click', function () {
+                var parameters= new FormData()
+                var cancelar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
+                submit_with_ajax(cancelar_link, 'Notificación', '¿Estás seguro de cancelar la tarea?',  parameters, function () {
+                    location.href = window.location.pathname;
+                });
+            });
+
+            $('a[rel="finalizar"]').on('click', function () {
+                var parameters= new FormData()
+                var finalizar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
+                submit_with_ajax(finalizar_link, 'Notificación', '¿Estás seguro de finalizar la tarea?',  parameters, function () {
+                    location.href = window.location.pathname;
+                });
             });
 
             $('#tblTareas tbody')
