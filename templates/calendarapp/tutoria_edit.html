@@ -138,9 +138,9 @@
                                 <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Taarea">
                                     <i class="bi bi-plus-lg"></i> Agregar Tarea
                                 </button>
-                                <button type="button" class="btn btn-danger btn-xs btn-flat btnRemoveAllTareas">
+                                {% comment %} <button type="button" class="btn btn-danger btn-xs btn-flat btnRemoveAllTareas">
                                     <i class="bi bi-trash2"></i> Eliminar todas las tareas
-                                </button>
+                                </button> {% endcomment %}
                             </div>
                             <br>
 
@@ -152,6 +152,7 @@
                                                 <table class="table table-hover table-bordered dataTable no-footer" id="tblTareas" role="grid" aria-describedby="sampleTable_info">
                                                     <thead>
                                                         <tr role="row">
+                                                            <th></th>
                                                             <th>Inicio</th>
                                                             <th>Vencimiento</th>
                                                             <th>Responsable</th>
@@ -371,6 +372,12 @@
                     destroy: true,
                     data: this.items.tareas,
                     columns: [
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": ''
+                        },
                         {"data": "inicio"},
                         {"data": "vencimiento"},
                         {"data": "responsable"},
@@ -381,7 +388,7 @@
                     ],
                     columnDefs: [
                         {
-                            targets: [0],
+                            targets: [1],
                             class: 'text-center',
                             orderable: true,
                             render: function (data, type, row) {
@@ -399,7 +406,7 @@
                             }
                         },
                         {
-                            targets: [1],
+                            targets: [2],
                             class: 'text-center',
                             orderable: true,
                             render: function (data, type, row) {
@@ -417,7 +424,7 @@
                             }
                         },
                         {
-                            targets: [2],
+                            targets: [3],
                             class: 'text-center',
                             orderable: true,
                             render: function (data, type, row) {
@@ -429,7 +436,7 @@
                             }
                         },
                         {
-                            targets: [3],
+                            targets: [4],
                             class: 'text-center',
                             orderable: true,
                             render: function (data, type, row) {
@@ -441,7 +448,7 @@
                             }
                         },
                         {
-                            targets: [4],
+                            targets: [5],
                             class: 'text-center',
                             orderable: true,
                             render: function (data, type, row) {
@@ -453,7 +460,7 @@
                             }
                         },
                         {
-                            targets: [5],
+                            targets: [6],
                             class: 'text-center',
                             orderable: true,
                             render: function (data, type, row) {
@@ -465,7 +472,14 @@
                             class: 'text-center',
                             orderable: false,
                             render: function (data, type, row) {
-                                return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                if (row.estado && row.estado.includes("Pendiente")) {
+                                    return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea" ><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a> <a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                } else if (row.estado && row.estado.includes("Iniciada")){
+                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" ><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" ><i class="bi bi-check2"></i></a> <a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                } else {
+                                    return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                }
+                                //return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
                             }
                         },
                     ]
@@ -506,8 +520,11 @@
                     // Recorrer la lista de datos
                     for (var i = 0; i < lista_tarea.length; i++) {
                         var tarea = lista_tarea[i];
-                        //tarea.id_tarea;
-                        //tarea.persona_alta;
+                        //var id_tarea= tarea.id_tarea;
+                        var persona_alta= tarea.persona_alta;
+                        var id_persona_alta= tarea.id_persona_alta;
+                        var persona_finalizacion= tarea.persona_finalizacion;
+                        var id_persona_finalizacion= tarea.id_persona_finalizacion;
                         var responsable_id= tarea.id_persona_responsable
                         var responsable= tarea.persona_responsable
                         var id_estado= tarea.id_estado_tarea;
@@ -515,13 +532,14 @@
                         var id_tipo_tarea= tarea.id_tipo_tarea;
                         var tipo_tarea = tarea.tipo_tarea;
                         var inicio = tarea.datetime_inicio_estimado;
-                        //tarea.datetime_inicio_real;
+                        var datetime_inicio_real = tarea.datetime_inicio_real;
                         var vencimiento= tarea.datetime_vencimiento;
-                        //tarea.datetime_alta;
-                        //tarea.datetime_finalizacion;
+                        var datetime_alta= tarea.datetime_alta;
+                        var datetime_finalizacion= tarea.datetime_finalizacion;
+                        var datetime_ultima_modificacion= tarea.datetime_ultima_modificacion;
                         var observacion= tarea.observacion;
                         //cargamos los datos
-                        tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion}
+                        tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion, 'persona_alta': persona_alta, 'id_persona_alta': id_persona_alta, 'persona_finalizacion': persona_finalizacion, 'id_persona_finalizacion': id_persona_finalizacion , 'datetime_inicio_real': datetime_inicio_real, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 'datetime_ultima_modificacion': datetime_ultima_modificacion}
                         //agregamos en la tabla de tareas
                         actividad_academica.addtarea(tareas)
                     }
@@ -933,6 +951,120 @@
                     });
                 })
 
+                .on('click', 'a[rel="iniciar"]', function () {
+                    var fila= $(this).closest('tr')
+                    //obtenemos los datos de la fila donde dio click
+                    var rowDataIniciada = tblTareas.row(fila).data();
+                    // indice para eliminar la tarea
+                    var tr = tblTareas.cell($(this).closest('td, li')).index();
+                    alert_action('Notificación', '¿Estas seguro de iniciar la tarea?', function () {
+                        //eliminamos el elemento 
+                        actividad_academica.items.tareas.splice(tr.row, 1);
+                        $.ajax({
+                            url: '/actualizar_campo/',
+                            data: {
+                                'campo': 'estados_tareas'
+                            },
+                            dataType: 'json',
+                            success: function(data) {
+                                var IniciadaId = null;
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].estado === "Iniciada") {
+                                        IniciadaId = data[i].id;
+                                        IniciadaEstado = data[i].estado;
+                                        //cambiamos el valor del estado por el estado nuevo, insertamos y volvemos a actualizar
+                                        rowDataIniciada.estado = IniciadaEstado + '|' + IniciadaId;
+                                        actividad_academica.addtarea(rowDataIniciada);
+                                        actividad_academica.list_tarea();
+                                        break; // Detener el bucle si se encuentra el estado "Iniciada"
+                                    }
+                                }
+                            }
+                        }); 
+                    });
+                })
+                
+                .on('click', 'a[rel="finalizar"]', function () {
+                    var fila= $(this).closest('tr')
+                    //obtenemos los datos de la fila donde dio click
+                    var rowDataFinalizada = tblTareas.row(fila).data();
+                    // indice para eliminar la tarea
+                    var tr = tblTareas.cell($(this).closest('td, li')).index();
+                    alert_action('Notificación', '¿Estas seguro de finalizar la tarea?', function () {
+                        //eliminamos el elemento 
+                        actividad_academica.items.tareas.splice(tr.row, 1);
+                        $.ajax({
+                            url: '/actualizar_campo/',
+                            data: {
+                                'campo': 'estados_tareas'
+                            },
+                            dataType: 'json',
+                            success: function(data) {
+                                var finalizadaId = null;
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].estado === "Finalizada") {
+                                        finalizadaId = data[i].id;
+                                        finalizadaestado= data[i].estado;
+                                        //eliminamos el elemento 
+                                        actividad_academica.items.tareas.splice(tr.row, 1);
+                                        //cambiamos el valor del estado por el estado nuevo, insertamos y volvemos a actualizar
+                                        rowDataFinalizada.estado = finalizadaestado + '|' + finalizadaId;
+                                        actividad_academica.addtarea(rowDataFinalizada);
+                                        actividad_academica.list_tarea();
+                                        break; // Detener el bucle si se encuentra el estado "Finalizada"
+                                    }
+                                }
+                            }
+                        });
+                    });
+                })
+
+                .on('click', 'a[rel="cancelar"]', function () {
+                    var fila= $(this).closest('tr')
+                    //obtenemos los datos de la fila donde dio click
+                    var rowDataCancelada = tblTareas.row(fila).data();
+                    // indice para eliminar la tarea
+                    var tr = tblTareas.cell($(this).closest('td, li')).index();
+                    alert_action('Notificación', '¿Estas seguro de cancelar la tarea?', function () {
+                        //eliminamos el elemento 
+                        actividad_academica.items.tareas.splice(tr.row, 1);
+                        $.ajax({
+                            url: '/actualizar_campo/',
+                            data: {
+                                'campo': 'estados_tareas'
+                            },
+                            dataType: 'json',
+                            success: function(data) {
+                                var CanceladaId = null;
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].estado === "Cancelada") {
+                                        CanceladaId = data[i].id;
+                                        Canceladaestado= data[i].estado;
+                                        //eliminamos el elemento 
+                                        actividad_academica.items.tareas.splice(tr.row, 1);
+                                        //cambiamos el valor del estado por el estado nuevo, insertamos y volvemos a actualizar
+                                        rowDataCancelada.estado = Canceladaestado + '|' + CanceladaId;
+                                        actividad_academica.addtarea(rowDataCancelada);
+                                        actividad_academica.list_tarea();
+                                        break; // Detener el bucle si se encuentra el estado "Cancelada"
+                                    }
+                                }
+                            }
+                        });
+                    });
+                })
+
+                .on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var row = tblTareas.row(tr);
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                });
             
             // Registrar una tutoria sin finalizar, asignacion de atributos para enviar
             $('.btnActualizarTutoria').on('click', function () {
@@ -988,11 +1120,13 @@
 
                             //reasignamos los datos de las tareas de la tabla 
                             actividad_academica.items.tareas= capturar_tareas();
+                            console.log(actividad_academica.items.tareas)
+
 
                             var parameters = new FormData();
                             parameters.append('action', 'edit');
                             parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
-                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de registrar la tutoría?', parameters, function () {
+                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de modificar la tutoría?', parameters, function () {
                                 location.href = '/running-acti_academ-list/Tutoria/';
                             });
                         }
@@ -1065,7 +1199,7 @@
                             var parameters = new FormData();
                             parameters.append('action', 'editfinalizar');
                             parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
-                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de registrar y finalizar la tutoría?', parameters, function () {
+                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de modificar y finalizar la tutoría?', parameters, function () {
                                 location.href = '/running-acti_academ-list/Tutoria/';
                             });
                         }
@@ -1147,7 +1281,7 @@
                             id_estado = $('select[name="id_estado_tarea"]').val();
                             observacion= $('textarea[name="observacion_tarea"]').val();
 
-                            tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion}
+                            tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion, 'persona_alta': '', 'id_persona_alta': '', 'persona_finalizacion': '', 'id_persona_finalizacion': '' , 'datetime_inicio_real': '', 'datetime_alta': '', 'datetime_finalizacion': '', 'datetime_ultima_modificacion': ''}
                             //agregamos en la tabla de tareas
                             //primero validamos 
                             var validar= actividad_academica.verificar_tarea(tareas)
@@ -1197,26 +1331,124 @@
 
             //debemos capturar todos los valores de los campos de la tabla de tareas y volver a asignar a la lista tareas dentro del table para poder enviar
             function capturar_tareas() {
-
                 lista_tareas= []
 
                 //validamos que la lista tenga tareas antes de capturar los datos de las columnas
                 if (actividad_academica.items.tareas.length > 0) {
 
-                    $('#tblTareas tbody tr').each(function() {
-                        var col1Value = $(this).find('text[name="InicioTarea"]').attr('value');
-                        var col2Value = $(this).find('text[name="FinTarea"]').attr('value');
-                        var col3Value = $(this).find('text[name="ResponsalbeTarea"]').attr('value');
-                        var col4Value = $(this).find('text[name="TipoTarea"]').attr('value');
-                        var col5Value = $(this).find('text[name="EstadoTarea"]').attr('value');
-                        var col6Value = $(this).find('text[name="Observacion"]').attr('value');
+                    var allRowsData = tblTareas.rows().data();
+                    console.log(allRowsData);
+                    for (var i = 0; i < allRowsData.length; i++) {
+                        var rowData = allRowsData[i];
+                        var inicio = formato_fecha_tarea(rowData.inicio);
+                        var vencimiento = formato_fecha_tarea(rowData.vencimiento);
+                        var datos_responsable = rowData.responsable.split('|');
+                        var responsable_nombre = datos_responsable[0]; 
+                        var id_responsable = datos_responsable[1]; 
+                        var responsable = id_responsable;
+                        var datos_estado = rowData.estado.split('|');
+                        var estado_tarea = datos_estado[0]; 
+                        var id_estado_tarea = datos_estado[1]; 
+                        var datos_tarea = rowData.tipo_tarea.split('|');
+                        var tipo_tarea = datos_tarea[0]; 
+                        var id_tarea = datos_tarea[1]; 
+                        var tipo_tarea = id_tarea;
+                        var estado = id_estado_tarea;
+                        var observacion = rowData.observacion;
+                        //adicionales
+                        var PersonaAlta = rowData.id_persona_alta;
+                        console.log(PersonaAlta)
+                        var PersonaFinalizacion = rowData.id_persona_finalizacion;
+                        console.log(PersonaFinalizacion)
+                        var FechaAlta = formato_fecha_tarea(rowData.datetime_alta);
+                        console.log(FechaAlta)
+                        var FechaReal = formato_fecha_tarea(rowData.datetime_inicio_real);
+                        console.log(FechaReal)
+                        var FechaFinalizacion = formato_fecha_tarea(rowData.datetime_finalizacion);
+                        console.log(FechaFinalizacion)
 
                         //insertamos en la lista para devolver
-                        lista_tareas.push({'inicio': col1Value, 'vencimiento': col2Value, 'responsable': col3Value, 'tipo_tarea': col4Value, 'estado': col5Value, 'observacion': col6Value})
-                    });
+                        lista_tareas.push({'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable, 'tipo_tarea': tipo_tarea, 'estado': estado, 'observacion': observacion, 'PersonaAlta': PersonaAlta, 'PersonaFinalizacion': PersonaFinalizacion, 'FechaAlta': FechaAlta, 'FechaReal': FechaReal, 'FechaFinalizacion': FechaFinalizacion})
+                    }
                 }
 
                 return lista_tareas
+            }
+
+            function formato_fecha_tarea(campo){
+                var originalDate = campo;
+                if (originalDate != "") {
+                    var parts = originalDate.split(' '); // Dividir la cadena en fecha y hora
+                    var Part1 = parts[0]; 
+                    var Part2 = parts[1]; 
+
+                    if Part1.length == 10 {
+                        //es una fecha
+                        var dateComponents = datePart.split('-'); // Dividir la parte de la fecha
+                        var rearrangedDate = dateComponents[2] + '-' + dateComponents[1] + '-' + dateComponents[0]; // '21-08-2023'
+
+                    } else{
+                        //es una hora
+                        var dateComponents = datePart.split('-'); // Dividir la parte de la fecha
+                        var rearrangedDate = dateComponents[2] + '-' + dateComponents[1] + '-' + dateComponents[0]; // '21-08-2023'
+                    }
+
+                    var newFormattedDate = rearrangedDate + ' ' + timePart; // '21-08-2023 17:30:00'
+                    return newFormattedDate
+                    
+                } else {
+                    return campo
+                }
+            }
+
+
+            //funcion para agregar los campos desplegados en cada registro de la fila
+            function format(t) {
+                console.log(t)
+                var html = '<table class="table">';
+                html += '<thead>';
+                html += '<tr><th scope="col">Finalizado por</th>';
+                html += '<th scope="col">Registrado por</th>';
+                html += '<th scope="col">Fecha alta</th>';
+                html += '<th scope="col">Fecha Inicio real</th>';
+                html += '<th scope="col">Fecha Fin real</th>';
+                html += '<th scope="col">Ultima modificación</th></tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                    html+='<tr>'
+                    if (t.id_persona_finalizacion != ""){
+                        html+='<td><text name="PersonaFinalizacion" value="' +t.id_persona_finalizacion+ '">' + t.persona_finalizacion + '</text></td>'
+                    } else {
+                        html+='<td><text name="PersonaFinalizacion" value=""></text></td>'
+                    }
+                    if (t.id_persona_alta != ""){
+                        html+='<td><text name="PersonaAlta" value="' +t.id_persona_alta+ '">' + t.persona_alta + '</text></td>'
+                    } else{
+                        html+='<td><text name="PersonaAlta" value=""></text></td>'
+                    }
+                    if (t.datetime_alta != ""){
+                        html+='<td><text name="FechaAlta" value="' +t.datetime_alta+ '">' + t.datetime_alta + '</text></td>'
+                    } else{
+                        html+='<td><text name="FechaAlta" value=""></text></td>'
+                    }
+                    if (t.datetime_inicio_real != ""){
+                        html+='<td><text name="FechaReal" value="' +t.datetime_inicio_real+ '">' + t.datetime_inicio_real + '</text></td>'
+                    } else{
+                        html+='<td><text name="FechaReal" value=""></text></td>'
+                    }
+                    if (t.datetime_finalizacion != ""){
+                        html+='<td><text name="FechaFinalizacion" value="' +t.datetime_finalizacion+ '">' + t.datetime_finalizacion + '</text></td>'
+                    } else{
+                        html+='<td><text name="FechaFinalizacion" value=""></text></td>'
+                    }
+                    if (t.datetime_ultima_modificacion != ""){
+                        html+='<td><text name="FechaModificacion" value="' +t.datetime_ultima_modificacion+ '">' + t.datetime_ultima_modificacion + '</text></td>'
+                    } else{
+                        html+='<td><text name="FechaModificacion" value=""></text></td>'
+                    }
+                    html+='</tr>';
+                html += '</tbody>';
+                return html;
             }
 
         });
