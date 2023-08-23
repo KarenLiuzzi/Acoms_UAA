@@ -175,58 +175,22 @@
                     </div>
                     <div class="card-body">
                         
-                        <table class="table table-bordered" id="tblParticipantes">
+                        <table class="table table-bordered" id="tblTareas">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>Inicio</th>
                                 <th>Vencimiento</th>
                                 <th>Responsable</th>
                                 <th>Tipo Tarea</th>
                                 <th>Estado</th>
-                                <th>Finalizado por</th>
-                                <th>Ultima modificación</th>
                                 <th>Observación</th>
+                                <th>Opción</th>
                             </tr>
                             </thead>
                             <tbody>
-                                {% if tareas.exists %}
-                                    {% for tarea in tareas %}
-                                        <tr role="row" class="odd">
-                                            <td>
-                                                {% if tarea.datetime_inicio_real %}
-                                                    {{ tarea.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_inicio_real|time:"H:i" }}
-                                                {% else %}
-                                                    {{ tarea.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_inicio_estimado|time:"H:i" }}
-                                                {% endif %}
-                                            </td>
-
-                                            <td>
-                                                {% if tarea.datetime_finalizacion %}
-                                                    {{ tarea.datetime_finalizacion|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_finalizacion|time:"H:i" }}
-                                                {% else %}
-                                                    {{ tarea.datetime_vencimiento|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_vencimiento|time:"H:i" }}
-                                                {% endif %}
-                                            </td>
-                                            <td>  {{ tarea.id_persona_responsable.nombre|add:' '|title}}{{ tarea.id_persona_responsable.apellido|title }}  </td> 
-                                            <td>  {{ tarea.id_tipo_tarea.descripcion_tipo_tarea|title}}  </td> 
-                                            <td>  {{ tarea.id_estado_tarea.descripcion_estado_tarea|title}}  </td>
-                                            <td> 
-                                                {% if tarea.id_persona_finalizacion %}
-                                                    {{ tarea.id_persona_finalizacion.nombre|add:' '|title}}{{ tarea.id_persona_finalizacion.apellido|title }} 
-                                                {% else %}
-                                                    ---------
-                                                {% endif %}
-                                            </td>
-                                            <td>  {{ tarea.datetime_ultima_modificacion|date:"d/m/Y"|add:' ' }}{{ tarea.datetime_ultima_modificacion|time:"H:i" }}  </td>
-                                            <td>  {{ tarea.observacion }}  </td> 
-                                        </tr>
-                                    {% endfor %}
-                                {% endif %}
                             </tbody>
                         </table>
-                        {% if tareas.exists == False %}
-                            <label> Sin Tareas... </label> 
-                        {% endif %} 
                     </div>
                 </div>
             </div>
@@ -235,7 +199,6 @@
     </div>
 
     {% if tutoria.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Iniciada' %}
-    {{ event.id_actividad_academica }}
         <div class="card-footer">
             <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_tutoria=tutoria.id_tutoria id_ori_academ=0 %}" > <i class="bi bi-x-lg"></i> Cancelar Tutoría </button> {% comment %} hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_cita=cita.id_cita %}" {% endcomment %}
             <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Finalizar" hx-get="{% url 'calendarapp:finalizar_actividad_academica' id_tutoria=tutoria.id_tutoria id_ori_academ=0 %}"> <i class="bi bi-check-lg"></i> Finalizar Tutoría </button> 
@@ -251,10 +214,124 @@
 {% block extrascripts %}
     <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable({
-        language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
-        },
-    });</script>
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+    <script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+    <!-- Jquery Confirm -->
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+    <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+    <!-- Functions -->
+    <script src="{% static 'js/functions.js' %}"></script>
+
+    <script>
+
+        var tblTareas;
+        var lista_tarea = {{ tareas|safe }}
+
+        $(document).ready(function() {
+
+            function format(t) {
+                var html = '<table class="table">';
+                html += '<thead>';
+                html += '<tr><th scope="col">Finalizado por</th>';
+                html += '<th scope="col">Registrado por</th>';
+                html += '<th scope="col">Fecha alta</th>';
+                html += '<th scope="col">Fecha Inicio real</th>';
+                html += '<th scope="col">Fecha Fin real</th>';
+                html += '<th scope="col">Ultima modificación</th></tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                    html+='<tr>'
+                    html+='<td>'+t.persona_finalizacion+'</td>'
+                    html+='<td>'+t.persona_alta+'</td>'
+                    html+='<td>'+t.datetime_alta+'</td>'
+                    html+='<td>'+t.datetime_inicio_real+'</td>'
+                    html+='<td>'+t.datetime_finalizacion+'</td>'
+                    html+='<td>'+t.datetime_ultima_modificacion+'</td>'
+                    html+='</tr>';
+                html += '</tbody>';
+                return html;
+            }
+
+            
+
+            tblTareas = $('#tblTareas').DataTable({
+                responsive: true,
+                //scrollX: true,
+                autoWidth: false,
+                destroy: true,
+                deferRender: true,
+                data: lista_tarea,
+                columns: [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ''
+                    },
+                    {"data": "datetime_inicio_estimado"},
+                    {"data": "datetime_vencimiento"},
+                    {"data": "persona_responsable"},
+                    {"data": "tipo_tarea"},
+                    {"data": "estado_tarea"},
+                    {"data": "observacion"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            if (row.estado_tarea === "Pendiente"){
+                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>';
+                            } else if (row.estado_tarea === "Iniciada"){
+                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>';
+                            } else {
+                                return '';
+                            }
+                    }
+                }                
+                ]
+            });
+
+            $('#tblTareas tbody')
+                .on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var row = tblTareas.row(tr);
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                })
+
+                .on('click', 'a[rel="iniciar"]', function () {
+                    var parameters= new FormData()
+                    var iniciar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
+                    submit_with_ajax(iniciar_link, 'Notificación', '¿Estás seguro de iniciar la tarea?',  parameters, function () {
+                        location.href = window.location.pathname;
+                    });
+                })
+    
+                .on('click', 'a[rel="cancelar"]', function () {
+                    var parameters= new FormData()
+                    var cancelar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
+                    submit_with_ajax(cancelar_link, 'Notificación', '¿Estás seguro de cancelar la tarea?',  parameters, function () {
+                        location.href = window.location.pathname;
+                    });
+                })
+    
+                .on('click', 'a[rel="finalizar"]', function () {
+                    var parameters= new FormData()
+                    var finalizar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
+                    submit_with_ajax(finalizar_link, 'Notificación', '¿Estás seguro de finalizar la tarea?',  parameters, function () {
+                        location.href = window.location.pathname;
+                    });
+                });
+
+        });
+
+    </script>
 
 {% endblock extrascripts %}

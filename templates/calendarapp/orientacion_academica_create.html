@@ -59,16 +59,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="id_tipo_tutoria">Solicitante</label>
+                                <label class="label" for="id_solicitante">Solicitante</label>
                                 <select name="id_solicitante" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_solicitante" data-select2-id="id_id_solicitante" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="id_tipo_tutoria">Tipo de Orientación Académica</label>
+                                <label class="label" for="id_tipo_orientacion_academica">Tipo de Orientación Académica</label>
                                 <select name="id_tipo_orientacion_academica" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_orientacion_academica" data-select2-id="id_id_tipo_orientacion_academica" tabindex="-1" aria-hidden="true"></select>
                             </div>
 
                             <div class="form-group">
-                                <label class="label" for="id_tipo_tutoria">Motivo de Orientación Académica</label>
+                                <label class="label" for="id_tipo_motivo">Motivo de Orientación Académica</label>
                                 <select name="id_tipo_motivo" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_motivo" data-select2-id="id_id_tipo_motivo" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
@@ -181,10 +181,10 @@
         </div>
 
         <div class="card-footer">
-            <button type="button" class="btn btn-primary btn-flat btnRegistrarOrientación" title="Orientación quedará Iniciada">
+            <button type="button" class="btn btn-primary btn-flat btnRegistrarOrientacion" title="Orientación quedará Iniciada">
                 <i class="bi bi-calendar-check"></i> Registrar Orientación
             </button> 
-            <button type="button" class="btn btn-primary btn-flat btnRegistrarFinalizarOrientación" title="Orientación quedará Finalizada">
+            <button type="button" class="btn btn-primary btn-flat btnRegistrarFinalizarOrientacion" title="Orientación quedará Finalizada">
                 <i class="bi bi-calendar-check"></i> Registrar y Finalizar Orientación
             </button> 
             <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i> Cancelar</button>
@@ -857,8 +857,8 @@
             });
 
 
-            // Registrar una tutoria sin finalizar, asignacion de atributos para enviar
-            $('.btnRegistrarOrientación').on('click', function () {
+            // Registrar una Orientacion sin finalizar, asignacion de atributos para enviar
+            $('.btnRegistrarOrientacion').on('click', function () {
                 //primero debemos validar que los campo obligatorios esten cargados 
                 //validar que el fin no sean menor o igual a Inicio
 
@@ -930,8 +930,8 @@
 
 
 
-             // Registrar una tutoria y finalizar, asignacion de atributos para enviar
-             $('.btnRegistrarFinalizarOrientación').on('click', function () {
+             // Registrar una Orientacion y finalizar, asignacion de atributos para enviar
+             $('.btnRegistrarFinalizarOrientacion').on('click', function () {
                 //primero debemos validar que los campo obligatorios esten cargados 
                 //validar que el fin no sean menor o igual a Inicio
 

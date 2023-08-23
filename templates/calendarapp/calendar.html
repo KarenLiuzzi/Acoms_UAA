@@ -40,127 +40,130 @@
                   </div>
               </div>
 
-            <div id="calendar"></div>
-                
-            </div>
+              <div id="calendar"></div>
+              </div>
 
-            <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                      <div class="modal-header bg-primary">
-                          <h5 class="modal-title text-white" id="exampleModalLongTitle">Detalles de Cita</h5>
-                          <button id="modalClose1" type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <!-- Elementos de modal -->
+              <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class='modal-header text-center'>
+                          <h3 class="modal-title w-100">Detalles de Cita</h3> 
+                            <button id="modalClose1" type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
-                          </button>
-                      </div>
-
-                      <div class="modal-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="label-bold text-primary" for="fecha">Fecha:</label>
-                                    <label class="label" id="fecha"></label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="label-bold text-primary" for="horario">Horario:</label>
-                                    <label class="label" id="horario"></label>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="encargado">Encargado:</label>
-                                <label class="label" id="encargado"></label>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="solicitante">Solicitante:</label>
-                                <label class="label" id="solicitante"></label>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="motivo">Motivo:</label>
-                                <label class="label" id="motivo"></label>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="estado">Estado:</label>
-                                <label class="label" id="estado"></label>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="convocatoria">Convocatoria:</label>
-                                <label class="label" id="convocatoria"></label>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="facultad">Facultad:</label>
-                                <label class="label" id="facultad"></label>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="materia">Materia:</label>
-                                <label class="label" id="materia"></label>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="observacion">Observación:</label>
-                                <label class="label" id="observacion"></label>
-                              </div>
-                            </div>
-
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="nro_curso">Nro Curso:</label>
-                                <label class="label" id="curso"></label>
-                              </div>
-                            </div>
-
+                            </button>
+                        </div>
+  
+                        <div class="modal-body">
+                          <div class="container">
                               <div class="row">
-                                <div class="col-md-6">
-                                  <label class="label-bold text-primary" for="tipo">Tipo Cita:</label>
-                                  <label class="label" id="tipo"></label>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                              <div class="col-md-6">
-                                <label class="label-bold text-primary" for="participantes">Participantes:</label>
-                                <ul id="participantes">
+                                  <div class="col-md-20">
+                                      <label class="label-bold text-primary" for="fecha">Fecha:</label>
+                                      <label class="label" id="fecha"></label>
+                                  </div>
                               </div>
-                            </div>
 
-                            <div class="row justify-content-end mt-2">
-                              <div class="col-md-6" id="container">
-                                  <a class="btn btn-primary mt-2" href="" id="id_cita" title="Más Detalles">
-                                      <i class="bi bi-eye-fill"></i>
-                                  </a>
-                                  <a class="btn btn-primary mt-2" href="#" id="id_iniciar_cita" title="Iniciar cita" disabled="true">
-                                    <i class="bi bi-caret-right-fill"></i>
-                                  </a>
+                              <div class="row">  
+                                  <div class="col-md-20">
+                                      <label class="label-bold text-primary" for="horario">Horario:</label>
+                                      <label class="label" id="horario"></label>
+                                  </div>
                               </div>
-                          </div>
-                          </div>
+                              
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="encargado">Encargado:</label>
+                                  <label class="label" id="encargado"></label>
+                                </div>
+                              </div>
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="solicitante">Solicitante:</label>
+                                  <label class="label" id="solicitante"></label>
+                                </div>
+                              </div>
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="motivo">Motivo:</label>
+                                  <label class="label" id="motivo"></label>
+                                </div>
+                              </div>
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="estado">Estado:</label>
+                                  <label class="label" id="estado"></label>
+                                </div>
+                              </div>
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="convocatoria">Convocatoria:</label>
+                                  <label class="label" id="convocatoria"></label>
+                                </div>
+                              </div>
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="facultad">Facultad:</label>
+                                  <label class="label" id="facultad"></label>
+                                </div>
+                              </div>
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="materia">Materia:</label>
+                                  <label class="label" id="materia"></label>
+                                </div>
+                              </div>
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="observacion">Observación:</label>
+                                  <label class="label" id="observacion"></label>
+                                </div>
+                              </div>
+  
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="nro_curso">Nro Curso:</label>
+                                  <label class="label" id="curso"></label>
+                                </div>
+                              </div>
+  
+                                <div class="row">
+                                  <div class="col-md-20">
+                                    <label class="label-bold text-primary" for="tipo">Tipo Cita:</label>
+                                    <label class="label" id="tipo"></label>
+                                  </div>
+                              </div>
+                              
+                              <div class="row">
+                                <div class="col-md-20">
+                                  <label class="label-bold text-primary" for="participantes">Participantes:</label>
+                                  <ul id="participantes">
+                                </div>
+                              </div>
+  
+                              <div class="modal-footer">
+                                <div class="mt-2" id="container">
+                                    <a class="btn btn-primary mt-2" href="" id="id_cita" title="Más Detalles">
+                                      <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
                       </div>
                     </div>
                 </div>
+              <!-- fin modal -->
             </div>
         </div>
-    </div>
+     </div>
 </div>
 {% endblock content %}
 
@@ -434,7 +437,6 @@
         //verificar
         if (tipo == 'Tutoría'){
           modalid_cita.href= '/moredetallesCitaTutoria/'+ id_cita
-          modaliniciar_cita.href = '/iniciarCitaTutoria/'+ id_cita
 
           //eliminar los elementos si es que ya existen
           if (document.getElementById("editar_tutoria")) {
@@ -443,10 +445,16 @@
           if (document.getElementById("editar_ori_academica")) {
             container.removeChild(document.getElementById("editar_ori_academica"));
           }
+          if (document.getElementById("iniciar_cita_tutoria")) {
+            container.removeChild(document.getElementById("iniciar_cita_tutoria"));
+          }
+          if (document.getElementById("iniciar_cita_orientacion")) {
+            container.removeChild(document.getElementById("iniciar_cita_orientacion"));
+          }
 
           if (estado == "Pendiente") {
             
-            // Crear un nuevo elemento <a>
+            // Crear un nuevo elemento <a> para editar 
             const newLink = document.createElement("a");
             newLink.className = "btn btn-primary mt-2";
             newLink.id = "editar_tutoria";
@@ -462,11 +470,48 @@
 
             // Agregar el nuevo elemento <a> al <div>
             container.appendChild(newLink);
+
+            console.log()
+
+            // Crear un nuevo elemento <a> para iniciar cita  
+            var newLinkIniciartutoriapend = document.createElement("a");
+            newLinkIniciartutoriapend.className = "btn btn-primary mt-2";
+            newLinkIniciartutoriapend.id = "iniciar_cita_tutoria";
+            newLinkIniciartutoriapend.href = '/iniciarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
+            newLinkIniciartutoriapend.title = "Iniciar Cita";
+
+            // Crear un nuevo elemento <i> para el icono
+            var newIconIniciartutoriapend = document.createElement("i");
+            newIconIniciartutoriapend.className = "bi bi-caret-right-fill"; // Clase para el icono 
+
+            // Agregar el icono al elemento <a>
+            newIconIniciartutoriapend.appendChild(newIconIniciartutoriapend);
+
+            // Agregar el nuevo elemento <a> al <div>
+            container.appendChild(newLinkIniciartutoriapend);
+
+          } else if (estado == "Confirmado") {
+            // Crear un nuevo elemento <a> para iniciar cita  
+              var newLinkIniciartutoriaconf = document.createElement("a");
+              newLinkIniciartutoriaconf.className = "btn btn-primary mt-2";
+              newLinkIniciartutoriaconf.id = "iniciar_cita_tutoria";
+              newLinkIniciartutoriaconf.href = '/iniciarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
+              newLinkIniciartutoriaconf.title = "Iniciar Cita";
+  
+              // Crear un nuevo elemento <i> para el icono
+              var newIconIniciartutoriaconf = document.createElement("i");
+              newIconIniciartutoriaconf.className = "bi bi-caret-right-fill"; // Clase para el icono 
+  
+              // Agregar el icono al elemento <a>
+                newLinkIniciartutoriaconf.appendChild(newIconIniciartutoriaconf);
+  
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkIniciartutoriaconf);
           }
 
         } else if (tipo == 'Orientacion Académica'){
+
           modalid_cita.href= '/moredetallesCitaOriAcadem/'+ id_cita
-          modaliniciar_cita.href = '/iniciarCitaOrientacionAcademica/'+ id_cita
 
           //eliminar los elementos si es que ya existen
           if (document.getElementById("editar_ori_academica")) {
@@ -475,9 +520,15 @@
           if (document.getElementById("editar_tutoria")) {
             container.removeChild(document.getElementById("editar_tutoria"));
           }
+          if (document.getElementById("iniciar_cita")) {
+            container.removeChild(document.getElementById("iniciar_cita"));
+          }
+          if (document.getElementById("iniciar_cita_orientacion")) {
+            container.removeChild(document.getElementById("iniciar_cita_orientacion"));
+          }
 
           if (estado == "Pendiente") {
-            // Crear un nuevo elemento <a>
+            // Crear un nuevo elemento <a> para editar
             const link = document.createElement("a");
             link.className = "btn btn-primary mt-2";
             link.id = "editar_ori_academica";
@@ -493,15 +544,44 @@
 
             // Agregar el nuevo elemento <a> al <div>
             container.appendChild(link);
+
+            // Crear un nuevo elemento <a> para iniciar cita  
+              var newLinkIniciarOripend = document.createElement("a");
+              newLinkIniciarOripend.className = "btn btn-primary mt-2";
+              newLinkIniciarOripend.id = "iniciar_cita_orientacion";
+              newLinkIniciarOripend.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
+              newLinkIniciarOripend.title = "Iniciar Cita";
+  
+              // Crear un nuevo elemento <i> para el icono
+              var newIconIniciarOripend = document.createElement("i");
+              newIconIniciarOripend.className = "bi bi-caret-right-fill"; // Clase para el icono 
+  
+              // Agregar el icono al elemento <a>
+              newLinkIniciarOripend.appendChild(newIconIniciarOripend);
+  
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkIniciarOripend);
+
+          } else if (estado == "Confirmado"){
+            // Crear un nuevo elemento <a> para iniciar cita  
+              var newLinkIniciarOriconf = document.createElement("a");
+              newLinkIniciarOriconf.className = "btn btn-primary mt-2";
+              newLinkIniciarOriconf.id = "iniciar_cita_orientacion";
+              newLinkIniciarOriconf.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
+              newLinkIniciarOriconf.title = "Iniciar Cita";
+  
+              // Crear un nuevo elemento <i> para el icono
+              var newIconIniciarOriconf = document.createElement("i");
+              newIconIniciarOriconf.className = "bi bi-caret-right-fill"; // Clase para el icono 
+  
+              // Agregar el icono al elemento <a>
+                newLinkIniciarOriconf.appendChild(newIconIniciarOriconf);
+  
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkIniciarOriconf);
           }
 
         }
-        
-        
-        ///'/moredetallesCita/?pk=?'+ id_cita
-        //modalparticipantes= participantes;
-
-    
         // Abrir el modal
         modal.style.display = 'block'
         //calendar.unselect()
