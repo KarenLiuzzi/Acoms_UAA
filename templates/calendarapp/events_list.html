@@ -48,9 +48,9 @@
                                                 <td>
                                                     {% load humanize %}
                                                     {% if event.id_cita.datetime_inicio_real %}
-                                                    {{ event.id_cita.datetime_inicio_real|naturalday|title  }}
+                                                    {{ event.id_cita.datetime_inicio_real|date:'l'|title  }}
                                                     {% else %}
-                                                        {{ event.id_cita.datetime_inicio_estimado|naturalday|title  }}
+                                                        {{ event.id_cita.datetime_inicio_estimado|date:'l'|title  }}
                                                     {% endif %} 
                                                 </td>
                                                 <td>{% if event.id_cita.datetime_fin_real %}

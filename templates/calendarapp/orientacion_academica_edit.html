@@ -5,14 +5,14 @@
 
 {% endblock %}
 
-{% block title %}Editar Tutoría{% endblock title %}
+{% block title %}Editar Orientación Académica{% endblock title %}
 
 {% block breadcrumb %}
 {% endblock breadcrumb %}
 
 {% block content %}
 
-<form method="post" id="tutoria">
+<form method="post" id="ori_academ">
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">
@@ -25,7 +25,7 @@
                 <div class="col-lg-7">
                     <div class="card card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="bi bi-person-video3"></i> Datos de la Tutoría</h3>
+                            <h3 class="card-title"><i class="bi bi-person-rolodex"></i> Datos de la Orientación Académica</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
@@ -34,25 +34,13 @@
                                 <span class="text-danger">{{ form.errors.id_facultad }}</span>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="id_funcionario_docente_encargado">Docente</label>
+                                <label class="label" for="id_funcionario_docente_encargado">Funcionario</label>
                                 {{ form.id_funcionario_docente_encargado }}
                                 <span class="text-danger">{{ form.errors.id_funcionario_docente_encargado }}</span>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="id_materia">Materia</label>
-                                {{ form.id_materia}}
-                                <span class="text-danger">{{ form.errors.id_materia }}</span>
-                            </div>
-                            <div class="form-group">
                                 <label class="label" for="id_convocatoria">Convocatoria</label>
                                 <select name="id_convocatoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_convocatoria" data-select2-id="id_id_convocatoria" tabindex="-1" aria-hidden="true"></select>
-                            </div>
-                            <div class="form-group">
-                                <label class="label" for="nro_curso">Nro. Curso</label>
-                                <div class="input-group">
-                                    {{ form.nro_curso }}
-                                    <span class="text-danger">{{ form.errors.motivo }}</span>
-                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="hora_inicio">Inicio</label> 
@@ -70,16 +58,30 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="id_tipo_tutoria">Solicitante</label>
+                                <label class="label" for="id_solicitante">Solicitante</label>
                                 <select name="id_solicitante" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_solicitante" data-select2-id="id_id_solicitante" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="id_tipo_tutoria">Tipo de Tutoría</label>
-                                <select name="id_tipo_tutoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tutoria" data-select2-id="id_id_tipo_tutoria" tabindex="-1" aria-hidden="true"></select>
+                                <label class="label" for="id_tipo_orientacion_academica">Tipo de Orientación Académica</label>
+                                <select name="id_tipo_orientacion_academica" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_orientacion_academica" data-select2-id="id_id_tipo_orientacion_academica" tabindex="-1" aria-hidden="true"></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label" for="id_tipo_motivo">Motivo de Orientación Académica</label>
+                                <select name="id_tipo_motivo" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_motivo" data-select2-id="id_id_tipo_motivo" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="nombre_trabajo_grado">Nombre de Trabajo</label>
-                                <textarea placeholder= "Opcional, en caso de tratarse de una tutoría de trabajo de grado o tésis..." class="form-control" rows="4" cols="30" name="nombre_trabajo" maxlength="200"></textarea>
+                                <label class="label" for="id_materia">Materia (Opcional)</label>
+                                {{ form.id_materia}}
+                                <span class="text-danger">{{ form.errors.id_materia }}</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="label" for="nro_curso">Nro. Curso</label>
+                                <div class="input-group">
+                                    {{ form.nro_curso }}
+                                    <span class="text-danger">{{ form.errors.motivo }}</span>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="observacion">Observación</label>
@@ -177,11 +179,11 @@
         </div>
 
         <div class="card-footer">
-            <button type="button" class="btn btn-primary btn-flat btnActualizarTutoria" title="Tutoría seguirá Iniciada">
-                <i class="bi bi-calendar-check"></i> Actualizar Tutoría
+            <button type="button" class="btn btn-primary btn-flat btnActualizarOrientacion" title="Orientación seguirá Iniciada">
+                <i class="bi bi-calendar-check"></i> Actualizar Orientación
             </button> 
-            <button type="button" class="btn btn-primary btn-flat btnActualizarFinalizarTutoria" title="Tutoría quedará Finalizada">
-                <i class="bi bi-calendar-check"></i> Actualizar y Finalizar Tutoría
+            <button type="button" class="btn btn-primary btn-flat btnActualizarFinalizarOrientacion" title="Orientación quedará Finalizada">
+                <i class="bi bi-calendar-check"></i> Actualizar y Finalizar Orientación
             </button> 
             <button type="button" class="btn btn-danger btn-flat btnCancelar" title="Cancelar"> <i class="bi bi-calendar-x"></i> Cancelar</button>
 
@@ -294,10 +296,10 @@
         var hora_fin;
         var convocatoria;
         var tblTareas;
-        var mi_form= $('#tutoria')
+        var mi_form= $('#ori_academ')
         var tblParticipantes;
         var lista_participantes = {{ det|safe }}
-        var lista_tutoria = {{ tutoria|safe }}
+        var lista_orientacion = {{ orientacion|safe }}
         var lista_event = {{ event|safe }}
         var lista_tarea = {{ tarea|safe }}
 
@@ -313,8 +315,8 @@
                 convocatoria: '',
                 datetime_inicio_estimado: '',
                 datetime_fin_estimado: '',
-                id_tipo_tutoria: '',
-                nombre_trabajo: '',
+                id_tipo_orientacion_academica: '',
+                id_motivo_ori_academ: '',
                 observacion: ''
             },
 
@@ -550,8 +552,7 @@
 
             }
 
-            //cargamos los campos de tipo textarea
-            $('textarea[name="nombre_trabajo"]').val(lista_tutoria[0]['nombre_trabajo']);
+            //cargamos los campos
             $('textarea[name="observacion"]').val(lista_event[0]['observacion']);
 
             // Convertir la cadena a un objeto datetime
@@ -743,37 +744,10 @@
                                     $('#id_id_funcionario_docente_encargado').val(lista_event[0]['id_funcionario_docente_encargado']);
                                 }
                                 band_boton_selects += 1
-                                actualizarmaterias_func_doce($('#id_id_funcionario_docente_encargado').val())
+                                actualizarconvocatoria()
                             }
                     }
                 });                        
-            }
-
-            //actualizar las materias que esten asociadas al funcionario docente
-            function actualizarmaterias_func_doce(func_doc) {
-                $.ajax({
-                    url: '/actualizar_campo/',
-                    data: {
-                        'campo': 'funcdoc_logeado_materias',
-                        'func_doc': func_doc
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        // Convertir a diccionario
-                        var diccionario = Object.assign({}, data);
-
-                        // Verificar si el diccionario tiene datos
-                        var tieneDatos = Object.keys(diccionario).length > 0;
-                            if (tieneDatos) {
-                                $('#id_id_materia').html(data);
-                                if (band_boton_selects == 2){
-                                    $('#id_id_materia').val(lista_event[0]['id_materia']);
-                                } 
-                                band_boton_selects += 1
-                            }
-                            actualizarconvocatoria();
-                     }       
-                });
             }
 
             function actualizarconvocatoria() {
@@ -785,26 +759,46 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_convocatoria').html(data);
-                        if (band_boton_selects == 3){
+                        if (band_boton_selects == 2){
                             $('#id_id_convocatoria').val(lista_event[0]['id_convocatoria']);
                         }
                         band_boton_selects += 1
-                        actualizartipo_tutoria();                       
+                        actualizartipo_ori_academ();                       
                     }
                 });
             }
 
-            function actualizartipo_tutoria() {
+            function actualizartipo_ori_academ() {
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'campo': 'tipo_tutoria'
+                        'campo': 'tipo_ori_academ'
                     },
                     dataType: 'json',
                     success: function(data) {
-                        $('#id_id_tipo_tutoria').html(data);
+                        $('#id_id_tipo_orientacion_academica').html(data);
+                        if (band_boton_selects == 3){
+                            $('#id_id_tipo_orientacion_academica').val(lista_orientacion[0]['id_tipo_orientacion_academica']);
+                        }
+                        band_boton_selects += 1
+                        actualizartipo_motivo_ori_academ();
+                    }
+                });
+            }
+
+            function actualizartipo_motivo_ori_academ() {
+                var selected_option = $('#id_id_tipo_orientacion_academica').val();
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'motivo_ori_academ',
+                        'selected_option': selected_option
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_tipo_motivo').html(data);
                         if (band_boton_selects == 4){
-                            $('#id_id_tipo_tutoria').val(lista_tutoria[0]['id_tipo_tutoria']);
+                            $('#id_id_tipo_motivo').val(lista_orientacion[0]['id_motivo']);
                         }
                         band_boton_selects += 1
                         actualizar_personas();
@@ -826,6 +820,24 @@
                         }
                         band_boton_selects += 1
                         $('#id_id_responsable_tarea').html(data);
+                        actualizarmateria();
+                    }
+                });
+            }
+
+            //actualizar las materias
+            function actualizarmateria() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'materias'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_materia').html(data);
+                        if (band_boton_selects == 6){
+                            $('#id_id_materia').val(lista_event[0]['id_materia']);
+                        }
                     }
                 });
             }
@@ -855,6 +867,13 @@
                     }
                 });
             }
+
+            //actualizar motivo cuando cambie el tipo ori academica
+            $('#id_id_tipo_orientacion_academica').change(function() {
+                actualizartipo_motivo_ori_academ()
+            });
+
+            
 
             //aplicar formato select2 a todos los dropdowns
             $('.select2').select2({
@@ -1061,8 +1080,8 @@
                     }
                 });
             
-            // Registrar una tutoria sin finalizar, asignacion de atributos para enviar
-            $('.btnActualizarTutoria').on('click', function () {
+            // Registrar una Orientacion sin finalizar, asignacion de atributos para enviar
+            $('.btnActualizarOrientacion').on('click', function () {
                 //primero debemos validar que los campo obligatorios esten cargados 
                 //validar que el fin no sean menor o igual a Inicio
 
@@ -1109,8 +1128,8 @@
                             actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
                             actividad_academica.items.datetime_inicio_estimado = horaInicioFinal
                             actividad_academica.items.datetime_fin_estimado = horaFinFinal
-                            actividad_academica.items.id_tipo_tutoria = $('select[name="id_tipo_tutoria"]').val();
-                            actividad_academica.items.nombre_trabajo = $('textarea[name="nombre_trabajo"]').val();
+                            actividad_academica.items.id_motivo_ori_academ = $('select[name="id_tipo_motivo"]').val();
+                            actividad_academica.items.id_tipo_orientacion_academica = $('select[name="id_tipo_orientacion_academica"]').val();
                             actividad_academica.items.observacion = $('textarea[name="observacion"]').val();
 
                             //reasignamos los datos de las tareas de la tabla 
@@ -1119,8 +1138,8 @@
                             var parameters = new FormData();
                             parameters.append('action', 'edit');
                             parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
-                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de modificar la tutoría?', parameters, function () {
-                                location.href = '/running-acti_academ-list/Tutoria/';
+                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de modificar la Orientación?', parameters, function () {
+                                location.href = '/running-acti_academ-list/OriAcademica/';
                             });
                         }
                     }
@@ -1134,8 +1153,8 @@
 
 
 
-             // Registrar una tutoria y finalizar, asignacion de atributos para enviar
-             $('.btnActualizarFinalizarTutoria').on('click', function () {
+             // Registrar una Orientacion y finalizar, asignacion de atributos para enviar
+             $('.btnActualizarFinalizarOrientacion').on('click', function () {
                 //primero debemos validar que los campo obligatorios esten cargados 
                 //validar que el fin no sean menor o igual a Inicio
 
@@ -1182,8 +1201,8 @@
                             actividad_academica.items.nro_curso = $('input[name="nro_curso"]').val();
                             actividad_academica.items.datetime_inicio_estimado = horaInicioFinal
                             actividad_academica.items.datetime_fin_estimado = horaFinFinal
-                            actividad_academica.items.id_tipo_tutoria = $('select[name="id_tipo_tutoria"]').val();
-                            actividad_academica.items.nombre_trabajo = $('textarea[name="nombre_trabajo"]').val();
+                            actividad_academica.items.id_motivo_ori_academ = $('select[name="id_tipo_motivo"]').val();
+                            actividad_academica.items.id_tipo_orientacion_academica = $('select[name="id_tipo_orientacion_academica"]').val();
                             actividad_academica.items.observacion = $('textarea[name="observacion"]').val();
 
                             //reasignamos los datos de las tareas de la tabla 
@@ -1192,8 +1211,8 @@
                             var parameters = new FormData();
                             parameters.append('action', 'editfinalizar');
                             parameters.append('actividad_academica', JSON.stringify(actividad_academica.items));
-                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de modificar y finalizar la tutoría?', parameters, function () {
-                                location.href = '/running-acti_academ-list/Tutoria/';
+                            submit_with_ajax(window.location.pathname, 'Notificación', '¿Estás seguro de modificar y finalizar la Orientación?', parameters, function () {
+                                location.href = '/running-acti_academ-list/OriAcademica/';
                             });
                         }
                     }
@@ -1208,7 +1227,7 @@
             //boton de cancelar
             $('.btnCancelar').on('click', function () {
                 alert_action('Notificación', '¿Estas seguro de cancelar el proceso?', function () {
-                    window.location.href= '/running-acti_academ-list/Tutoria/'
+                    window.location.href= '/running-acti_academ-list/Orientación/'
                 });
             });
 
@@ -1422,6 +1441,7 @@
 
             actividad_academica.actualizar_participantes(lista_participantes)
         }
+
 
     </script>
 
