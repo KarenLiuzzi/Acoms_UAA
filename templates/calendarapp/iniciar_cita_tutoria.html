@@ -63,6 +63,7 @@
                                 <label class="label" for="hora_inicio">Hora de inicio</label> <label> (Cambiar según sea necesario)</label> 
                                 <div class="input-group">
                                     <input type="time" class="form-control" id="hora_inicio" name="hora_inicio">
+                                    <a href="#" id="ahora_inicio">  Ahora </a>
                                 </div>
                             </div>
 
@@ -70,6 +71,7 @@
                                 <label class="label" for="hora_fin">Hora de fin</label> <label> (Cambiar según sea necesario)</label> 
                                 <div class="input-group">
                                     <input type="time" class="form-control" id="hora_fin" name="hora_fin">
+                                    <a href="#" id="ahora_fin">  Ahora </a>
                                 </div>
                             </div>
                         </div>
@@ -133,6 +135,55 @@
                     </div>
                 </div>
 
+                <div class="col-md-12">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-journal-text"></i> Tareas</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="tile">
+                                    <div>
+                                        <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Taarea">
+                                            <i class="bi bi-plus-lg"></i> Agregar Tarea
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-xs btn-flat btnRemoveAllTareas">
+                                            <i class="bi bi-trash2"></i> Eliminar todas las tareas
+                                        </button>
+                                    </div>
+                                    <br>
+
+                                    <div class="tile-body">
+                                        <div class="table-responsive">
+                                            <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <table class="table table-hover table-bordered dataTable no-footer" id="tblTareas" role="grid" aria-describedby="sampleTable_info">
+                                                            <thead>
+                                                                <tr role="row">
+                                                                    <th>Inicio</th>
+                                                                    <th>Vencimiento</th>
+                                                                    <th>Responsable</th>
+                                                                    <th>Tipo Tarea</th>
+                                                                    <th>Estado</th>
+                                                                    <th>Observación</th>
+                                                                    <th>Opción</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -144,6 +195,62 @@
     
         </div>
     </div>
+
+    <div id="modaltareas" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div id="dialog" class="modal-dialog modal-dialog-centered" role="document"> 
+            <div class="modal-content">
+                <div class='modal-header text-center'>
+                    <h3 class="modal-title w-100"> Crear Tarea</h3> 
+                    <button id="modalClose2" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group">
+                            <label class="label" for="hora_inicio_tarea">Inicio</label> 
+                                <input type="datetime-local" class="form-control" id="hora_inicio_tarea" name="hora_inicio_tarea">
+                                <a href="#" id="ahora_inicio_tarea">  Ahora </a>
+                        </div>
+        
+                        <div class="form-group">
+                            <label class="label" for="hora_fin_tarea">Fin</label>
+                                <input type="datetime-local" class="form-control" id="hora_fin_tarea" name="hora_fin_tarea">
+                                <a href="#" id="ahora_fin_tarea">  Ahora </a>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label class="label" for="id_responsable_tarea">Responsable</label>
+                            <select name="id_responsable_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_responsable_tarea" data-select2-id="id_id_responsable_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label" for="id_tipo_tarea">Tipo de Tarea</label>
+                            <select name="id_tipo_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tarea" data-select2-id="id_id_tipo_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label" for="id_tipo_tarea">Estado de Tarea</label>
+                            <select name="id_estado_tarea" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_estado_tarea" data-select2-id="id_id_estado_tarea" tabindex="-1" aria-hidden="true"></select>
+                        </div>
+            
+                        <div class="form-group">
+                            <label class="label" for="observacion_tarea">Observación</label>
+                            <textarea placeholder= "Desea agregar algún comentario adicional?..." class="form-control" rows="3" cols="25" name="observacion_tarea" maxlength="500"></textarea>
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose1"> Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="modalguardar"> Guardar</button>
+                        </div>  
+
+                    </div>       
+                </div>  
+            </div>
+        </div>
+    </div>
+
 </form>
 
 {% endblock content %}
@@ -175,7 +282,24 @@
     <!-- Functions -->
     <script src="{% static 'js/functions.js' %}"></script>
 
-    <script>       
+    <script>
+        
+        var ahoraInicioLinkTarea = document.getElementById("ahora_inicio_tarea");
+        var horaInicioInputTarea = document.getElementById("hora_inicio_tarea");
+        var ahoraFinLinkTarea = document.getElementById("ahora_fin_tarea");
+        var horaFinInputTarea = document.getElementById("hora_fin_tarea");
+
+        const ahoraFinLink = document.getElementById('ahora_fin');
+        const ahoraInicioLink = document.getElementById('ahora_inicio');
+        const horaFinInput = document.getElementById('hora_fin');
+        const horaInicioInput = document.getElementById('hora_inicio');
+
+        var modal = document.getElementById('modaltareas')
+        const cerrarmodal = document.getElementById('modalClose1');
+        const cerrarmodal2 = document.getElementById('modalClose2');
+        const guardarmodal = document.getElementById('modalguardar');
+        var tblTareas;
+
         var band_boton_selects= 0
         var mi_form= $('#tutoria')
         var tblParticipantes;
@@ -190,6 +314,7 @@
                 motivo: '',
                 nro_curso: '',
                 participantes: [],
+                tareas: [],
                 datetime_inicio_real: '',
                 datetime_fin_real: '',
                 observacion: '',
@@ -241,6 +366,130 @@
                     ]
 
                 });
+                
+                tblTareas = $('#tblTareas').DataTable({
+                    searching: true,
+                    paging: true,
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    data: this.items.tareas,
+                    columns: [
+                        {"data": "inicio"},
+                        {"data": "vencimiento"},
+                        {"data": "responsable"},
+                        {"data": "tipo_tarea"},
+                        {"data": "estado"},
+                        {"data": "observacion"},
+                        {},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var fechainicio = new Date(data);
+                                var dia = fechainicio.getDate().toString().padStart(2, '0');
+                                var mes = (fechainicio.getMonth() + 1).toString().padStart(2, '0');
+                                var anho = fechainicio.getFullYear().toString();
+                                var horas = fechainicio.getHours().toString().padStart(2, '0');
+                                var minutos = fechainicio.getMinutes().toString().padStart(2, '0');
+                                var segundos = fechainicio.getSeconds().toString().padStart(2, '0');
+                                
+                                var fechaInicioFormateada = dia + '-' + mes + '-' + anho + ' ' + horas + ':' + minutos + ':' + segundos;
+                                
+                                return '<text name="InicioTarea" value="' + data + '">' + fechaInicioFormateada + '</text>';
+                            }
+                        },
+                        {
+                            targets: [1],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var fechafin = new Date(data);
+                                var dia = fechafin.getDate().toString().padStart(2, '0');
+                                var mes = (fechafin.getMonth() + 1).toString().padStart(2, '0');
+                                var anho = fechafin.getFullYear().toString();
+                                var horas = fechafin.getHours().toString().padStart(2, '0');
+                                var minutos = fechafin.getMinutes().toString().padStart(2, '0');
+                                var segundos = fechafin.getSeconds().toString().padStart(2, '0');
+                                
+                                var fechaFinFormateada = dia + '-' + mes + '-' + anho + ' ' + horas + ':' + minutos + ':' + segundos;
+                                
+                                return '<text name="FinTarea" value="' + data + '">' + fechaFinFormateada + '</text>';
+                            }
+                        },
+                        {
+                            targets: [2],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var inicio = data;
+                                var datos = inicio.split('|');
+                                var responsable = datos[0]; 
+                                var id_responsable = datos[1]; 
+                                return '<text name="ResponsalbeTarea" value="' + id_responsable + '">' + responsable + '</text>';
+                            }
+                        },
+                        {
+                            targets: [3],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var tipo = data;
+                                var datos = tipo.split('|');
+                                var tipo_tarea = datos[0]; 
+                                var id_tarea = datos[1]; 
+                                return '<text name="TipoTarea" value="' + id_tarea +'">' + tipo_tarea + '</text>';
+                            }
+                        },
+                        {
+                            targets: [4],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                var estado = data;
+                                var datos = estado.split('|');
+                                var estado_tarea = datos[0]; 
+                                var id_estado_tarea = datos[1]; 
+                                return '<text name="EstadoTarea" value="' + id_estado_tarea + '">' + estado_tarea + '</text>';
+                            }
+                        },
+                        {
+                            targets: [5],
+                            class: 'text-center',
+                            orderable: true,
+                            render: function (data, type, row) {
+                                return '<text name="Observacion" value="'+ data +'">' + data + '</text>';
+                            }
+                        },
+                        {
+                            targets: [-1],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                            }
+                        },
+                    ]
+
+                });
+            },
+            addtarea: function (item) {
+                this.items.tareas.push(item);
+                this.list();
+            },
+            verificar_tarea: function (valor) {
+                var tareaExistente = this.items.tareas.some(function(tarea) {
+                    return JSON.stringify(tarea) === JSON.stringify(valor);
+                  });
+                  
+                  if (tareaExistente) {
+                    return false; //La tarea ya existe en el arreglo de tareas.
+                  } else {
+                    return true; //La tarea es nueva y puede ser agregada.
+                  }
             },
             
             actualizar_participantes: function (lista_participantes) {
@@ -263,6 +512,131 @@
             actualizarfacultad();
             actualizartipo_tutoria();
             cambiarValorHora();
+
+
+            //funcion para crear tabla vacia de tareas
+            function reiniciar_tblTareas() {
+                // generar tabla de tareas 
+                tblTareas = $('#tblTareas').DataTable({
+                    searching: true,
+                    paging: true,
+                    responsive: true,
+                    autoWidth: false,
+                    destroy: true,
+                    columns: [
+                        {"data": "inicio"},
+                        {"data": "vencimiento"},
+                        {"data": "responsable"},
+                        {"data": "tipo_tarea"},
+                        {"data": "estado"},
+                        {"data": "observacion"},
+                        {},
+                    ],
+                    data: [] // Datos vacíos para crear una tabla sin contenido
+                });
+            }
+
+            // Agrega un evento de clic al enlace
+            ahoraInicioLinkTarea.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaInicioInputTarea.value = fechaHoraActual;
+            });
+
+            ahoraFinLinkTarea.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                
+                // Obtiene la fecha y hora actual en formato 24h
+                var now = new Date();
+                var fechaHoraActual = now.getFullYear() + "-" +
+                ("0" + (now.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + now.getDate()).slice(-2) + "T" +
+                ("0" + now.getHours()).slice(-2) + ":" +
+                ("0" + now.getMinutes()).slice(-2);
+
+                // Actualiza el valor del input con la fecha y hora actual
+                horaFinInputTarea.value = fechaHoraActual;
+            });
+
+            //horas de inicio y fin de cita
+            ahoraFinLink.addEventListener('click', () => {
+                event.preventDefault(); // Previene el comportamiento predeterminado del enlace
+                // Obtener la hora actual
+                var now = new Date();
+                var horaActual = now.getHours().toString().padStart(2, '0');
+                var minutoActual = now.getMinutes().toString().padStart(2, '0');
+
+                // Formatear la hora actual
+                var horaActualFormateada = `${horaActual}:${minutoActual}`;
+
+                // Actualizar el valor del input con la hora actual
+                horaFinInput.value = horaActualFormateada;
+            });
+
+             // Agregar un evento al hacer clic en el enlace "Ahora inicio"
+             ahoraInicioLink.addEventListener('click', () => {
+                event.preventDefault(); // Previene el comportamiento predeterminado del enlace
+                // Obtener la hora actual
+                var now = new Date();
+                var horaActual = now.getHours().toString().padStart(2, '0');
+                var minutoActual = now.getMinutes().toString().padStart(2, '0');
+
+                // Formatear la hora actual
+                var horaActualFormateada = `${horaActual}:${minutoActual}`;
+
+                // Actualizar el valor del input con la hora actual
+                horaInicioInput.value = horaActualFormateada;
+            });
+
+            
+
+            function actualizar_personas() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'personas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_responsable_tarea').html(data);
+                    }
+                });
+            }
+
+            function actualizar_tipo_tarea() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'tipo_tareas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_tipo_tarea').html(data);
+                    }
+                });
+            }
+
+            function actualizar_estado_tarea() {
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        'campo': 'estado_tareas'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_estado_tarea').html(data);
+                    }
+                });
+            }
 
 
             function cambiarValorHora() {
@@ -352,6 +726,10 @@
                         //ponemos los valores ya cargados en los selects, solo si es la primera vez
                         if (band_boton_selects == 2) {
                             $('#id_id_funcionario_docente_encargado').val(lista_cita[0]['id_funcionario_docente_encargado']);
+                            //actualizamos una vez se haya cargado los primeros datos para no alterar la carga de datos
+                            actualizar_personas();
+                            actualizar_tipo_tarea();
+                            actualizar_estado_tarea();
                         }
                         band_boton_selects= band_boton_selects + 1
                     }
@@ -368,6 +746,25 @@
                 theme: "bootstrap4",
                 language: 'es'
             });
+
+            //elimina todas las tareas
+            $('.btnRemoveAllTareas').on('click', function () {
+                if (actividad_academica.items.tareas.length === 0) return false;
+                alert_action('Notificación', '¿Estás seguro de eliminar todas las tareas?', function () {
+                    actividad_academica.items.tareas = [];
+                    actividad_academica.list();
+                });
+            });
+
+            //eliminar por item de tarea
+            $('#tblTareas tbody')
+                .on('click', 'a[rel="removetarea"]', function () {
+                    var tr = tblTareas.cell($(this).closest('td, li')).index();
+                    alert_action('Notificación', '¿Estas seguro de eliminar la tarea?', function () {
+                        actividad_academica.items.tareas.splice(tr.row, 1);
+                        actividad_academica.list();
+                    });
+                })
 
 
             // search participantes
@@ -481,6 +878,8 @@
                     actividad_academica.items.datetime_inicio_real = fechaFinalInicio;
                     actividad_academica.items.datetime_fin_real = fechaFinalFin;
 
+                    //reasignamos los datos de las tareas de la tabla 
+                    actividad_academica.items.tareas= capturar_tareas();
 
                     var parameters = new FormData();
                     parameters.append('action', $('input[name="action"]').val());
@@ -498,6 +897,140 @@
                     window.location.href= '/running-event-list/Tutoria/'
                 });
             });
+
+
+            //boton de cerrar modal tarea
+            cerrarmodal.addEventListener('click',()=>{
+                limpiar_campos_tarea();
+                modal.style.display = 'none';
+              });
+
+            //boton de guardar modal tarea
+            guardarmodal.addEventListener('click',()=>{
+                var horaInicioValueTarea = horaInicioInputTarea.value;
+                var horaFinValueTarea = horaFinInputTarea.value;
+
+                if (horaInicioValueTarea && horaFinValueTarea) {
+
+
+                    var horaIniciotarea = new Date(horaInicioValueTarea);
+                    horaInicioFinalTarea = horaIniciotarea.getFullYear() + "-" +
+                    ("0" + (horaIniciotarea.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaIniciotarea.getDate()).slice(-2) + " " +
+                    ("0" + horaIniciotarea.getHours()).slice(-2) + ":" +
+                    ("0" + horaIniciotarea.getMinutes()).slice(-2) + ":00";
+                    var horaFintarea = new Date(horaFinValueTarea);
+                    horaFinFinalTarea = horaFintarea.getFullYear() + "-" +
+                    ("0" + (horaFintarea.getMonth() + 1)).slice(-2) + "-" +
+                    ("0" + horaFintarea.getDate()).slice(-2) + " " +
+                    ("0" + horaFintarea.getHours()).slice(-2) + ":" +
+                    ("0" + horaFintarea.getMinutes()).slice(-2) + ":00";
+
+                    if (horaFintarea <= horaIniciotarea) {
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'La hora de fin debe ser mayor que la hora de inicio.',
+                        });
+
+                    } else {
+                        //validar que tenga cargado un id_solicitante
+                        if ($('select[name="id_responsable_tarea"]').val() == "" ){
+
+                            $.alert({
+                                title: 'Alerta!',
+                                content: 'Debe seleccionar un responsable.',
+                            });
+                        }
+                        else {
+                            //procedemos a capturar todos los datos de los campos
+                            inicio= horaInicioFinalTarea 
+                            vencimiento= horaFinFinalTarea
+                            respons= document.getElementById('id_id_responsable_tarea');
+                            responsable= respons.options[respons.selectedIndex].text;
+                            responsable_id = $('select[name="id_responsable_tarea"]').val();
+                            tip_tar= document.getElementById('id_id_tipo_tarea'); 
+                            tipo_tarea= tip_tar.options[tip_tar.selectedIndex].text;
+                            id_tipo_tarea= $('select[name="id_tipo_tarea"]').val();
+                            estad= document.getElementById('id_id_estado_tarea'); 
+                            estado= estad.options[estad.selectedIndex].text; 
+                            id_estado = $('select[name="id_estado_tarea"]').val();
+                            observacion= $('textarea[name="observacion_tarea"]').val();
+
+                            tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion}
+                            //agregamos en la tabla de tareas
+                            //primero validamos 
+                            var validar= actividad_academica.verificar_tarea(tareas)
+                            if (validar == true ) {
+                                actividad_academica.addtarea(tareas)
+                            } else {
+                                $.alert({
+                                    title: 'Alerta!',
+                                    content: 'La tarea ya se encuentra en la lista!',
+                                });
+
+                            }
+                            
+                            
+
+                            //limpiamos los campos completados
+                            limpiar_campos_tarea();
+                            //cerramos el modal y actualizamos el tb de tareas
+                            modal.style.display = 'none';
+                        }
+                    }
+                    
+                } else {
+                    $.alert({
+                        title: 'Alerta!',
+                        content: 'Los campos de hora inicio y fin deben estar cargados.',
+                    });
+                }
+            });
+
+            //boton de agregar tarea
+            $('.btnRegistrarTarea').on('click', function () {
+                modal.style.display = 'block'
+            });
+            
+            //boton 2 de cerrar modal tarea
+            cerrarmodal2.addEventListener('click',()=>{
+                limpiar_campos_tarea();
+                modal.style.display = 'none';
+            });
+
+            function limpiar_campos_tarea(){
+                //inicio y fin 
+                horaInicioInputTarea.value= ''
+                horaFinInputTarea.value= ''
+                //responsalbe
+                $('select[name="id_responsable_tarea"]').val(null).trigger('change');;
+                //observacion
+                $('textarea[name="observacion_tarea"]').val('');
+            }
+
+            //debemos capturar todos los valores de los campos de la tabla de tareas y volver a asignar a la lista tareas dentro del table para poder enviar
+            function capturar_tareas() {
+
+                lista_tareas= []
+
+                //validamos que la lista tenga tareas antes de capturar los datos de las columnas
+                if (actividad_academica.items.tareas.length > 0) {
+
+                    $('#tblTareas tbody tr').each(function() {
+                        var col1Value = $(this).find('text[name="InicioTarea"]').attr('value');
+                        var col2Value = $(this).find('text[name="FinTarea"]').attr('value');
+                        var col3Value = $(this).find('text[name="ResponsalbeTarea"]').attr('value');
+                        var col4Value = $(this).find('text[name="TipoTarea"]').attr('value');
+                        var col5Value = $(this).find('text[name="EstadoTarea"]').attr('value');
+                        var col6Value = $(this).find('text[name="Observacion"]').attr('value');
+
+                        //insertamos en la lista para devolver
+                        lista_tareas.push({'inicio': col1Value, 'vencimiento': col2Value, 'responsable': col3Value, 'tipo_tarea': col4Value, 'estado': col5Value, 'observacion': col6Value})
+                    });
+                }
+
+                return lista_tareas
+            }
 
         });
 
