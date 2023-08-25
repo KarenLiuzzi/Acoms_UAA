@@ -2,6 +2,7 @@ import json
 from django.forms import model_to_dict
 from django.views.generic import ListView
 from django.shortcuts import render
+from accounts.models.user import Persona
 from calendarapp.models import Event
 from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica, Tutoria, OrientacionAcademica, Tarea, EstadoTarea
 from django.contrib.auth.decorators import login_required
@@ -238,6 +239,11 @@ def FinalizarTarea(request, id_tarea):
                 estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Finalizada').first()
                 record.id_estado_tarea= estado
                 record.datetime_finalizacion= datetime.now()
+                current_user = request.user
+                dict = model_to_dict(current_user)
+                id_persona=  dict["id_persona"]
+                ins_persona= Persona.objects.get(id= id_persona)                
+                record.id_persona_finalizacion= ins_persona
                 record.save()
                 data= json.dumps([{"name": 200}])
                 return HttpResponse(data)
@@ -264,3 +270,6 @@ def IniciarTarea(request, id_tarea):
                data= json.dumps([{"name": 500}])
                return HttpResponse(data)
                 
+                
+def About(request):
+    return render(request,'calendarapp/about.html')

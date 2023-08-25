@@ -149,7 +149,7 @@
         {% if cita.es_tutoria %}
         <a type="button" class="btn btn-primary" href="{% url 'calendarapp:more_detalles_cita_tutoria' cita.id_cita %}">Más Detalles</a>
         {% elif cita.es_orientacion_academica %}
-              <a type="button" class="btn btn-primary" href="{% url 'calendarapp:more_detalles_ori_academica' cita.id_cita %}">Más Detalles</a>
+              <a type="button" class="btn btn-primary" href="{% url 'calendarapp:more_cita_detalles_ori_academica' cita.id_cita %}">Más Detalles</a>
         {% endif %}
       </div>
     </div>

@@ -684,12 +684,64 @@ class CitaOrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
             pass
         return data
     
+    def get_tareas(self):
+        data = []
+        try:
+            tarea= Tarea.objects.filter(id_orientacion_academica= self.get_object().id_cita.id_actividad_academica)
+            tareas_lista = list(tarea)
+            if tareas_lista:
+                for tarea in tareas_lista:
+                    id_tarea = tarea.id_tarea
+                    if tarea.id_persona_finalizacion:
+                        id_persona_finalizacion = tarea.id_persona_finalizacion.id
+                        persona_finalizacion= tarea.id_persona_finalizacion.nombre + ' ' + tarea.id_persona_finalizacion.apellido
+                    else:
+                        id_persona_finalizacion= ''
+                        persona_finalizacion= ''
+                    id_persona_alta = tarea.id_persona_alta.id
+                    persona_alta= tarea.id_persona_alta.nombre + ' ' + tarea.id_persona_alta.apellido
+                    if tarea.id_persona_responsable:
+                        id_persona_responsable = tarea.id_persona_responsable.id
+                        persona_responsable= tarea.id_persona_responsable.nombre + ' ' + tarea.id_persona_responsable.apellido
+                    else: 
+                        id_persona_responsable= ''
+                        persona_responsable= ''
+                    id_orientacion_academica = tarea.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                    id_estado_tarea = tarea.id_estado_tarea.id_estado_tarea
+                    estado_tarea= tarea.id_estado_tarea.descripcion_estado_tarea
+                    id_tipo_tarea = tarea.id_tipo_tarea.id_tipo_tarea
+                    tipo_tarea= tarea.id_tipo_tarea.descripcion_tipo_tarea
+                    datetime_inicio_estimado = tarea.datetime_inicio_estimado.strftime('%Y-%m-%d %H:%M:%S')
+                    if tarea.datetime_inicio_real:
+                        datetime_inicio_real = tarea.datetime_inicio_real.strftime('%Y-%m-%d %H:%M:%S')
+                    else:
+                        datetime_inicio_real= ''
+                    datetime_vencimiento = tarea.datetime_vencimiento.strftime('%Y-%m-%d %H:%M:%S')
+                    datetime_alta = tarea.datetime_alta.strftime('%Y-%m-%d %H:%M:%S')
+                    if tarea.datetime_finalizacion:
+                        datetime_finalizacion = tarea.datetime_finalizacion.strftime('%Y-%m-%d %H:%M:%S')
+                    else:
+                        datetime_finalizacion= ''
+                    datetime_ultima_modificacion = tarea.datetime_ultima_modificacion.strftime('%Y-%m-%d %H:%M:%S')
+                    observacion = tarea.observacion
+                    
+                    auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
+                    'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_orientacion_academica': id_orientacion_academica, 
+                    'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
+                    'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}  
+                    data.append(auxiliar)     
+        except:
+            pass
+        return data
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Detalles de Cita de Orientación Académica'
         #context['modificar_url'] = reverse_lazy('erp:sale_create')
         context['participantes'] =  self.get_details_participantes()
         context['orientacion_academica'] =  self.get_details_orientacion_academica()
+        context['tareas'] =  self.get_tareas()
         return context
 
 #clase de vista de cita de tipo tutoria
@@ -721,12 +773,65 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
             pass
         return data
     
+    def get_tareas(self):
+        data = []
+        try:
+            tarea= Tarea.objects.filter(id_tutoria= self.get_object().id_cita.id_actividad_academica)
+            tareas_lista = list(tarea)
+            if tareas_lista:
+                for tarea in tareas_lista:
+                    id_tarea = tarea.id_tarea
+                    if tarea.id_persona_finalizacion:
+                        id_persona_finalizacion = tarea.id_persona_finalizacion.id
+                        persona_finalizacion= tarea.id_persona_finalizacion.nombre + ' ' + tarea.id_persona_finalizacion.apellido
+                    else:
+                        id_persona_finalizacion= ''
+                        persona_finalizacion= ''
+                    id_persona_alta = tarea.id_persona_alta.id
+                    persona_alta= tarea.id_persona_alta.nombre + ' ' + tarea.id_persona_alta.apellido
+                    if tarea.id_persona_responsable:
+                        id_persona_responsable = tarea.id_persona_responsable.id
+                        persona_responsable= tarea.id_persona_responsable.nombre + ' ' + tarea.id_persona_responsable.apellido
+                    else: 
+                        id_persona_responsable= ''
+                        persona_responsable= ''
+                    id_tutoria = tarea.id_tutoria.id_tutoria.id_actividad_academica
+                    id_estado_tarea = tarea.id_estado_tarea.id_estado_tarea
+                    estado_tarea= tarea.id_estado_tarea.descripcion_estado_tarea
+                    id_tipo_tarea = tarea.id_tipo_tarea.id_tipo_tarea
+                    tipo_tarea= tarea.id_tipo_tarea.descripcion_tipo_tarea
+                    datetime_inicio_estimado = tarea.datetime_inicio_estimado.strftime('%Y-%m-%d %H:%M:%S')
+                    if tarea.datetime_inicio_real:
+                        datetime_inicio_real = tarea.datetime_inicio_real.strftime('%Y-%m-%d %H:%M:%S')
+                    else:
+                        datetime_inicio_real= ''
+                    datetime_vencimiento = tarea.datetime_vencimiento.strftime('%Y-%m-%d %H:%M:%S')
+                    datetime_alta = tarea.datetime_alta.strftime('%Y-%m-%d %H:%M:%S')
+                    if tarea.datetime_finalizacion:
+                        datetime_finalizacion = tarea.datetime_finalizacion.strftime('%Y-%m-%d %H:%M:%S')
+                    else:
+                        datetime_finalizacion= ''
+                    datetime_ultima_modificacion = tarea.datetime_ultima_modificacion.strftime('%Y-%m-%d %H:%M:%S')
+                    observacion = tarea.observacion
+                    
+                    auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
+                    'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_tutoria': id_tutoria, 
+                    'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
+                    'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}  
+                    data.append(auxiliar)
+        except:
+            pass
+        
+        return data
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Detalles de Cita de Tutoría'
         #context['modificar_url'] = reverse_lazy('erp:sale_create')
         context['participantes'] =  self.get_details_participantes()
         context['tutoria'] =  self.get_details_tutoria()
+        context['tareas'] =  self.get_tareas()
         return context  
 
 #clase de vista de tipo orientacion academica
@@ -1519,7 +1624,46 @@ class CitaTutoriaIniciarView(LoginRequiredMixin, UpdateView):
                     ins_tipo_tutoria= TipoTutoria.objects.get(id_tipo_tutoria= actividad_academica['id_tipo_tutoria'])
                     tutoria.id_tipo_tutoria= ins_tipo_tutoria
                     tutoria.nombre_trabajo = actividad_academica['nombre_trabajo_grado']
-                    tutoria.save()                        
+                    tutoria.save()
+                    
+                    if actividad_academica['tareas']:
+                        #obtenemos la persona que esta dando de alta 
+                                current_user = request.user
+                                dict = model_to_dict(current_user)
+                                id_persona=  dict["id_persona"]
+                                ins_persona= Persona.objects.get(id= id_persona)
+                                for i in actividad_academica['tareas']:
+                                    tarea = Tarea()
+                                    tarea.id_persona_alta= ins_persona
+                                    tarea.id_tutoria= tutoria
+                                    ins_estado_tarea= EstadoTarea.objects.get(id_estado_tarea= i['estado'])
+                                    tarea.id_estado_tarea= ins_estado_tarea
+                                    ins_tipo_tarea= TipoTarea.objects.get(id_tipo_tarea= i['tipo_tarea'])
+                                    tarea.id_tipo_tarea= ins_tipo_tarea
+                                    ins_responsable= Persona.objects.get(id= i['responsable'])
+                                    #si la tarea ya esta finalizada, la fecha inicio estimado y real seran iguales y la fecha vencimiento sera igual a la finalizada, agregar quien finalizo
+                                    if ins_estado_tarea.descripcion_estado_tarea == 'Finalizada':
+                                        tarea.datetime_inicio_estimado= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_inicio_real= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_finalizacion= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.id_persona_finalizacion= ins_responsable
+                                    
+                                    #si la tarea esta pendiente aun no existira fecha real ni de finalizacion
+                                    elif ins_estado_tarea.descripcion_estado_tarea == 'Pendiente':
+                                        tarea.datetime_inicio_estimado= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                                    #si la tarea esta iniciada tendra fecha real pero aun no la de finalizacion 
+                                    elif ins_estado_tarea.descripcion_estado_tarea == 'Iniciada':
+                                        tarea.datetime_inicio_estimado= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_inicio_real= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
+                                    
+                                    tarea.id_persona_responsable= ins_responsable
+                                    tarea.datetime_alta= datetime.now()
+                                    tarea.observacion=  i['observacion']
+                                    tarea.save()
+                                                        
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
@@ -1670,7 +1814,45 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, UpdateView):
                     ins_motivo_orientacion_academica= Motivo.objects.get(id_motivo= actividad_academica['id_motivo_ori_academ'])
                     ori_academ.id_tipo_orientacion_academica= ins_tipo_orientacion_academica
                     ori_academ.id_motivo = ins_motivo_orientacion_academica
-                    ori_academ.save()                                 
+                    ori_academ.save()      
+                    
+                    if actividad_academica['tareas']:
+                        #obtenemos la persona que esta dando de alta 
+                                current_user = request.user
+                                dict = model_to_dict(current_user)
+                                id_persona=  dict["id_persona"]
+                                ins_persona= Persona.objects.get(id= id_persona)
+                                for i in actividad_academica['tareas']:
+                                    tarea = Tarea()
+                                    tarea.id_persona_alta= ins_persona
+                                    tarea.id_orientacion_academica= ori_academ
+                                    ins_estado_tarea= EstadoTarea.objects.get(id_estado_tarea= i['estado'])
+                                    tarea.id_estado_tarea= ins_estado_tarea
+                                    ins_tipo_tarea= TipoTarea.objects.get(id_tipo_tarea= i['tipo_tarea'])
+                                    tarea.id_tipo_tarea= ins_tipo_tarea
+                                    ins_responsable= Persona.objects.get(id= i['responsable'])
+                                    #si la tarea ya esta finalizada, la fecha inicio estimado y real seran iguales y la fecha vencimiento sera igual a la finalizada, agregar quien finalizo
+                                    if ins_estado_tarea.descripcion_estado_tarea == 'Finalizada':
+                                        tarea.datetime_inicio_estimado= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_inicio_real= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_finalizacion= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.id_persona_finalizacion= ins_responsable
+                                    
+                                    #si la tarea esta pendiente aun no existira fecha real ni de finalizacion
+                                    elif ins_estado_tarea.descripcion_estado_tarea == 'Pendiente':
+                                        tarea.datetime_inicio_estimado= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                                    #si la tarea esta iniciada tendra fecha real pero aun no la de finalizacion 
+                                    elif ins_estado_tarea.descripcion_estado_tarea == 'Iniciada':
+                                        tarea.datetime_inicio_estimado= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_inicio_real= datetime.strptime(i['inicio'], '%Y-%m-%d %H:%M:%S')
+                                        tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
+                                    
+                                    tarea.id_persona_responsable= ins_responsable
+                                    tarea.datetime_alta= datetime.now()
+                                    tarea.observacion=  i['observacion']
+                                    tarea.save()                        
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
@@ -3052,7 +3234,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
                         det_acti.save()
                     
                     #eliminamos todas las tareas y la volvemos a crear
-                    for i in Tarea.objects.filter(id_tutoria= self.get_object().id_actividad_academica):
+                    for i in Tarea.objects.filter(id_orientacion_academica= self.get_object().id_actividad_academica):
                         i.delete()
                         
                     #obtenemos la persona que esta dando de alta 
@@ -3208,7 +3390,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
                         det_acti.save()
                     
                     #eliminamos todas las tareas y la volvemos a crear
-                    for i in Tarea.objects.filter(id_tutoria= self.get_object().id_actividad_academica):
+                    for i in Tarea.objects.filter(id_orientacion_academica= self.get_object().id_actividad_academica):
                         i.delete()
                         
                     #obtenemos la persona que esta dando de alta 
@@ -3516,3 +3698,64 @@ class TareasView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['tarea'] = json.dumps(self.get_datos_tareas())
         return context
+
+
+#metodo para anhadir una tarea 
+
+
+@csrf_exempt
+def AddTarea(request):
+    if request.method == "POST":                
+            try:
+                tarea= json.loads(request.POST['tarea'])
+                #obtenemos la persona que esta dando de alta 
+                current_user = request.user
+                dict = model_to_dict(current_user)
+                id_persona=  dict["id_persona"]
+                ins_persona= Persona.objects.get(id= id_persona)
+                record = Tarea()
+                ins_ori_academ= ''
+                ins_tutoria= ''
+                record.id_persona_alta= ins_persona
+                if tarea['tipo_actividad_academica'] == 'tutoria':
+                    ins_tutoria= Tutoria.objects.get(id_tutoria= tarea['id_actividad_academica'])
+                    record.id_tutoria= ins_tutoria
+                else:
+                    ins_ori_academ= OrientacionAcademica.objects.get(id_orientacion_academica= tarea['id_actividad_academica'])
+                    record.id_orientacion_academica= ins_ori_academ
+                    
+                ins_estado_tarea= EstadoTarea.objects.get(id_estado_tarea= tarea['estado'])
+                record.id_estado_tarea= ins_estado_tarea
+                ins_tipo_tarea= TipoTarea.objects.get(id_tipo_tarea= tarea['tipo_tarea'])
+                record.id_tipo_tarea= ins_tipo_tarea
+                ins_responsable= Persona.objects.get(id= tarea['responsable'])
+                #si la tarea ya esta finalizada, la fecha inicio estimado y real seran iguales y la fecha vencimiento sera igual a la finalizada
+                if ins_estado_tarea.descripcion_estado_tarea == 'Finalizada':
+                    record.datetime_inicio_estimado= datetime.strptime(tarea['inicio'], '%Y-%m-%d %H:%M:%S')
+                    record.datetime_inicio_real= datetime.strptime(tarea['inicio'], '%Y-%m-%d %H:%M:%S')
+                    record.datetime_finalizacion= datetime.strptime(tarea['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                    record.datetime_vencimiento= datetime.strptime(tarea['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                    record.id_persona_finalizacion= ins_responsable
+                    
+                #si la tarea esta pendiente aun no existira fecha real ni de finalizacion
+                elif ins_estado_tarea.descripcion_estado_tarea == 'Pendiente':
+                    record.datetime_inicio_estimado= datetime.strptime(tarea['inicio'], '%Y-%m-%d %H:%M:%S')
+                    record.datetime_vencimiento= datetime.strptime(tarea['vencimiento'], '%Y-%m-%d %H:%M:%S')
+                #si la tarea esta iniciada tendra fecha real pero aun no la de finalizacion 
+                elif ins_estado_tarea.descripcion_estado_tarea == 'Iniciada':
+                    record.datetime_inicio_estimado= datetime.strptime(tarea['inicio'], '%Y-%m-%d %H:%M:%S')
+                    record.datetime_inicio_real= datetime.strptime(tarea['inicio'], '%Y-%m-%d %H:%M:%S')
+                    record.datetime_vencimiento= datetime.strptime(tarea['vencimiento'], '%Y-%m-%d %H:%M:%S')   
+                
+                record.id_persona_responsable= ins_responsable
+                record.datetime_alta= datetime.now()
+                record.observacion=  tarea['observacion']
+                record.save()
+                
+                data= json.dumps([{"name": 200}])
+                return HttpResponse(data)
+
+            except Exception as e:
+               print(str(e))
+               data= json.dumps([{"name": 500}])
+               return HttpResponse(data)

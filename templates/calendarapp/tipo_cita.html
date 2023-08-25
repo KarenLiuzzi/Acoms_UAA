@@ -1,30 +1,40 @@
 {% comment %} <form hx-post= "{{request.path}}" class="modal-content"> {% endcomment %}
-<div class="modal-content">
-      <div class='modal-header text-center'>
+  <div class="modal-content">
+    <div class='modal-header text-center'>
         <h3 class="modal-title w-100">Tipo de Cita</h3> 
-      </div>
+    </div>
 
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="tutoria" value="tutoria" checked>
-            <label class="form-check-label" for="tutoria">
-              Tutoria
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="orientacion_academica" value="orientacion_academica">
-            <label class="form-check-label" for="orientacion_academica">
-              Orientación Académica
-            </label>
-          </div>
-
-    
-        <div class="modal-footer">
-          <button type="button mt-2" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="button mt-2" class="btn btn-primary" id="confirmar-btn">Confirmar</button>
-        </div>  
+    <div class="modal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="tutoria" value="tutoria" checked>
+                        <label class="form-check-label" for="tutoria">
+                            Tutoría
+                        </label>
+                    </div>
+                </div>
+            </div>
             
-      </div>
-</div>  
+            <div class="row">
+                <div class="col-md-12 mt-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="orientacion_academica" value="orientacion_academica">
+                        <label class="form-check-label" for="orientacion_academica">
+                            Orientación Académica
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="confirmar-btn">Confirmar</button>
+    </div>  
+</div>
 
 {% comment %} Este código agrega un escucha de evento click al botón. Cuando se hace clic en el botón, 
 el código verifica cuál de los elementos de radio está seleccionado y actualiza el href del botón en consecuencia.
@@ -51,3 +61,5 @@ el código verifica cuál de los elementos de radio está seleccionado y actuali
 
     </script>
 {% endblock extrascripts %}
+
+

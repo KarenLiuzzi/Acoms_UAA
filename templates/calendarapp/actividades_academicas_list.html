@@ -26,13 +26,14 @@
                                 <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr role="row">
-                                            <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 102.281px;">Fecha</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.312px;">Dia</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Horario</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.281px;">Estado</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.141px;">Solicitante</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.312px;">Tipo</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 140.641px;">Opciones</th>
+                                            <th >Fecha</th>
+                                            <th >Dia</th>
+                                            <th >Horario</th>
+                                            <th >Estado</th>
+                                            <th>Encargado</th>
+                                            <th>Solicitante</th>
+                                            <th>Tipo</th>
+                                            <th >Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -93,7 +94,15 @@
                                                         {{ event.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica}}
                                                     {% endif %} 
                                                 
-                                                    </td>
+                                                </td>
+
+                                                <td>
+                                                    {% if event.id_tutoria %}
+                                                        {{ event.id_tutoria.id_funcionario_docente_encargado|title}}
+                                                    {% else %}
+                                                        {{ event.id_orientacion_academica.id_funcionario_docente_encargado|title}}
+                                                    {% endif %} 
+                                                </td>
 
                                                 <td>
                                                     {% if event.id_tutoria %}

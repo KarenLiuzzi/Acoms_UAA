@@ -174,6 +174,25 @@
                 <li>
                     <a class="app-menu__item" href="{% url 'calendarapp:tareas' %}"> <i class="bi bi-journal-text app-menu__icon fa fa-file-code-o bi bi-journal-text"></i><span class="app-menu__label"> Tareas</span></a>
                 </li>
+
+                <li class="treeview">
+                    <a class="app-menu__item" href="#" data-toggle="treeview"><i class="bi bi-clipboard2-data app-menu__icon fa fa-th-list"></i><span class="app-menu__label"> Reportes </span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li>
+                            <a class="treeview-item" href="#"> <i class="icon fa fa-circle-o"></i> Tutorías</a>
+                        </li>
+                        <li>
+                            <a class="treeview-item" href="#"> <i class="icon fa fa-circle-o"></i> Orientaciones Académicas</a>
+                        </li>
+                        <li>
+                            <a class="treeview-item" href="#"> <i class="icon fa fa-circle-o"></i> Citas</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="app-menu__item" href="{% url 'calendarapp:about' %}" > <i class="bi bi-journal-text app-menu__icon fa fa-file-code-o bi bi-person-exclamation"></i><span class="app-menu__label"> Acerca de</span></a>
+                </li>
             </ul>
         </aside>
         <main class="app-content">

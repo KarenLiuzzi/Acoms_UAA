@@ -1,8 +1,8 @@
 from django.urls import path
-from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita, tipo_acti_academ, AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, CitaTutoriaCreateView, CitaOrientacionAcademicaCreateView, CitaTutoriaUpdateView, CitaOrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, CitaTutoriaIniciarView, CitaOrientacionAcademicaIniciarView, OrientacionAcademicaCreateView, TutoriaDetalle, OrientacionAcademicaDetalle, TutoriaUpdateView, TareasView, OrientacionAcademicaUpdateView#ListCalendarioFuncDoc
+from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita, tipo_acti_academ, AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, CitaTutoriaCreateView, CitaOrientacionAcademicaCreateView, CitaTutoriaUpdateView, CitaOrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, CitaTutoriaIniciarView, CitaOrientacionAcademicaIniciarView, OrientacionAcademicaCreateView, TutoriaDetalle, OrientacionAcademicaDetalle, TutoriaUpdateView, TareasView, OrientacionAcademicaUpdateView, AddTarea#ListCalendarioFuncDoc
 
 from calendarapp.views import CalendarView, CalendarViewNew, AllEventsListView, RunningEventsListView, DetalleCita, CancelarCita
-from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView, DetalleActividadesAcademicas, CancelarActividadAcademica, FinalizarActividadAcademica, CancelarTarea, IniciarTarea, FinalizarTarea
+from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView, DetalleActividadesAcademicas, CancelarActividadAcademica, FinalizarActividadAcademica, CancelarTarea, IniciarTarea, FinalizarTarea, About
 
 app_name = "calendarapp"
 
@@ -44,7 +44,7 @@ urlpatterns = [
     path("all-event-list/", AllEventsListView.as_view(), name="all_events"),
     path("running-event-list/<str:tipo_cita>/",RunningEventsListView.as_view(),name="running_events"), 
     path("moredetallesCitaTutoria/<int:pk>/", CitaTutoriaDetalle.as_view() , name="more_detalles_cita_tutoria"),
-    path("moredetallesCitaOriAcadem/<int:pk>/", CitaOrientacionAcademicaDetalle.as_view() , name="more_detalles_ori_academica"),
+    path("moredetallesCitaOriAcadem/<int:pk>/", CitaOrientacionAcademicaDetalle.as_view() , name="more_cita_detalles_ori_academica"),
     path("iniciarCitaTutoria/<int:pk>/", CitaTutoriaIniciarView.as_view() , name="iniciar_cita_tutoria"),
     path("iniciarCitaOrientacionAcademica/<int:pk>/", CitaOrientacionAcademicaIniciarView.as_view() , name="iniciar_cita_ori_academ"),
     
@@ -67,6 +67,10 @@ urlpatterns = [
     path("tarea/finalizar/<int:id_tarea>/", FinalizarTarea, name="finalizar_tarea"),
     path("tarea/iniciar/<int:id_tarea>/", IniciarTarea, name="iniciar_tarea"),
     path("tarea/cancelar/<int:id_tarea>/", CancelarTarea, name="cancelar_tarea"),
+    path("nuevaTarea/", AddTarea, name="nueva_tarea"),
     
+    
+    #adicionales
+    path("about/", About, name="about"),
     
 ]
