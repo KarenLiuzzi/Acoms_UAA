@@ -1,0 +1,372 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Reporte Tutoría{% endblock title %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+
+
+{% block content %}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="bi bi-person-video3"></i>
+            {{ title }}
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label>Rango de fechas:</label>
+                    {{ form.date_range }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
+                    <label>Facultad:</label>
+                    {{ form.id_facultad }}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
+                    <label>Materia:</label>
+                    {{ form.id_materia }}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
+                    <label>Funcionario/docente:</label>
+                    {{ form.id_funcionario_docente_encargado }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
+                    <label>Estado:</label>
+                    {{ form.id_estado }}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
+                    <label>Solicitante:</label>
+                    {{ form.id_persona_solicitante }}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
+                    <label>Tipo Tutoría:</label>
+                    {{ form.id_tipo_tutoria }}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
+                    <label>Incluir tutorías de citas:</label>
+                    <div class="form-check ml-3">
+                        <input type="radio" class="form-check-input" name="incluir_cita" id="radio_si" value="si">
+                        <label class="form-check-label" for="radio_si">Sí</label>
+                    </div>
+                    <div class="form-check ml-3">
+                        <input type="radio" class="form-check-input" name="incluir_cita" id="radio_no" value="no">
+                        <label class="form-check-label" for="radio_no">No</label>
+                    </div>  
+
+                </div>
+            </div>
+        </div>
+        <hr>
+        <table class="table table-bordered" id="TblReporte">
+            <thead>
+            <tr>
+                <th scope="col">Fecha estimada</th>
+                <th scope="col">Fecha real</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Encargado</th>
+                <th scope="col">Solicitante</th>
+                <th scope="col">Facultad</th>
+                <th scope="col">Materia</th>
+                <th scope="col">Convocatoria</th>
+                <th scope="col">Tipo tutoría</th>
+                <th scope="col">Alta por Cita</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        <a href="#" class="btn btn-primary btn-flat BtnAplicar">
+            <i class="fas fa-sync"></i> Actualizar
+        </a>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extrascripts %}
+
+<script src="{% static 'lib/moment-2.25.3/moment.js' %}"></script>
+<script src="{% static 'lib/daterangepicker-3.1/spanish.js' %}"></script>
+<script src="{% static 'lib/daterangepicker-3.1/daterangepicker.js' %}"></script>
+<link rel="stylesheet" href="{% static 'lib/daterangepicker-3.1/daterangepicker.css' %}"/>
+
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/buttons-1.6.1/css/buttons.bootstrap.min.css' %}"/>
+
+{% comment %} <script src="{% static 'lib/datatables-1.10.20/plugins/buttons-1.6.1/js/dataTables.buttons.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/buttons-1.6.1/js/buttons.html5.min.js' %}" type="text/javascript"></script> {% endcomment %}
+
+
+<script src="{% static 'lib/datatables-1.10.20/plugins/jszip-2.5.0/jszip.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/pdfmake-0.1.36/pdfmake.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/pdfmake-0.1.36/vfs_fonts.js' %}" type="text/javascript"></script>
+
+
+<link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+<script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+<script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+<script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+    
+
+<script>
+var TblReporte;
+var cita_check;
+var date_range = null;
+var date_now = new moment().format('YYYY-MM-DD');
+const radioSi = document.getElementById('radio_si');
+const radioNo = document.getElementById('radio_no');
+
+$(document).ready(function() {
+
+        //funcion para crear tabla vacia de tareas
+        TblReporte = $('#tblTareas').DataTable({
+            searching: true,
+            paging: true,
+            responsive: true,
+            autoWidth: false,
+            destroy: true,
+            columns: [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+            ],
+            data: [] // Datos vacíos para crear una tabla sin contenido
+        });
+
+        radioSi.addEventListener('change', function() {
+            if (radioSi.checked) {
+                cita_check= 'si'
+            }
+        });
+
+        radioNo.addEventListener('change', function() {
+            if (radioNo.checked) {
+                 cita_check= 'no'
+            }
+        });
+
+        function generate_report() {
+            //traemos los datos seleccionados
+            var id_facultad=   $('select[name="id_facultad"]').val();
+            var id_materia =  $('select[name="id_materia"]').val();
+            var id_funcionario_docente_encargado =  $('select[name="id_funcionario_docente_encargado"]').val();
+            var id_estado =  $('select[name="id_estado"]').val();
+            var id_persona_solicitante =  $('select[name="id_persona_solicitante"]').val();
+            var id_tipo_tutoria = $('select[name="id_tipo_tutoria"]').val();
+            
+            var parameters = {
+                'action': 'search_report',
+                'start_date': date_now,
+                'end_date': date_now,
+                'id_facultad': id_facultad,
+                'id_funcionario_docente_encargado': id_funcionario_docente_encargado,
+                'id_estado': id_estado,
+                'id_persona_solicitante': id_persona_solicitante,
+                'id_tipo_tutoria': id_tipo_tutoria,
+                'id_materia': id_materia,
+                'cita': cita_check
+            };
+
+            if (date_range !== null) {
+                parameters['start_date'] = date_range.startDate.format('YYYY-MM-DD');
+                parameters['end_date'] = date_range.endDate.format('YYYY-MM-DD');
+            }
+
+            TblReporte= $('#TblReporte').DataTable({
+                responsive: true,
+                autoWidth: false,
+                destroy: true,
+                deferRender: true,
+                ajax: {
+                    url: window.location.pathname,
+                    type: 'POST',
+                    data: parameters,
+                    dataSrc: ""
+                },
+                order: false,
+                paging: false,
+                ordering: false,
+                info: false,
+                searching: false,
+                initComplete: function (settings, json) {
+                }
+            });
+        }
+
+        $(function () {
+            $('input[name="date_range"]').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    applyLabel: 'Aplicar',
+                    cancelLabel: 'Cancelar',
+                }
+            }).on('apply.daterangepicker', function (ev, picker) {
+                date_range = picker;
+                //generate_report();
+            }).on('cancel.daterangepicker', function (ev, picker) {
+                $(this).data('daterangepicker').setStartDate(date_now);
+                $(this).data('daterangepicker').setEndDate(date_now);
+                date_range = picker;
+                //generate_report();
+            });
+
+            //generate_report();
+        });
+
+        //boton de aplicar
+        $('.BtnAplicar').on('click', function () {
+            event.preventDefault();
+            generate_report();
+        });
+
+        //aplicar formato select2 a todos los dropdowns
+        $('.select2').select2({
+            theme: "bootstrap4",
+            language: 'es'
+        });
+
+        actualizarfacultad();
+        actualizar_personas();
+        actualizarmateria();
+        actualizarencargado();
+        actualizartipo_tutoria();
+        actualizarestado();
+
+        function actualizarfacultad() {
+            $.ajax({
+                url: '/actualizar_campos_reportes/',
+                data: {
+                    'campo': 'facultad'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_facultad').html(data);    
+                   
+                }
+            });
+        }
+
+        function actualizarconvocatoria() {
+            $.ajax({
+                url: '/actualizar_campos_reportes/',
+                data: {
+                    'campo': 'convocatoria'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_convocatoria').html(data);                  
+                }
+            });
+        }
+
+        function actualizar_personas() {
+            $.ajax({
+                url: '/actualizar_campos_reportes/',
+                data: {
+                    'campo': 'personas'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_persona_solicitante').html(data);
+                }
+            });
+        }
+
+        //actualizar las materias
+        function actualizarmateria() {
+            $.ajax({
+                url: '/actualizar_campos_reportes/',
+                data: {
+                    'campo': 'materias'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_materia').html(data);
+                }
+            });
+        }
+
+        function actualizarencargado() {
+            $.ajax({
+                url: '/actualizar_campos_reportes/',
+                data: {
+                    'campo': 'todos_funcionarios_docentes'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_funcionario_docente_encargado').html(data);
+                }
+            });
+        }
+        
+
+        function actualizartipo_tutoria() {
+            $.ajax({
+                url: '/actualizar_campos_reportes/',
+                data: {
+                    'campo': 'tipo_tutoria'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_tipo_tutoria').html(data);
+                }
+            });
+        }
+
+        function actualizarestado() {
+            $.ajax({
+                url: '/actualizar_campos_reportes/',
+                data: {
+                    'campo': 'estado_actividades_sin_cita'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_estado').html(data);
+                }
+            });
+        }
+
+    });
+
+</script>
+{% endblock extrascripts %}

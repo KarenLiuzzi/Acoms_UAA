@@ -43,6 +43,19 @@ class EventManager(models.Manager):
         events= list(chain(tutorias, orientaciones))
 
         return events
+    
+    def get_all_actividades(self):
+        #actividades con citas
+        citas = Cita.objects.select_related("id_cita")
+        #tutorias sin citas
+        tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None)
+        #orientaciones sin citas
+        orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None)
+
+        # Combinar los dos querysets en una sola variable
+        all_events= list(chain(citas, tutorias, orientaciones))
+
+        return all_events
 
     #este usamos para traer un solo tipo de cita, ya sea de tipo tutoria u orientacion academica -- ver como modificar
     #def get_running_events(self, user):
