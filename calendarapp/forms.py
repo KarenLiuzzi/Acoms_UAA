@@ -332,3 +332,40 @@ class ActividadAcademicaForm(ModelForm):
 #         'class': 'form-control select2',
 #         'style': 'width: 100%'
 #     }))
+
+
+class ReportForm(Form):
+    date_range = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'autocomplete': 'off'
+    }))
+    id_facultad = forms.ChoiceField(widget=forms.Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+    
+    id_materia = forms.ChoiceField(widget=forms.Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+    
+    id_funcionario_docente_encargado = forms.ChoiceField(widget=forms.Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+    
+    id_estado = forms.ChoiceField(widget=forms.Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+    
+    id_persona_solicitante = forms.ChoiceField(widget=forms.Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+    id_tipo_tutoria = forms.ChoiceField(widget=forms.Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+    
+    
