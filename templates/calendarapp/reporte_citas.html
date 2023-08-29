@@ -13,7 +13,7 @@
 <div class="card card-primary">
     <div class="card-header">
         <h3 class="card-title">
-            <i class="bi bi-person-rolodex"></i>
+            <i class="bi bi-person-video3"></i>
             {{ title }}
         </h3>
     </div>
@@ -61,26 +61,14 @@
             </div>
             <div class="col-lg-4">
                 <div class="form-group form-inline">
-                    <label>Tipo Orientación:</label>
-                    {{ form.id_tipo_orientacion_academica }}
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group form-inline">
-                    <label>Motivo :</label>
-                    {{ form.id_tipo_motivo }}
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group form-inline">
-                    <label>Incluir tutorías de citas:</label>
+                    <label>Tipo de cita:</label>
                     <div class="form-check ml-3">
-                        <input type="radio" class="form-check-input" name="incluir_cita" id="radio_si" value="si">
-                        <label class="form-check-label" for="radio_si">Sí</label>
+                        <input type="radio" class="form-check-input" name="tipo_cita" id="radio_tutoria" value="tutoria">
+                        <label class="form-check-label" for="radio_tutoria">Tutoría</label>
                     </div>
                     <div class="form-check ml-3">
-                        <input type="radio" class="form-check-input" name="incluir_cita" id="radio_no" value="no">
-                        <label class="form-check-label" for="radio_no">No</label>
+                        <input type="radio" class="form-check-input" name="tipo_cita" id="radio_orientacion" value="orientacion">
+                        <label class="form-check-label" for="radio_orientacion">Orientación Académica</label>
                     </div>  
 
                 </div>
@@ -98,10 +86,11 @@
                 <th scope="col">Facultad</th>
                 <th scope="col">Materia</th>
                 <th scope="col">Convocatoria</th>
-                <th scope="col">Tipo Orientación</th>
-                <th scope="col">Motivo</th>
+                <th scope="col">Tipo cita</th>
                 <th scope="col">Observación</th>
-                <th scope="col">Alta por Cita</th>
+                <th scope="col">Motivo</th>
+                <th scope="col">Motivo cancelación</th>
+                <th scope="col">Motivo Rechazo</th>
                 <th scope="col">Participantes</th>
             </tr>
             </thead>
@@ -151,11 +140,11 @@
 
 <script>
 var TblReporte;
-var cita_check;
+var tipo_cita;
 var date_range = null;
 var date_now = new moment().format('YYYY-MM-DD');
-const radioSi = document.getElementById('radio_si');
-const radioNo = document.getElementById('radio_no');
+const radio_tutoria = document.getElementById('radio_tutoria');
+const radio_orientacion = document.getElementById('radio_orientacion');
 
 $(document).ready(function() {
 
@@ -179,24 +168,22 @@ $(document).ready(function() {
                 {},
                 {},
                 {},
+                {},
+                {},
                 {}
             ],
             data: [] // Datos vacíos para crear una tabla sin contenido
         });
 
-        radioSi.addEventListener('change', function() {
-            if (radioSi.checked) {
-                cita_check= 'si'
-                //traemos estados de citas y orientaciones
-                actualizarestado_all();
+        radio_orientacion.addEventListener('change', function() {
+            if (radio_orientacion.checked) {
+                tipo_cita= 'orientacion'
             }
         });
 
-        radioNo.addEventListener('change', function() {
-            if (radioNo.checked) {
-                 cita_check= 'no'
-                //sacamos los estados de cita
-                actualizarestado();
+        radio_tutoria.addEventListener('change', function() {
+            if (radio_tutoria.checked) {
+                tipo_cita= 'tutoria'
             }
         });
 
@@ -207,8 +194,6 @@ $(document).ready(function() {
             var id_funcionario_docente_encargado =  $('select[name="id_funcionario_docente_encargado"]').val();
             var id_estado =  $('select[name="id_estado"]').val();
             var id_persona_solicitante =  $('select[name="id_persona_solicitante"]').val();
-            var id_tipo_orientacion_academica = $('select[name="id_tipo_orientacion_academica"]').val();
-            var id_tipo_motivo = $('select[name="id_tipo_motivo"]').val();
             
             var parameters = {
                 'action': 'search_report',
@@ -218,10 +203,8 @@ $(document).ready(function() {
                 'id_funcionario_docente_encargado': id_funcionario_docente_encargado,
                 'id_estado': id_estado,
                 'id_persona_solicitante': id_persona_solicitante,
-                'id_tipo_orientacion_academica': id_tipo_orientacion_academica,
-                'id_tipo_motivo': id_tipo_motivo,
                 'id_materia': id_materia,
-                'cita': cita_check
+                'tipo_cita': tipo_cita
             };
 
             if (date_range !== null) {
@@ -286,8 +269,6 @@ $(document).ready(function() {
         actualizar_personas();
         actualizarmateria();
         actualizarencargado();
-        actualizartipo_ori_academ();
-        actualizartipo_motivo_ori_academ_all();
         actualizarestado();
 
         function actualizarfacultad() {
@@ -356,55 +337,12 @@ $(document).ready(function() {
                 }
             });
         }
-        
-
-        function actualizartipo_ori_academ() {
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'tipo_ori_academ'
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_tipo_orientacion_academica').html(data);
-                }
-            });
-        }
-
-        function actualizartipo_motivo_ori_academ_all() {
-            var selected_option = $('#id_id_tipo_orientacion_academica').val();
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'motivos_ori_academ',
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_tipo_motivo').html(data);
-                }
-            });
-        }
-
-        function actualizartipo_motivo_ori_academ() {
-            var selected_option = $('#id_id_tipo_orientacion_academica').val();
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'motivo_ori_academ',
-                    'selected_option': selected_option
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_tipo_motivo').html(data);
-                }
-            });
-        }
 
         function actualizarestado() {
             $.ajax({
                 url: '/actualizar_campos_reportes/',
                 data: {
-                    'campo': 'estado_actividades_sin_cita'
+                    'campo': 'estado_actividades_con_cita'
                 },
                 dataType: 'json',
                 success: function(data) {
@@ -412,24 +350,6 @@ $(document).ready(function() {
                 }
             });
         }
-
-        function actualizarestado_all() {
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'estado_actividades_all'
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_estado').html(data);
-                }
-            });
-        }
-
-        //actualizar motivo cuando cambie el tipo ori academica
-        $('#id_id_tipo_orientacion_academica').change(function() {
-            actualizartipo_motivo_ori_academ()
-        });
 
     });
 

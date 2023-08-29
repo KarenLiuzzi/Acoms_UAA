@@ -3,7 +3,7 @@ from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncD
 
 from calendarapp.views import CalendarView, CalendarViewNew, AllEventsListView, RunningEventsListView, DetalleCita, CancelarCita
 from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView, DetalleActividadesAcademicas, CancelarActividadAcademica, FinalizarActividadAcademica, CancelarTarea, IniciarTarea, FinalizarTarea, About
-from calendarapp.views.reportes import ReporteTutoriaView, actualizar_campos_reportes, ReporteOrientacionAcademicaView
+from calendarapp.views.reportes import ReporteTutoriaView, actualizar_campos_reportes, ReporteOrientacionAcademicaView, ReporteCitasView
 app_name = "calendarapp"
 
 
@@ -76,8 +76,11 @@ urlpatterns = [
     
     #reportes
     path("reporte/tutoria/", ReporteTutoriaView.as_view(), name="reporte_tutoria"),
+    path("reporte/cita/", ReporteCitasView.as_view(), name="reporte_cita"),
     path("reporte/orientacion/", ReporteOrientacionAcademicaView.as_view(), name="reporte_orientacion"),
     path('actualizar_campos_reportes/', actualizar_campos_reportes, name='actualizar_campos_reportes'),
+    
+    
     
     
 ]
