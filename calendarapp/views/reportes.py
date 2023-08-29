@@ -120,6 +120,25 @@ def actualizar_campos_reportes(request):
             else:
                 options += f'<option value="{item.id_tipo_orientacion_academica}">{item.descripcion_tipo_orientacion_academica}</option>'  
                 contador += 1
+      
+        
+    elif campo == "motivos_ori_academ":
+        contador= 0
+        selected_option= ""
+        
+        queryset= ""
+        #traer todos los motivos de acuerdo al tipo de orientacion academica
+        queryset = Motivo.objects.all()
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+            if contador == 0:
+                options += f'<option value="">-----------------</option>'
+                options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'   
+                contador += 1
+            else:
+                options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'     
+                contador += 1
             
     elif campo == "motivo_ori_academ":
         contador= 0
@@ -127,9 +146,13 @@ def actualizar_campos_reportes(request):
         selected_option = request.GET.get('selected_option')
         
         queryset= ""
-        #traer todos los motivos de acuerdo al tipo de orientacion academica
-        queryset = Motivo.objects.filter(id_tipo_orientacion_academica= selected_option)
-        # Pasar los datos del queryset a datos HTML
+        if selected_option != "":
+            #traer todos los motivos de acuerdo al tipo de orientacion academica
+            queryset = Motivo.objects.filter(id_tipo_orientacion_academica= selected_option)
+            # Pasar los datos del queryset a datos HTML
+        else:
+             queryset = Motivo.objects.all()
+             
         options = ''
         for item in queryset:
             if contador == 0:
@@ -185,6 +208,20 @@ def actualizar_campos_reportes(request):
     if campo == "estado_actividades_sin_cita":
         contador= 0
         queryset= EstadoActividadAcademica.objects.exclude(descripcion_estado_actividad_academica='Confirmado')
+        # Pasar los datos del queryset a datos HTML
+        options = ''
+        for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'  
+                    contador += 1
+                else:
+                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'     
+                    contador += 1
+                    
+    if campo == "estado_actividades_all":
+        contador= 0
+        queryset= EstadoActividadAcademica.objects.all()
         # Pasar los datos del queryset a datos HTML
         options = ''
         for item in queryset:
@@ -293,7 +330,8 @@ class ReporteTutoriaView(TemplateView):
                             s.id_tutoria.id_facultad.descripcion_facultad,
                             s.id_tutoria.id_materia.descripcion_materia,
                             s.id_tutoria.id_convocatoria.id_semestre.descripcion_semestre + ' ' + anho_convocatoria,
-                            s.id_tipo_tutoria.descripcion_tipo_tutoria, 
+                            s.id_tipo_tutoria.descripcion_tipo_tutoria,
+                            s.id_tutoria.observacion, 
                             generado_cita                            
                         ])
                     
@@ -307,6 +345,116 @@ class ReporteTutoriaView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Reporte de Tutorías'
+        context['entity'] = 'Reportes'
+        #context['list_url'] = 'reporte/tutoria'
+        context['form'] = ReportForm()
+        return context
+
+
+
+class ReporteOrientacionAcademicaView(TemplateView):
+    template_name = 'calendarapp/reporte_orientacion_academica.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'search_report':
+                data = []
+                start_date = request.POST.get('start_date', '')
+                end_date = request.POST.get('end_date', '')
+                id_facultad = request.POST.get('id_facultad', '')
+                id_materia = request.POST.get('id_materia', '')
+                id_funcionario_docente_encargado = request.POST.get('id_funcionario_docente_encargado', '')
+                id_estado = request.POST.get('id_estado', '')
+                id_persona_solicitante = request.POST.get('id_persona_solicitante', '')
+                id_tipo_orientacion_academica = request.POST.get('id_tipo_orientacion_academica', '')
+                id_tipo_motivo = request.POST.get('id_tipo_motivo', '')
+                cita = request.POST.get('cita', '')
+                
+                # Construcción del queryset
+                # Si alguno de los campos no tiene valor, dentro del queryset no se filtran y se obtienen todos los registros que tengan campos 
+                
+                queryset = OrientacionAcademica.objects.select_related("id_orientacion_academica").all()
+                
+                #traemos solo los que no fueron generados por citas
+                if cita == 'no':
+                    #excluimos los que fueron generados por citas
+                    queryset = queryset.filter(id_cita= None)
+                else:
+                    pass
+                    
+                if len(start_date) and len(end_date):
+                    # Ajusta las fechas para incluir los registros del día completo
+                    end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
+                    queryset = queryset.filter(id_orientacion_academica__datetime_inicio_estimado__range=[start_date, end_date])
+
+                if id_facultad:
+                    queryset = queryset.filter(id_orientacion_academica__id_facultad=id_facultad)
+
+                if id_materia:
+                    queryset = queryset.filter(id_orientacion_academica__id_materia=id_materia)
+
+                if id_funcionario_docente_encargado:
+                    queryset = queryset.filter(id_orientacion_academica__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
+
+                if id_estado:
+                    queryset = queryset.filter(id_orientacion_academica__id_estado_actividad_academica=id_estado)
+
+                if id_persona_solicitante:
+                    queryset = queryset.filter(id_orientacion_academica__id_persona_solicitante=id_persona_solicitante)
+
+                if id_tipo_orientacion_academica:
+                    queryset = queryset.filter(id_tipo_orientacion_academica=id_tipo_orientacion_academica)
+                
+                if id_tipo_motivo:
+                    queryset = queryset.filter(id_tipo_motivo=id_tipo_motivo)
+                
+                #preguntamos si existen registros 
+                if queryset.exists():
+                    #filtramos solo los campos que nos interesan                                
+                    for s in queryset:
+                        start_estimado = s.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y %H:%M') if s.id_orientacion_academica.datetime_inicio_estimado else ''
+                        end_estimado = s.id_orientacion_academica.datetime_fin_estimado.strftime('%d-%m-%Y %H:%M') if s.id_orientacion_academica.datetime_fin_estimado else ''
+                        start_real = s.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y %H:%M') if s.id_orientacion_academica.datetime_inicio_real else ''
+                        end_real = s.id_orientacion_academica.datetime_fin_real.strftime('%d-%m-%Y %H:%M') if s.id_orientacion_academica.datetime_fin_real else ''
+                        anho_convocatoria = str(s.id_orientacion_academica.id_convocatoria.anho) if s.id_orientacion_academica.id_convocatoria.anho else ''
+                        solicitante= s.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + s.id_orientacion_academica.id_persona_solicitante.apellido if s.id_orientacion_academica.id_persona_solicitante else ''
+                        generado_cita= 'Si' if s.id_cita else 'No'
+                        materia= '' 
+                        if s.id_orientacion_academica.id_materia:
+                            materia= s.id_orientacion_academica.id_materia.descripcion_materia 
+                        else:
+                            materia='' 
+                        data.append([
+                            start_estimado + ' - ' + end_estimado,
+                            start_real + ' - ' + end_real,
+                            s.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica,
+                            s.id_orientacion_academica.id_funcionario_docente_encargado.id_funcionario_docente.nombre + ' ' + s.id_orientacion_academica.id_funcionario_docente_encargado.id_funcionario_docente.apellido,
+                            solicitante,
+                            s.id_orientacion_academica.id_facultad.descripcion_facultad,
+                            materia,
+                            s.id_orientacion_academica.id_convocatoria.id_semestre.descripcion_semestre + ' ' + anho_convocatoria,
+                            s.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica,
+                            s.id_motivo.descripcion_motivo, 
+                            s.id_orientacion_academica.observacion,
+                            generado_cita                            
+                        ])
+                    
+                
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Reporte de Orientaciones Académicas'
         context['entity'] = 'Reportes'
         #context['list_url'] = 'reporte/tutoria'
         context['form'] = ReportForm()

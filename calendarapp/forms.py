@@ -367,5 +367,13 @@ class ReportForm(Form):
         'class': 'form-control select2',
         'style': 'width: 100%'
     }))
+    id_tipo_orientacion_academica = forms.ChoiceField(widget=forms.Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
+    id_tipo_motivo = forms.ChoiceField(widget=forms.Select(attrs={
+        'class': 'form-control select2',
+        'style': 'width: 100%'
+    }))
     
     
