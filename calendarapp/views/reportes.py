@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from calendarapp.models.event import Event, Tutoria, OrientacionAcademica, TipoTarea, TipoTutoria, DetalleActividadAcademica ,Cita,TipoOrientacionAcademica, EstadoActividadAcademica, EstadoTarea, Motivo, Convocatoria
+from calendarapp.models.event import Event, Tutoria, OrientacionAcademica, TipoTarea, Tarea,TipoTutoria, DetalleActividadAcademica ,Cita,TipoOrientacionAcademica, EstadoActividadAcademica, EstadoTarea, Motivo, Convocatoria
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from datetime import datetime, timedelta, date
@@ -10,7 +10,9 @@ from django.db.models import Sum
 from django.views.generic import TemplateView
 from calendarapp.forms import ReportForm
 from django.urls import reverse_lazy
+from django.db.models import Q
 from accounts.models.user import Persona, Departamento, Facultad, Materia, FuncionarioDocente
+
 
 
 def actualizar_campos_reportes(request):
@@ -588,6 +590,145 @@ class ReporteCitasView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Reporte de Citas'
+        context['entity'] = 'Reportes'
+        #context['list_url'] = 'reporte/tutoria'
+        context['form'] = ReportForm()
+        return context
+    
+    
+    
+class ReporteTareasView(TemplateView):
+    template_name = 'calendarapp/reporte_tarea.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'search_report':
+                data = []
+                start_date = request.POST.get('start_date', '')
+                end_date = request.POST.get('end_date', '')
+                id_facultad = request.POST.get('id_facultad', '')
+                id_estado_tarea = request.POST.get('id_estado_tarea', '')
+                id_tipo_tarea = request.POST.get('id_tipo_tarea', '')
+                tipo_actividad = request.POST.get('tipo_actividad', '')
+                
+                # Construcción del queryset
+                # Si alguno de los campos no tiene valor, dentro del queryset no se filtran y se obtienen todos los registros que tengan campos 
+                
+                queryset = Tarea.objects.all()
+                
+                
+                    
+                #traemos solo los que no fueron generados por citas
+                if tipo_actividad == 'tutoria':
+                    #traemos las tareas de tutorias
+                    queryset = queryset.filter(id_orientacion_academica= None)
+                    if id_facultad:
+                        # Obtener las IDs de las tutorías y orientaciones asociadas a la facultad
+                        tutoria_ids = Tutoria.objects.filter(id_tutoria__id_facultad=id_facultad).values('id_tutoria')
+
+                        # Filtrar el queryset de Tarea por las IDs combinadas
+                        queryset = queryset.filter(id_tutoria__in=tutoria_ids)
+                        
+                elif tipo_actividad == 'orientacion':
+                    #traemos las tareas de orientaciones
+                    queryset = queryset.filter(id_tutoria= None)
+                    if id_facultad:
+                        # Obtener las IDs de las tutorías y orientaciones asociadas a la facultad
+                        orientacion_ids = OrientacionAcademica.objects.filter(id_orientacion_academica__id_facultad=id_facultad).values('id_orientacion_academica')
+                        
+                        # Filtrar el queryset de Tarea por las IDs combinadas
+                        queryset = queryset.filter(id_orientacion_academica__in=orientacion_ids)
+                else:
+                    #traemos todos
+                    if id_facultad:
+                        # Obtener las IDs de las tutorías y orientaciones asociadas a la facultad
+                        tutoria_ids = Tutoria.objects.filter(id_tutoria__id_facultad=id_facultad).values('id_tutoria')
+                        orientacion_ids = OrientacionAcademica.objects.filter(id_orientacion_academica__id_facultad=id_facultad).values('id_orientacion_academica')
+                        
+                        # Filtrar el queryset de Tarea por las IDs combinadas
+                        queryset = queryset.filter(Q(id_tutoria__in=tutoria_ids) | Q(id_orientacion_academica__in=orientacion_ids))
+                    
+                if len(start_date) and len(end_date):
+                    # Ajusta las fechas para incluir los registros del día completo
+                    end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
+                    queryset = queryset.filter(datetime_inicio_estimado__range=[start_date, end_date])                
+
+                if id_estado_tarea:
+                    queryset = queryset.filter(id_estado_tarea=id_estado_tarea)
+
+                if id_tipo_tarea:
+                    queryset = queryset.filter(id_tipo_tarea= id_tipo_tarea)
+                    
+                #preguntamos si existen registros 
+                if queryset.exists():
+                    #filtramos solo los campos que nos interesan                                
+                    for s in queryset:
+                        if s.id_persona_finalizacion:
+                            persona_finalizacion= s.id_persona_finalizacion.nombre + ' ' + s.id_persona_finalizacion.apellido
+                        else:
+                            persona_finalizacion= ''
+                        persona_alta= s.id_persona_alta.nombre + ' ' + s.id_persona_alta.apellido
+                        if s.id_persona_responsable:
+                            persona_responsable= s.id_persona_responsable.nombre + ' ' + s.id_persona_responsable.apellido
+                        else: 
+                            persona_responsable= ''
+                        if s.id_orientacion_academica:
+                            id_actividad= s.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                        else:
+                            id_actividad= s.id_tutoria.id_tutoria.id_actividad_academica
+                        estado_tarea= s.id_estado_tarea.descripcion_estado_tarea
+                        tipo_tarea= s.id_tipo_tarea.descripcion_tipo_tarea
+                        datetime_inicio_estimado = s.datetime_inicio_estimado.strftime('%Y-%m-%d %H:%M:%S')
+                        if s.datetime_inicio_real:
+                            datetime_inicio_real = s.datetime_inicio_real.strftime('%Y-%m-%d %H:%M:%S')
+                        else:
+                            datetime_inicio_real= ''
+                        datetime_vencimiento = s.datetime_vencimiento.strftime('%Y-%m-%d %H:%M:%S')
+                        datetime_alta = s.datetime_alta.strftime('%Y-%m-%d %H:%M:%S')
+                        if s.datetime_finalizacion:
+                            datetime_finalizacion = s.datetime_finalizacion.strftime('%Y-%m-%d %H:%M:%S')
+                        else:
+                            datetime_finalizacion= ''
+                        datetime_ultima_modificacion = s.datetime_ultima_modificacion.strftime('%Y-%m-%d %H:%M:%S')
+                        observacion = s.observacion
+                        tipo= ''
+                        if s.id_orientacion_academica:
+                            tipo= 'Orientación'
+                        elif s.id_tutoria:
+                            tipo= 'Tutoría'
+                        
+                        data.append([
+                            datetime_inicio_estimado,
+                            datetime_vencimiento,
+                            persona_responsable,
+                            tipo_tarea,
+                            estado_tarea,
+                            persona_alta,
+                            datetime_alta,
+                            observacion,
+                            datetime_inicio_real,
+                            datetime_finalizacion,
+                            persona_finalizacion,
+                            datetime_ultima_modificacion,
+                            id_actividad,
+                            tipo
+                        ])
+                
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Reporte de Tareas'
         context['entity'] = 'Reportes'
         #context['list_url'] = 'reporte/tutoria'
         context['form'] = ReportForm()
