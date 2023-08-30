@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}Reporte Orientaciones Académicas{% endblock title %}
+{% block title %}Reporte Tareas{% endblock title %}
 
 {% block breadcrumb %}
 {% endblock breadcrumb %}
@@ -13,7 +13,7 @@
 <div class="card card-primary">
     <div class="card-header">
         <h3 class="card-title">
-            <i class="bi bi-person-rolodex"></i>
+            <i class="bi bi-journal-text"></i>
             {{ title }}
         </h3>
     </div>
@@ -35,79 +35,57 @@
             </div>
             <div class="col-lg-4">
                 <div class="form-group form-inline">
-                    <label>Materia:</label>
-                    {{ form.id_materia }}
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group form-inline">
-                    <label>Funcionario/docente:</label>
-                    {{ form.id_funcionario_docente_encargado }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="form-group form-inline">
                     <label>Estado:</label>
-                    {{ form.id_estado }}
+                    {{ form.id_estado_tarea }}
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="form-group form-inline">
-                    <label>Solicitante:</label>
-                    {{ form.id_persona_solicitante }}
+                    <label>Tipo Tarea:</label>
+                    {{ form.id_tipo_tarea }}
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="form-group form-inline">
-                    <label>Tipo Orientación:</label>
-                    {{ form.id_tipo_orientacion_academica }}
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group form-inline">
-                    <label>Motivo :</label>
-                    {{ form.id_tipo_motivo }}
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="form-group form-inline">
-                    <label>Incluir tutorías de citas:</label>
+                    <label>Tipo de Actividad:</label>
                     <div class="form-check ml-3">
-                        <input type="radio" class="form-check-input" name="incluir_cita" id="radio_si" value="si">
-                        <label class="form-check-label" for="radio_si">Sí</label>
+                        <input type="radio" class="form-check-input" name="tipo_cita" id="radio_tutoria" value="tutoria">
+                        <label class="form-check-label" for="radio_tutoria">Tutoría</label>
                     </div>
                     <div class="form-check ml-3">
-                        <input type="radio" class="form-check-input" name="incluir_cita" id="radio_no" value="no">
-                        <label class="form-check-label" for="radio_no">No</label>
+                        <input type="radio" class="form-check-input" name="tipo_cita" id="radio_orientacion" value="orientacion">
+                        <label class="form-check-label" for="radio_orientacion">Orientación Académica</label>
                     </div>  
-
                 </div>
             </div>
         </div>
         <hr>
-        <table class="table table-bordered" id="TblReporte">
-            <thead>
-            <tr>
-                <th scope="col">Fecha estimada</th>
-                <th scope="col">Fecha real</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Encargado</th>
-                <th scope="col">Solicitante</th>
-                <th scope="col">Facultad</th>
-                <th scope="col">Materia</th>
-                <th scope="col">Convocatoria</th>
-                <th scope="col">Tipo Orientación</th>
-                <th scope="col">Motivo</th>
-                <th scope="col">Observación</th>
-                <th scope="col">Alta por Cita</th>
-                <th scope="col">Participantes</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                <table class="table table-bordered dataTable no-footer" id="TblReporte">
+                    <thead>
+                    <tr>
+                        <th scope="col">Inicio</th>
+                        <th scope="col">Vencimiento</th>
+                        <th scope="col">Responsable</th>
+                        <th scope="col">Tipo Tarea</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Registrado por</th>
+                        <th scope="col">Fecha alta</th>
+                        <th scope="col">Observación</th>
+                        <th scope="col">Fecha Inicio real</th>
+                        <th scope="col">Fecha Fin real</th>
+                        <th scope="col">Finalizado por</th>
+                        <th scope="col">Ultima modificación</th>
+                        <th scope="col">ID Actividad</th>
+                        <th scope="col">Tipo Actividad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="card-footer">
         <a href="#" class="btn btn-primary btn-flat BtnAplicar">
@@ -119,7 +97,6 @@
 {% endblock content %}
 
 {% block extrascripts %}
-
 <script src="{% static 'lib/moment-2.25.3/moment.js' %}"></script>
 <script src="{% static 'lib/daterangepicker-3.1/spanish.js' %}"></script>
 <script src="{% static 'lib/daterangepicker-3.1/daterangepicker.js' %}"></script>
@@ -139,19 +116,19 @@
 <script src="{% static 'lib/datatables-1.10.20/plugins/pdfmake-0.1.36/vfs_fonts.js' %}" type="text/javascript"></script>
 <script src="{% static 'lib/datatables-1.10.20/plugins/buttons-1.6.1/js/buttons.html5.min.js' %}" type="text/javascript"></script>
 
+
 <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet"/>
 <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
 <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
 <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
 
-
 <script>
 var TblReporte;
-var cita_check;
+var tipo_actividad;
 var date_range = null;
 var date_now = new moment().format('YYYY-MM-DD');
-const radioSi = document.getElementById('radio_si');
-const radioNo = document.getElementById('radio_no');
+const radio_tutoria = document.getElementById('radio_tutoria');
+const radio_orientacion = document.getElementById('radio_orientacion');
 
 $(document).ready(function() {
 
@@ -175,49 +152,38 @@ $(document).ready(function() {
                 {},
                 {},
                 {},
+                {},
                 {}
             ],
             data: [] // Datos vacíos para crear una tabla sin contenido
         });
 
-        radioSi.addEventListener('change', function() {
-            if (radioSi.checked) {
-                cita_check= 'si'
-                //traemos estados de citas y orientaciones
-                actualizarestado_all();
+        radio_orientacion.addEventListener('change', function() {
+            if (radio_orientacion.checked) {
+                tipo_actividad= 'orientacion'
             }
         });
 
-        radioNo.addEventListener('change', function() {
-            if (radioNo.checked) {
-                 cita_check= 'no'
-                //sacamos los estados de cita
-                actualizarestado();
+        radio_tutoria.addEventListener('change', function() {
+            if (radio_tutoria.checked) {
+                tipo_actividad= 'tutoria'
             }
         });
 
         function generate_report() {
             //traemos los datos seleccionados
             var id_facultad=   $('select[name="id_facultad"]').val();
-            var id_materia =  $('select[name="id_materia"]').val();
-            var id_funcionario_docente_encargado =  $('select[name="id_funcionario_docente_encargado"]').val();
-            var id_estado =  $('select[name="id_estado"]').val();
-            var id_persona_solicitante =  $('select[name="id_persona_solicitante"]').val();
-            var id_tipo_orientacion_academica = $('select[name="id_tipo_orientacion_academica"]').val();
-            var id_tipo_motivo = $('select[name="id_tipo_motivo"]').val();
+            var id_tipo_tarea =  $('select[name="id_tipo_tarea"]').val();
+            var id_estado_tarea =  $('select[name="id_estado_tarea"]').val();
             
             var parameters = {
                 'action': 'search_report',
                 'start_date': date_now,
                 'end_date': date_now,
                 'id_facultad': id_facultad,
-                'id_funcionario_docente_encargado': id_funcionario_docente_encargado,
-                'id_estado': id_estado,
-                'id_persona_solicitante': id_persona_solicitante,
-                'id_tipo_orientacion_academica': id_tipo_orientacion_academica,
-                'id_tipo_motivo': id_tipo_motivo,
-                'id_materia': id_materia,
-                'cita': cita_check
+                'id_tipo_tarea': id_tipo_tarea,
+                'id_estado_tarea': id_estado_tarea,
+                'tipo_actividad': tipo_actividad
             };
 
             if (date_range !== null) {
@@ -247,8 +213,8 @@ $(document).ready(function() {
                         extend: 'excelHtml5',
                         text: 'Descargar Excel <i class="bi bi-filetype-xlsx"></i>',
                         titleAttr: 'Excel',
-                        className: 'btn btn-primary btn-flat btn-xs'
-                    }
+                        className: 'btn btn-success btn-flat btn-xs'
+                    }, 
                 ],
                 initComplete: function (settings, json) {
                 }
@@ -288,12 +254,8 @@ $(document).ready(function() {
         });
 
         actualizarfacultad();
-        actualizar_personas();
-        actualizarmateria();
-        actualizarencargado();
-        actualizartipo_ori_academ();
-        actualizartipo_motivo_ori_academ_all();
-        actualizarestado();
+        actualizar_tipo_tarea();
+        actualizar_estado_tarea();
 
         function actualizarfacultad() {
             $.ajax({
@@ -309,132 +271,32 @@ $(document).ready(function() {
             });
         }
 
-        function actualizarconvocatoria() {
+
+        function actualizar_tipo_tarea() {
             $.ajax({
                 url: '/actualizar_campos_reportes/',
                 data: {
-                    'campo': 'convocatoria'
+                    'campo': 'tipo_tareas'
                 },
                 dataType: 'json',
                 success: function(data) {
-                    $('#id_id_convocatoria').html(data);                  
+                    $('#id_id_tipo_tarea').html(data);
                 }
             });
         }
 
-        function actualizar_personas() {
+        function actualizar_estado_tarea() {
             $.ajax({
                 url: '/actualizar_campos_reportes/',
                 data: {
-                    'campo': 'personas'
+                    'campo': 'estado_tareas'
                 },
                 dataType: 'json',
                 success: function(data) {
-                    $('#id_id_persona_solicitante').html(data);
+                    $('#id_id_estado_tarea').html(data);
                 }
             });
         }
-
-        //actualizar las materias
-        function actualizarmateria() {
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'materias'
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_materia').html(data);
-                }
-            });
-        }
-
-        function actualizarencargado() {
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'todos_funcionarios_docentes'
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_funcionario_docente_encargado').html(data);
-                }
-            });
-        }
-        
-
-        function actualizartipo_ori_academ() {
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'tipo_ori_academ'
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_tipo_orientacion_academica').html(data);
-                }
-            });
-        }
-
-        function actualizartipo_motivo_ori_academ_all() {
-            var selected_option = $('#id_id_tipo_orientacion_academica').val();
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'motivos_ori_academ',
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_tipo_motivo').html(data);
-                }
-            });
-        }
-
-        function actualizartipo_motivo_ori_academ() {
-            var selected_option = $('#id_id_tipo_orientacion_academica').val();
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'motivo_ori_academ',
-                    'selected_option': selected_option
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_tipo_motivo').html(data);
-                }
-            });
-        }
-
-        function actualizarestado() {
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'estado_actividades_sin_cita'
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_estado').html(data);
-                }
-            });
-        }
-
-        function actualizarestado_all() {
-            $.ajax({
-                url: '/actualizar_campos_reportes/',
-                data: {
-                    'campo': 'estado_actividades_all'
-                },
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_id_estado').html(data);
-                }
-            });
-        }
-
-        //actualizar motivo cuando cambie el tipo ori academica
-        $('#id_id_tipo_orientacion_academica').change(function() {
-            actualizartipo_motivo_ori_academ()
-        });
 
     });
 
