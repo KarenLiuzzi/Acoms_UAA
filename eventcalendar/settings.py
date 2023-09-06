@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "calendarapp.apps.CalendarappConfig",
     "accounts.apps.AccountsConfig",
+    "notify.apps.NotifyConfig",
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,12 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 #agregado el tiempo limite del token para reset passwords
 PASSWORD_RESET_TIMEOUT = 86400
+
+
+
+#agregados
+# LOGIN_REDIRECT_URL= '/calendarapp/dashboard'
+
+# LOGOUT_REDDIRECT_URL= '/login/'
+
+LOGIN_URL= '/login/'

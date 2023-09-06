@@ -4,7 +4,7 @@ from turtle import title
 from django.contrib import messages
 from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
@@ -13,14 +13,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from calendarapp.models.event import DetalleActividadAcademica
-import requests
 from calendarapp.models.calendario import HorarioSemestral, Dia, Convocatoria
 from calendarapp.forms import HorarioSemestralForm, ActividadAcademicaForm
 from accounts.models.user import FuncionarioDocente, Persona, Materia, Departamento, User, Facultad
-from calendarapp.models import EventMember, Event
+from calendarapp.models import  Event
 from calendarapp.models.event import Parametro, Cita, EstadoActividadAcademica, Tutoria, Tarea ,OrientacionAcademica, EstadoTarea ,TipoTutoria, TipoTarea ,TipoOrientacionAcademica, Motivo
 from calendarapp.utils import Calendar
-from calendarapp.forms import EventForm, AddMemberForm
+from calendarapp.forms import EventForm
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -30,20 +29,21 @@ from django.core import serializers
 import pandas as pd
 from django.db.models import Q
 
+@login_required
 def get_date(req_day):
     if req_day:
         year, month = (int(x) for x in req_day.split("-"))
         return date(year, month, day=1)
     return datetime.today()
 
-
+@login_required
 def prev_month(d):
     first = d.replace(day=1)
     prev_month = first - timedelta(days=1)
     month = "month=" + str(prev_month.year) + "-" + str(prev_month.month)
     return month
 
-
+@login_required
 def next_month(d):
     days_in_month = calendar.monthrange(d.year, d.month)[1]
     last = d.replace(day=days_in_month)
@@ -51,12 +51,15 @@ def next_month(d):
     month = "month=" + str(next_month.year) + "-" + str(next_month.month)
     return month
 
-
 class CalendarView(LoginRequiredMixin, generic.ListView):
     login_url = "accounts:signin"
     model = Event
     template_name = "calendar.html"
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         d = get_date(self.request.GET.get("month", None))
@@ -128,6 +131,10 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
     login_url = "accounts:signin"
     template_name = "calendarapp/calendar.html"
     form_class = EventForm
+    
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         forms = self.form_class()
@@ -385,18 +392,19 @@ def delCalendarioFuncDoc(request, pk):
 
 
 #agregados de pruebas
-
+@login_required
 def tipo_cita(request):
     return render(request,'calendarapp/tipo_cita.html')
-
+@login_required
 def tipo_acti_academ(request):
     return render(request,'calendarapp/tipo_actividad_academica.html')
-
+@login_required
 def ori_academica(request):
     return render(request,'calendarapp/prueba_ori_academica.html')
 
 from django.http import JsonResponse
 
+@login_required
 def actualizar_campo(request):
     
     campo = request.GET.get('campo')
@@ -662,6 +670,9 @@ class CitaOrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     #permission_required = 'erp.view_sale'
     context_object_name= 'cita'
     
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_details_participantes(self):
         data = {}
@@ -751,6 +762,9 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
     #permission_required = 'erp.view_sale'
     context_object_name= 'cita'
     
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_details_participantes(self):
         data = {}
@@ -842,6 +856,10 @@ class OrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     context_object_name= 'orientacion_academica'
     queryset= OrientacionAcademica.objects.select_related("id_orientacion_academica")
     
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_tareas(self):
         data = []
         try:
@@ -919,6 +937,10 @@ class TutoriaDetalle(LoginRequiredMixin, DetailView):
     #permission_required = 'erp.view_sale'
     context_object_name= 'tutoria'
     queryset= Tutoria.objects.select_related("id_tutoria")
+    
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
     
     def get_tareas(self):
         data = []
@@ -1092,6 +1114,7 @@ class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
             data['error'] = str(e)
+            print('aqui')
             #probar
         return JsonResponse(data, safe=False) #, json_dumps_params=[{"showMessage": "Registro Guardado."}]
     
@@ -3625,6 +3648,10 @@ class TareasView(LoginRequiredMixin, ListView):
     model = Tarea
     template_name = 'calendarapp/tareas_list.html'
     
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_datos_tareas(self):
         data = []
         try:
@@ -3704,6 +3731,7 @@ class TareasView(LoginRequiredMixin, ListView):
 
 
 @csrf_exempt
+@login_required
 def AddTarea(request):
     if request.method == "POST":                
             try:

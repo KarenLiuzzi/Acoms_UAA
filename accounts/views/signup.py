@@ -2,6 +2,7 @@ from django.views.generic import View
 from django.shortcuts import render, redirect
 
 from accounts.forms import SignUpForm
+from django.conf import settings
 
 
 class SignUpView(View):
@@ -23,6 +24,7 @@ class SignUpView(View):
             # print("formulario validado")
             forms.save()
             return redirect("accounts:signin")
+            #return redirect(settings.LOGIN_REDIRECT_URL)
         else:
             for field, errors in forms.errors.items():
                 for error in errors:

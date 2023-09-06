@@ -311,3 +311,7 @@ class MateriaAdmin(admin.ModelAdmin):
 #     list_display = ['func_doc_nombre', 'carrera_nombre'] # Campos a mostrar en la lista
 #     # list_filter = ('descripcion_materia',)  # Filtro por campo
 #     # search_fields = ('descripcion_materia',)  # Búsqueda por campo
+
+
+from accounts.models.user import Post
+admin.site.register(Post) 
