@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     {% load static %}
+
+    {% load notificaciones_tags %}
+    {%  notificaciones as notify %}
+
     <head>
         <!-- Main CSS-->
         <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
@@ -28,79 +32,37 @@
                 <!--Notification Menu-->
                 <li class="dropdown">
                     <a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications"><i class="fa fa-bell-o fa-lg"></i></a>
+                    {% if notify.sin_leer %}
+                        <button class="count"> {{ notify.sin_leer }} </button>
+                    {% endif %}
                     <ul class="app-notification dropdown-menu dropdown-menu-right">
-                        <li class="app-notification__title">You have 4 new notifications.</li>
+                        {% if notify.sin_leer != 0 %}
+                            {% if notify.sin_leer == 1 %}
+                                <li class="app-notification__title">Tienes {{ notify.sin_leer }} nueva notificación.</li>
+                            {% else %}
+                                <li class="app-notification__title">Tienes {{ notify.sin_leer }} nuevas notificaciones.</li>
+                                {% endif %}
+                        {% endif %}
                         <div class="app-notification__content">
-                            <li>
-                                <a class="app-notification__item" href="javascript:;">
-                                    <span class="app-notification__icon">
-                                        <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                    </span>
-                                    <div>
-                                        <p class="app-notification__message">Lisa sent you a mail</p>
-                                        <p class="app-notification__meta">2 min ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="app-notification__item" href="javascript:;">
-                                    <span class="app-notification__icon">
-                                        <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span>
-                                    </span>
-                                    <div>
-                                        <p class="app-notification__message">Mail server not working</p>
-                                        <p class="app-notification__meta">5 min ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="app-notification__item" href="javascript:;">
-                                    <span class="app-notification__icon">
-                                        <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fa fa-money fa-stack-1x fa-inverse"></i></span>
-                                    </span>
-                                    <div>
-                                        <p class="app-notification__message">Transaction complete</p>
-                                        <p class="app-notification__meta">2 days ago</p>
-                                    </div>
-                                </a>
-                            </li>
-                            <div class="app-notification__content">
-                                <li>
-                                    <a class="app-notification__item" href="javascript:;">
-                                        <span class="app-notification__icon">
-                                            <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                        </span>
-                                        <div>
-                                            <p class="app-notification__message">Lisa sent you a mail</p>
-                                            <p class="app-notification__meta">2 min ago</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="app-notification__item" href="javascript:;">
-                                        <span class="app-notification__icon">
-                                            <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span>
-                                        </span>
-                                        <div>
-                                            <p class="app-notification__message">Mail server not working</p>
-                                            <p class="app-notification__meta">5 min ago</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="app-notification__item" href="javascript:;">
-                                        <span class="app-notification__icon">
-                                            <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fa fa-money fa-stack-1x fa-inverse"></i></span>
-                                        </span>
-                                        <div>
-                                            <p class="app-notification__message">Transaction complete</p>
-                                            <p class="app-notification__meta">2 days ago</p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </div>
+                            {% if notify.notificaciones %}
+                                {% for notificacion in notify.notificaciones %}
+                                    <li>
+                                        {% load humanize %}
+                                        <a class="app-notification__item" href="javascript:;">
+                                            <span class="app-notification__icon">
+                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                            </span>
+                                            <div>
+                                                <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+
+                            {% endif %}
                         </div>
-                        <li class="app-notification__footer"><a href="#">See all notifications.</a></li>
+                        <li class="app-notification__footer"><a href="{% url 'notify:notificaciones' %}">Ver todas las notificaciones.</a></li>
                     </ul>
                 </li>
                 <!-- User Menu-->
@@ -222,11 +184,47 @@
             </div>
         </div>
 
+        <style>
+            .count{
+                display: flex;
+                line-height: 1;
+                align-items: center;
+                position: absolute;
+                height: 20px;
+                width: 20px;
+                font-size: 10px;
+                text-align: center;
+                vertical-align: middle;
+                left: 5%;
+                top: 10px;
+                transform: translateY(-1%);
+                background: #dc3545;
+                border-radius: 50%;
+                border: none;
+                color: #fff;
+                font-weight: 500;
+            }
+        </style>
 
         <!-- Essential javascripts for application to work-->
         {% include 'base/js.html' %}   
         {% block extrascripts %}
         {% endblock extrascripts %}
+        
+        <script>
+            {% if messages %}
+                var html = '<p>';
+                {% for message in messages %}
+                    html += '{{ message }}<br>';
+                {% endfor %}
+                html += '</p>';
+                Swal.fire({
+                    title: 'Error!',
+                    html: html,
+                    icon: 'error'
+                });
+            {% endif %}
+        </script>
         
     </body>
 </html>

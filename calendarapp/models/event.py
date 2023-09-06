@@ -323,3 +323,22 @@ class Tarea(models.Model):
     
     class Meta:
         verbose_name_plural = "Tareas"
+        
+        
+from django.db.models.signals import post_save
+from notify.signals import notificar
+
+def notify_cita(sender, instance, created, **kwargs):
+    title= 'Nueva solicitud de cita'
+    
+    #traemos del user del solicitante
+    ins_solicitante= Persona.objects.get(id= instance.id_cita.id_persona_solicitante.id)
+    ins_encargado= Persona.objects.get(id= instance.id_cita.id_funcionario_docente_encargado.id_funcionario_docente.id)
+    
+    solicitante= ins_solicitante.usuario.all().first()
+    encargado = ins_encargado.usuario.all().first()
+    id_actividad= int(instance.id_cita.id_actividad_academica)
+
+    notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= 'cita_tutoria' , id_tipo= id_actividad)
+    
+post_save.connect(notify_cita, sender= Cita)

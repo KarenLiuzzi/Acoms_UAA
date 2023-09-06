@@ -185,7 +185,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     id_persona= models.ForeignKey(Persona, on_delete=models.PROTECT,  related_name='usuario', blank= True, null= True)
     materia_func_doc= models.ManyToManyField(Materia, blank=True, help_text='Las materias asignadas al Funcionario/Docente', related_name='func_doc_materias') #, through= 'MateriaFuncionarioDocente') no funciona con este en el panel de admin
     #carrera_usuario= models.ManyToManyField(Carrera, blank=True, help_text='Las carreras asignadas al usuario', related_name='user_carreras')
-
+    lector =  models.BooleanField(default=True)
+    
     email = models.EmailField(
         _("Email Address"),
         max_length=255,
@@ -236,3 +237,27 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 #     class Meta:
 #         verbose_name_plural = "Materias Funcionario/Docente"
+
+#built-in signals
+from django.db.models.signals import post_save
+from django.utils import timezone
+from notify.signals import notificar
+class Post(models.Model):
+    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    title= models.CharField(max_length=100)
+    text= models.TextField()
+    timestamp= models.DateTimeField(default=timezone.now(), db_index=True)
+    
+    def __str__(self):
+        return self.title
+        # diccionario= {
+        #     'title': self.title,
+        #     'text': self.text[:10],
+        # }
+        
+        # return u'%(title)s %(text)s' % diccionario
+
+def notify_post(sender, instance, created, **kwargs):
+    notificar.send(instance.user, destiny= instance.user, verb= instance.title, level='success')
+    
+post_save.connect(notify_post, sender= Post)
