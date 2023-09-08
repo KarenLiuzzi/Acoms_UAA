@@ -91,21 +91,23 @@ def CancelarCita(request, id_cita):
                     storage.discard(message)
                 
             try:
+                dict = model_to_dict(request.user)
                 
                 with transaction.atomic():
                     record = Event.objects.get(id_actividad_academica=id_cita)
                     estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
                     record.id_estado_actividad_academica= estado
-                    record.save()
+                    ins_persona= Persona.objects.get(id= dict["id_persona"])
+                    record.id_persona_ultima_modificacion= ins_persona
                     #motivo_cancelacion
-                    record_cita= Cita.objects.get(id_cita= id_cita)
+                    record_cita= Cita.objects.get(id_cita=id_cita)
                     record_cita.motivo_cancelacion= campo
                     record_cita.save()
+                    record.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Cancelada."})})
 
             except:
                 messages.error(request, 'Ocurrió un error al intentar cancelar la cita.')
-                
                 return render(request, "calendarapp/cancelar_cita.html", context = {"id_cita": id_cita})
                 
     else:
@@ -122,7 +124,7 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
                     storage.discard(message)
                 
             try:
-                
+                dict = model_to_dict(request.user)
                 if id_tutoria > 0:
                     #obtenemos la instancia de tutoria a cancelar
                     tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
@@ -130,6 +132,7 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
                     #obtenemos instancia de estado cancelado
                     estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
                     tutoria.id_estado_actividad_academica= estado
+                    tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     tutoria.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
                 else:
@@ -138,6 +141,7 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
                     #obtenemos instancia de estado cancelado
                     estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
                     orientacion_academica.id_estado_actividad_academica= estado
+                    orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     orientacion_academica.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
             except:
@@ -159,13 +163,14 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
                     storage.discard(message)
                 
             try:
-                
+                dict = model_to_dict(request.user)
                 if id_tutoria > 0:
                     #obtenemos la instancia de tutoria a cancelar
                     tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
                     #obtenemos instancia de estado cancelado
                     estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizado').first()
                     tutoria.id_estado_actividad_academica= estado
+                    tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     tutoria.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
                 else:
@@ -174,6 +179,7 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
                     #obtenemos instancia de estado cancelado
                     estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizado').first()
                     orientacion_academica.id_estado_actividad_academica= estado
+                    orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     orientacion_academica.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
             except:
@@ -197,10 +203,11 @@ def AprobarCita(request, id_cita):
                     storage.discard(message)
                 
             try:
-                
+                    dict = model_to_dict(request.user)
                     record = Event.objects.get(id_actividad_academica=id_cita)
                     estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Confirmado').first()
                     record.id_estado_actividad_academica= estado
+                    record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     record.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Confirmada."})})
 
@@ -217,11 +224,11 @@ def AprobarCita(request, id_cita):
 def CancelarTarea(request, id_tarea):
     if request.method == "POST":                
         try:
+            dict = model_to_dict(request.user)
             record = Tarea.objects.get(id_tarea=id_tarea)
-            print(record)
             estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Cancelada').first()
-            print(estado)
             record.id_estado_tarea= estado
+            record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
             record.save()
             data= json.dumps([{"name": 200}])
             return HttpResponse(data)
@@ -235,15 +242,14 @@ def CancelarTarea(request, id_tarea):
 def FinalizarTarea(request, id_tarea):
     if request.method == "POST":                
             try:
+                dict = model_to_dict(request.user)
                 record = Tarea.objects.get(id_tarea=id_tarea)
                 estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Finalizada').first()
                 record.id_estado_tarea= estado
                 record.datetime_finalizacion= datetime.now()
-                current_user = request.user
-                dict = model_to_dict(current_user)
-                id_persona=  dict["id_persona"]
-                ins_persona= Persona.objects.get(id= id_persona)                
+                ins_persona= Persona.objects.get(pk= dict["id_persona"])                
                 record.id_persona_finalizacion= ins_persona
+                record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                 record.save()
                 data= json.dumps([{"name": 200}])
                 return HttpResponse(data)
@@ -257,10 +263,12 @@ def FinalizarTarea(request, id_tarea):
 def IniciarTarea(request, id_tarea):
     if request.method == "POST":                
             try:
+                dict = model_to_dict(request.user)
                 record = Tarea.objects.get(id_tarea=id_tarea)
                 estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Iniciada').first()
                 record.id_estado_tarea= estado
                 record.datetime_inicio_real= datetime.now()
+                record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                 record.save()
                 data= json.dumps([{"name": 200}])
                 return HttpResponse(data)

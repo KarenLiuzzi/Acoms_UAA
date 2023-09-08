@@ -1082,6 +1082,7 @@ class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
                     cita.id_persona_alta= ins_persona
                     cita.id_persona_solicitante= ins_persona
+                    cita.id_persona_ultima_modificacion= ins_persona
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
@@ -1189,6 +1190,7 @@ class CitaOrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
                     cita.id_persona_alta= ins_persona
                     cita.id_persona_solicitante= ins_persona
+                    cita.id_persona_ultima_modificacion= ins_persona
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
@@ -1286,7 +1288,8 @@ class CitaTutoriaUpdateView(LoginRequiredMixin, UpdateView):
                     cita.id_facultad= ins_facultad
                     cita.id_materia= ins_materia
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
-                    cita.id_persona_alta= ins_persona
+                    cita.id_persona_ultima_modificacion= ins_persona
+                    #cita.id_persona_alta= ins_persona
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
@@ -1455,7 +1458,8 @@ class CitaOrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
                     cita.id_convocatoria = ins_convocatoria
                     cita.id_facultad= ins_facultad
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
-                    cita.id_persona_alta= ins_persona
+                    cita.id_persona_ultima_modificacion= ins_persona
+                    #cita.id_persona_alta= ins_persona
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
@@ -1613,6 +1617,8 @@ class CitaTutoriaIniciarView(LoginRequiredMixin, UpdateView):
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
                     cita.datetime_inicio_real= fecha_hora_inicio_real
                     cita.datetime_fin_real = fecha_hora_fin_real
+                    dict = model_to_dict(request.user)
+                    cita.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                     cita.nro_curso= actividad_academica['nro_curso']
                     cita.observacion= actividad_academica['observacion']
                     cita.save()
@@ -1684,6 +1690,7 @@ class CitaTutoriaIniciarView(LoginRequiredMixin, UpdateView):
                                     
                                     tarea.id_persona_responsable= ins_responsable
                                     tarea.datetime_alta= datetime.now()
+                                    tarea.id_persona_ultima_modificacion= ins_persona
                                     tarea.observacion=  i['observacion']
                                     tarea.save()
                                                         
@@ -1804,6 +1811,8 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, UpdateView):
                     cita.datetime_inicio_real= fecha_hora_inicio_real
                     cita.datetime_fin_real = fecha_hora_fin_real
                     cita.nro_curso= actividad_academica['nro_curso']
+                    dict = model_to_dict(request.user)
+                    cita.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                     cita.observacion= actividad_academica['observacion']  
                     cita.save()
                     
@@ -1875,6 +1884,7 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, UpdateView):
                                     tarea.id_persona_responsable= ins_responsable
                                     tarea.datetime_alta= datetime.now()
                                     tarea.observacion=  i['observacion']
+                                    tarea.id_persona_ultima_modificacion= ins_persona
                                     tarea.save()                        
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
@@ -2268,6 +2278,7 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                     tutoria.id_materia= ins_materia
                     tutoria.id_funcionario_docente_encargado= ins_func_doc_encargado
                     tutoria.id_persona_alta= ins_persona
+                    tutoria.id_persona_ultima_modificacion= ins_persona
                     tutoria.id_persona_solicitante= ins_solicitante
                     tutoria.datetime_inicio_estimado= fecha_hora_inicio
                     tutoria.datetime_fin_estimado= fecha_hora_fin
@@ -2330,6 +2341,7 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                                 
                                 tarea.id_persona_responsable= ins_responsable
                                 tarea.datetime_alta= datetime.now()
+                                tarea.id_persona_ultima_modificacion= ins_persona
                                 tarea.observacion=  i['observacion']
                                 tarea.save()
                                 
@@ -2368,6 +2380,7 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                     tutoria.id_materia= ins_materia
                     tutoria.id_funcionario_docente_encargado= ins_func_doc_encargado
                     tutoria.id_persona_alta= ins_persona
+                    tutoria.id_persona_ultima_modificacion= ins_persona
                     tutoria.id_persona_solicitante= ins_solicitante
                     tutoria.datetime_inicio_estimado= fecha_hora_inicio
                     tutoria.datetime_fin_estimado= fecha_hora_fin
@@ -2430,6 +2443,7 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
                                 
                                 tarea.id_persona_responsable= ins_responsable
                                 tarea.datetime_alta= datetime.now()
+                                tarea.id_persona_ultima_modificacion= ins_persona
                                 tarea.observacion=  i['observacion']
                                 tarea.save()
             else:
@@ -2511,6 +2525,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     orientacion_academica.id_funcionario_docente_encargado= ins_func_doc_encargado
                     orientacion_academica.id_persona_alta= ins_persona
                     orientacion_academica.id_persona_solicitante= ins_persona
+                    orientacion_academica.id_persona_ultima_modificacion= ins_persona
                     orientacion_academica.datetime_inicio_estimado= fecha_hora_inicio
                     orientacion_academica.datetime_fin_estimado= fecha_hora_fin
                     orientacion_academica.datetime_inicio_real= datetime.now()
@@ -2574,6 +2589,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                                 
                                 tarea.id_persona_responsable= ins_responsable
                                 tarea.datetime_alta= datetime.now()
+                                tarea.id_persona_ultima_modificacion= ins_persona
                                 tarea.observacion=  i['observacion']
                                 tarea.save()
                                 
@@ -2621,6 +2637,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     orientacion_academica.id_funcionario_docente_encargado= ins_func_doc_encargado
                     orientacion_academica.id_persona_alta= ins_persona
                     orientacion_academica.id_persona_solicitante= ins_persona
+                    orientacion_academica.id_persona_ultima_modificacion= ins_persona
                     orientacion_academica.datetime_inicio_estimado= fecha_hora_inicio
                     orientacion_academica.datetime_fin_estimado= fecha_hora_fin
                     orientacion_academica.datetime_inicio_real= fecha_hora_inicio
@@ -2684,6 +2701,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                                 
                                 tarea.id_persona_responsable= ins_responsable
                                 tarea.datetime_alta= datetime.now()
+                                tarea.id_persona_ultima_modificacion= ins_persona
                                 tarea.observacion=  i['observacion']
                                 tarea.save()
             else:
@@ -2756,6 +2774,8 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
                     tutoria.id_funcionario_docente_encargado= ins_func_doc_encargado
                     #la persona se mantiene
                     #tutoria.id_persona_alta= ins_persona
+                    dict = model_to_dict(request.user)
+                    tutoria.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                     tutoria.datetime_inicio_estimado= fecha_hora_inicio
                     tutoria.datetime_fin_estimado= fecha_hora_fin
                     tutoria.nro_curso= actividad_academica['nro_curso']
@@ -2866,6 +2886,7 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
                                     tarea.datetime_alta= datetime.now()
                                 else:
                                     tarea.datetime_alta= datetime.strptime(i['FechaAlta'], '%Y-%m-%d %H:%M:%S')
+                                tarea.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                                 tarea.observacion=  i['observacion']
                                 tarea.save()     
             
@@ -2899,6 +2920,8 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
                     tutoria.id_funcionario_docente_encargado= ins_func_doc_encargado
                     #la persona se mantiene
                     #tutoria.id_persona_alta= ins_persona
+                    dict = model_to_dict(request.user)
+                    tutoria.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                     tutoria.datetime_inicio_estimado= fecha_hora_inicio
                     tutoria.datetime_fin_estimado= fecha_hora_fin
                     tutoria.datetime_fin_real= datetime.now()
@@ -3011,6 +3034,7 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
                                     tarea.datetime_alta= datetime.now()
                                 else:
                                     tarea.datetime_alta= datetime.strptime(i['FechaAlta'], '%Y-%m-%d %H:%M:%S')
+                                tarea.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                                 tarea.observacion=  i['observacion']
                                 tarea.save()                   
                 
@@ -3226,6 +3250,8 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
                     orientacion_academica.id_funcionario_docente_encargado= ins_func_doc_encargado
                     #la persona se mantiene
                     #tutoria.id_persona_alta= ins_persona
+                    dict = model_to_dict(request.user)
+                    orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                     orientacion_academica.datetime_inicio_estimado= fecha_hora_inicio
                     orientacion_academica.datetime_fin_estimado= fecha_hora_fin
                     orientacion_academica.nro_curso= actividad_academica['nro_curso']
@@ -3339,6 +3365,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
                                 else:
                                     tarea.datetime_alta= datetime.strptime(i['FechaAlta'], '%Y-%m-%d %H:%M:%S')
                                 tarea.observacion=  i['observacion']
+                                tarea.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                                 tarea.save()                  
             
             elif action == 'editfinalizar':
@@ -3381,6 +3408,8 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
                     orientacion_academica.id_funcionario_docente_encargado= ins_func_doc_encargado
                     #la persona se mantiene
                     #tutoria.id_persona_alta= ins_persona
+                    dict = model_to_dict(request.user)
+                    orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                     orientacion_academica.datetime_inicio_estimado= fecha_hora_inicio
                     orientacion_academica.datetime_fin_real= datetime.now()
                     orientacion_academica.datetime_fin_estimado= fecha_hora_fin
@@ -3493,6 +3522,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
                                     tarea.datetime_alta= datetime.now()
                                 else:
                                     tarea.datetime_alta= datetime.strptime(i['FechaAlta'], '%Y-%m-%d %H:%M:%S')
+                                tarea.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                                 tarea.observacion=  i['observacion']
                                 tarea.save()                   
                 
@@ -3777,6 +3807,7 @@ def AddTarea(request):
                 
                 record.id_persona_responsable= ins_responsable
                 record.datetime_alta= datetime.now()
+                record.id_persona_ultima_modificacion= ins_persona
                 record.observacion=  tarea['observacion']
                 record.save()
                 
@@ -3787,3 +3818,13 @@ def AddTarea(request):
                print(str(e))
                data= json.dumps([{"name": 500}])
                return HttpResponse(data)
+           
+           
+           
+# TutoriaUpdateView
+# cita_tutoria_edit
+
+# OrientacionAcademicaUpdateView
+# orientacion_academica_edit
+
+# editar estos para ver como hacer la edicion de tarea y poder notificar correctamente las tareas
