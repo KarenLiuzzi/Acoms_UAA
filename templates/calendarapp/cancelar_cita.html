@@ -1,6 +1,5 @@
 {% load static %}
 <form hx-post= "{{request.path}}" class="modal-content" id="formcancel">
-    {% csrf_token %}
       <div class='modal-header text-center'>
         <h3 class="modal-title w-100">Cancelar Cita</h3> 
       </div>
@@ -46,6 +45,21 @@
       // Obtener el formulario y el botón de cancelar
       var form = document.getElementById('formcancel');
       var botonCancelar = document.getElementById('cancelar');
+
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
       
       // Agregar el evento click al botón de cancelar
       botonCancelar.addEventListener('click', function() {
@@ -70,7 +84,6 @@
               data: {
                   'motivo': motivo_cancelacion
               },
-              dataType: 'json',
             }).done(function (data) {
                 location.reload();
             }).fail(function (jqXHR, textStatus, errorThrown) {

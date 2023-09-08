@@ -81,7 +81,7 @@ class AbstractNotificacion(models.Model):
 	level = models.CharField(choices=Levels.choices, max_length=20, default=Levels.info)
 	tipo = models.CharField(choices=Tipo.choices, max_length=25, default= Tipo.tutoria)
 	
-	id_tipo= models.IntegerField(default=0)
+	id_tipo= models.IntegerField()
 
 	destiny = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='notificaciones', blank=True, null=True)
 
@@ -118,6 +118,9 @@ def notify_signals(verb, **kwargs):
 
 	Notify = load_model('notify', 'Notification')
 	levels= kwargs.pop('level', Notify.Levels.info)
+ 
+	tipo= kwargs.pop('tipo')
+	id_tipo= int(kwargs.pop('id_tipo'))
 
 	if isinstance(destiny, Group):
 		destinies= destiny.user_set.all()
@@ -128,7 +131,7 @@ def notify_signals(verb, **kwargs):
 
 	new_notify= []
 	for destiny in destinies:
-		notification= Notify(destiny= destiny, actor_content_type= ContentType.objects.get_for_model(actor), object_id_actor= actor.pk, verbo= str(verb), publico= publico, timestamp= timestamp, level= levels)
+		notification= Notify(destiny= destiny, actor_content_type= ContentType.objects.get_for_model(actor), object_id_actor= actor.pk, verbo= str(verb), publico= publico, timestamp= timestamp, level= levels, tipo= tipo, id_tipo= id_tipo)
 		notification.save()
 		new_notify.append(notification)
 
