@@ -213,9 +213,9 @@
         <div class="card-footer">
             <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Editar Cita</a>
         
-            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> Cancelar Cita </button>
+            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
        
-            <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=cita.id_cita %}"> Confirmar Cita </button>
+            <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=cita.id_cita %}">  <i class="bi bi-calendar-check"></i> Confirmar Cita </button>
         
         </div>
 
@@ -224,23 +224,23 @@
     {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmado' %}
 
     <div class="card-footer">
-        <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> Cancelar Cita </button>
+        <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
         
         {% if cita.es_tutoria %}
 
-        <a type="button" class="btn btn-primary btn-flat"  title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_tutoria' pk=cita.id_cita %}"> Iniciar Cita </a>
+        <a type="button" class="btn btn-primary btn-flat"  title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_tutoria' pk=cita.id_cita %}"> <i class="bi bi-caret-right-fill"></i> Iniciar Cita </a>
 
         {% else %}
 
-        <a type="button" class="btn btn-primary btn-flat" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=cita.id_cita %}"> Iniciar Cita </a>
+        <a type="button" class="btn btn-primary btn-flat" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=cita.id_cita %}"> <i class="bi bi-caret-right-fill"></i> Iniciar Cita </a>
         
         {% endif %}
     
     </div>
     {% endif %}
 
-    <div id="modaltareas" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div id="dialog" class="modal-dialog modal-dialog-centered" role="document"> 
+    <div id="modaltareas" class="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document"> 
             <div class="modal-content">
                 <div class='modal-header text-center'>
                     <h3 class="modal-title w-100"> Crear Tarea</h3> 

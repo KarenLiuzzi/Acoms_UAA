@@ -477,7 +477,7 @@
                                 } else if (row.estado && row.estado.includes("Iniciada")){
                                     return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" ><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" ><i class="bi bi-check2"></i></a> <a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
                                 } else {
-                                    return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                    return '' //'<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
                                 }
                                 //return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
                             }
@@ -538,8 +538,9 @@
                         var datetime_finalizacion= tarea.datetime_finalizacion;
                         var datetime_ultima_modificacion= tarea.datetime_ultima_modificacion;
                         var observacion= tarea.observacion;
+                        var id= tarea.id_tarea
                         //cargamos los datos
-                        tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion, 'persona_alta': persona_alta, 'id_persona_alta': id_persona_alta, 'persona_finalizacion': persona_finalizacion, 'id_persona_finalizacion': id_persona_finalizacion , 'datetime_inicio_real': datetime_inicio_real, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 'datetime_ultima_modificacion': datetime_ultima_modificacion}
+                        tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion, 'persona_alta': persona_alta, 'id_persona_alta': id_persona_alta, 'persona_finalizacion': persona_finalizacion, 'id_persona_finalizacion': id_persona_finalizacion , 'datetime_inicio_real': datetime_inicio_real, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 'datetime_ultima_modificacion': datetime_ultima_modificacion, 'id': id}
                         //agregamos en la tabla de tareas
                         actividad_academica.addtarea(tareas)
                     }
@@ -1274,7 +1275,7 @@
                             id_estado = $('select[name="id_estado_tarea"]').val();
                             observacion= $('textarea[name="observacion_tarea"]').val();
 
-                            tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion, 'persona_alta': '', 'id_persona_alta': '', 'persona_finalizacion': '', 'id_persona_finalizacion': '' , 'datetime_inicio_real': '', 'datetime_alta': '', 'datetime_finalizacion': '', 'datetime_ultima_modificacion': ''}
+                            tareas= {'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable + '|' + responsable_id , 'tipo_tarea': tipo_tarea + '|' + id_tipo_tarea , 'estado': estado + '|' + id_estado, 'observacion': observacion, 'persona_alta': '', 'id_persona_alta': '', 'persona_finalizacion': '', 'id_persona_finalizacion': '' , 'datetime_inicio_real': '', 'datetime_alta': '', 'datetime_finalizacion': '', 'datetime_ultima_modificacion': '', 'id': ''}
                             //agregamos en la tabla de tareas
                             //primero validamos 
                             var validar= actividad_academica.verificar_tarea(tareas)
@@ -1288,8 +1289,6 @@
                                 });
 
                             }
-                            
-                            
 
                             //limpiamos los campos completados
                             limpiar_campos_tarea();
@@ -1353,9 +1352,10 @@
                         var FechaAlta = rowData.datetime_alta;
                         var FechaReal = rowData.datetime_inicio_real;
                         var FechaFinalizacion = rowData.datetime_finalizacion;
+                        var id = rowData.id;
 
                         //insertamos en la lista para devolver
-                        lista_tareas.push({'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable, 'tipo_tarea': tipo_tarea, 'estado': estado, 'observacion': observacion, 'PersonaAlta': PersonaAlta, 'PersonaFinalizacion': PersonaFinalizacion, 'FechaAlta': FechaAlta, 'FechaReal': FechaReal, 'FechaFinalizacion': FechaFinalizacion})
+                        lista_tareas.push({'inicio': inicio, 'vencimiento': vencimiento, 'responsable': responsable, 'tipo_tarea': tipo_tarea, 'estado': estado, 'observacion': observacion, 'PersonaAlta': PersonaAlta, 'PersonaFinalizacion': PersonaFinalizacion, 'FechaAlta': FechaAlta, 'FechaReal': FechaReal, 'FechaFinalizacion': FechaFinalizacion, 'id': id})
                     }
                 }
 
