@@ -17,3 +17,19 @@ td.details-control {
 tr.shown td.details-control {
   background: url('../lib/datatables-1.10.20/images/details_close.png') no-repeat center center;
 }
+
+.app-notification__item-container {
+  display: block;
+  margin-bottom: 10px; /* Espacio entre elementos */
+}
+
+
+.notification-list {
+  background-color: #e9e9e9e1; /* Color gris de fondo */
+  padding: 10px; /* Espacio interno para el fondo gris */
+  list-style: none; /* Elimina las viñetas predeterminadas */
+}
+
+.notification-list li {
+  margin-bottom: 10px; /* Espacio entre elementos de la lista */
+}

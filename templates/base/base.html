@@ -48,15 +48,102 @@
                                 {% for notificacion in notify.notificaciones %}
                                     <li>
                                         {% load humanize %}
-                                        <a class="app-notification__item" href="javascript:;">
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ notificacion.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
+                                        {% if notificacion.tipo ==  'tutoria' %}
+
+                                            <a class="app-notification__item" href="/moredetallesTutoria/{{ notificacion.id_tipo}}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                            {% elif notificacion.tipo ==  'orientacion' %}
+                                            <a class="app-notification__item" href="/moredetallesOrientacionAcademica/{{ notificacion.id_tipo}}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                            {% elif notificacion.tipo ==  'cita_orientacion' %}
+
+                                            <a class="app-notification__item" href="/moredetallesCitaOriAcadem/{{ notificacion.id_tipo}}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                            {% elif notificacion.tipo ==  'cita_tutoria' %}
+
+                                            <a class="app-notification__item" href="/moredetallesCitaTutoria/{{ notificacion.id_tipo}}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                            {% elif notificacion.tipo ==  'tarea_tutoria' %}
+
+                                            <a class="app-notification__item" href="/moredetallesTutoria/{{ notificacion.id_tipo}}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                            {% elif notificacion.tipo ==  'tarea_orientacion' %}
+
+                                            <a class="app-notification__item" href="/moredetallesOrientacionAcademica/{{ notificacion.id_tipo}}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                            {% elif notificacion.tipo ==  'tarea_cita_orientacion' %}
+
+                                            <a class="app-notification__item" href="/moredetallesCitaOriAcadem/{{ notificacion.id_tipo}}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                            {% elif notificacion.tipo ==  'tarea_cita_tutoria' %}
+                                            <a class="app-notification__item" href="/moredetallesCitaTutoria/{{ notificacion.id_tipo}}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ notificacion.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ notificacion.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                            {% endif %}
+
                                     </li>
                                 {% endfor %}
 

@@ -330,9 +330,7 @@ class Tarea(models.Model):
         verbose_name_plural = "Tareas"
         
         
-        
 #aqui construimos nuestros singals
-
 from django.db.models.signals import post_save, pre_save
 from notify.signals import notificar
 
@@ -472,79 +470,157 @@ def detectar_cambio_estado(sender, instance, **kwargs):
         print('no paso')    
 pre_save.connect(detectar_cambio_estado, sender= Event)
 
+#notificar tarea
+def notify_tarea(sender, instance, created, **kwargs):
+    
+    #para que notifique una sola vez
+    if created:
+        
+        if (instance.id_estado_tarea.descripcion_estado_tarea == 'Pendiente' or instance.id_estado_tarea.descripcion_estado_tarea == 'Iniciada'):
+            tipo_actividad= ''
+            id_actividad=''
+            title= ''
+            cita_existente_tutoria= None
+            cita_existente_orrientacion= None
+            
+            print('entro en creacion')
+            #traemos del user del solicitante
+            ins_solicitante= Persona.objects.get(id= instance.id_persona_alta.id)
+            ins_encargado= Persona.objects.get(id= instance.id_persona_responsable.id)
+            
+            #Verificamos si existe una cita relacionada
+            if instance.id_tutoria is not None:
+                cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria.id_tutoria.id_actividad_academica).first()
+            elif instance.id_orientacion_academica is not None:
+                cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica).first()
+            
+            
+            if cita_existente_tutoria is not None:
+                print('entro en cita tutoria')
+                tipo_actividad= 'tarea_cita_tutoria'
+                id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
+                title = 'Te asignaron una tarea en una cita de tutoría'
+                    
+            elif cita_existente_orrientacion is not None:
+                print('entro en cita orientacion')
+                id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                tipo_actividad= 'tarea_cita_orientacion'            
+                title = 'Te asignaron una tarea en una cita de orientación académica'
+                
+            elif instance.id_tutoria != None:
+                print('entro en tutoria')
+                id_actividad= instance.id_tutoria.id_tutoria
+                tipo_actividad= 'tarea_tutoria'            
+                title = 'Te asignaron una tarea en una tutoría'
+                
+            elif instance.id_orientacion_academica != None:
+                print('entro en orientacion')
+                id_actividad= instance.id_orientacion_academica.id_orientacion_academica
+                tipo_actividad= 'tarea_orientacion'
+                title = 'Te asignaron una tarea en una orientación académica'
+            
+            solicitante= ins_solicitante.usuario.all().first()
+            encargado = ins_encargado.usuario.all().first()
+
+            notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= tipo_actividad , id_tipo= id_actividad)
+        else:
+            print('no notifico')
+    
+post_save.connect(notify_tarea, sender= Tarea)
 
 # #cambia el estado de Tarea
-# def detectar_cambio_estado_tarea(sender, instance, **kwargs):
+def detectar_cambio_estado_tarea(sender, instance, **kwargs):
     
-#     #traemos del user del solicitante
-#     ins_solicitante= Persona.objects.get(id= instance.id_persona_alta.id)
-#     ins_encargado= Persona.objects.get(id= instance.id_persona_responsable.id)
-#     tipo= ''
-#     nombre_actividad= ''
-#     title= ''
-    
-#         #Verificamos si existe una cita relacionada
-#     cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria).first()
-#     cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica).first()
-    
-#     if cita_existente_tutoria.exists():
-#         tipo= 'tarea_cita_tutoria'
-#         nombre_actividad= 'Tarea de cita de Tutoría'
-#         id_actividad= instance.id_tutoria
-            
-#     elif cita_existente_orrientacion.exists():
-#         id_actividad= instance.id_orientacion_academica
-#         tipo= 'tarea_cita_orientacion'
-#         nombre_actividad= 'Tarea de cita de Orientación Académica'
-            
-#     elif instance.id_tutoria != None:
-#         id_actividad= instance.id_tutoria
-#         tipo= 'tarea_tutoria'
-#         nombre_actividad= 'Tarea de Tutoría'
+    if instance.id_tarea:
+        print('paso') 
+        original_instance = sender.objects.get(id_tarea=instance.id_tarea)
+        print(original_instance)
         
-#     elif instance.id_orientacion_academica != None:
-#         id_actividad= instance.id_orientacion_academica
-#         tipo= 'tarea_orientacion'
-#         nombre_actividad= 'Tarea de Orientación Académica'
+        # Comprueba si el campo id_estado_actividad_academica ha cambiado
+        if original_instance.id_estado_tarea != instance.id_estado_tarea:
+            print('entro porque cambio')
+            # Realiza aquí las acciones que desees cuando el campo cambie
+            # Puedes acceder a instance.id_estado_tarea para obtener el nuevo valor y
+            # original_instance.id_estado_tarea para obtener el valor anterior
             
-#     # Comprueba si el campo id_estado_actividad_academica ha cambiado
-#     if instance.id_estado_tarea_id != instance._original_id_estado_tarea:
-#         # Realiza aquí las acciones que desees cuando el campo cambie
-#         # Puedes acceder a instance.id_estado_tarea para obtener el nuevo valor y
-#         # instance.id_estado_tarea para obtener el valor anterior
+            #traemos del user del solicitante
+            ins_solicitante= Persona.objects.get(id= instance.id_persona_alta.id)
+            ins_encargado= Persona.objects.get(id= instance.id_persona_responsable.id)
+            tipo= ''
+            nombre_actividad= ''
+            title= ''
+            id_actividad= ''
+            cita_existente_tutoria= None
+            cita_existente_orrientacion= None
+            print(ins_solicitante)
+            print(ins_encargado)
+            
+            #Verificamos si existe una cita relacionada
+             #Verificamos si existe una cita relacionada
+            if instance.id_tutoria is not None:
+                cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria.id_tutoria.id_actividad_academica).first()
+            elif instance.id_orientacion_academica is not None:
+                cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica).first()
+            
+            if cita_existente_tutoria is not None:
+                print('entro en cita tutoria')
+                tipo= 'tarea_cita_tutoria'
+                nombre_actividad= 'Tarea de cita de Tutoría'
+                id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
+                    
+            elif cita_existente_orrientacion is not None:
+                print('entro en cita orientacion')
+                id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                tipo= 'tarea_cita_orientacion'
+                nombre_actividad= 'Tarea de cita de Orientación Académica'
+                    
+            elif instance.id_tutoria != None:
+                print('entro en tutoria')
+                id_actividad= instance.id_tutoria.id_tutoria
+                tipo= 'tarea_tutoria'
+                nombre_actividad= 'Tarea de Tutoría'
+                
+            elif instance.id_orientacion_academica != None:
+                print('entro en orientacion')
+                id_actividad= instance.id_orientacion_academica.id_orientacion_academica
+                tipo= 'tarea_orientacion'
+                nombre_actividad= 'Tarea de Orientación Académica'                    
+            
+            #preguntamos si es que la persona que modifico es diferente de la solicitante avisar al solicitante
+            if instance.id_persona_ultima_modificacion !=  instance.id_persona_alta:
+                ins_persona_modificacion= Persona.objects.get(id= instance.id_persona_ultima_modificacion.id)
+                originador= ins_persona_modificacion.usuario.all().first()
+                print(originador)
+                destinatario = ins_solicitante.usuario.all().first()
+                print(destinatario)
+                destino= destinatario.email
+                
+                if instance.id_estado_tarea.descripcion_estado_tarea == 'Cancelada':
+                    contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue cancelada.</a> <br> Atte equipo AcOms.'
+                    title = nombre_actividad + ' cancelada.'
+                    enviarcorreo(title, contenido, destino)
+                    notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                
+                elif instance.id_estado_tarea.descripcion_estado_tarea == 'Iniciada':
+                    contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue confirmada.</a> <br> Atte equipo AcOms.'
+                    title = nombre_actividad + ' iniciada.'
+                    enviarcorreo(title, contenido, destino)
+                    notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                    
+                    
+                elif instance.id_estado_tarea.descripcion_estado_tarea == 'Finalizada':
+                    contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue finalizada.</a> <br> Atte equipo AcOms.'
+                    title = nombre_actividad + ' finalizada.'
+                    enviarcorreo(title, contenido, destino)
+                    notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+            else:
+                print('no notifico a nadie')
+        else:
+            print('no detecto cambio')
+    else:
+        print('no entro ')
         
-#         #preguntamos si es que la persona que modifico es diferente de la solicitante avisar al encargado
-#         if instance.id_persona_ultima_modificacion !=  instance.instance.id_persona_alta:
-            
-#             originador= ins_solicitante.usuario.all().first()
-#             destinatario = ins_encargado.usuario.all().first()
-            
-#             if instance.id_estado_tarea.descripcion_estado_actividad_academica == 'Cancelada':
-#                 title = nombre_actividad + ' cancelada.'
-#                 notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
-            
-#             elif instance.id_estado_tarea.descripcion_estado_actividad_academica == 'Iniciada':
-#                 title = nombre_actividad + 'iniciada.'
-#                 notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
-                
-#             elif instance.id_estado_tarea.descripcion_estado_actividad_academica == 'Finalizada':
-#                 title = nombre_actividad + ' finalizada.'
-#                 notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
-                
-#     else:
-#         #significa que se trata de un nuevo registro
-#         if (instance.id_estado_tarea.descripcion_estado_actividad_academica == 'Pendiente' or instance.id_estado_tarea.descripcion_estado_actividad_academica == 'Iniciada'):
-            
-#             #preguntamos si es que la persona que solicito es diferente de la encargada entonces avisar al encargado
-#             if instance.id_persona_responsable !=  instance.instance.id_persona_alta:
-                
-#                 originador= ins_solicitante.usuario.all().first()
-#                 destinatario = ins_encargado.usuario.all().first()
-                
-#                 title = 'Te asignaron una tarea en una ' + nombre_actividad
-#                 notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
-
-# post_save.connect(detectar_cambio_estado_tarea, sender= Tarea)
+pre_save.connect(detectar_cambio_estado_tarea, sender= Tarea)
 
 #configurar el setting.py, crear logica de envio de correo, obtener el mail del token
 def enviarcorreo(asunto, contenido, destinatario):
