@@ -27,9 +27,16 @@ tr.shown td.details-control {
 .notification-list {
   background-color: #e9e9e9e1; /* Color gris de fondo */
   padding: 10px; /* Espacio interno para el fondo gris */
-  list-style: none; /* Elimina las viñetas predeterminadas */
+  /*list-style: none;  Elimina las viñetas predeterminadas */
 }
 
 .notification-list li {
   margin-bottom: 10px; /* Espacio entre elementos de la lista */
+}
+
+
+.notification-lista {
+  background-color: #e9e9e9c0; /* Color gris de fondo */
+  padding: 10px; /* Espacio interno para el fondo gris */
+  list-style: none;  /*Elimina las viñetas predeterminadas */
 }
