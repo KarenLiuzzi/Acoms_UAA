@@ -2,8 +2,12 @@ from django.contrib import admin
 from calendarapp import models
 from calendarapp.models.event import EstadoActividadAcademica, Event,UnidadMedida,Tutoria , OrientacionAcademica , Cita,EstadoTarea, Parametro, TipoTarea, TipoTutoria, TipoOrientacionAcademica, Motivo #,DetalleActividadAcademica
 from calendarapp.models.calendario import Dia, Semestre, HorarioSemestral, Convocatoria
+from django.contrib.auth.models import Permission
 
 #registramos nuestros modelos en la pantalla de admin
+
+admin.site.register(Permission)
+
 
 @admin.register(Dia)
 class DiaAdmin(admin.ModelAdmin):
@@ -226,3 +230,5 @@ class OrientacionAcademicaAdmin(admin.ModelAdmin):
 #     model = models.EventMember
 #     list_display = ["id", "event", "user", "created_at", "updated_at"]
 #     list_filter = ["event"]
+
+

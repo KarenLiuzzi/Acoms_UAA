@@ -41,6 +41,7 @@
               </div>
 
               <div id="calendar"></div>
+              {% comment %} {{ tipo_usuario.tipo_usuario }} {% endcomment %}
               </div>
 
               <!-- Elementos de modal -->
@@ -251,10 +252,11 @@
             var curso = info.event.extendedProps.curso;
             var tipo = info.event.extendedProps.tipo;
             var participantes = info.event.extendedProps.participantes;
+            var tipo_usuario= info.event.extendedProps.tipo_usuario;
             
 
             // Mostrar el modal con los detalles del evento
-            mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita);
+            mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita, tipo_usuario);
 
           },
 
@@ -373,7 +375,7 @@
         calendar.render();
       });
 
-      function mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita) {
+      function mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita, tipo_usuario) {
         // Obtener el modal
 
         var modal = document.getElementById('eventModal')
@@ -461,57 +463,65 @@
         if (tipo == 'Orientacion Académica'){
 
           if (estado == "Pendiente") {
-            // Crear un nuevo elemento <a> para editar
-            const link = document.createElement("a");
-            link.className = "btn btn-primary mt-2";
-            link.id = "editar_ori_academica";
-            link.href = '/modificar_cita_ori_academica/'+ id_cita; // Agrega aquí la URL deseada
-            link.title = "Editar";
 
-            // Crear un nuevo elemento <i> para el icono
-            const icon = document.createElement("i");
-            icon.className = "bi bi-pencil-fill"; // Clase para el icono 
+            //habilitar solo al usuario normal
+            if (tipo_usuario== "normal"){
+              // Crear un nuevo elemento <a> para editar
+              const link = document.createElement("a");
+              link.className = "btn btn-primary mt-2";
+              link.id = "editar_ori_academica";
+              link.href = '/modificar_cita_ori_academica/'+ id_cita; // Agrega aquí la URL deseada
+              link.title = "Editar";
 
-            // Agregar el icono al elemento <a>
-            link.appendChild(icon);
+              // Crear un nuevo elemento <i> para el icono
+              const icon = document.createElement("i");
+              icon.className = "bi bi-pencil-fill"; // Clase para el icono 
 
-            // Agregar el nuevo elemento <a> al <div>
-            container.appendChild(link);
+              // Agregar el icono al elemento <a>
+              link.appendChild(icon);
 
-            // Crear un nuevo elemento <a> para iniciar cita  
-            const newLinkIniciarOripend = document.createElement("a");
-            newLinkIniciarOripend.className = "btn btn-primary mt-2";
-            newLinkIniciarOripend.id = "iniciar_cita_orientacion";
-            newLinkIniciarOripend.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
-            newLinkIniciarOripend.title = "Iniciar Cita";
-  
-            // Crear un nuevo elemento <i> para el icono
-            const newIconIniciarOripend = document.createElement("i");
-            newIconIniciarOripend.className = "bi bi-caret-right-fill"; // Clase para el icono 
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(link);
+            } else {
+              // Crear un nuevo elemento <a> para iniciar cita  
+              const newLinkIniciarOripend = document.createElement("a");
+              newLinkIniciarOripend.className = "btn btn-primary mt-2";
+              newLinkIniciarOripend.id = "iniciar_cita_orientacion";
+              newLinkIniciarOripend.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
+              newLinkIniciarOripend.title = "Iniciar Cita";
+    
+              // Crear un nuevo elemento <i> para el icono
+              const newIconIniciarOripend = document.createElement("i");
+              newIconIniciarOripend.className = "bi bi-caret-right-fill"; // Clase para el icono 
 
-            // Agregar el icono al elemento <a>
-            newLinkIniciarOripend.appendChild(newIconIniciarOripend);
+              // Agregar el icono al elemento <a>
+              newLinkIniciarOripend.appendChild(newIconIniciarOripend);
 
-            // Agregar el nuevo elemento <a> al <div>
-            container.appendChild(newLinkIniciarOripend);
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkIniciarOripend);
+            }
 
           } else if (estado == "Confirmado"){
-            // Crear un nuevo elemento <a> para iniciar cita  
-            const newLinkIniciarOriconf = document.createElement("a");
-            newLinkIniciarOriconf.className = "btn btn-primary mt-2";
-            newLinkIniciarOriconf.id = "iniciar_cita_orientacion";
-            newLinkIniciarOriconf.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
-            newLinkIniciarOriconf.title = "Iniciar Cita";
+            //habilitar solo al usuario staff
+            if (tipo_usuario== "staff") {
 
-            // Crear un nuevo elemento <i> para el icono
-            const newIconIniciarOriconf = document.createElement("i");
-            newIconIniciarOriconf.className = "bi bi-caret-right-fill"; // Clase para el icono 
+              // Crear un nuevo elemento <a> para iniciar cita  
+              const newLinkIniciarOriconf = document.createElement("a");
+              newLinkIniciarOriconf.className = "btn btn-primary mt-2";
+              newLinkIniciarOriconf.id = "iniciar_cita_orientacion";
+              newLinkIniciarOriconf.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
+              newLinkIniciarOriconf.title = "Iniciar Cita";
 
-            // Agregar el icono al elemento <a>
-            newLinkIniciarOriconf.appendChild(newIconIniciarOriconf);
+              // Crear un nuevo elemento <i> para el icono
+              const newIconIniciarOriconf = document.createElement("i");
+              newIconIniciarOriconf.className = "bi bi-caret-right-fill"; // Clase para el icono 
 
-            // Agregar el nuevo elemento <a> al <div>
-            container.appendChild(newLinkIniciarOriconf);
+              // Agregar el icono al elemento <a>
+              newLinkIniciarOriconf.appendChild(newIconIniciarOriconf);
+
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkIniciarOriconf);
+            }
           }
 
         }
@@ -519,66 +529,69 @@
         if (tipo == 'Tutoría'){
 
           if (estado == "Pendiente") {
-            // Crear un nuevo elemento <a> para editar
-            const link = document.createElement("a");
-            link.className = "btn btn-primary mt-2";
-            link.id = "editar_tutoria";
-            link.href = '/modificarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
-            link.title = "Editar";
+             //habilitar solo al usuario normal
+            if (tipo_usuario== "normal"){
+              // Crear un nuevo elemento <a> para editar
+              const link = document.createElement("a");
+              link.className = "btn btn-primary mt-2";
+              link.id = "editar_tutoria";
+              link.href = '/modificarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
+              link.title = "Editar";
 
-            // Crear un nuevo elemento <i> para el icono
-            const icon = document.createElement("i");
-            icon.className = "bi bi-pencil-fill"; // Clase para el icono 
+              // Crear un nuevo elemento <i> para el icono
+              const icon = document.createElement("i");
+              icon.className = "bi bi-pencil-fill"; // Clase para el icono 
 
-            // Agregar el icono al elemento <a>
-            link.appendChild(icon);
+              // Agregar el icono al elemento <a>
+              link.appendChild(icon);
 
-            // Agregar el nuevo elemento <a> al <div>
-            container.appendChild(link);
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(link);
+            } else {
+              // Crear un nuevo elemento <a> para iniciar cita  
+              const newLinkIniciarOripend = document.createElement("a");
+              newLinkIniciarOripend.className = "btn btn-primary mt-2";
+              newLinkIniciarOripend.id = "iniciar_cita_orientacion";
+              newLinkIniciarOripend.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
+              newLinkIniciarOripend.title = "Iniciar Cita";
+    
+              // Crear un nuevo elemento <i> para el icono
+              const newIconIniciarOripend = document.createElement("i");
+              newIconIniciarOripend.className = "bi bi-caret-right-fill"; // Clase para el icono 
 
-            // Crear un nuevo elemento <a> para iniciar cita  
-            const newLinkIniciarOripend = document.createElement("a");
-            newLinkIniciarOripend.className = "btn btn-primary mt-2";
-            newLinkIniciarOripend.id = "iniciar_cita_orientacion";
-            newLinkIniciarOripend.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
-            newLinkIniciarOripend.title = "Iniciar Cita";
-  
-            // Crear un nuevo elemento <i> para el icono
-            const newIconIniciarOripend = document.createElement("i");
-            newIconIniciarOripend.className = "bi bi-caret-right-fill"; // Clase para el icono 
+              // Agregar el icono al elemento <a>
+              newLinkIniciarOripend.appendChild(newIconIniciarOripend);
 
-            // Agregar el icono al elemento <a>
-            newLinkIniciarOripend.appendChild(newIconIniciarOripend);
-
-            // Agregar el nuevo elemento <a> al <div>
-            container.appendChild(newLinkIniciarOripend);
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkIniciarOripend);
+            }
 
           } else if (estado == "Confirmado"){
-            // Crear un nuevo elemento <a> para iniciar cita  
-            const newLinkIniciarOriconf = document.createElement("a");
-            newLinkIniciarOriconf.className = "btn btn-primary mt-2";
-            newLinkIniciarOriconf.id = "iniciar_cita_tutoria";
-            newLinkIniciarOriconf.href = '/iniciarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
-            newLinkIniciarOriconf.title = "Iniciar Cita";
+            //habilitar solo al usuario staff
+            if (tipo_usuario== "staff") {
+              // Crear un nuevo elemento <a> para iniciar cita  
+              const newLinkIniciarOriconf = document.createElement("a");
+              newLinkIniciarOriconf.className = "btn btn-primary mt-2";
+              newLinkIniciarOriconf.id = "iniciar_cita_tutoria";
+              newLinkIniciarOriconf.href = '/iniciarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
+              newLinkIniciarOriconf.title = "Iniciar Cita";
 
-            // Crear un nuevo elemento <i> para el icono
-            const newIconIniciarOriconf = document.createElement("i");
-            newIconIniciarOriconf.className = "bi bi-caret-right-fill"; // Clase para el icono 
+              // Crear un nuevo elemento <i> para el icono
+              const newIconIniciarOriconf = document.createElement("i");
+              newIconIniciarOriconf.className = "bi bi-caret-right-fill"; // Clase para el icono 
 
-            // Agregar el icono al elemento <a>
-            newLinkIniciarOriconf.appendChild(newIconIniciarOriconf);
+              // Agregar el icono al elemento <a>
+              newLinkIniciarOriconf.appendChild(newIconIniciarOriconf);
 
-            // Agregar el nuevo elemento <a> al <div>
-            container.appendChild(newLinkIniciarOriconf);
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkIniciarOriconf);
+            }
           }
-
         }
-
 
         // Abrir el modal
         modal.style.display = 'block'
         //calendar.unselect()
-
       }
 
       const closeBtn1 = document.getElementById('modalClose1');

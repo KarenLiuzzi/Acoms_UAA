@@ -10,7 +10,8 @@ from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
 import calendar
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin 
+from calendarapp.mixins import ValidatePermissionRequiredMixin
 from django.urls import reverse_lazy, reverse
 from calendarapp.models.event import DetalleActividadAcademica
 from calendarapp.models.calendario import HorarioSemestral, Dia, Convocatoria
@@ -140,8 +141,24 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
         forms = self.form_class()
         #events = Event.objects.get_all_events(user=request.user)
         events = Event.objects.get_all_events()
-        #events_month = Event.objects.get_running_events(user=request.user)
-        events_month = Event.objects.get_running_events(tipo_cita= '')
+        #events_month = Eveont.objects.get_running_events(user=request.user)
+        current_user = request.user
+        usuario= model_to_dict(current_user)
+        ins_persona= Persona.objects.get(id= usuario["id_persona"])
+        tipo_usuario= {}
+        #comprobamos que el usuario logeado sea  o funcionario/docente o alumno
+        if current_user.has_perm('calendarapp.iniciar_cita'):
+            tipo_usuario= {'tipo_usuario': 'staff'}
+            #si es funcionario/docente solo pueden ver las citas que fueron asignadas a ellos
+            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+            events= events.filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+        else:
+            tipo_usuario= {'tipo_usuario': 'normal'}
+            #los que son usuarios normales deben ver solo las citas que fueron generadas por ellos
+            #events= events.filter(id_cita__id_persona_solicitante= ins_persona)
+            events= events.filter(id_cita__id_persona_alta= ins_persona)
+            
+        #events_month = Event.objects.get_running_events(tipo_cita= '')
         event_list = []
         # start: '2020-09-16T16:00:00'
         for event in events:
@@ -260,13 +277,13 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     "observacion":observacion, 
                     "curso": curso,
                     "tipo": tipo,
-                    "participantes": participantes_lista
+                    "participantes": participantes_lista,
+                    "tipo_usuario": tipo_usuario['tipo_usuario']
                 }
                 
             )
             #print(event.id_cita.id_actividad_academica)
-        context = {"form": forms, "events": event_list,
-                   "events_month": events_month}
+        context = {"form": forms, "events": event_list, "tipo_usuario": tipo_usuario}
         return render(request, self.template_name, context)
 
     #descomentar una vez que este hecho el form de evento
@@ -1568,13 +1585,13 @@ class CitaOrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
 
 
 #Clase de ininciar una cita tipo Tutoria
-class CitaTutoriaIniciarView(LoginRequiredMixin, UpdateView):
+class CitaTutoriaIniciarView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,UpdateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/iniciar_cita_tutoria.html'
     success_url = 'running-event-list/tutoria/'
-    #permission_required = 'erp.change_sale'
-    url_redirect = success_url
+    permission_required = 'calendarapp.iniciar_cita'
+    #url_redirect = success_url
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -1750,13 +1767,13 @@ class CitaTutoriaIniciarView(LoginRequiredMixin, UpdateView):
 
 
 #Clase parta iniciar una cita tipo Orientacion Academica
-class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, UpdateView):
+class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/iniciar_cita_orientacion_academica.html'
     success_url = 'running-event-list/orientacionAcademica/'
-    #permission_required = 'erp.change_sale'
-    url_redirect = success_url
+    permission_required = 'calendarapp.iniciar_cita'
+    #url_redirect = success_url
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -2220,13 +2237,13 @@ def obtener_horarios_cita(request):
 
 
 #clase de creacion para una actividad academica de tipo tutoria
-class TutoriaCreateView(LoginRequiredMixin, CreateView):
+class TutoriaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,CreateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/tutoria_create.html'
     success_url = 'running-acti_academ-list/Tutoria/' #reverse_lazy('calendarapp:calenders')
-    #permission_required = 'erp.add_sale'
-    url_redirect = success_url
+    permission_required = 'calendarapp.registrar_actividad_academica'
+    #url_redirect = success_url
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -2462,13 +2479,13 @@ class TutoriaCreateView(LoginRequiredMixin, CreateView):
     
     
 #clase de creacion para una actividad academica de tipo orientacion academica
-class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
+class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,CreateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/orientacion_academica_create.html'
     success_url = 'running-acti_academ-list/OriAcademica/' #reverse_lazy('calendarapp:calenders')
-    #permission_required = 'erp.add_sale'
-    url_redirect = success_url
+    permission_required = 'calendarapp.registrar_actividad_academica'
+    #url_redirect = success_url
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -2720,13 +2737,13 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
     
     
 #Clase de editar de una actividad academica tipo Tutoria
-class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
+class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,UpdateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/tutoria_edit.html'
     success_url = 'running-acti_academ-list/Tutoria/'
-    #permission_required = 'erp.change_sale'
-    url_redirect = success_url
+    permission_required = 'calendarapp.editar_actividad_academica'
+    #url_redirect = success_url
     
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -3154,13 +3171,13 @@ class TutoriaUpdateView(LoginRequiredMixin, UpdateView):
     
 
 #Clase de editar de una actividad academica tipo Orientación Académica
-class OrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
+class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,UpdateView):
     model = Event
     form_class = ActividadAcademicaForm
     template_name = 'calendarapp/orientacion_academica_edit.html'
     success_url = 'running-acti_academ-list/OriAcademica/'
-    #permission_required = 'erp.change_sale'
-    url_redirect = success_url
+    permission_required = 'calendarapp.editar_actividad_academica'
+    #url_redirect = success_url
     
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -3754,12 +3771,3 @@ def AddTarea(request):
                data= json.dumps([{"name": 500}])
                return HttpResponse(data)
            
-           
-           
-# TutoriaUpdateView listo
-# tutoria_edit
-
-# OrientacionAcademicaUpdateView listo
-# orientacion_academica_edit
-
-# editar estos para ver como hacer la edicion de tarea y poder notificar correctamente las tareas

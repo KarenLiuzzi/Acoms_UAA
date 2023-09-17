@@ -10,6 +10,8 @@ from itertools import chain
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 """models.Manager es una clase de Django que proporciona un mecanismo para realizar consultas a la base de datos y realizar operaciones en los modelos de manera más fácil y eficiente. Cada modelo de Django tiene al menos un objeto Manager asociado a él de forma predeterminada.
 
@@ -139,13 +141,13 @@ class Event(EventAbstract):
     
     """Este código Django define un método get_html_url dentro de un modelo de la aplicación calendarapp. Este método utiliza el decorador @property para indicar que se trata de una propiedad calculada dinámicamente, en lugar de un campo de base de datos almacenado en la instancia del modelo.
 
-El propósito del método get_html_url es devolver un enlace HTML que apunte a la página de detalles de un evento. En la primera línea, se utiliza la función reverse de Django para construir la URL de la página de detalles del evento, especificando el nombre de la vista event-detail y el ID del evento actual (self.id) como argumentos.
+    El propósito del método get_html_url es devolver un enlace HTML que apunte a la página de detalles de un evento. En la primera línea, se utiliza la función reverse de Django para construir la URL de la página de detalles del evento, especificando el nombre de la vista event-detail y el ID del evento actual (self.id) como argumentos.
 
-Luego, se utiliza una cadena de formato de f-string para construir la etiqueta HTML de anclaje (<a>) que incluirá el título del evento (self.title) y la URL de la página de detalles. La URL se incrusta en la cadena de formato mediante llaves ({}) y la expresión de formato {url}.
+    Luego, se utiliza una cadena de formato de f-string para construir la etiqueta HTML de anclaje (<a>) que incluirá el título del evento (self.title) y la URL de la página de detalles. La URL se incrusta en la cadena de formato mediante llaves ({}) y la expresión de formato {url}.
 
-Finalmente, el método devuelve la cadena de la etiqueta HTML completa con el enlace al detalle del evento.
+    Finalmente, el método devuelve la cadena de la etiqueta HTML completa con el enlace al detalle del evento.
 
-Este método puede ser utilizado por otros componentes de la aplicación que necesiten representar los eventos en forma de enlaces HTML. Por ejemplo, puede ser utilizado para generar enlaces de eventos en una vista de calendario o en una lista de eventos."""
+    Este método puede ser utilizado por otros componentes de la aplicación que necesiten representar los eventos en forma de enlaces HTML. Por ejemplo, puede ser utilizado para generar enlaces de eventos en una vista de calendario o en una lista de eventos."""
 
     # @property
     # def get_html_url(self):
@@ -154,8 +156,8 @@ Este método puede ser utilizado por otros componentes de la aplicación que nec
     
     class Meta:
         verbose_name_plural = "Actividades Academicas"
-
-
+        #permisos personalizados
+        permissions= [('iniciar_cita', 'Iniciar cita'), ('finalizar_cita', 'Finalizar cita' ), ('editar_cita', 'Editar cita'), ('cancelar_cita', 'Cancelar cita'), ('confirmar_cita', 'Confirmar cita'), ('registrar_cita', 'registar cita'), ('editar_actividad_academica', 'Editar Actividad Academica'), ('registrar_actividad_academica', 'Registrar Actividad Academica'), ('cancelar_actividad_academica', 'Cancelar Actividad Academica'), ('finalizar_actividad_academica', 'Finalizar Actividad Academica')]
 
 class DetalleActividadAcademica(models.Model):
     id_detalle_actividad_Academica= models.AutoField(primary_key=True)
@@ -334,6 +336,11 @@ class Tarea(models.Model):
 from django.db.models.signals import post_save, pre_save
 from notify.signals import notificar
 
+#websocket
+# from channels.layers import get_channel_layer
+# from asgiref.sync import async_to_sync
+
+
 def notify_cita(sender, instance, created, **kwargs):
 
     try:
@@ -351,11 +358,22 @@ def notify_cita(sender, instance, created, **kwargs):
             id_actividad= instance.id_cita.id_actividad_academica
 
             notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= 'cita_tutoria' , id_tipo= id_actividad)
-    
+            # enviar_notificacion_a_usuario(encargado.id, 'notificar')
+            
     except:
         print('error')
     
 post_save.connect(notify_cita, sender= Cita)
+
+# def enviar_notificacion_a_usuario(user_id, message):
+#     channel_layer = get_channel_layer()
+#     channel_name = f"user_{user_id}"
+#     # Usa async_to_sync para añadir la conexión actual al grupo de canales
+#     async_to_sync(channel_layer.group_add)(channel_name, channel_layer.channel_name)
+#     async_to_sync(channel_layer.group_send)(channel_name, {
+#         "type": "send_notification",
+#         "message": message,
+#     })
 
 #cambia el estado de Event 
 def detectar_cambio_estado(sender, instance, **kwargs):

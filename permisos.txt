@@ -1,0 +1,52 @@
+en el calendario
+
+los que son usuarios normales deben ver solo las citas que fueron generadas por ellos
+
+si es funcionario/docente solo pueden ver las citas que fueron asignadas a ellos
+
+en las citas
+
+usuarios normales solo podran ver, cancelar y editar la cita 
+
+
+funcionario docente podra ver e iniciar, finalizar, confirmar y cancelar la cita pero no editar 
+
+
+en la lista de citas los normales veran los solicitados por ellos mismos (con los botones de registrar cita)
+
+los funcionarios veran los asignados a ellos (sin ver los botones de registrar cita)
+
+en la lsita de actividades academica 
+lkos normales podran ver los que fueron cargados como solicitantes (sin ver botones de agregar tutoria u orientacion)
+
+en los funcionarios podran ver los que fueron cargados por ellos mismos viendo los botones de agregar tutoria y orientacio
+
+
+administrar calendario solo los funcionarios
+ en las tareas 
+los usuarios normales podran ver las tareas en donde ya sea, cita, tutoria, orientacion fueron solicitados por ellos mismos
+o estan como encargados en las tareas mismas
+
+
+los funcionarios podran ver las tareas donde ya sea cita, tutoria, orientacion fueron encargados o bien 
+ellos estan como encargados en las tareas mismas  
+
+
+en la vista del dashboard 
+
+el boton de registrar cita solo sera habilitado al usuaio normal 
+el boton de registrar actividad solo para el funcionario
+
+y la lista para los ususario normales podran ver los que fueron solicitados por ellos mismos
+
+y la lista para los funcionarios podran ver los que fueron encargados 
+
+
+
+en los numeros de arriba podemos poner tres filas 
+una para citas
+
+otra para tutorias
+
+otra para orientaciones 
+
