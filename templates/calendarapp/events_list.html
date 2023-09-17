@@ -10,14 +10,16 @@
 <div class="row">
     <div class="col-md-12">
         <div class="tile">
+            
+            {% if perms.calendarapp.iniciar_cita == False  %}
+                <div>
+                    <button type="button" class="btn btn-primary mt-2" hx-get="{% url 'calendarapp:tipo_cita' %}" hx-target="#dialog" >
+                        Registrar Cita
+                    </button>
 
-            <div>
-                <button type="button" class="btn btn-primary mt-2" hx-get="{% url 'calendarapp:tipo_cita' %}" hx-target="#dialog" >
-                    Registrar Cita
-                </button>
-
-            </div>
-            <br>
+                </div>
+                <br>
+            {% endif %}
 
             <div class="tile-body">
                 <div class="table-responsive">
@@ -84,23 +86,39 @@
                                                         
                                                         <!-- Button trigger modal -->
                                                         {% if event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' and event.es_tutoria  %}
-                                                            <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
-                                                            <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            <button type="button" class="btn btn-primary" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-calendar-check"></i> </button>
+                                                            
+                                                            {% if perms.calendarapp.iniciar_cita  %}
+                                                                <button type="button" class="btn btn-primary" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-calendar-check"></i> </button>
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {% else %}
+                                                                <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {%endif%}
 
                                                         {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmado' and event.es_tutoria %}
-                                                            <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i> </a>
-                                                            <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                                
+                                                            {% if perms.calendarapp.iniciar_cita  %}
+                                                                <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i> </a>
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {% else %}
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {%endif%}
+
                                                         {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' and event.es_orientacion_academica %}
-                                                            <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
-                                                            <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            <button type="button" class="btn btn-primary" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-calendar-check"></i> </button>
-                                                        
+                                                            {% if perms.calendarapp.iniciar_cita  %}
+                                                                <button type="button" class="btn btn-primary" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-calendar-check"></i> </button>
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {% else %}
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                                <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
+                                                            {%endif%}
+
                                                         {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmado' and event.es_orientacion_academica %}
-                                                        <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i> </a>
-                                                        <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            
+                                                            {% if perms.calendarapp.iniciar_cita  %}
+                                                                <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i> </a>
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {% else %}
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {% endif %}
                                                         {% else %}
                                                             <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
                                                             <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button>

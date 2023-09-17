@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "calendarapp.apps.CalendarappConfig",
     "accounts.apps.AccountsConfig",
     "notify.apps.NotifyConfig",
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,12 @@ PASSWORD_RESET_TIMEOUT = 86400
 # LOGOUT_REDDIRECT_URL= '/login/'
 
 LOGIN_URL= '/login/'
+
+
+WSGI_APPLICATION = "eventcalendar.wsgi.application"
+
+CHANNEL_LAYERS = {
+    'default':{
+        'BACKEND':'channels.layers.InMemoryChannelLayer'
+    }
+}
