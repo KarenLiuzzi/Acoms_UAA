@@ -11,7 +11,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
-
+from accounts.models.user import FuncionarioDocente
+from itertools import chain
 class AllEventsListView(ListView):
     """ All event list views """
 
@@ -19,8 +20,16 @@ class AllEventsListView(ListView):
     model = Event
 
     def get_queryset(self):
-        #return Event.objects.get_all_events(user=self.request.user)
-        return Event.objects.get_all_events()
+        request = self.request
+        current_user= request.user
+        dict = model_to_dict(current_user)
+        ins_persona=  Persona.objects.get(id= dict["id_persona"])
+         #devolvemos solo aquellos registros que correspondan al usuario logeado
+        if current_user.has_perm('calendarapp.iniciar_cita'):
+            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+            return Event.objects.get_all_events().filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+        else:
+            return Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona)
 
 class ActividadesAcademicasListView(ListView):
     """ All event list views """
@@ -31,7 +40,27 @@ class ActividadesAcademicasListView(ListView):
 
     def get_queryset(self):
         #return Event.objects.get_all_events(user=self.request.user)
-        return Event.objects.get_all_acti_academ()
+        #return Event.objects.get_all_acti_academ()
+        request = self.request
+        current_user= request.user
+        dict = model_to_dict(current_user)
+        ins_persona=  Persona.objects.get(id= dict["id_persona"])
+        events= []
+         #devolvemos solo aquellos registros que correspondan al usuario logeado
+        if current_user.has_perm('calendarapp.iniciar_cita'):
+            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+            tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
+            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
+            # Combinar los dos querysets en una sola variable
+            events= list(chain(tutorias, orientaciones))
+        
+        else:
+            tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+            # Combinar los dos querysets en una sola variable
+            events= list(chain(tutorias, orientaciones))        
+        return events
+        
 
 class RunningEventsListView(ListView):
     """ Running events list view """
@@ -41,8 +70,18 @@ class RunningEventsListView(ListView):
 
     def get_queryset(self):
         parametro = self.kwargs['tipo_cita']
+        request = self.request
+        current_user= request.user
+        dict = model_to_dict(current_user)
+        ins_persona=  Persona.objects.get(id= dict["id_persona"])
+        #devolvemos solo aquellos registros que correspondan al usuario logeado
+        if current_user.has_perm('calendarapp.iniciar_cita'):
+            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+            return Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+        else:
+            return Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
         #return Event.objects.get_running_events(user=self.request.user) 
-        return Event.objects.get_running_events(tipo_cita= parametro)
+        
     
 class RunningActividadesAcademicasListView(ListView):
     """ Running events list view """
@@ -53,9 +92,36 @@ class RunningActividadesAcademicasListView(ListView):
 
     def get_queryset(self):
         parametro = self.kwargs['tipo_cita']
-        #return Event.objects.get_running_events(user=self.request.user) 
-        return Event.objects.get_running_acti_academ(tipo_cita= parametro)
+        request = self.request
+        current_user= request.user
+        dict = model_to_dict(current_user)
+        ins_persona=  Persona.objects.get(id= dict["id_persona"])
+        running_events= []
+        #devolvemos solo aquellos registros que correspondan al usuario logeado
+        if current_user.has_perm('calendarapp.iniciar_cita'):
+            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+            if parametro == 'Tutoria':
+                running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
+            
+            elif parametro== "OriAcademica":
+                running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
+            else: 
+                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
+                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
+                running_events = list(chain(tutorias, orientaciones))
+        else:
+            if parametro == 'Tutoria':
+                running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+            
+            elif parametro== "OriAcademica":
+                running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+            else: 
+                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+                running_events = list(chain(tutorias, orientaciones))
 
+        return running_events
+    
 def DetalleCita(request, id_cita):
     cita= Cita.objects.filter(id_cita= id_cita).select_related("id_cita").first()
     #detalles pude enviar uno o varios registros

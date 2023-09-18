@@ -162,9 +162,11 @@
 
                         <div class="tile">
                             <div>
-                                <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Tarea">
-                                    <i class="bi bi-plus-lg"></i> Agregar Tarea
-                                </button>
+                                {% if perms.calendarapp.iniciar_cita %}
+                                    <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Tarea">
+                                        <i class="bi bi-plus-lg"></i> Agregar Tarea
+                                    </button>
+                                {% endif %}
                             </div>
                             <br>
                                 <table class="table table-bordered" id="tblTareas">
@@ -191,12 +193,14 @@
         </div>
     </div>
 
-    {% if orientacion_academica.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Iniciada' %}
-        <div class="card-footer">
-            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_tutoria=0 id_ori_academ=orientacion_academica.id_orientacion_academica %}" > <i class="bi bi-x-lg"></i> Cancelar Orientación Académica </button> 
-            <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Finalizar" hx-get="{% url 'calendarapp:finalizar_actividad_academica' id_tutoria=0 id_ori_academ=orientacion_academica.id_orientacion_academica %}"> <i class="bi bi-check-lg"></i> Finalizar Orientación Académica </button> 
-            <a type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Editar" href="{% url 'calendarapp:modificar_orientacion' pk=orientacion_academica.id_orientacion_academica %}"> <i class="bi bi-pencil"></i> Editar Orientación Académica </a>
-        </div>
+    {% if perms.calendarapp.iniciar_cita %}
+        {% if orientacion_academica.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Iniciada' %}
+            <div class="card-footer">
+                <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_tutoria=0 id_ori_academ=orientacion_academica.id_orientacion_academica %}" > <i class="bi bi-x-lg"></i> Cancelar Orientación Académica </button> 
+                <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Finalizar" hx-get="{% url 'calendarapp:finalizar_actividad_academica' id_tutoria=0 id_ori_academ=orientacion_academica.id_orientacion_academica %}"> <i class="bi bi-check-lg"></i> Finalizar Orientación Académica </button> 
+                <a type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Editar" href="{% url 'calendarapp:modificar_orientacion' pk=orientacion_academica.id_orientacion_academica %}"> <i class="bi bi-pencil"></i> Editar Orientación Académica </a>
+            </div>
+        {% endif %}
     {% endif %}
 
     <div id="modaltareas" class="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

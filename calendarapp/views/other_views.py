@@ -3635,10 +3635,16 @@ class TareasView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
     
     def get_datos_tareas(self):
+        
         data = []
         try:
             #obtenemos todos los datos de la instancia acti academ tutoria
-            tareas = Tarea.objects.all()#filter(id_tutoria= self.get_object().id_actividad_academica)
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_persona=  Persona.objects.get(id= dict["id_persona"])
+            #devolvemos solo aquellos registros que correspondan al usuario logeado
+            tareas = Tarea.objects.all().filter(id_persona_responsable= ins_persona)#filter(id_tutoria= self.get_object().id_actividad_academica)
             # Convertir el queryset a JSON en formato de cadena (str)
             tareas_lista= serializers.serialize('json', tareas)
             # Convertir la cadena JSON a un diccionario

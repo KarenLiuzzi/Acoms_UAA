@@ -29,6 +29,7 @@
                                 <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr role="row">
+                                            <th >ID</th>
                                             <th>Fecha</th>
                                             <th>Dia</th>
                                             <th >Horario</th>
@@ -43,6 +44,9 @@
                                         {% for event in object_list %}
                                             <tr role="row" class="odd">
                                                 {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
+                                                <td>
+                                                    {{ event.id_cita }}
+                                                </td>
                                                 <td>{% if event.id_cita.datetime_inicio_real %}
                                                         {{ event.id_cita.datetime_inicio_real|date:"d/m/Y" }}
                                                     {% else %}
@@ -68,7 +72,7 @@
                                                 </td>
 
                                                 <td>{{ event.id_cita.id_funcionario_docente_encargado|title}}
-                                                <td>{{ event.id_cita.id_persona_solicitante.nombre|add:' '|title}}{{ event.id_cita.id_persona_solicitante.apellido|title}}</td>
+                                                <td>{{ event.id_cita.id_persona_alta.nombre|add:' '|title}}{{ event.id_cita.id_persona_alta.apellido|title}}</td>
                                                 <td>
                                                     {% if event.es_tutoria %}
                                                         Tutoría
@@ -120,8 +124,8 @@
                                                                 <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
                                                             {% endif %}
                                                         {% else %}
-                                                            <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
-                                                            <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button>
+                                                            {% comment %} <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
+                                                            <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button> {% endcomment %}
                                                         {% endif %}
                                                         
                                                     </div>

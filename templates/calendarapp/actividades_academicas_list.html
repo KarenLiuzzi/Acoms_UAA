@@ -28,6 +28,7 @@
                                 <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr role="row">
+                                            <th >ID</th>
                                             <th >Fecha</th>
                                             <th >Dia</th>
                                             <th >Horario</th>
@@ -42,6 +43,13 @@
                                         {% for event in lista_actividades %}
                                             <tr role="row" class="odd">
                                                 {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
+                                                <td>
+                                                    {% if event.id_tutoria %}
+                                                            {{ event.id_tutoria }} 
+                                                    {% else %}
+                                                            {{ event.id_orientacion_academica }} 
+                                                    {% endif %}
+                                                </td>
                                                 <td>
                                                     {% if event.id_tutoria %}
                                                         {% if event.id_tutoria.datetime_inicio_real %}
