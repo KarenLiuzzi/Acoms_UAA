@@ -80,6 +80,7 @@
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.141px;">Solicitante</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.312px;">Tipo</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.641px;">Opciones</th> {% endcomment %}
+                                            <th >ID</th>
                                             <th >Fecha</th>
                                             <th >Dia</th>
                                             <th >Horario</th>
@@ -95,6 +96,16 @@
                                         {% for event in running_events %}
                                         <tr role="row" class="odd">
                                             {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
+
+                                            <td>
+                                                {% if event.id_cita %}
+                                                    {{ event.id_cita }}
+                                                {% elif event.id_tutoria %}
+                                                    {{ event.id_tutoria }}
+                                                {% else %}
+                                                    {{ event.id_orientacion_academica }}
+                                                {% endif %} 
+                                            </td>
                                             
                                             <td>
                                                 {% if event.id_cita %}
@@ -189,13 +200,13 @@
                                             </td>
                                             <td>
                                                 {% if event.id_cita %}
-                                                    {{ event.id_cita.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ event.id_cita.id_funcionario_docente_encargado|title }}
+                                                    {{ event.id_cita.id_funcionario_docente_encargado|title}}
                                                 
                                                 {% elif event.id_tutoria %}
-                                                    {{ event.id_tutoria.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ event.id_tutoria.id_funcionario_docente_encargado|title }}
+                                                    {{ event.id_tutoria.id_funcionario_docente_encargado|title}}
 
                                                 {% else %}
-                                                    {{ event.id_orientacion_academica.id_funcionario_docente_encargado.nombre|add:' '|title}}{{ event.id_orientacion_academica.id_funcionario_docente_encargado|title }}
+                                                    {{ event.id_orientacion_academica.id_funcionario_docente_encargado|title}}
                                                 
                                                 {% endif %}
                                             </td>
@@ -204,10 +215,10 @@
                                                 {% if event.id_cita %}
                                                     {{ event.id_cita.id_persona_alta.nombre|add:' '|title}}{{ event.id_cita.id_persona_alta.apellido|title}}
                                                 {% elif event.id_tutoria %}
-                                                    {{ event.id_tutoria.id_persona_solicitante.nombre|add:' '|title}}{{ event.id_tutoria.id_persona_solicitante.apellido|title}}
+                                                    {{ event.id_tutoria.id_persona_alta.nombre|add:' '|title}}{{ event.id_tutoria.id_persona_alta.apellido|title}}
 
                                                 {% else %}
-                                                    {{ event.id_orientacion_academica.id_persona_solicitante.nombre|add:' '|title}}{{ event.id_orientacion_academica.id_persona_solicitante.apellido|title}}
+                                                    {{ event.id_orientacion_academica.id_persona_alta.nombre|add:' '|title}}{{ event.id_orientacion_academica.id_persona_alta.apellido|title}}
                                                 {% endif %}
                                             </td>
 
