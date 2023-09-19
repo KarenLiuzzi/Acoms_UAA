@@ -7,6 +7,67 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+
+<div class="row">
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small primary coloured-icon">
+            <i class="icon bi bi-check-circle-fill fa-3x"></i>
+            <div class="info">
+                <h5>Tutorias finalizadas</h5>
+                <p><b>{{ datos.tutoria_finalizada }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small info coloured-icon">
+            <i class="icon fa fa-thumbs-o-up fa-3x"></i>
+            <div class="info">
+                <h5>Tutorias iniciadas</h5>
+                <p><b>{{ datos.tutoria_iniciada }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small danger coloured-icon">
+            <i class="icon bi bi-x-circle-fill fa-3x"></i>
+            <div class="info">
+                <h5>Tutorias Canceladas</h5>
+                <p><b>{{ datos.tutoria_cancelada }}</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small primary coloured-icon">
+            <i class="icon bi bi-check-circle-fill fa-3x"></i>
+            <div class="info">
+                <h5>Orientaciones finalizadas</h5>
+                <p><b>{{ datos.orientacion_finalizada }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small info coloured-icon">
+            <i class="icon fa fa-thumbs-o-up fa-3x"></i>
+            <div class="info">
+                <h5>Orientaciones iniciadas</h5>
+                <p><b>{{ datos.orientacion_iniciada }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small danger coloured-icon">
+            <i class="icon bi bi-x-circle-fill fa-3x"></i>
+            <div class="info">
+                <h5>Orientaciones Canceladas</h5>
+                <p><b>{{ datos.orientacion_cancelada }}</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="tile">

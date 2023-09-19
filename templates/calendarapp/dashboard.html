@@ -8,42 +8,42 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-6 col-lg-3">
-        <div class="widget-small primary coloured-icon">
-            <i class="icon fa fa-files-o fa-3x"></i>
-            <div class="info">
-                <h5>Actividades académicas Finalizadas</h5>
-                <p><b>{{ total_event }}</b></p>
+        <div class="col-md-6 col-lg-3">
+            <div class="widget-small primary coloured-icon">
+                <i class="icon bi bi-check-circle-fill fa-3x"></i>
+                <div class="info">
+                    <h5>Citas finalizadas</h5>
+                    <p><b>{{ citas_finalizadas }}</b></p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-        <div class="widget-small info coloured-icon">
-            <i class="icon fa fa-thumbs-o-up fa-3x"></i>
-            <div class="info">
-                <h5>Actividades académicas confirmadas</h5>
-                <p><b>{{ running_events.count }}</b></p>
+        <div class="col-md-6 col-lg-3">
+            <div class="widget-small info coloured-icon">
+                <i class="icon fa fa-thumbs-o-up fa-3x"></i>
+                <div class="info">
+                    <h5>Citas confirmadas</h5>
+                    <p><b>{{ citas_confirmadas }}</b></p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-        <div class="widget-small warning coloured-icon">
-            <i class="icon fa fa-users fa-3x"></i>
-            <div class="info">
-                <h5>Total Participantes</h5>
-                <p><b>10</b></p>
+        <div class="col-md-6 col-lg-3">
+            <div class="widget-small warning coloured-icon">
+                <i class="icon bi bi-hourglass-split fa-3x"></i>
+                <div class="info">
+                    <h5>Citas pendientes</h5>
+                    <p><b>{{ citas_pendientes }}</b></p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-        <div class="widget-small danger coloured-icon">
-            <i class="icon fa fa-star fa-3x"></i>
-            <div class="info">
-                <h5>Actividades académicas Canceladas</h5>
-                <p><b>5</b></p>
+        <div class="col-md-6 col-lg-3">
+            <div class="widget-small danger coloured-icon">
+                <i class="icon bi bi-x-circle-fill fa-3x"></i>
+                <div class="info">
+                    <h5>Citas Canceladas</h5>
+                    <p><b>{{ citas_canceladas }}</b></p>
+                </div>
             </div>
         </div>
-    </div>
     <div class="col-md-12">
         <div class="tile">
 

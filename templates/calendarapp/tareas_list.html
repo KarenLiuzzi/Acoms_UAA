@@ -4,17 +4,49 @@
 {% block content %}
 
 <div class="row">
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small primary coloured-icon">
+            <i class="icon bi bi-check-circle-fill fa-3x"></i>
+            <div class="info">
+                <h5>Tareas finalizadas</h5>
+                <p><b>{{ datos.tarea_finalizada }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small info coloured-icon">
+            <i class="icon fa fa-thumbs-o-up fa-3x"></i>
+            <div class="info">
+                <h5>Tareas iniciadas</h5>
+                <p><b>{{ datos.tarea_iniciada }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small warning coloured-icon">
+            <i class="icon bi bi-hourglass-split fa-3x"></i>
+            <div class="info">
+                <h5>Tareas pendientes</h5>
+                <p><b>{{ datos.tarea_pendiente }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="widget-small danger coloured-icon">
+            <i class="icon bi bi-x-circle-fill fa-3x"></i>
+            <div class="info">
+                <h5>Tareas Canceladas</h5>
+                <p><b>{{ datos.tarea_cancelada }}</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <div class="tile-body">
                 <div class="table-responsive">
                     <div class="tile">
-                        {% comment %} <div>
-                            <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Taarea">
-                                <i class="bi bi-plus-lg"></i> Agregar Tarea
-                            </button>
-                        </div>
-                        <br> {% endcomment %}
-
                         <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                             <div class="row">
                                 <div class="col-sm-12">

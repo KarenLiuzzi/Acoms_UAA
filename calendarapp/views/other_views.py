@@ -3708,10 +3708,31 @@ class TareasView(LoginRequiredMixin, ListView):
         except:
             pass
         return data
+    
+    def get_tareas_medicion(self):
+        data = {}
+        try:
+             #obtenemos todos los datos de la instancia acti academ tutoria
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_persona=  Persona.objects.get(id= dict["id_persona"])
+            tareas= Tarea.objects.all().filter(id_persona_responsable= ins_persona)
+            #devolvemos solo aquellos registros que correspondan al usuario logeado
+            tarea_iniciada =tareas.filter( id_estado_tarea__descripcion_estado_tarea= 'Iniciada').count()
+            tarea_cancelada = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Cancelada').count()
+            tarea_finalizada = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Finalizada').count()
+            tarea_pendiente = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Pendiente').count()
+            data= {'tarea_iniciada': tarea_iniciada, 'tarea_cancelada': tarea_cancelada, 'tarea_finalizada': tarea_finalizada, 'tarea_pendiente': tarea_pendiente}
+        except:
+            pass
+        return data
+    
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tarea'] = json.dumps(self.get_datos_tareas())
+        context['datos'] = self.get_tareas_medicion()
         return context
 
 
