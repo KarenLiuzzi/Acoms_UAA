@@ -19,12 +19,19 @@ class DashboardView(LoginRequiredMixin, View):
         dict = model_to_dict(current_user)
         ins_persona=  Persona.objects.get(id= dict["id_persona"])
         latest_events = Event.objects.all() #filter(user=request.user).order_by("-id")[:10]
-        
+        citas_finalizadas= 0
+        citas_confirmadas= 0
+        citas_canceladas= 0
+        citas_pendientes= 0
         #devolvemos solo aquellos registros que correspondan al usuario logeado
         if current_user.has_perm('calendarapp.iniciar_cita'):
             ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
             #actividades con citas
             citas = Cita.objects.select_related("id_cita").filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+            citas_finalizadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+            citas_confirmadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmado').count()
+            citas_canceladas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelado').count()
+            citas_pendientes= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente').count()
             #tutorias sin citas
             tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
             #orientaciones sin citas
@@ -34,7 +41,11 @@ class DashboardView(LoginRequiredMixin, View):
         else:
              #actividades con citas
             citas = Cita.objects.select_related("id_cita").filter(id_cita__id_persona_alta= ins_persona)
-            #tutorias sin citas
+            citas_finalizadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+            citas_confirmadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmado').count()
+            citas_canceladas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelado').count()
+            citas_pendientes= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente').count()
+            # #tutorias sin citas
             tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
             #orientaciones sin citas
             orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
@@ -45,5 +56,9 @@ class DashboardView(LoginRequiredMixin, View):
             "total_event": events.count(),
             "running_events": running_events,
             "latest_events": latest_events,
+            "citas_finalizadas": citas_finalizadas,
+            "citas_confirmadas": citas_confirmadas,
+            "citas_canceladas": citas_canceladas,
+            "citas_pendientes": citas_pendientes,            
         }
         return render(request, self.template_name, context)
