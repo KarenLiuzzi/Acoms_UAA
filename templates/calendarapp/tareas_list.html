@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-md-6 col-lg-3">
+    <div class="col-md-3 col-lg-2">
         <div class="widget-small primary coloured-icon">
             <i class="icon bi bi-check-circle-fill fa-3x"></i>
             <div class="info">
@@ -13,7 +13,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-lg-3">
+    <div class="col-md-3 col-lg-2">
         <div class="widget-small info coloured-icon">
             <i class="icon fa fa-thumbs-o-up fa-3x"></i>
             <div class="info">
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-lg-3">
+    <div class="col-md-3 col-lg-2">
         <div class="widget-small warning coloured-icon">
             <i class="icon bi bi-hourglass-split fa-3x"></i>
             <div class="info">
@@ -31,12 +31,21 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-lg-3">
+    <div class="col-md-3 col-lg-2">
         <div class="widget-small danger coloured-icon">
             <i class="icon bi bi-x-circle-fill fa-3x"></i>
             <div class="info">
                 <h5>Tareas Canceladas</h5>
                 <p><b>{{ datos.tarea_cancelada }}</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-lg-2">
+        <div class="widget-small warning coloured-icon">
+            <i class="icon bi bi-clock-history fa-3x"></i>
+            <div class="info">
+                <h5>Tareas vencidas</h5>
+                <p><b>{{ datos.tarea_vencida }}</b></p>
             </div>
         </div>
     </div>

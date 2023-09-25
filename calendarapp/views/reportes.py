@@ -187,7 +187,8 @@ def actualizar_campos_reportes(request):
         for item in queryset:
                 if contador == 0:
                     options += f'<option value="">-----------------</option>'
-                    options += f'<option value="{item.id_estado_tarea}">{item.descripcion_estado_tarea} </option>'  
+                    options += f'<option value="{item.id_estado_tarea}">{item.descripcion_estado_tarea} </option>'
+                    options += f'<option value="Vencida">Vencida</option>'  
                     contador += 1
                 else:
                     options += f'<option value="{item.id_estado_tarea}">{item.descripcion_estado_tarea} </option>'     
@@ -202,6 +203,7 @@ def actualizar_campos_reportes(request):
                 if contador == 0:
                     options += f'<option value="">-----------------</option>'
                     options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'
+                    options += f'<option value="Vencida">Vencida</option>'
                     contador += 1
                 else:
                     options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'   
@@ -216,6 +218,7 @@ def actualizar_campos_reportes(request):
                 if contador == 0:
                     options += f'<option value="">-----------------</option>'
                     options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'  
+                    options += f'<option value="Vencida">Vencida</option>'
                     contador += 1
                 else:
                     options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'     
@@ -229,7 +232,8 @@ def actualizar_campos_reportes(request):
         for item in queryset:
                 if contador == 0:
                     options += f'<option value="">-----------------</option>'
-                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'  
+                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>' 
+                    options += f'<option value="Vencida">Vencida</option>' 
                     contador += 1
                 else:
                     options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'     
@@ -287,7 +291,8 @@ class ReporteTutoriaView(TemplateView):
                     #excluimos los que fueron generados por citas
                     queryset = queryset.filter(id_cita= None)
                 else:
-                    pass
+                    #pass
+                    queryset = queryset.exclude(id_cita__isnull=True)
                     
                 if len(start_date) and len(end_date):
                     # Ajusta las fechas para incluir los registros del día completo
@@ -304,7 +309,10 @@ class ReporteTutoriaView(TemplateView):
                     queryset = queryset.filter(id_tutoria__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
 
                 if id_estado:
-                    queryset = queryset.filter(id_tutoria__id_estado_actividad_academica=id_estado)
+                    if id_estado != 'Vencida':
+                        queryset = queryset.filter(id_tutoria__id_estado_actividad_academica=id_estado)
+                    else:
+                        queryset = queryset.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado ', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now())
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_tutoria__id_persona_solicitante=id_persona_solicitante)
@@ -395,7 +403,8 @@ class ReporteOrientacionAcademicaView(TemplateView):
                     #excluimos los que fueron generados por citas
                     queryset = queryset.filter(id_cita= None)
                 else:
-                    pass
+                    #pass
+                    queryset = queryset.exclude(id_cita__isnull=True)
                     
                 if len(start_date) and len(end_date):
                     # Ajusta las fechas para incluir los registros del día completo
@@ -412,7 +421,10 @@ class ReporteOrientacionAcademicaView(TemplateView):
                     queryset = queryset.filter(id_orientacion_academica__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
 
                 if id_estado:
-                    queryset = queryset.filter(id_orientacion_academica__id_estado_actividad_academica=id_estado)
+                    if id_estado != 'Vencida':
+                        queryset = queryset.filter(id_orientacion_academica__id_estado_actividad_academica=id_estado)
+                    else:
+                        queryset = queryset.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado ', 'Finalizado']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now())
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_orientacion_academica__id_persona_solicitante=id_persona_solicitante)
@@ -533,7 +545,10 @@ class ReporteCitasView(TemplateView):
                     queryset = queryset.filter(id_cita__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
 
                 if id_estado:
-                    queryset = queryset.filter(id_cita__id_estado_actividad_academica=id_estado)
+                    if id_estado != 'Vencida':
+                        queryset = queryset.filter(id_cita__id_estado_actividad_academica=id_estado)
+                    else:
+                        queryset = queryset.filter(~Q(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado ', 'Finalizado']), id_cita__datetime_fin_estimado__lte= datetime.now())
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_cita__id_persona_solicitante=id_persona_solicitante)
@@ -616,6 +631,8 @@ class ReporteTareasView(TemplateView):
                 id_estado_tarea = request.POST.get('id_estado_tarea', '')
                 id_tipo_tarea = request.POST.get('id_tipo_tarea', '')
                 tipo_actividad = request.POST.get('tipo_actividad', '')
+                id_persona_alta= request.POST.get('id_persona_alta', '')
+                id_persona_responsable= request.POST.get('id_persona_responsable', '')
                 
                 # Construcción del queryset
                 # Si alguno de los campos no tiene valor, dentro del queryset no se filtran y se obtienen todos los registros que tengan campos 
@@ -660,10 +677,19 @@ class ReporteTareasView(TemplateView):
                     queryset = queryset.filter(datetime_inicio_estimado__range=[start_date, end_date])                
 
                 if id_estado_tarea:
-                    queryset = queryset.filter(id_estado_tarea=id_estado_tarea)
+                    if id_estado_tarea != 'Vencida':
+                        queryset = queryset.filter(id_estado_tarea=id_estado_tarea)
+                    else:
+                        queryset = queryset.filter(~Q(id_estado_tarea__descripcion_estado_tarea__in=['Cancelada', 'Finalizada']), datetime_vencimiento__lte= datetime.now())
 
                 if id_tipo_tarea:
                     queryset = queryset.filter(id_tipo_tarea= id_tipo_tarea)
+                    
+                if id_persona_responsable:
+                    queryset = queryset.filter(id_persona_responsable= id_persona_responsable)
+                    
+                if id_persona_alta:
+                    queryset = queryset.filter(id_persona_alta= id_persona_alta)
                     
                 #preguntamos si existen registros 
                 if queryset.exists():

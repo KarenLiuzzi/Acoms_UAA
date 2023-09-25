@@ -75,8 +75,13 @@
                                 <select name="id_solicitante" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_solicitante" data-select2-id="id_id_solicitante" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="id_tipo_tutoria">Tipo de Tutoría</label>
-                                <select name="id_tipo_tutoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tutoria" data-select2-id="id_id_tipo_tutoria" tabindex="-1" aria-hidden="true"></select>
+                                    <label class="label" for="id_tipo_tutoria">Tipo de Tutoría</label>
+                                <div class="input-group">
+                                    <select name="id_tipo_tutoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tutoria" data-select2-id="id_id_tipo_tutoria" tabindex="-1" aria-hidden="true"></select>
+                                    {% if perms.calendarapp.add_tipotutoria %} 
+                                        <a href="#" id="add_tipo_tutoria" title="Agregar">  <i class="bi bi-plus"></i> </a>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="nombre_trabajo_grado">Nombre de Trabajo</label>
@@ -245,6 +250,36 @@
         </div>
     </div>
 
+
+
+    <div id="modalAddTipoTutoria" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div id="dialog" class="modal-dialog modal-dialog-centered" role="document"> 
+            <div class="modal-content">
+                <div class='modal-header text-center'>
+                    <h3 class="modal-title w-100"> Agregar Tipo Tutoría</h3> 
+                    <button id="cerrarAddtipoTutoria1" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group">
+                            <label class="label" for="descripcion_tipo_tutoria">Tipo de Tutoría:</label>
+                            <textarea placeholder= "Descripcion para el tipo de tutoría..." class="form-control" rows="3" cols="25" name="descripcion_tipo_tutoria" maxlength="500"></textarea>
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cerrarAddtipoTutoria2"> Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="guardarTipoTutoria"> Guardar</button>
+                        </div>  
+
+                    </div>       
+                </div>  
+            </div>
+        </div>
+    </div>
+
 </form>
 
 {% endblock content %}
@@ -293,6 +328,13 @@
         const cerrarmodal2 = document.getElementById('modalClose2');
         const guardarmodal = document.getElementById('modalguardar');
         
+        var add_tutoria= document.getElementById("add_tipo_tutoria");
+        var modalAddTipoTutoria = document.getElementById('modalAddTipoTutoria')
+        const cerrarAddtipoTutoria1 = document.getElementById('cerrarAddtipoTutoria1');
+        const cerrarAddtipoTutoria2 = document.getElementById('cerrarAddtipoTutoria2');
+        const guardarTipoTutoria = document.getElementById('guardarTipoTutoria');
+
+
         var tblTareas;
         var mi_form= $('#tutoria')
         var tblParticipantes;
@@ -1120,6 +1162,80 @@
 
                 return lista_tareas
             }
+
+
+            function limpiar_campos_tipo_tutoria(){
+                $('textarea[name="descripcion_tipo_tutoria"]').val('');
+            }
+
+            add_tutoria.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                console.log('click')
+                modalAddTipoTutoria.style.display = 'block'
+            });
+
+
+            //boton 2 de cerrar modal tarea
+            cerrarAddtipoTutoria1.addEventListener('click',()=>{
+                limpiar_campos_tipo_tutoria();
+                modalAddTipoTutoria.style.display = 'none';
+            });
+
+
+            //boton 2 de cerrar modal tarea
+            cerrarAddtipoTutoria2.addEventListener('click',()=>{
+                limpiar_campos_tipo_tutoria();
+                modalAddTipoTutoria.style.display = 'none';
+            });
+
+
+            //boton de guardar modal tipo tutoria
+            guardarTipoTutoria.addEventListener('click',()=>{
+                alert_action('Notificación', '¿Estas seguro de agregar el tipo de tutoría?', function () {
+                    //validar que tenga cargado una observacion
+                    if ( $('textarea[name="descripcion_tipo_tutoria"]').val() == "" ){
+
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'Debe cargase una descripción.',
+                        });
+                    }
+                    else {
+                        //procedemos a capturar todos los datos de los campos
+                        descripcion= $('textarea[name="descripcion_tipo_tutoria"]').val();
+
+                        $.ajax({
+                            url: '/actualizar_campo/',
+                            type: 'POST',
+                            data: {
+                                'accion': 'add_tipo_tutoria',
+                                'descripcion': descripcion
+                            },
+                            dataType: 'json',
+                        }).done(function (data) {
+                            if (data[0].estado == 'existe'){
+                                $.alert({
+                                    title: 'Alerta!',
+                                    content: 'Ya existe un registro con la misma descripción.',
+                                });
+                            } else{
+
+                                //limpiamos los campos completados
+                                limpiar_campos_tipo_tutoria();
+                                //cerramos el modal y actualizamos el select de tipo tutoria
+                                modalAddTipoTutoria.style.display = 'none';
+                                actualizartipo_tutoria();
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            alert(textStatus + ': ' + errorThrown);
+                        }).always(function (data) {
+
+                        });                        
+                    }
+                });
+            });
+
+
         });
 
         actividad_academica.list();
