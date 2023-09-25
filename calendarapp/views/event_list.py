@@ -13,6 +13,8 @@ from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from accounts.models.user import FuncionarioDocente
 from itertools import chain
+from django.db.models import Q
+
 class AllEventsListView(ListView):
     """ All event list views """
 
@@ -72,9 +74,11 @@ class ActividadesAcademicasListView(ListView):
             tutoria_iniciada= 0
             tutoria_cancelada= 0
             tutoria_finalizada= 0
+            tutoria_vencida= 0
             orientacion_iniciada= 0
             orientacion_cancelada= 0
             orientacion_finalizada= 0
+            orientacion_vencida= 0
             #devolvemos solo aquellos registros que correspondan al usuario logeado
             if current_user.has_perm('calendarapp.iniciar_cita'):
                 ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
@@ -84,9 +88,11 @@ class ActividadesAcademicasListView(ListView):
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada').count()
                 tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
                 tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada').count()
                 orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             else:
                 
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
@@ -94,12 +100,14 @@ class ActividadesAcademicasListView(ListView):
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada').count()
                 tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
                 tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada').count()
                 orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count() 
             
             data= {'tutoria_iniciada': tutoria_iniciada, 'tutoria_cancelada': tutoria_cancelada, 'tutoria_finalizada': tutoria_finalizada,
-                'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada}
+                'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada, 'tutoria_vencida': tutoria_vencida, 'orientacion_vencida': orientacion_vencida}
         except:
             pass
         return data
@@ -183,9 +191,11 @@ class RunningActividadesAcademicasListView(ListView):
             tutoria_iniciada= 0
             tutoria_cancelada= 0
             tutoria_finalizada= 0
+            tutoria_vencida= 0
             orientacion_iniciada= 0
             orientacion_cancelada= 0
             orientacion_finalizada= 0
+            orientacion_vencida= 0
             #devolvemos solo aquellos registros que correspondan al usuario logeado
             if current_user.has_perm('calendarapp.iniciar_cita'):
                 ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
@@ -195,9 +205,11 @@ class RunningActividadesAcademicasListView(ListView):
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada').count()
                 tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
                 tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada').count()
                 orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             else:
                 
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
@@ -205,12 +217,14 @@ class RunningActividadesAcademicasListView(ListView):
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada').count()
                 tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
                 tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada').count()
                 orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
+                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']) , id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             
             data= {'tutoria_iniciada': tutoria_iniciada, 'tutoria_cancelada': tutoria_cancelada, 'tutoria_finalizada': tutoria_finalizada,
-                'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada}
+                'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada, 'tutoria_vencida': tutoria_vencida, 'orientacion_vencida': orientacion_vencida}
         except:
             pass
         return data

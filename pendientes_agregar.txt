@@ -1,0 +1,1 @@
+- funcionarios/docentes con permiso por el administrador para ser asignado como encargado en tutorias u orientaciones en las actividades

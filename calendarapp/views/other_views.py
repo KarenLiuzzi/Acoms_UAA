@@ -255,12 +255,17 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                 participantes= participantes_filtro
             else:
                 participantes= []
-
+                
+            title= ''
+            if tipo_usuario['tipo_usuario'] == 'staff':
+                title= solicitante
+            else: 
+                title= encargado
             
             #estos nombres tienen que mantenerse
             event_list.append(
                 {
-                    "title": event.id_cita.id_facultad.descripcion_facultad,
+                    "title": title,
                     "start": event.id_cita.datetime_inicio_estimado.strftime("%Y-%m-%dT%H:%M:%S"),
                     "end": event.id_cita.datetime_fin_estimado.strftime("%Y-%m-%dT%H:%M:%S"),
                     "id_cita": event.id_cita.id_actividad_academica,
@@ -421,6 +426,7 @@ def ori_academica(request):
 
 from django.http import JsonResponse
 
+@csrf_exempt
 @login_required
 def actualizar_campo(request):
     
@@ -652,6 +658,27 @@ def actualizar_campo(request):
             estado= item.descripcion_estado_tarea
             id = item.id_estado_tarea
             options.append({"estado": estado, "id": id}) 
+     
+    if request.method == "POST":
+        accion = request.POST.get('accion')
+        descripcion= request.POST.get('descripcion')
+        options = []
+        if accion == "add_tipo_tutoria":
+           
+            #Primero validamos si ya no existe un tipo de tutoria con la misma descripcion
+            queryset= TipoTutoria.objects.filter(descripcion_tipo_tutoria__contains=descripcion)
+            if queryset.exists():
+                options.append({"estado": 'existe'}) 
+            else:
+                try:
+                    ins_tipo_tutoria= TipoTutoria()
+                    ins_tipo_tutoria.descripcion_tipo_tutoria= descripcion
+                    ins_tipo_tutoria.save()
+                    options.append({"estado": 'ok'}) 
+                except:
+                    pass
+            
+            
     return JsonResponse(options, safe=False)
 
 # def obtener_participante(request):
@@ -3719,11 +3746,12 @@ class TareasView(LoginRequiredMixin, ListView):
             ins_persona=  Persona.objects.get(id= dict["id_persona"])
             tareas= Tarea.objects.all().filter(id_persona_responsable= ins_persona)
             #devolvemos solo aquellos registros que correspondan al usuario logeado
+            tarea_finalizada=  tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Finalizada').count()
             tarea_iniciada =tareas.filter( id_estado_tarea__descripcion_estado_tarea= 'Iniciada').count()
             tarea_cancelada = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Cancelada').count()
-            tarea_finalizada = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Finalizada').count()
+            tarea_vencida = tareas.filter(~Q(id_estado_tarea__descripcion_estado_tarea__in=['Cancelada', 'Finalizada']), datetime_vencimiento__lte=datetime.now()).count()
             tarea_pendiente = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Pendiente').count()
-            data= {'tarea_iniciada': tarea_iniciada, 'tarea_cancelada': tarea_cancelada, 'tarea_finalizada': tarea_finalizada, 'tarea_pendiente': tarea_pendiente}
+            data= {'tarea_iniciada': tarea_iniciada, 'tarea_cancelada': tarea_cancelada, 'tarea_finalizada': tarea_finalizada, 'tarea_pendiente': tarea_pendiente, 'tarea_vencida': tarea_vencida}
         except:
             pass
         return data

@@ -47,6 +47,18 @@
             </div>
             <div class="col-lg-4">
                 <div class="form-group form-inline">
+                    <label>Responsable:</label>
+                    {{ form.id_persona_responsable }}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
+                    <label>Solicitante:</label>
+                    {{ form.id_persona_alta }}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group form-inline">
                     <label>Tipo de Actividad:</label>
                     <div class="form-check ml-3">
                         <input type="radio" class="form-check-input" name="tipo_cita" id="radio_tutoria" value="tutoria">
@@ -175,6 +187,9 @@ $(document).ready(function() {
             var id_facultad=   $('select[name="id_facultad"]').val();
             var id_tipo_tarea =  $('select[name="id_tipo_tarea"]').val();
             var id_estado_tarea =  $('select[name="id_estado_tarea"]').val();
+
+            var id_persona_alta =  $('select[name="id_persona_alta"]').val();
+            var id_persona_responsable =  $('select[name="id_persona_responsable"]').val();
             
             var parameters = {
                 'action': 'search_report',
@@ -183,7 +198,9 @@ $(document).ready(function() {
                 'id_facultad': id_facultad,
                 'id_tipo_tarea': id_tipo_tarea,
                 'id_estado_tarea': id_estado_tarea,
-                'tipo_actividad': tipo_actividad
+                'tipo_actividad': tipo_actividad,
+                'id_persona_alta': id_persona_alta,
+                'id_persona_responsable': id_persona_responsable
             };
 
             if (date_range !== null) {
@@ -256,6 +273,7 @@ $(document).ready(function() {
         actualizarfacultad();
         actualizar_tipo_tarea();
         actualizar_estado_tarea();
+        actualizar_personas();
 
         function actualizarfacultad() {
             $.ajax({
@@ -294,6 +312,20 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_estado_tarea').html(data);
+                }
+            });
+        }
+
+        function actualizar_personas() {
+            $.ajax({
+                url: '/actualizar_campos_reportes/',
+                data: {
+                    'campo': 'personas'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_id_persona_responsable').html(data);
+                    $('#id_id_persona_alta').html(data);
                 }
             });
         }
