@@ -6,6 +6,7 @@ from django.contrib.auth.models import (
 )
 from django.forms import model_to_dict
 from django.utils.translation import gettext_lazy as _
+from django.core import validators
 
 class TipoDocumento(models.Model):
     descripcion_tipo_documento = models.CharField(max_length=30, unique= True)
@@ -145,10 +146,26 @@ class UserManager(BaseUserManager):
     def _create_user(self, email, password=None,**extra_fields):
         """Creates and returns a new user using an email address"""
         if not email:  # check for an empty email
-            raise AttributeError("User must set an email address")
+            raise AttributeError("El campo email es obligatorio")
         else:  # normalizes the provided email
             #normalize pone en minusculas
             email = self.normalize_email(email)
+
+        # Verifica si el campo documento existe en Persona
+        documento = extra_fields.get('documento')
+        if not documento or documento== "":
+            raise AttributeError("El campo documento es obligatorio")
+        else:
+            try:
+                #verificamos que no exista un usuario con el mismo documento 
+                usuario= User.objects.filter(documento= documento)
+                if usuario.exists():
+                    raise AttributeError("Ya existe un usuario con el documento ingresado")
+                else:
+                    persona = Persona.objects.get(documento=documento)
+                    extra_fields['id_persona'] = persona
+            except Persona.DoesNotExist:
+                raise ValueError('El documento no existe en la tabla Persona')
 
         # create user
         user = self.model(email=email, **extra_fields)
@@ -181,7 +198,12 @@ class UserManager(BaseUserManager):
 #tambien hay otro llamado abstractuser que se nos permite agregar mas campos pero en cambio no tendremos la ventaja de controlar como en el abstractbaseuser
 class User(AbstractBaseUser, PermissionsMixin):
     """ Custom user model, contendra los campos"""
-    documento= models.CharField(max_length=30, unique= True, blank=True, null= True)
+    documento= models.CharField(max_length=30, unique= True, validators=[
+            validators.RegexValidator(
+                regex=r'^\d{1,10}$',
+                message='El documento debe ser un número de hasta 10 dígitos.'
+            ),
+        ]) #blank=True, null= True)
     id_persona= models.ForeignKey(Persona, on_delete=models.PROTECT,  related_name='usuario', blank= True, null= True)
     materia_func_doc= models.ManyToManyField(Materia, blank=True, help_text='Las materias asignadas al Funcionario/Docente', related_name='func_doc_materias') #, through= 'MateriaFuncionarioDocente') no funciona con este en el panel de admin
     #carrera_usuario= models.ManyToManyField(Carrera, blank=True, help_text='Las carreras asignadas al usuario', related_name='user_carreras')
@@ -202,6 +224,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['documento']
 #comentamos para ver como devuelve al instanciar el objeto con un campo en un queryset
     # def __str__(self):
     #     return self.email
@@ -216,7 +239,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
          return '%s' % (self.email)
 
-    REQUIRED_FIELDS= ['documento']
 
     class Meta:
         verbose_name_plural = "Usuarios"
@@ -238,26 +260,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 #     class Meta:
 #         verbose_name_plural = "Materias Funcionario/Docente"
 
-#built-in signals
-from django.db.models.signals import post_save
-from django.utils import timezone
-from notify.signals import notificar
-class Post(models.Model):
-    user= models.ForeignKey(User, on_delete=models.CASCADE)
-    title= models.CharField(max_length=100)
-    text= models.TextField()
-    timestamp= models.DateTimeField(default=timezone.now(), db_index=True)
+# #built-in signals
+# from django.db.models.signals import post_save
+# from django.utils import timezone
+# from notify.signals import notificar
+# class Post(models.Model):
+#     user= models.ForeignKey(User, on_delete=models.CASCADE)
+#     title= models.CharField(max_length=100)
+#     text= models.TextField()
+#     timestamp= models.DateTimeField(default=timezone.now(), db_index=True)
     
-    def __str__(self):
-        return self.title
-        # diccionario= {
-        #     'title': self.title,
-        #     'text': self.text[:10],
-        # }
+#     def __str__(self):
+#         return self.title
+#         # diccionario= {
+#         #     'title': self.title,
+#         #     'text': self.text[:10],
+#         # }
         
-        # return u'%(title)s %(text)s' % diccionario
+#         # return u'%(title)s %(text)s' % diccionario
 
-def notify_post(sender, instance, created, **kwargs):
-    notificar.send(instance.user, destiny= instance.user, verb= instance.title, level='success')
+# def notify_post(sender, instance, created, **kwargs):
+#     notificar.send(instance.user, destiny= instance.user, verb= instance.title, level='success')
     
-post_save.connect(notify_post, sender= Post)
+# post_save.connect(notify_post, sender= Post)

@@ -313,5 +313,5 @@ class MateriaAdmin(admin.ModelAdmin):
 #     # search_fields = ('descripcion_materia',)  # Búsqueda por campo
 
 
-from accounts.models.user import Post
-admin.site.register(Post) 
+# from accounts.models.user import Post
+# admin.site.register(Post) 

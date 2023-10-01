@@ -75,7 +75,7 @@
                                 <select name="id_solicitante" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_solicitante" data-select2-id="id_id_solicitante" tabindex="-1" aria-hidden="true"></select>
                             </div>
                             <div class="form-group">
-                                    <label class="label" for="id_tipo_tutoria">Tipo de Tutoría</label>
+                                <label class="label" for="id_tipo_tutoria">Tipo de Tutoría</label>
                                 <div class="input-group">
                                     <select name="id_tipo_tutoria" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_tutoria" data-select2-id="id_id_tipo_tutoria" tabindex="-1" aria-hidden="true"></select>
                                     {% if perms.calendarapp.add_tipotutoria %} 
@@ -1175,14 +1175,14 @@
             });
 
 
-            //boton 2 de cerrar modal tarea
+            //boton 2 de cerrar modal tipo tutoria
             cerrarAddtipoTutoria1.addEventListener('click',()=>{
                 limpiar_campos_tipo_tutoria();
                 modalAddTipoTutoria.style.display = 'none';
             });
 
 
-            //boton 2 de cerrar modal tarea
+            //boton 2 de cerrar modal tipo tutoria
             cerrarAddtipoTutoria2.addEventListener('click',()=>{
                 limpiar_campos_tipo_tutoria();
                 modalAddTipoTutoria.style.display = 'none';

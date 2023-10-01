@@ -15,6 +15,10 @@ fulanita@test.com
 ci 258147
 HolaMundo!22!
 
+admin@admin.com
+654321 documento
+HolaAdmin123!
+
 
 #cargamos una persona especifica para el objecto de persona/funcionario
 id 2
@@ -50,7 +54,3 @@ Maria
 Aguero
 mail mariague@test.com
 pass HolaMundo!26!
-
-
-
-es posible crear un dataframe con datos de un queryset en django y mostrarlo como una tabla en un template?
