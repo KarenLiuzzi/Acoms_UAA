@@ -63,12 +63,21 @@
                             </div>
                             <div class="form-group">
                                 <label class="label" for="id_tipo_orientacion_academica">Tipo de Orientación Académica</label>
-                                <select name="id_tipo_orientacion_academica" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_orientacion_academica" data-select2-id="id_id_tipo_orientacion_academica" tabindex="-1" aria-hidden="true"></select>
+                                <div class="input-group">
+                                    <select name="id_tipo_orientacion_academica" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_orientacion_academica" data-select2-id="id_id_tipo_orientacion_academica" tabindex="-1" aria-hidden="true"></select>
+                                    {% if perms.calendarapp.add_tipoorientacionacademica %} 
+                                        <a href="#" id="add_tipo_orientacion" title="Agregar">  <i class="bi bi-plus"></i> </a>
+                                    {% endif %}
+                                </div>
                             </div>
-
                             <div class="form-group">
                                 <label class="label" for="id_tipo_motivo">Motivo de Orientación Académica</label>
-                                <select name="id_tipo_motivo" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_motivo" data-select2-id="id_id_tipo_motivo" tabindex="-1" aria-hidden="true"></select>
+                                <div class="input-group">
+                                    <select name="id_tipo_motivo" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_motivo" data-select2-id="id_id_tipo_motivo" tabindex="-1" aria-hidden="true"></select>
+                                    {% if perms.calendarapp.add_motivo %} 
+                                        <a href="#" id="add_motivo" title="Agregar">  <i class="bi bi-plus"></i> </a>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="label" for="id_materia">Materia (Opcional)</label>
@@ -244,6 +253,70 @@
             </div>
         </div>
     </div>
+
+    <div id="modalAddTipoOrientacion" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div id="dialog" class="modal-dialog modal-dialog-centered" role="document"> 
+            <div class="modal-content">
+                <div class='modal-header text-center'>
+                    <h3 class="modal-title w-100"> Agregar Tipo Orientación Académica</h3> 
+                    <button id="cerrarAddtipoOrientacion1" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group">
+                            <label class="label" for="descripcion_tipo_orientacion">Tipo de Orientación Académica:</label>
+                            <textarea placeholder= "Descripcion para el tipo de orientación académica..." class="form-control" rows="3" cols="25" name="descripcion_tipo_orientacion" maxlength="500"></textarea>
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cerrarAddtipoOrientacion2"> Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="guardarTipoOrientacion"> Guardar</button>
+                        </div>  
+
+                    </div>       
+                </div>  
+            </div>
+        </div>
+    </div>
+
+
+    <div id="modalAddMotivo" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div id="dialog" class="modal-dialog modal-dialog-centered" role="document"> 
+            <div class="modal-content">
+                <div class='modal-header text-center'>
+                    <h3 class="modal-title w-100"> Agregar Motivo de Orientación Académica</h3> 
+                    <button id="cerrarMotivo1" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group">
+                            <label class="label" for="id_tipo_orientacion_academica">Tipo de Orientación Académica</label>
+                            <div class="input-group">
+                                <select name="id_tipo_orientacion_academica_add" class="form-control select2 select2-hidden-accessible" style="width: 100%" id="id_id_tipo_orientacion_academica_add" data-select2-id="id_id_tipo_orientacion_academica_add" tabindex="-1" aria-hidden="true"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label" for="descripcion_Motivo">Motivo de Orientación Académica:</label>
+                            <textarea placeholder= "Descripcion para el Motivo de orientación académica..." class="form-control" rows="3" cols="25" name="descripcion_Motivo" maxlength="500"></textarea>
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cerrarMotivo2"> Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="guardarMotivo"> Guardar</button>
+                        </div>  
+
+                    </div>       
+                </div>  
+            </div>
+        </div>
+    </div>
+
 </form>
 
 {% endblock content %}
@@ -290,6 +363,18 @@
         const cerrarmodal = document.getElementById('modalClose1');
         const cerrarmodal2 = document.getElementById('modalClose2');
         const guardarmodal = document.getElementById('modalguardar');
+
+        var add_orientacion= document.getElementById("add_tipo_orientacion");
+        var modalAddTipoOrientacion = document.getElementById('modalAddTipoOrientacion')
+        const cerrarAddtipoOrientacion1 = document.getElementById('cerrarAddtipoOrientacion1');
+        const cerrarAddtipoOrientacion2 = document.getElementById('cerrarAddtipoOrientacion2');
+        const guardarTipoOrientacion = document.getElementById('guardarTipoOrientacion');
+
+        var add_Motivo= document.getElementById("add_Motivo");
+        var modalAddMotivo = document.getElementById('modalAddMotivo')
+        const cerrarMotivo1 = document.getElementById('cerrarMotivo1');
+        const cerrarMotivo2 = document.getElementById('cerrarMotivo2');
+        const guardarMotivo = document.getElementById('guardarMotivo');
 
         var band_boton_selects= 0
         var hora_inicio;
@@ -778,6 +863,7 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_tipo_orientacion_academica').html(data);
+                        $('#id_id_tipo_orientacion_academica_add').html(data);
                         if (band_boton_selects == 3){
                             $('#id_id_tipo_orientacion_academica').val(lista_orientacion[0]['id_tipo_orientacion_academica']);
                         }
@@ -1432,6 +1518,157 @@
                 html += '</tbody>';
                 return html;
             }
+
+
+            function limpiar_campos_tipo_orientacion(){
+                $('textarea[name="descripcion_tipo_orientacion"]').val('');
+            }
+    
+            add_orientacion.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                console.log('click')
+                modalAddTipoOrientacion.style.display = 'block'
+            });
+    
+    
+            //boton 2 de cerrar modal tipo orientacion
+            cerrarAddtipoOrientacion1.addEventListener('click',()=>{
+                limpiar_campos_tipo_orientacion();
+                modalAddTipoOrientacion.style.display = 'none';
+            });
+    
+    
+            //boton 2 de cerrar modal tipo orientacion
+            cerrarAddtipoOrientacion2.addEventListener('click',()=>{
+                limpiar_campos_tipo_orientacion();
+                modalAddTipoOrientacion.style.display = 'none';
+            });
+    
+    
+            //boton de guardar modal tipo orientacion
+            guardarTipoOrientacion.addEventListener('click',()=>{
+                alert_action('Notificación', '¿Estas seguro de agregar el tipo de orientación académica?', function () {
+                    //validar que tenga cargado una observacion
+                    if ( $('textarea[name="descripcion_tipo_orientacion"]').val() == "" ){
+    
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'Debe cargase una descripción.',
+                        });
+                    }
+                    else {
+                        //procedemos a capturar todos los datos de los campos
+                        descripcion= $('textarea[name="descripcion_tipo_orientacion"]').val();
+    
+                        $.ajax({
+                            url: '/actualizar_campo/',
+                            type: 'POST',
+                            data: {
+                                'accion': 'add_tipo_orientacion',
+                                'descripcion': descripcion
+                            },
+                            dataType: 'json',
+                        }).done(function (data) {
+                            if (data[0].estado == 'existe'){
+                                $.alert({
+                                    title: 'Alerta!',
+                                    content: 'Ya existe un registro con la misma descripción.',
+                                });
+                            } else{
+    
+                                //limpiamos los campos completados
+                                limpiar_campos_tipo_orientacion();
+                                //cerramos el modal y actualizamos el select de tipo tutoria
+                                modalAddTipoOrientacion.style.display = 'none';
+                                actualizartipo_ori_academ();
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            alert(textStatus + ': ' + errorThrown);
+                        }).always(function (data) {
+    
+                        });                        
+                    }
+                });
+            });
+
+
+            function limpiar_campos_motivo(){
+                $('textarea[name="descripcion_Motivo"]').val('');
+            }
+    
+            add_motivo.addEventListener("click", function(event) {
+                event.preventDefault();  // Evita el comportamiento predeterminado del enlace
+                modalAddMotivo.style.display = 'block'
+            });
+    
+    
+            //boton 2 de cerrar modal tipo orientacion
+            cerrarMotivo1.addEventListener('click',()=>{
+                limpiar_campos_motivo();
+                modalAddMotivo.style.display = 'none';
+            });
+    
+    
+            //boton 2 de cerrar modal tipo orientacion
+            cerrarMotivo2.addEventListener('click',()=>{
+                limpiar_campos_motivo();
+                modalAddMotivo.style.display = 'none';
+            });
+    
+    
+            //boton de guardar modal tipo orientacion
+            guardarMotivo.addEventListener('click',()=>{
+                alert_action('Notificación', '¿Estas seguro de agregar el motivo de orientación académica?', function () {
+                    //validar que tenga cargado una observacion
+                    if ( $('textarea[name="descripcion_Motivo"]').val() == "" ){
+    
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'Debe cargase una descripción.',
+                        });
+                    } else if ($('select[name="id_tipo_orientacion_academica_add"]').val() == ""){
+    
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'Debe seleccionar un tipo de orientación académica.',
+                        });
+                    }
+                    else {
+                        //procedemos a capturar todos los datos de los campos
+                        descripcion= $('textarea[name="descripcion_Motivo"]').val();
+                        id_tipo= $('select[name="id_tipo_orientacion_academica_add"]').val()
+    
+                        $.ajax({
+                            url: '/actualizar_campo/',
+                            type: 'POST',
+                            data: {
+                                'accion': 'add_motivo',
+                                'descripcion': descripcion,
+                                'id_tipo': id_tipo
+                            },
+                            dataType: 'json',
+                        }).done(function (data) {
+                            if (data[0].estado == 'existe'){
+                                $.alert({
+                                    title: 'Alerta!',
+                                    content: 'Ya existe un registro con la misma descripción para el tipo de orientación académica seleccionada.',
+                                });
+                            } else{
+    
+                                //limpiamos los campos completados
+                                limpiar_campos_motivo();
+                                //cerramos el modal y actualizamos el select de tipo tutoria
+                                modalAddMotivo.style.display = 'none';
+                                actualizartipo_motivo_ori_academ();
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            alert(textStatus + ': ' + errorThrown);
+                        }).always(function (data) {
+    
+                        });                        
+                    }
+                });
+            });
 
         });
 

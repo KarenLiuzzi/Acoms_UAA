@@ -677,7 +677,38 @@ def actualizar_campo(request):
                     options.append({"estado": 'ok'}) 
                 except:
                     pass
-            
+                
+        elif accion == "add_tipo_orientacion": 
+            #Primero validamos si ya no existe un tipo de orientacion con la misma descripcion
+            queryset= TipoOrientacionAcademica.objects.filter(descripcion_tipo_orientacion_academica__contains=descripcion)
+            if queryset.exists():
+                options.append({"estado": 'existe'}) 
+            else:
+                try:
+                    ins_tipo_orientacion= TipoOrientacionAcademica()
+                    ins_tipo_orientacion.descripcion_tipo_orientacion_academica= descripcion
+                    ins_tipo_orientacion.save()
+                    options.append({"estado": 'ok'}) 
+                except:
+                    pass
+                
+        elif accion == "add_motivo": 
+            id_tipo= request.POST.get('id_tipo')
+            #Traemos el tipo orientacion
+            tipo_orientacion= TipoOrientacionAcademica.objects.get(id_tipo_orientacion_academica=id_tipo)
+            #traemos el motivo
+            queryset= Motivo.objects.filter(id_tipo_orientacion_academica= tipo_orientacion, descripcion_motivo__contains= descripcion)
+            if queryset.exists():
+                options.append({"estado": 'existe'}) 
+            else:
+                try:
+                    ins_motivo= Motivo()
+                    ins_motivo.descripcion_motivo= descripcion
+                    ins_motivo.id_tipo_orientacion_academica= tipo_orientacion
+                    ins_motivo.save()
+                    options.append({"estado": 'ok'}) 
+                except:
+                    pass
             
     return JsonResponse(options, safe=False)
 
@@ -3707,7 +3738,10 @@ class TareasView(LoginRequiredMixin, ListView):
                     id_estado_tarea = tarea['fields']['id_estado_tarea']
                     #traer la descripcion de la tarea
                     estado_tarea= EstadoTarea.objects.filter(id_estado_tarea= id_estado_tarea).values('descripcion_estado_tarea').first()
-                    estado_tarea= estado_tarea['descripcion_estado_tarea']
+                    if estado_tarea['descripcion_estado_tarea'] not in ('Finalizada', 'Cancelada') and datetime.fromisoformat(tarea['fields']['datetime_vencimiento']) <= datetime.now():
+                        estado_tarea= 'Vencida'
+                    else:
+                        estado_tarea= estado_tarea['descripcion_estado_tarea']
                     id_tipo_tarea = tarea['fields']['id_tipo_tarea']
                     tipo_tarea= TipoTarea.objects.filter(id_tipo_tarea= id_tipo_tarea).values('descripcion_tipo_tarea').first()
                     tipo_tarea= tipo_tarea['descripcion_tipo_tarea']

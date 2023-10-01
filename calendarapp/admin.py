@@ -9,6 +9,14 @@ from django.contrib.auth.models import Permission
 admin.site.register(Permission)
 
 
+@admin.register(TipoOrientacionAcademica)
+class TipoOrientacionAcademicaAdmin(admin.ModelAdmin):
+
+    
+    list_display = ['descripcion_tipo_orientacion_academica'] # Campos a mostrar en la lista
+    list_filter = ["descripcion_tipo_orientacion_academica"]  # Filtro por campo
+    search_fields = ["descripcion_tipo_orientacion_academica"] # Búsqueda por campo
+
 @admin.register(Dia)
 class DiaAdmin(admin.ModelAdmin):
 
@@ -24,25 +32,25 @@ class SemestreAdmin(admin.ModelAdmin):
     list_filter = ('descripcion_semestre',)  # Filtro por campo
     search_fields = ('descripcion_semestre',)  # Búsqueda por campo
 
-@admin.register(HorarioSemestral)
-class HorarioSemestralAdmin(admin.ModelAdmin):
+# @admin.register(HorarioSemestral)
+# class HorarioSemestralAdmin(admin.ModelAdmin):
 
-    def funcionario_docente_nombre(self, obj):
-        return '%s' % (obj.id_funcionario_docente) 
-    funcionario_docente_nombre.short_description = 'Funcionario/Docente'
+#     def funcionario_docente_nombre(self, obj):
+#         return '%s' % (obj.id_funcionario_docente) 
+#     funcionario_docente_nombre.short_description = 'Funcionario/Docente'
 
-    def convocatoria_nombre(self, obj):
-        return '%s %s' % (obj.id_convocatoria.id_semestre.descripcion_semestre, obj.id_convocatoria.anho) 
-    convocatoria_nombre.short_description = 'Convocatoria'
+#     def convocatoria_nombre(self, obj):
+#         return '%s %s' % (obj.id_convocatoria.id_semestre.descripcion_semestre, obj.id_convocatoria.anho) 
+#     convocatoria_nombre.short_description = 'Convocatoria'
 
-    def dia_nombre(self, obj):
-        return '%s' % (obj.id_dia.descripcion_dia) 
-    dia_nombre.short_description = 'Dia'
+#     def dia_nombre(self, obj):
+#         return '%s' % (obj.id_dia.descripcion_dia) 
+#     dia_nombre.short_description = 'Dia'
 
     
-    list_display = ['funcionario_docente_nombre', 'convocatoria_nombre', 'dia_nombre', 'hora_inicio', 'hora_fin'] # Campos a mostrar en la lista
-    list_filter = ["id_funcionario_docente", "id_convocatoria", "hora_inicio", "hora_fin", "id_dia"]  # Filtro por campo
-    #search_fields = ["id_funcionario_docente__",] # Búsqueda por campo
+#     list_display = ['funcionario_docente_nombre', 'convocatoria_nombre', 'dia_nombre', 'hora_inicio', 'hora_fin'] # Campos a mostrar en la lista
+#     list_filter = ["id_funcionario_docente", "id_convocatoria", "hora_inicio", "hora_fin", "id_dia"]  # Filtro por campo
+#     #search_fields = ["id_funcionario_docente__",] # Búsqueda por campo
 
 @admin.register(Convocatoria)
 class ConvocatoriaAdmin(admin.ModelAdmin):
@@ -89,16 +97,6 @@ class TipoTutoriaAdmin(admin.ModelAdmin):
     list_filter = ["descripcion_tipo_tutoria"]  # Filtro por campo
     search_fields = ["descripcion_tipo_tutoria"] # Búsqueda por campo
 
-
-@admin.register(TipoOrientacionAcademica)
-class TipoOrientacionAcademicaAdmin(admin.ModelAdmin):
-
-    
-    list_display = ['descripcion_tipo_orientacion_academica'] # Campos a mostrar en la lista
-    list_filter = ["descripcion_tipo_orientacion_academica"]  # Filtro por campo
-    search_fields = ["descripcion_tipo_orientacion_academica"] # Búsqueda por campo
-
-
 @admin.register(Motivo)
 class MotivoAdmin(admin.ModelAdmin):
 
@@ -127,80 +125,80 @@ class EstadoTareaAdmin(admin.ModelAdmin):
     list_filter = ["descripcion_estado_tarea"]  # Filtro por campo
     search_fields = ["descripcion_estado_tarea"] # Búsqueda por campo
     
-@admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
+# @admin.register(Event)
+# class EventAdmin(admin.ModelAdmin):
 
-    def estado_acti_nombre(self, obj):
-        return '%s' % (obj.id_estado_actividad_academica.descripcion_estado_actividad_academica) 
-    estado_acti_nombre.short_description = 'Estado'
+#     def estado_acti_nombre(self, obj):
+#         return '%s' % (obj.id_estado_actividad_academica.descripcion_estado_actividad_academica) 
+#     estado_acti_nombre.short_description = 'Estado'
     
-    def convocatoria_nombre(self, obj):
-        return '%s %s' % (obj.id_convocatoria.id_semestre.descripcion_semestre, obj.id_convocatoria.anho) 
-    convocatoria_nombre.short_description = 'Convocatoria'
+#     def convocatoria_nombre(self, obj):
+#         return '%s %s' % (obj.id_convocatoria.id_semestre.descripcion_semestre, obj.id_convocatoria.anho) 
+#     convocatoria_nombre.short_description = 'Convocatoria'
     
-    def facultad_nombre(self, obj):
-        return '%s' % (obj.id_facultad.descripcion_facultad) 
-    facultad_nombre.short_description = 'Facultad'
+#     def facultad_nombre(self, obj):
+#         return '%s' % (obj.id_facultad.descripcion_facultad) 
+#     facultad_nombre.short_description = 'Facultad'
     
-    def materia_nombre(self, obj):
-        #si no existe el objeto, entonces devuelve vacio o None
-        try:
-            return '%s' % (obj.id_facultad.descripcion_facultad)
-        except AttributeError:
-            return ''
+#     def materia_nombre(self, obj):
+#         #si no existe el objeto, entonces devuelve vacio o None
+#         try:
+#             return '%s' % (obj.id_facultad.descripcion_facultad)
+#         except AttributeError:
+#             return ''
     
-    def departamento_nombre(self, obj):
-        return '%s' % (obj.id_departamento.descripcion_departamento) 
-    departamento_nombre.short_description = 'Departamento'
+#     def departamento_nombre(self, obj):
+#         return '%s' % (obj.id_departamento.descripcion_departamento) 
+#     departamento_nombre.short_description = 'Departamento'
     
-    def encargado_nombre(self, obj):
-        return '%s %s' % (obj.id_funcionario_docente_encargado.id_funcionario_docente.nombre, obj.id_funcionario_docente_encargado.id_funcionario_docente.apellido) 
-    encargado_nombre.short_description = 'Encargado'
+#     def encargado_nombre(self, obj):
+#         return '%s %s' % (obj.id_funcionario_docente_encargado.id_funcionario_docente.nombre, obj.id_funcionario_docente_encargado.id_funcionario_docente.apellido) 
+#     encargado_nombre.short_description = 'Encargado'
     
-    def receptor_nombre(self, obj):
-        #si no existe el objeto, entonces devuelve vacio o None
-        try:
-            return '%s %s' % (obj.id_persona_receptor.nombre, obj.id_persona_receptor.apellido) 
-        except AttributeError:
-            return ''
-    
-    
-    def alta_nombre(self, obj):
-        return '%s %s' % (obj.id_persona_alta.nombre, obj.id_persona_alta.apellido) 
-    alta_nombre.short_description = 'Usuario alta'
+#     def receptor_nombre(self, obj):
+#         #si no existe el objeto, entonces devuelve vacio o None
+#         try:
+#             return '%s %s' % (obj.id_persona_receptor.nombre, obj.id_persona_receptor.apellido) 
+#         except AttributeError:
+#             return ''
     
     
-    list_display = ['estado_acti_nombre', 'convocatoria_nombre','facultad_nombre' ,'materia_nombre' ,'receptor_nombre','departamento_nombre', 'encargado_nombre' , 'alta_nombre' , 'datetime_inicio_estimado', 'datetime_fin_estimado', 'datetime_inicio_real', 'datetime_fin_real', 'datetime_registro', 'observacion', 'nro_curso'] # Campos a mostrar en la lista
-    #list_filter = ["descripcion_estado_tarea"]  # Filtro por campo
-    #search_fields = ["descripcion_estado_tarea"] # Búsqueda por campo
-
-
-
-@admin.register(Cita)
-class CitaAdmin(admin.ModelAdmin):
+#     def alta_nombre(self, obj):
+#         return '%s %s' % (obj.id_persona_alta.nombre, obj.id_persona_alta.apellido) 
+#     alta_nombre.short_description = 'Usuario alta'
     
-    def Parametro_nombre(self, obj):
-        return '%s %s' % (obj.id_parametro.descripcion_parametro, obj.id_parametro.valor) 
-    Parametro_nombre.short_description = 'Parametro'
     
-    list_display = ['Parametro_nombre', 'es_tutoria','es_orientacion_academica' , 'es_notificable', 'motivo'] # Campos a mostrar en la lista
+#     list_display = ['estado_acti_nombre', 'convocatoria_nombre','facultad_nombre' ,'materia_nombre' ,'receptor_nombre','departamento_nombre', 'encargado_nombre' , 'alta_nombre' , 'datetime_inicio_estimado', 'datetime_fin_estimado', 'datetime_inicio_real', 'datetime_fin_real', 'datetime_registro', 'observacion', 'nro_curso'] # Campos a mostrar en la lista
+#     #list_filter = ["descripcion_estado_tarea"]  # Filtro por campo
+#     #search_fields = ["descripcion_estado_tarea"] # Búsqueda por campo
 
 
 
-@admin.register(OrientacionAcademica)
-class OrientacionAcademicaAdmin(admin.ModelAdmin):
+# @admin.register(Cita)
+# class CitaAdmin(admin.ModelAdmin):
     
-    def motivo_nombre(self, obj):
-        return '%s' % (obj.id_motivo.descripcion_motivo) 
-    motivo_nombre.short_description = 'Motivo'
+#     def Parametro_nombre(self, obj):
+#         return '%s %s' % (obj.id_parametro.descripcion_parametro, obj.id_parametro.valor) 
+#     Parametro_nombre.short_description = 'Parametro'
+    
+#     list_display = ['Parametro_nombre', 'es_tutoria','es_orientacion_academica' , 'es_notificable', 'motivo'] # Campos a mostrar en la lista
+
+
+
+# @admin.register(OrientacionAcademica)
+# class OrientacionAcademicaAdmin(admin.ModelAdmin):
+    
+#     def motivo_nombre(self, obj):
+#         return '%s' % (obj.id_motivo.descripcion_motivo) 
+#     motivo_nombre.short_description = 'Motivo'
     
     
-    def tipo_nombre(self, obj):
-        return '%s' % (obj.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica) 
-    tipo_nombre.short_description = 'Tipo'
+#     def tipo_nombre(self, obj):
+#         return '%s' % (obj.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica) 
+#     tipo_nombre.short_description = 'Tipo'
     
     
-    list_display = ['id_cita', 'motivo_nombre','tipo_nombre'] # Campos a mostrar en la lista
+#     list_display = ['id_cita', 'motivo_nombre','tipo_nombre'] # Campos a mostrar en la lista
 
 #comentamos momentaneamente
 # @admin.register(DetalleActividadAcademica)
