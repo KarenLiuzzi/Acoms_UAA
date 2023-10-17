@@ -282,7 +282,7 @@
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'campo': 'facultad'
+                        'campo': 'facultad_alumno'
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -290,6 +290,10 @@
                         actualizarmateria();
                         band_boton_selects= band_boton_selects + 1
                         validar_cambio();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -310,6 +314,10 @@
                         actualizarfuncionariodocente();
                         band_boton_selects= band_boton_selects + 1
                         validar_cambio();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar materia.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
 
                 });
@@ -334,6 +342,10 @@
                         $('#id_id_funcionario_docente_encargado').html(data);
                         band_boton_selects= band_boton_selects + 1
                         validar_cambio();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar funcionario.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -422,7 +434,8 @@
                                 return '<button type="button" class="btn btn-primary btn-flat btn-submit"><i class="bi bi-calendar-check"></i>Registrar Cita</button>';
                             }
                         },
-                    ]
+                    ],
+                    order: [] // Desactivar el ordenamiento por defecto
                 });
                 
             }
@@ -450,6 +463,7 @@
                     }).done(function (data) {
                         //convertimos el str a un objeto de lista de diccionarios y pasamos 
                         var listaDiccionarios = JSON.parse(data)
+                        console.log(listaDiccionarios)
 
                         if (listaDiccionarios.length === 0) {
                             $.alert({

@@ -1,13 +1,7 @@
+Administrador
 prueba@test.com
 estaesasi
-4956652
-
-
-
-mio 
-kmooonnl@gmail.com
-HolaMundo!22!
-
+4978990
 
 nuevo persona de prueba 
 fulanita 
@@ -34,7 +28,7 @@ ci 789654
 Luis 
 Diaz
 mail luidi@test.com
-pass HolaMundo!24!
+pass HolaMundo!25!
 va ser docente de TIC
 intro a la info y paginas web
 
@@ -47,10 +41,10 @@ mail glogui@test.com
 pass HolaMundo!25!
 
 
-#cargamos una persona especifica para el objecto de persona/funcionario y docente
+#cargamos una persona especifica para el objecto de persona/alumno
 id 5
 ci 147258
 Maria
 Aguero
-mail mariague@test.com
+mail karendreammoon@gmail.com
 pass HolaMundo!26!

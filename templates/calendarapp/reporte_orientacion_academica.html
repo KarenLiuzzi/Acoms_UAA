@@ -305,6 +305,10 @@ $(document).ready(function() {
                 success: function(data) {
                     $('#id_id_facultad').html(data);    
                    
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -318,6 +322,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_convocatoria').html(data);                  
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar convocatoria.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -331,6 +339,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_persona_solicitante').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar personas.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -345,6 +357,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_materia').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar materia.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -358,6 +374,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_funcionario_docente_encargado').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar encargado.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -372,6 +392,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_tipo_orientacion_academica').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar tipo orientacion.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -386,6 +410,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_tipo_motivo').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar motivo orientacion.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -401,6 +429,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_tipo_motivo').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar motivo orientacion.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -414,6 +446,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_estado').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar estado.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -427,6 +463,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_estado').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar estado.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }

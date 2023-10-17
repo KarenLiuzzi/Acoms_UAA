@@ -38,15 +38,16 @@
                                 <span class="text-danger">{{ form.errors.id_facultad }}</span>
                             </div>
                             <div class="form-group">
-                                <label class="label" for="id_materia">Materia</label>
-                                {{ form.id_materia}}
-                                <span class="text-danger">{{ form.errors.id_materia }}</span>
-                            </div>
-                            <div class="form-group">
                                 <label class="label" for="id_funcionario_docente_encargado">Docente</label>
                                 {{ form.id_funcionario_docente_encargado }}
                                 <span class="text-danger">{{ form.errors.id_funcionario_docente_encargado }}</span>
                             </div>
+                            <div class="form-group">
+                                <label class="label" for="id_materia">Materia</label>
+                                {{ form.id_materia}}
+                                <span class="text-danger">{{ form.errors.id_materia }}</span>
+                            </div>
+                            
                             <div class="form-group">
                                 <label class="label" for="motivo">Motivo</label>
                                 <textarea placeholder= "Describa el motivo de la cita..." class="form-control" rows="4" cols="50" name="motivo" required="True" maxlength="500"></textarea>
@@ -608,6 +609,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_responsable_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar personas.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -621,6 +626,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_tipo_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -634,6 +643,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_estado_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar estado tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -659,6 +672,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_tipo_tutoria').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo tutoria.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -667,7 +684,7 @@
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'campo': 'facultad'
+                        'campo': 'facultad_funcionario'
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -677,69 +694,85 @@
                             $('#id_id_facultad').val(lista_cita[0]['id_facultad']);
                         }
                         band_boton_selects= band_boton_selects + 1
+                        actualizarfuncionariodocente();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
+                    }
+                });
+            }
+
+             //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
+             function actualizarfuncionariodocente() {
+                //var selected_option = $('#id_id_materia').val();
+                $.ajax({
+                    url: '/actualizar_campo/',
+                    data: {
+                        //'id_materia': selected_option,
+                        'campo': 'funcionariodocente_logeado'
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_id_funcionario_docente_encargado').html(data);
+                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
+                        if (band_boton_selects == 1) {
+                            $('#id_id_funcionario_docente_encargado').val(lista_cita[0]['id_funcionario_docente_encargado']);
+                            //actualizamos una vez se haya cargado los primeros datos para no alterar la carga de datos
+                        }
+                        band_boton_selects= band_boton_selects + 1
                         actualizarmateria();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar funcionario.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
 
              //actualizar el campo de la materia de acuerdo a la facultad seleccionada
              function actualizarmateria() {
-                var selected_option = $('#id_id_facultad').val();
+                //var selected_option = $('#id_id_facultad').val();
+                var selected_option = $('#id_id_funcionario_docente_encargado').val();
                 //console.log(selected_option)
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'id_facultad': selected_option,
-                        'campo': 'materia'
+                        'func_doc': selected_option,
+                        'campo': 'funcdoc_logeado_materias'
                     },
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_materia').html(data);
                         //ponemos los valores ya cargados en los selects, solo si es la primera vez
-                        if (band_boton_selects == 1){
+                        if (band_boton_selects == 2){
                             $('#id_id_materia').val(lista_cita[0]['id_materia']);
-                        }
-                        band_boton_selects= band_boton_selects + 1
-                        actualizarfuncionariodocente();
-                    }
-
-                });
-            }
-            //ejecutar si cambia la facultad para actualizar materia y func/doc
-            $('#id_id_facultad').change(function() {
-                actualizarmateria()
-                actualizarfuncionariodocente()
-            });
-
-            //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
-            function actualizarfuncionariodocente() {
-                var selected_option = $('#id_id_materia').val();
-                $.ajax({
-                    url: '/actualizar_campo/',
-                    data: {
-                        'id_materia': selected_option,
-                        'campo': 'funcionariodocente'
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        $('#id_id_funcionario_docente_encargado').html(data);
-                        //ponemos los valores ya cargados en los selects, solo si es la primera vez
-                        if (band_boton_selects == 2) {
-                            $('#id_id_funcionario_docente_encargado').val(lista_cita[0]['id_funcionario_docente_encargado']);
                             //actualizamos una vez se haya cargado los primeros datos para no alterar la carga de datos
                             actualizar_personas();
                             actualizar_tipo_tarea();
                             actualizar_estado_tarea();
                         }
                         band_boton_selects= band_boton_selects + 1
+                        
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar materia.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
+
                 });
             }
+            //ejecutar si cambia la facultad para actualizar materia y func/doc
+            //$('#id_id_facultad').change(function() {
+            //    actualizarfuncionariodocente()
+            //    actualizarmateria()
+                
+            //});
 
             //ejecutar si cambia la materia para actualiar fun/doc
-            $('#id_id_materia').change(function() {
-                actualizarfuncionariodocente()
-            });
+            //$('#id_id_materia').change(function() {
+            //    actualizarfuncionariodocente()
+            //});
 
             //aplicar formato select2 a todos los dropdowns
             $('.select2').select2({

@@ -284,7 +284,7 @@
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'campo': 'facultad'
+                        'campo': 'facultad_alumno'
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -296,6 +296,10 @@
                         band_boton_selects= band_boton_selects + 1
                         actualizarmateria();
                         validar_cambio();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -320,6 +324,10 @@
                         band_boton_selects= band_boton_selects + 1
                         actualizarfuncionariodocente();
                         validar_cambio();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar materia.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
 
                 });
@@ -348,6 +356,10 @@
                         }
                         band_boton_selects= band_boton_selects + 1
                         validar_cambio();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar funcionario.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -472,7 +484,8 @@
                                 return '<button type="button" class="btn btn-primary btn-flat btn-submit"><i class="bi bi-calendar-check"></i>Actualizar Cita</button>';
                             }
                         },
-                    ]
+                    ],
+                    order: [] // Desactivar el ordenamiento por defecto
                 });
             }
 

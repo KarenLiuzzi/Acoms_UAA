@@ -4,5 +4,4 @@ from django.conf import settings
 
 def signout(request):
     logout(request)
-    #return redirect(settings.LOGOUT_REDIRECT_URL)
     return redirect("accounts:signin")

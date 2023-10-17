@@ -32,7 +32,7 @@ class Semestre(models.Model):
     
 class Convocatoria(models.Model):
     id_convocatoria= models.AutoField(primary_key=True)
-    id_semestre= models.ForeignKey(Semestre, on_delete=models.PROTECT, related_name='semestre_calendario')
+    id_semestre= models.ForeignKey(Semestre, on_delete=models.CASCADE, related_name='semestre_calendario')
     anho= models.IntegerField(validators=[MinValueValidator(datetime.now().year)])
     fecha_inicio= models.DateField()
     fecha_fin= models.DateField()
@@ -46,21 +46,12 @@ class Convocatoria(models.Model):
     
     class Meta:
         verbose_name_plural = "Convocatorias"
-        
-# conv = Convocatoria.objects.get(anho=2001)
-# sem = conv.semestre_calendario.all()
-
-# mi_instancia = MiModelo(mi_campo=-1)
-# try:
-#     mi_instancia.full_clean()
-# except ValidationError as e:
-#     print(e.message)
 
 class HorarioSemestral(models.Model):
     id_horario_semestral= models.AutoField(primary_key=True)
-    id_funcionario_docente= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='func_doc_calendario')
-    id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.PROTECT, related_name='convocatoria_calendario')
-    id_dia= models.ForeignKey(Dia, on_delete=models.PROTECT, related_name='hsem_dia')
+    id_funcionario_docente= models.ForeignKey(FuncionarioDocente, on_delete=models.CASCADE, related_name='func_doc_calendario')
+    id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='convocatoria_calendario')
+    id_dia= models.ForeignKey(Dia, on_delete=models.CASCADE, related_name='hsem_dia')
     hora_inicio= models.TimeField()
     hora_fin= models.TimeField()
 

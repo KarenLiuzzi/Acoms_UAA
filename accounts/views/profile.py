@@ -9,11 +9,13 @@ from accounts.forms import SignUpForm
 #login_required, garantiza que el usuario esté autenticado antes de que se ejecute la vista. Usar solo para funciones, no para clases
 @login_required
 def ProfileView(request):
+    try:
+        current_user = request.user
+        #https://stackoverflow.com/questions/21925671/convert-django-model-object-to-dict-with-all-of-the-fields-intact
+        dict = model_to_dict(current_user)
+        persona=  Persona.objects.get(pk= dict["id_persona"])
+        context = {"user": current_user, "persona": persona}
 
-    current_user = request.user
-    #https://stackoverflow.com/questions/21925671/convert-django-model-object-to-dict-with-all-of-the-fields-intact
-    dict = model_to_dict(current_user)
-    persona=  Persona.objects.get(pk= dict["id_persona"])
-    context = {"user": current_user, "persona": persona}
-
-    return render(request, "accounts/profile.html", context)
+        return render(request, "accounts/profile.html", context)
+    except Exception as e:
+        print(f"Se ha producido un error: {e}")
