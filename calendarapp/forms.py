@@ -1,50 +1,9 @@
-from time import strptime
-from django.forms import ModelForm, DateInput, TimeInput, ValidationError, Form
-from requests import request
+from django.forms import ModelForm, DateInput, ValidationError, Form
 from calendarapp.models import Event, EventMember
-from calendarapp.models.event import Parametro, EstadoActividadAcademica, Cita, DetalleActividadAcademica
 from calendarapp.models.calendario import HorarioSemestral, Dia, Convocatoria
-from accounts.models.user import FuncionarioDocente, Facultad, Materia, Departamento, Persona
+from accounts.models.user import FuncionarioDocente, Facultad, Materia
 from django import forms
 
-
-""" esto es un ejemplo de como se veria el metodo
-fecha1 = '2023-04-24 10:00:00'
-fecha2 = '2023-04-24 11:30:00'
-minutos = 15
-
-divisiones = dividir_fechas_en_minutos(fecha1, fecha2, minutos)
-for fecha_hora in divisiones:
-    print(fecha_hora.strftime('%Y-%m-%d %H:%M:%S'))
-    
-resultado:
-2023-04-24 10:15:00
-2023-04-24 10:30:00
-2023-04-24 10:45:00
-2023-04-24 11:00:00
-2023-04-24 11:15:00
-2023-04-24 11:30:00
-
-"""
-
-
-"""
-evento
-id_estado_actividad_academica= models.ForeignKey(EstadoActividadAcademica, on_delete=models.PROTECT, related_name='estado_acti_aca')
-    id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.PROTECT, related_name='convocatoria')
-    id_facultad= models.ForeignKey(Facultad, on_delete=models.PROTECT, related_name='facultad')
-    id_materia= models.ForeignKey(Materia, on_delete=models.PROTECT, related_name='materia', null= True)
-    id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='departamento')
-    id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='funcionario_docente_encarcado')
-    id_persona_receptor= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_receptor')
-    id_persona_alta= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_alta')
-    datetime_inicio_estimado = models.DateTimeField()
-    datetime_fin_estimado = models.DateTimeField()
-    datetime_inicio_real = models.DateTimeField(null= True, default= None)
-    datetime_fin_real = models.DateTimeField(null= True, default= None)
-    datetime_registro = models.DateTimeField(auto_now=True)
-    observacion= models.CharField(max_length=500, null= True)
-    nro_curso= models.CharField(max_length=30, null= True)"""
 
 class EventForm(ModelForm):
     class Meta:
@@ -96,13 +55,12 @@ class AddMemberForm(forms.ModelForm):
 
 class HorarioSemestralForm(forms.ModelForm): #ModelForm
 
-    #para el id_funcionario_docente generamos un campo modelchoicefield e indicamos que este desabilitado y no sea requerido en el template, el queryset dejamos vacio aqui.. y el valor predeterminado el primer valor
+    #para el id_funcionario_docente generamos un campo modelchoicefield e indicamos que este desabilitado y no sea requerido en el template, el queryset dejamos vacio aqui..
     #y lo sobreescribimos en el constructor para asignar el valor id_funcionario_docente del usuario logeado. 
 
     #sacamos de manera momentanea el valor inicia para poder hacer las migraciones correctamente, luego volvemos a poner cuando ya hayamos migrado
-    id_funcionario_docente = forms.ModelChoiceField(label='id_funcionario_docente', queryset= FuncionarioDocente.objects.none() , to_field_name= 'id_funcionario_docente', widget=forms.Select(attrs={'class': 'form-control'}), initial=FuncionarioDocente.objects.first())
+    id_funcionario_docente = forms.ModelChoiceField(label='id_funcionario_docente', queryset= FuncionarioDocente.objects.none() , to_field_name= 'id_funcionario_docente', widget=forms.Select(attrs={'class': 'form-control'}))
     #id_funcionario_docente = forms.ModelChoiceField(label='id_funcionario_docente', queryset= FuncionarioDocente.objects.none() , to_field_name= 'id_funcionario_docente', initial=FuncionarioDocente.objects.first(), widget=forms.Select(attrs={'class': 'form-control'}))
-    #id_funcionario_docente= forms.CharField(label='id_funcionario_docente', widget=forms.TextInput(attrs={"class": "hidden"}), disabled= True, required= False)
     id_convocatoria = forms.ModelChoiceField(label='id_convocatoria', queryset= Convocatoria.objects.all().order_by('-anho'), to_field_name= 'id_convocatoria', widget=forms.Select(attrs={'class': 'form-control'}))
     id_dia = forms.ModelChoiceField(label='id_dia', queryset= Dia.objects.all(), to_field_name= 'id_dia', widget=forms.Select(attrs={'class': 'form-control'}))
     hora_inicio= forms.TimeField(label= 'hora_inicio', widget=forms.TimeInput(attrs={"type": "time", "class": "form-control"}, format="%H:%M"))
@@ -126,36 +84,6 @@ class HorarioSemestralForm(forms.ModelForm): #ModelForm
             self.add_error(None, msg)
 
         return cleaned_data
-  
-    # def __init__(self, *args, **kwargs):
-    #     super(HorarioSemestralForm, self).__init__(*args, **kwargs)
-    #     # input_formats to parse HTML5 datetime-local input to datetime field
-    #     self.fields["hora_inicio"].input_formats = ("%Y-%m-%dT%H:%M",)
-    #     self.fields["hora_fin"].input_formats = ("%Y-%m-%dT%H:%M",)
-    
-    # def clean_id_funcionario_docente(self, user, *args, **kwargs):
-    #     user = kwargs.pop('user')
-    #     id_func_doc= FuncionarioDocente.objects.filter(id_funcionario_docente=user.id_persona)
-    #     if id_funcionario_docente is not None:
-    #         #dict = model_to_dict(per.first())
-    #         # print("llego hasta validar el id persona")
-    #         id_funcionario_docente = id_func_doc
-    #         print("paso asignacion funcdoc")
-
-    #     else:
-    #         raise ValidationError("No es valido!")
-    #     return id_funcionario_docente
-
-    #este da error!
-    # def clean_hora_inicio(self):
-    #     hora_inicio = self.cleaned_data.get("hora_inicio")
-    #     print(hora_inicio)
-    #     hora_fin= self.cleaned_data.get("hora_fin")
-    #     print(hora_fin)
-    #     if hora_inicio > hora_fin:
-    #         raise ValidationError("La hora de inicio no puede ser mayor que la fecha de fin.")
-    #     return hora_inicio
-    
     def clean_hora_fin(self):
         hora_inicio = self.cleaned_data.get("hora_inicio")
         hora_fin= self.cleaned_data.get("hora_fin")
@@ -169,83 +97,9 @@ class HorarioSemestralForm(forms.ModelForm): #ModelForm
         user = kwargs.pop('user')
         super(HorarioSemestralForm, self).__init__(*args, **kwargs)
         self.fields['id_funcionario_docente'].queryset = FuncionarioDocente.objects.filter(id_funcionario_docente=user.id_persona)
-        # self.fields['id_funcionario_docente'].widget = forms.HiddenInput()
-        #self.fields['id_funcionario_docente']= FuncionarioDocente.objects.filter(id_funcionario_docente=user.id_persona)
-
-        #Guardamos el id_funcionario_docente del usuario actual
-    # def save(self, *args, **kwargs):
-    #     if not self.fields["id_funcionario_docente"]:  # si el objeto no ha sido guardado anteriormente
-    #         print('entro al save')
-    #         user = kwargs.pop('user')
-    #         print(FuncionarioDocente.objects.filter(id_funcionario_docente=user.id_persona) )
-    #         self.fields['id_funcionario_docente'].queryset = FuncionarioDocente.objects.filter(id_funcionario_docente=user.id_persona)  # obtiene el usuario actual
-    #         super(HorarioSemestralForm, self).save(*args, **kwargs)  # llama al método save del modelo padrex
-
-
-
-
-
-# class ActividadAcademica(forms.Form):
     
-    #Event
-    # id_estado_actividad_academica= forms.ModelChoiceField(label="Estado", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= EstadoActividadAcademica.objects.none(), required=False, to_field_name= 'id_estado_actividad_academica')
-    # id_convocatoria= forms.ModelChoiceField(label="Convocatoria", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= Convocatoria.objects.none(), required=False, to_field_name= 'id_convocatoria')
-    # id_facultad= forms.ModelChoiceField(label='Facultad', queryset= Facultad.objects.all() , to_field_name= 'id_facultad', widget=forms.Select(attrs={'class': 'form-control'}))
-    # id_materia= forms.ModelChoiceField(label='Materia', queryset= Materia.objects.none() , to_field_name= 'id_materia', widget=forms.Select(attrs={'class': 'form-control'}), required=False)
-    # departamento= forms.ModelChoiceField(label='Departamento', queryset= Departamento.objects.none() , to_field_name= 'id_departamento', widget=forms.Select(attrs={'class': 'hidden'}), required=False)
-    # id_funcionario_docente_encargado= forms.ModelChoiceField(label="Encargado", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= FuncionarioDocente.objects.none(), required=False, to_field_name= 'id_funcionario_docente')
-    # id_persona_receptor = forms.ModelChoiceField(label='Receptor', queryset= FuncionarioDocente.objects.none() , to_field_name= 'id_funcionario_docente', widget=forms.Select(attrs={'class': 'form-control'}), required=False)
-    # id_persona_alta= forms.ModelChoiceField(label="Solicitante", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= Persona.objects.none(), required=False, to_field_name= 'id_persona')
-    # datetime_inicio_estimado = forms.DateTimeField(label='Inicio Estimado', widget= DateInput(attrs={"type": "datetime-local", "class": "hidden"}, format="%Y-%m-%dT%H:%M"), required=False)
-    # datetime_fin_estimado = forms.DateTimeField(label='Fin Estimado', widget= DateInput(attrs={"type": "datetime-local", "class": "hidden"}, format="%Y-%m-%dT%H:%M"), required=False)
-    # datetime_inicio_real = forms.DateTimeField(label='Inicio Real', widget= DateInput(attrs={"type": "datetime-local", "class": "hidden"}, format="%Y-%m-%dT%H:%M"), required=False)
-    # datetime_fin_real = forms.DateTimeField(label='Fin Real', widget= DateInput(attrs={"type": "datetime-local", "class": "hidden"}, format="%Y-%m-%dT%H:%M"), required=False)
-    # observacion= forms.CharField(label='Observacion',widget= forms.Textarea(attrs={ "class": "form-control", "placeholder": "Desea agregar algun comentario adicional?"}))
-    # nro_curso= forms.CharField(label='Nro. Curso',widget= forms.Textarea(attrs={ "class": "form-control", "placeholder": "Opcional"}))
-    
-    
-    #DetalleActividadAcademica
-    # id_detalle_actividad_Academica= forms.ModelChoiceField(label="Detalle", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= DetalleActividadAcademica.objects.none(), required=False, to_field_name= 'id_detalle_actividad_Academica')
-    # id_participante= forms.ModelChoiceField(label="Participante", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= Persona.objects.none(), required=False, to_field_name= 'id_persona')
-    # id_actividad_academica= forms.ModelChoiceField(label="Actividad Academica", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= Event.objects.none(), required=False, to_field_name= 'id_actividad_Academica')
-    
-    #Cita
-    # id_cita= forms.ModelChoiceField(label="Cita", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= Cita.objects.none(), required=False, to_field_name= 'id_cita')
-    # id_parametro= forms.ModelChoiceField(label="Parametro", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= Parametro.objects.none(), required=False, to_field_name= 'id_parametro')
-    # es_tutoria= forms.BooleanField(label="Tutoria", widget=forms.TextInput(attrs={"class": "hidden"}), required=False)
-    # es_orientacion_academica= forms.BooleanField(label="Orientacion Academica", widget=forms.TextInput(attrs={"class": "hidden"}), required=False)     
-    # motivo = forms.CharField(label='Motivo', widget= forms.Textarea(attrs={ "class": "form-control", "placeholder": "Indique el motivo de la cita"}))
-   
-   
-   
-   
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['id_facultad'].widget.attrs['onchange'] = 'actualizar_campo_materia()'
-        
-    
-    # def clean(self):
-        
-    #     dt_AA_facultad = self.cleaned_data['id_facultad']
-    #     dt_AA_materia = self.cleaned_data['id_materia']
-    #     dt_AA_receptor = self.cleaned_data['id_funcionario_docente']
-        
-    #      # Crear instancias de los modelos y guardar los datos
-    #     modelo1 = Event(id_facultad= dt_AA_facultad, id_materia=dt_AA_materia, id_persona_receptor= dt_AA_receptor)
-    #     modelo1.save()
-
-        # modelo2 = Modelo2(id_materia=id_materia)
-        # modelo2.save()
-
-        # modelo3 = Modelo3(campo_modelo3=datos_modelo3)
-        # modelo3.save()
-        
-        
-        
-#desde aqui voy a hacer una prueba para poder utilizar CVB's 
 
 '''++++++++++++++++-------------------------------------------------------Calendario del Funcionario docente---------------------------------------------++++++++++++++++++++++'''
-#Cita
 
 class ActividadAcademicaForm(ModelForm):
     
@@ -265,21 +119,6 @@ class ActividadAcademicaForm(ModelForm):
         self.fields['id_funcionario_docente_encargado'].queryset = FuncionarioDocente.objects.none()
         self.fields['id_funcionario_docente_encargado'].to_field_name = 'id_funcionario_docente'
         
-    # id_estado_actividad_academica= forms.ModelChoiceField(label="Estado", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= EstadoActividadAcademica.objects.none(), required=False, to_field_name= 'id_estado_actividad_academica')
-    # id_convocatoria= forms.ModelChoiceField(label="Convocatoria", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= Convocatoria.objects.none(), required=False, to_field_name= 'id_convocatoria')
-    # id_facultad= forms.ModelChoiceField(label='Facultad', queryset= Facultad.objects.all() , to_field_name= 'id_facultad', widget=forms.Select(attrs={'class': 'form-control'}))
-    # id_materia= forms.ModelChoiceField(label='Materia', queryset= Materia.objects.none() , to_field_name= 'id_materia', widget=forms.Select(attrs={'class': 'form-control'}), required=False)
-    # departamento= forms.ModelChoiceField(label='Departamento', queryset= Departamento.objects.none() , to_field_name= 'id_departamento', widget=forms.Select(attrs={'class': 'hidden'}), required=False)
-    # id_funcionario_docente_encargado= forms.ModelChoiceField(label="Encargado", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= FuncionarioDocente.objects.none(), required=False, to_field_name= 'id_funcionario_docente')
-   # id_persona_alta= forms.ModelChoiceField(label="Solicitante", widget=forms.TextInput(attrs={"class": "hidden"}), queryset= Persona.objects.none(), required=False, to_field_name= 'id_persona')
-    # datetime_inicio_estimado = forms.DateTimeField(label='Inicio Estimado', widget= DateInput(attrs={"type": "datetime-local", "class": "hidden"}, format="%Y-%m-%dT%H:%M"), required=False)
-    # datetime_fin_estimado = forms.DateTimeField(label='Fin Estimado', widget= DateInput(attrs={"type": "datetime-local", "class": "hidden"}, format="%Y-%m-%dT%H:%M"), required=False)
-    # datetime_inicio_real = forms.DateTimeField(label='Inicio Real', widget= DateInput(attrs={"type": "datetime-local", "class": "hidden"}, format="%Y-%m-%dT%H:%M"), required=False)
-    # datetime_fin_real = forms.DateTimeField(label='Fin Real', widget= DateInput(attrs={"type": "datetime-local", "class": "hidden"}, format="%Y-%m-%dT%H:%M"), required=False)
-    # observacion= forms.CharField(label='Observacion',widget= forms.Textarea(attrs={ "class": "form-control", "placeholder": "Desea agregar algun comentario adicional?"}))
-    # nro_curso= forms.CharField(label='Nro. Curso',widget= forms.Textarea(attrs={ "class": "form-control", "placeholder": "Opcional"}))
-    
-
     class Meta:
         model = Event
         fields = '__all__'
@@ -314,24 +153,6 @@ class ActividadAcademicaForm(ModelForm):
                 
             })
         }
-        
-        
-# class busquedaForm(Form):
-    
-#     facultades = forms.ModelChoiceField(queryset=Facultad.objects.none(), widget= forms.Select(attrs={
-#         'class': 'form-control select2',
-#         'style': 'width: 100%'
-#     }))
-    
-#     materias = forms.ModelChoiceField(queryset=Materia.objects.all(), widget= forms.Select(attrs={
-#         'class': 'form-control select2',
-#         'style': 'width: 100%'
-#     }))
-
-#     funcionario_docente = forms.ModelChoiceField(queryset=FuncionarioDocente.objects.none(), widget= forms.Select(attrs={
-#         'class': 'form-control select2',
-#         'style': 'width: 100%'
-#     }))
 
 
 class ReportForm(Form):

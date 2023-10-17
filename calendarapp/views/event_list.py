@@ -22,24 +22,27 @@ class AllEventsListView(ListView):
     model = Event
 
     def get_queryset(self):
-        request = self.request
-        current_user= request.user
-        dict = model_to_dict(current_user)
-        ins_persona=  Persona.objects.get(id= dict["id_persona"])
-         #devolvemos solo aquellos registros que correspondan al usuario logeado
-        if current_user.has_perm('calendarapp.iniciar_cita'):
-            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
-            event= Event.objects.get_all_events().filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
-            for objeto in event:
-                    if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                        objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-            return event
-        else:
-            event= Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona)
-            for objeto in event:
-                    if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                        objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-            return event
+        try:
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_persona=  Persona.objects.get(id= dict["id_persona"])
+            #devolvemos solo aquellos registros que correspondan al usuario logeado
+            if current_user.has_perm('calendarapp.iniciar_cita'):
+                ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+                event= Event.objects.get_all_events().filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+                for objeto in event:
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                return event
+            else:
+                event= Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona)
+                for objeto in event:
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                return event
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
 
 class ActividadesAcademicasListView(ListView):
     """ All event list views """
@@ -49,43 +52,46 @@ class ActividadesAcademicasListView(ListView):
     context_object_name= "lista_actividades"
 
     def get_queryset(self):
-        #return Event.objects.get_all_events(user=self.request.user)
-        #return Event.objects.get_all_acti_academ()
-        request = self.request
-        current_user= request.user
-        dict = model_to_dict(current_user)
-        ins_persona=  Persona.objects.get(id= dict["id_persona"])
-        events= []
-         #devolvemos solo aquellos registros que correspondan al usuario logeado
-        if current_user.has_perm('calendarapp.iniciar_cita'):
-            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
-            tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
-            for objeto in tutorias:
-                    if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                        objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+        try:
+            #return Event.objects.get_all_events(user=self.request.user)
+            #return Event.objects.get_all_acti_academ()
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_persona=  Persona.objects.get(id= dict["id_persona"])
+            events= []
+            #devolvemos solo aquellos registros que correspondan al usuario logeado
+            if current_user.has_perm('calendarapp.iniciar_cita'):
+                ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
+                for objeto in tutorias:
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
 
-            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
-            for objeto in orientaciones:
-                    if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                        objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-                
-            # Combinar los dos querysets en una sola variable
-            events= list(chain(tutorias, orientaciones))
-        
-        else:
-            tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
-            for objeto in tutorias:
-                    if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                        objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
+                for objeto in orientaciones:
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                    
+                # Combinar los dos querysets en una sola variable
+                events= list(chain(tutorias, orientaciones))
+            
+            else:
+                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+                for objeto in tutorias:
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
 
-            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
-            for objeto in orientaciones:
-                    if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                        objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-                
-            # Combinar los dos querysets en una sola variable
-            events= list(chain(tutorias, orientaciones))        
-        return events
+                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+                for objeto in orientaciones:
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                    
+                # Combinar los dos querysets en una sola variable
+                events= list(chain(tutorias, orientaciones))        
+            return events
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
     
     def get_actividades_medicion(self):
         data = {}
@@ -132,8 +138,8 @@ class ActividadesAcademicasListView(ListView):
             
             data= {'tutoria_iniciada': tutoria_iniciada, 'tutoria_cancelada': tutoria_cancelada, 'tutoria_finalizada': tutoria_finalizada,
                 'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada, 'tutoria_vencida': tutoria_vencida, 'orientacion_vencida': orientacion_vencida}
-        except:
-            pass
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
         return data
     
 
@@ -150,26 +156,29 @@ class RunningEventsListView(ListView):
     model = Event
 
     def get_queryset(self):
-        parametro = self.kwargs['tipo_cita']
-        request = self.request
-        current_user= request.user
-        dict = model_to_dict(current_user)
-        ins_persona=  Persona.objects.get(id= dict["id_persona"])
-        #devolvemos solo aquellos registros que correspondan al usuario logeado
-        if current_user.has_perm('calendarapp.iniciar_cita'):
-            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
-            event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
-            for objeto in event:
-                    if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                        objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-            return event
-        else:
-            event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
-            for objeto in event:
-                    if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                        objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-            return event
+        try:
+            parametro = self.kwargs['tipo_cita']
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_persona=  Persona.objects.get(id= dict["id_persona"])
+            #devolvemos solo aquellos registros que correspondan al usuario logeado
+            if current_user.has_perm('calendarapp.iniciar_cita'):
+                ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+                event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+                for objeto in event:
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                return event
+            else:
+                event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
+                for objeto in event:
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                return event
         #return Event.objects.get_running_events(user=self.request.user) 
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
         
     
 class RunningActividadesAcademicasListView(ListView):
@@ -180,58 +189,61 @@ class RunningActividadesAcademicasListView(ListView):
     context_object_name= "lista_actividades"
 
     def get_queryset(self):
-        parametro = self.kwargs['tipo_cita']
-        request = self.request
-        current_user= request.user
-        dict = model_to_dict(current_user)
-        ins_persona=  Persona.objects.get(id= dict["id_persona"])
-        running_events= []
-        #devolvemos solo aquellos registros que correspondan al usuario logeado
-        if current_user.has_perm('calendarapp.iniciar_cita'):
-            ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
-            if parametro == 'Tutoria':
-                running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
-                for objeto in running_events:
-                    if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                        objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-            elif parametro== "OriAcademica":
-                running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
-                for objeto in running_events:
-                    if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                        objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-            else: 
-                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
-                for objeto in tutorias:
-                    if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                        objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
-                for objeto in orientaciones:
-                    if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                        objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-                running_events = list(chain(tutorias, orientaciones))
-        else:
-            if parametro == 'Tutoria':
-                running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
-                for objeto in running_events:
-                    if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                        objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-            elif parametro== "OriAcademica":
-                running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
-                for objeto in running_events:
-                    if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                        objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-            else: 
-                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
-                for objeto in tutorias:
-                    if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                        objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
-                for objeto in orientaciones:
-                    if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                        objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
-                running_events = list(chain(tutorias, orientaciones))
+        try:
+            parametro = self.kwargs['tipo_cita']
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_persona=  Persona.objects.get(id= dict["id_persona"])
+            running_events= []
+            #devolvemos solo aquellos registros que correspondan al usuario logeado
+            if current_user.has_perm('calendarapp.iniciar_cita'):
+                ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
+                if parametro == 'Tutoria':
+                    running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
+                    for objeto in running_events:
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                elif parametro== "OriAcademica":
+                    running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
+                    for objeto in running_events:
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                else: 
+                    tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
+                    for objeto in tutorias:
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                    orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
+                    for objeto in orientaciones:
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                    running_events = list(chain(tutorias, orientaciones))
+            else:
+                if parametro == 'Tutoria':
+                    running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+                    for objeto in running_events:
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                elif parametro== "OriAcademica":
+                    running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+                    for objeto in running_events:
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                else: 
+                    tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+                    for objeto in tutorias:
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                    orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+                    for objeto in orientaciones:
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                    running_events = list(chain(tutorias, orientaciones))
 
-        return running_events
+            return running_events
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
     
     def get_actividades_medicion(self):
         data = {}
@@ -279,8 +291,8 @@ class RunningActividadesAcademicasListView(ListView):
             
             data= {'tutoria_iniciada': tutoria_iniciada, 'tutoria_cancelada': tutoria_cancelada, 'tutoria_finalizada': tutoria_finalizada,
                 'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada, 'tutoria_vencida': tutoria_vencida, 'orientacion_vencida': orientacion_vencida}
-        except:
-            pass
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
         return data
     
 
@@ -290,26 +302,33 @@ class RunningActividadesAcademicasListView(ListView):
         return context
     
 def DetalleCita(request, id_cita):
-    cita= Cita.objects.filter(id_cita= id_cita).select_related("id_cita").first()
-    #detalles pude enviar uno o varios registros
-    detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_cita)
-    contexto= {'cita': cita, 'detalles': detalles}
-    return render(request,'calendarapp/detalles_cita.html', context= contexto)
+    try:
+        cita= Cita.objects.filter(id_cita= id_cita).select_related("id_cita").first()
+        #detalles pude enviar uno o varios registros
+        detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_cita)
+        contexto= {'cita': cita, 'detalles': detalles}
+        return render(request,'calendarapp/detalles_cita.html', context= contexto)
+    except Exception as e:
+                print(f"Se ha producido un error: {e}")
+
 
 def DetalleActividadesAcademicas(request, id_tutoria, id_ori_academ):
-    tutoria= []
-    orientacion_academica= []
-    if id_tutoria > 0:
-        tutoria= Tutoria.objects.filter(id_tutoria= id_tutoria).select_related("id_tutoria").first()
-        #detalles pude enviar uno o varios registros
-        detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_tutoria)
-    else:
-        orientacion_academica= OrientacionAcademica.objects.filter(id_orientacion_academica= id_ori_academ).select_related("id_orientacion_academica").first()
-        #detalles pude enviar uno o varios registros
-        detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_ori_academ)
-    
-    contexto= {'tutoria': tutoria, 'detalles': detalles, 'orientacion_academica': orientacion_academica}
-    return render(request,'calendarapp/detalles_actividad_academica.html', context= contexto)
+    try:
+        tutoria= []
+        orientacion_academica= []
+        if id_tutoria > 0:
+            tutoria= Tutoria.objects.filter(id_tutoria= id_tutoria).select_related("id_tutoria").first()
+            #detalles pude enviar uno o varios registros
+            detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_tutoria)
+        else:
+            orientacion_academica= OrientacionAcademica.objects.filter(id_orientacion_academica= id_ori_academ).select_related("id_orientacion_academica").first()
+            #detalles pude enviar uno o varios registros
+            detalles= DetalleActividadAcademica.objects.filter(id_actividad_academica= id_ori_academ)
+        
+        contexto= {'tutoria': tutoria, 'detalles': detalles, 'orientacion_academica': orientacion_academica}
+        return render(request,'calendarapp/detalles_actividad_academica.html', context= contexto)
+    except Exception as e:
+                print(f"Se ha producido un error: {e}")
 
 @csrf_exempt
 def CancelarCita(request, id_cita):
@@ -339,7 +358,8 @@ def CancelarCita(request, id_cita):
                     record.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Cancelada."})})
 
-            except:
+            except Exception as e:
+                print(f"Se ha producido un error: {e}")
                 messages.error(request, 'Ocurrió un error al intentar cancelar la cita.')
                 return render(request, "calendarapp/cancelar_cita.html", context = {"id_cita": id_cita})
                 
@@ -377,7 +397,8 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
                     orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     orientacion_academica.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
-            except:
+            except Exception as e:
+                print(f"Se ha producido un error: {e}")
                 messages.error(request, 'Ocurrió un error al intentar cancelar la Actividad Académica.')
                 
                 return render(request, "calendarapp/cancelar_actividad_academica.html", context = {"id_tutoria": id_tutoria, "id_ori_academ": id_ori_academ})
@@ -415,7 +436,8 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
                     orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     orientacion_academica.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
-            except:
+            except Exception as e:
+                print(f"Se ha producido un error: {e}")
                 messages.error(request, 'Ocurrió un error al intentar finalizar la Actividad Académica.')
                 
                 return render(request, "calendarapp/finalizar_actividad_academica.html", context = {"id_tutoria": id_tutoria, "id_ori_academ": id_ori_academ})
@@ -444,7 +466,8 @@ def AprobarCita(request, id_cita):
                     record.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Confirmada."})})
 
-            except:
+            except Exception as e:
+                print(f"Se ha producido un error: {e}")
                 messages.error(request, 'Ocurrió un error al intentar confirmar la cita.')
                 
                 return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})
@@ -467,7 +490,7 @@ def CancelarTarea(request, id_tarea):
             return HttpResponse(data)
 
         except Exception as e:
-            print(str(e))
+            print(f"Se ha producido un error: {e}")
             data= json.dumps([{"name": 500}])
             return HttpResponse(data)    
         
@@ -488,9 +511,9 @@ def FinalizarTarea(request, id_tarea):
                 return HttpResponse(data)
 
             except Exception as e:
-               print(str(e))
-               data= json.dumps([{"name": 500}])
-               return HttpResponse(data)
+                print(f"Se ha producido un error: {e}")
+                data= json.dumps([{"name": 500}])
+                return HttpResponse(data)
             
 @csrf_exempt
 def IniciarTarea(request, id_tarea):
@@ -507,9 +530,9 @@ def IniciarTarea(request, id_tarea):
                 return HttpResponse(data)
 
             except Exception as e:
-               print(str(e))
-               data= json.dumps([{"name": 500}])
-               return HttpResponse(data)
+                print(f"Se ha producido un error: {e}")
+                data= json.dumps([{"name": 500}])
+                return HttpResponse(data)
                 
                 
 def About(request):

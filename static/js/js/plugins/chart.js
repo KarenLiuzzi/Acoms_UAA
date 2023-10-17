@@ -1993,7 +1993,7 @@
 			timeout = setTimeout(function(){
 				each(Chart.instances,function(instance){
 					// If the responsive flag is set in the chart instance config
-					// Cascade the resize event down to the chart.
+					// CASCADE the resize event down to the chart.
 					if (instance.options.responsive){
 						instance.resize(instance.render, true);
 					}

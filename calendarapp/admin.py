@@ -1,7 +1,6 @@
 from django.contrib import admin
-from calendarapp import models
-from calendarapp.models.event import EstadoActividadAcademica, Event,UnidadMedida,Tutoria , OrientacionAcademica , Cita,EstadoTarea, Parametro, TipoTarea, TipoTutoria, TipoOrientacionAcademica, Motivo #,DetalleActividadAcademica
-from calendarapp.models.calendario import Dia, Semestre, HorarioSemestral, Convocatoria
+from calendarapp.models.event import EstadoActividadAcademica,UnidadMedida,EstadoTarea, Parametro, TipoTarea, TipoTutoria, TipoOrientacionAcademica, Motivo 
+from calendarapp.models.calendario import Dia, Semestre, Convocatoria
 from django.contrib.auth.models import Permission
 
 #registramos nuestros modelos en la pantalla de admin
@@ -32,25 +31,6 @@ class SemestreAdmin(admin.ModelAdmin):
     list_filter = ('descripcion_semestre',)  # Filtro por campo
     search_fields = ('descripcion_semestre',)  # Búsqueda por campo
 
-# @admin.register(HorarioSemestral)
-# class HorarioSemestralAdmin(admin.ModelAdmin):
-
-#     def funcionario_docente_nombre(self, obj):
-#         return '%s' % (obj.id_funcionario_docente) 
-#     funcionario_docente_nombre.short_description = 'Funcionario/Docente'
-
-#     def convocatoria_nombre(self, obj):
-#         return '%s %s' % (obj.id_convocatoria.id_semestre.descripcion_semestre, obj.id_convocatoria.anho) 
-#     convocatoria_nombre.short_description = 'Convocatoria'
-
-#     def dia_nombre(self, obj):
-#         return '%s' % (obj.id_dia.descripcion_dia) 
-#     dia_nombre.short_description = 'Dia'
-
-    
-#     list_display = ['funcionario_docente_nombre', 'convocatoria_nombre', 'dia_nombre', 'hora_inicio', 'hora_fin'] # Campos a mostrar en la lista
-#     list_filter = ["id_funcionario_docente", "id_convocatoria", "hora_inicio", "hora_fin", "id_dia"]  # Filtro por campo
-#     #search_fields = ["id_funcionario_docente__",] # Búsqueda por campo
 
 @admin.register(Convocatoria)
 class ConvocatoriaAdmin(admin.ModelAdmin):
@@ -124,109 +104,3 @@ class EstadoTareaAdmin(admin.ModelAdmin):
     list_display = ['descripcion_estado_tarea'] # Campos a mostrar en la lista
     list_filter = ["descripcion_estado_tarea"]  # Filtro por campo
     search_fields = ["descripcion_estado_tarea"] # Búsqueda por campo
-    
-# @admin.register(Event)
-# class EventAdmin(admin.ModelAdmin):
-
-#     def estado_acti_nombre(self, obj):
-#         return '%s' % (obj.id_estado_actividad_academica.descripcion_estado_actividad_academica) 
-#     estado_acti_nombre.short_description = 'Estado'
-    
-#     def convocatoria_nombre(self, obj):
-#         return '%s %s' % (obj.id_convocatoria.id_semestre.descripcion_semestre, obj.id_convocatoria.anho) 
-#     convocatoria_nombre.short_description = 'Convocatoria'
-    
-#     def facultad_nombre(self, obj):
-#         return '%s' % (obj.id_facultad.descripcion_facultad) 
-#     facultad_nombre.short_description = 'Facultad'
-    
-#     def materia_nombre(self, obj):
-#         #si no existe el objeto, entonces devuelve vacio o None
-#         try:
-#             return '%s' % (obj.id_facultad.descripcion_facultad)
-#         except AttributeError:
-#             return ''
-    
-#     def departamento_nombre(self, obj):
-#         return '%s' % (obj.id_departamento.descripcion_departamento) 
-#     departamento_nombre.short_description = 'Departamento'
-    
-#     def encargado_nombre(self, obj):
-#         return '%s %s' % (obj.id_funcionario_docente_encargado.id_funcionario_docente.nombre, obj.id_funcionario_docente_encargado.id_funcionario_docente.apellido) 
-#     encargado_nombre.short_description = 'Encargado'
-    
-#     def receptor_nombre(self, obj):
-#         #si no existe el objeto, entonces devuelve vacio o None
-#         try:
-#             return '%s %s' % (obj.id_persona_receptor.nombre, obj.id_persona_receptor.apellido) 
-#         except AttributeError:
-#             return ''
-    
-    
-#     def alta_nombre(self, obj):
-#         return '%s %s' % (obj.id_persona_alta.nombre, obj.id_persona_alta.apellido) 
-#     alta_nombre.short_description = 'Usuario alta'
-    
-    
-#     list_display = ['estado_acti_nombre', 'convocatoria_nombre','facultad_nombre' ,'materia_nombre' ,'receptor_nombre','departamento_nombre', 'encargado_nombre' , 'alta_nombre' , 'datetime_inicio_estimado', 'datetime_fin_estimado', 'datetime_inicio_real', 'datetime_fin_real', 'datetime_registro', 'observacion', 'nro_curso'] # Campos a mostrar en la lista
-#     #list_filter = ["descripcion_estado_tarea"]  # Filtro por campo
-#     #search_fields = ["descripcion_estado_tarea"] # Búsqueda por campo
-
-
-
-# @admin.register(Cita)
-# class CitaAdmin(admin.ModelAdmin):
-    
-#     def Parametro_nombre(self, obj):
-#         return '%s %s' % (obj.id_parametro.descripcion_parametro, obj.id_parametro.valor) 
-#     Parametro_nombre.short_description = 'Parametro'
-    
-#     list_display = ['Parametro_nombre', 'es_tutoria','es_orientacion_academica' , 'es_notificable', 'motivo'] # Campos a mostrar en la lista
-
-
-
-# @admin.register(OrientacionAcademica)
-# class OrientacionAcademicaAdmin(admin.ModelAdmin):
-    
-#     def motivo_nombre(self, obj):
-#         return '%s' % (obj.id_motivo.descripcion_motivo) 
-#     motivo_nombre.short_description = 'Motivo'
-    
-    
-#     def tipo_nombre(self, obj):
-#         return '%s' % (obj.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica) 
-#     tipo_nombre.short_description = 'Tipo'
-    
-    
-#     list_display = ['id_cita', 'motivo_nombre','tipo_nombre'] # Campos a mostrar en la lista
-
-#comentamos momentaneamente
-# @admin.register(DetalleActividadAcademica)
-# class DetalleActividadAcademicaAdmin(admin.ModelAdmin):
-    
-#     def participante_nombre(self, obj):
-#         return '%s %s' % (obj.id_participante.nombre, obj.id_participante.apellido) 
-#     participante_nombre.short_description = 'Participante'
-    
-#     list_display = ['id_actividad_academica', 'participante_nombre', 'es_docente', 'es_funcionario', 'es_alumno'] # Campos a mostrar en la lista
-
-
-# @admin.register(models.Event)
-# class EventAdmin(admin.ModelAdmin):
-#     model = models.Event
-#     list_display = [
-#         "observacion",
-#         "datetime_inicio_estimado",
-#         "datetime_fin_estimado",
-#     ]
-#     list_filter = ["datetime_inicio_estimado", "datetime_fin_estimado"]
-#     search_fields = ["observacion"]
-
-
-# @admin.register(models.EventMember)
-# class EventMemberAdmin(admin.ModelAdmin):
-#     model = models.EventMember
-#     list_display = ["id", "event", "user", "created_at", "updated_at"]
-#     list_filter = ["event"]
-
-

@@ -575,6 +575,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_responsable_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar personas.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -588,6 +592,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_tipo_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -601,6 +609,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_estado_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar estado tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -627,6 +639,10 @@
                     success: function(data) {
                         $('#id_id_tipo_orientacion_academica').html(data);
                         actualizartipo_motivo_ori_academ();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo orientacion.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -642,6 +658,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_tipo_motivo').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar motivo orientacion.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -655,7 +675,7 @@
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'campo': 'facultad'
+                        'campo': 'facultad_funcionario'
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -666,6 +686,10 @@
                         }
                         band_boton_selects= band_boton_selects + 1
                         //actualizarmateria();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -680,24 +704,28 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_materia').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar materia.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
 
                 });
             }
             //ejecutar si cambia la facultad para actualizar materia y func/doc
-            $('#id_id_facultad').change(function() {
+            //$('#id_id_facultad').change(function() {
                 //actualizarmateria()
-                actualizarfuncionariodocente()
-            });
+            //    actualizarfuncionariodocente()
+            //});
 
             //actualizar el campo de la docente/funcionario de acuerdo a la materia seleccionada
             function actualizarfuncionariodocente() {
-                var selected_option = $('#id_id_facultad').val();
+                //var selected_option = $('#id_id_facultad').val();
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'id_facultad': selected_option,
-                        'campo': 'todos_funcionarios_docentes'
+                        //'id_facultad': selected_option,
+                        'campo': 'funcionariodocente_logeado'
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -712,14 +740,18 @@
                             actualizar_estado_tarea();
                         }
                         band_boton_selects= band_boton_selects + 1
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar funcionario.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
 
             //ejecutar si cambia la materia para actualiar fun/doc
-            $('#id_id_materia').change(function() {
-                actualizarfuncionariodocente()
-            });
+            //$('#id_id_materia').change(function() {
+            //    actualizarfuncionariodocente()
+            //});
 
             //aplicar formato select2 a todos los dropdowns
             $('.select2').select2({

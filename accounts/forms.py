@@ -51,20 +51,6 @@ class ResetPassForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}), validators=[clean_email])
 
 class SignInForm(forms.Form):
-
-    # def clean(self):
-    #     cleaned_data = super().clean()
-
-    # def clean_password(self):
-    #     user = User.objects.get(mail= self.cleaned_data.get("email"))
-
-    #     if user.check_password():
-    #         # Contraseña correcta
-    #         return self.cleaned_data.get("password")
-    #     else:
-    #         raise ValidationError("Los datos son incorrectos, vuelve a intentarlo.")
-        
-
     email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}), validators=[validar_mail])
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={"class": "form-control"})  
@@ -117,7 +103,6 @@ class SignUpForm(forms.ModelForm):
         if nro_doc.count() == 0:
             raise ValidationError("El nro de documento no existe en la base de Datos!")
         #Validamos si existe un usuario con el nro de documento
-        #if user_doc.exists():
         if user_doc.count() != 0:
             raise ValidationError("Ya existe un usuario con el Nro de Cédula!")
         return doc
@@ -141,34 +126,13 @@ class SignUpForm(forms.ModelForm):
     def clean_id_persona(self):
         doc = self.cleaned_data.get("documento")
         per = Persona.objects.filter(documento=doc).first()
-        #print(per)
-        # if per is not None:
         if per is not None:
-            #dict = model_to_dict(per.first())
-            # print("llego hasta validar el id persona")
             id_persona = per
-            #print("paso asignacion persona")
 
         else:
             raise ValidationError("No existe una persona con el Nro de documento en la Base de Datos!")
         return id_persona
     
-    # def clean_materia_func_doc(self):
-    #     materia_func_doc = self.cleaned_data.get("materia_func_doc")
-    #     #per = Persona.objects.filter(documento=doc).first()
-    #     #print(per)
-    #     # if per is not None:
-    #     if materia_func_doc is  None:
-    #     #     #dict = model_to_dict(per.first())
-    #     #     # print("llego hasta validar el id persona")
-    #     #     print(materia_func_doc)
-    #     #     #print("paso asignacion persona")
-
-    #     # else:
-    #         print(materia_func_doc)
-    #         raise ValidationError("Existe un problema con materia_func_doc!")
-            
-    #     return materia_func_doc
 
 #clase para generar el token de reset pass a el usuario
 class ForgotPasswordTokenGenerator(PasswordResetTokenGenerator):

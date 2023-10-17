@@ -248,7 +248,7 @@
             
                 <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-calendar-check"></i> Confirmar Cita </button>
             {% else %}
-                <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Editar Cita</a>
+                <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Editar Cita</a>
             
                 <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
             {% endif %}
@@ -263,16 +263,7 @@
         {% if perms.calendarapp.iniciar_cita %}
 
             <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
-        
-            {% if cita.es_tutoria %}
-
-                <a type="button" class="btn btn-primary btn-flat"  title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_tutoria' pk=cita.id_cita %}">  <i class="bi bi-caret-right-fill"></i> Iniciar Cita </a>
-
-            {% else %}
-
-                <a type="button" class="btn btn-primary btn-flat" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=cita.id_cita %}"> <i class="bi bi-caret-right-fill"></i> Iniciar Cita </a>
-                
-            {% endif %}
+            <a type="button" class="btn btn-primary btn-flat" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=cita.id_cita %}"> <i class="bi bi-caret-right-fill"></i> Iniciar Cita </a>
 
         {% else %}
             <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
@@ -525,6 +516,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_responsable_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar personas.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -538,6 +533,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_tipo_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -551,6 +550,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_estado_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar estado tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }

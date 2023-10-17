@@ -4326,7 +4326,7 @@ var FullCalendar = (function (exports) {
             this.splitIndividualUi = memoize(this._splitIndividualUi);
             this.splitEventDrag = memoize(this._splitInteraction);
             this.splitEventResize = memoize(this._splitInteraction);
-            this.eventUiBuilders = {}; // TODO: typescript protection
+            this.eventUiBuilders = {}; // TODO: typescript CASCADEion
         }
         Splitter.prototype.splitProps = function (props) {
             var _this = this;
@@ -6879,7 +6879,7 @@ var FullCalendar = (function (exports) {
             this.currentCalendarOptionsRefiners = {};
             this.getCurrentData = function () { return _this.data; };
             this.dispatch = function (action) {
-                _this.actionRunner.request(action); // protects against recursive calls to _handleAction
+                _this.actionRunner.request(action); // CASCADEs against recursive calls to _handleAction
             };
             this.props = props;
             this.actionRunner.pause();
@@ -10205,7 +10205,7 @@ var FullCalendar = (function (exports) {
             this.pointerScreenY = null;
             this.isAnimating = false;
             this.scrollCaches = null;
-            // protect against the initial pointerdown being too close to an edge and starting the scroll
+            // CASCADE against the initial pointerdown being too close to an edge and starting the scroll
             this.everMovedUp = false;
             this.everMovedDown = false;
             this.everMovedLeft = false;

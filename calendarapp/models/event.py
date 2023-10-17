@@ -1,17 +1,12 @@
-from datetime import datetime
 from django.db import models
 from django.db.models import F
-from django.urls import reverse
 from django.forms import model_to_dict
 from calendarapp.models import EventAbstract
-from accounts.models import User
 from django.db.models import Q, CheckConstraint
 from itertools import chain
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+# from sendgrid import SendGridAPIClient
+# from sendgrid.helpers.mail import Mail
 import os
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
 
 """models.Manager es una clase de Django que proporciona un mecanismo para realizar consultas a la base de datos y realizar operaciones en los modelos de manera más fácil y eficiente. Cada modelo de Django tiene al menos un objeto Manager asociado a él de forma predeterminada.
 
@@ -24,15 +19,9 @@ En resumen, models.Manager es un componente clave de Django que proporciona una 
 
 class EventManager(models.Manager):
     """ Event manager. select_related: Sin embargo, debes tener en cuenta que esta optimización solo funciona para relaciones ForeignKey y OneToOneField. Si estás trabajando con relaciones ManyToManyField, deberás utilizar el método prefetch_related para optimizar las consultas. """
-    #retornar todos los campos de un event
-    # def get_cita(self, id):
-    #     cita= Event.objects.filter(id_actividad_academica= id).values('id_estado_actividad_academica', 'id_actividad_academica').first
-    #     return cita
-    #este se usa para traer tanto las citas de tipo tutoria como de orientacion academica
-    #def get_all_events(self, user):
+
     def get_all_events(self):
         
-        #events = Event.objects.all() #.filter(user=user, is_active=True, is_deleted=False)
         events = Cita.objects.select_related("id_cita")
 
         return events
@@ -40,7 +29,6 @@ class EventManager(models.Manager):
     
     def get_all_acti_academ(self):
         
-        #events = Event.objects.all() #.filter(user=user, is_active=True, is_deleted=False), cambiamos el nombre de la columna por un alias
         tutorias = Tutoria.objects.select_related("id_tutoria").annotate(id_actividad_academica=F("id_tutoria")).filter(id_cita= None)
         orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").annotate(id_actividad_academica=F("id_orientacion_academica")).filter(id_cita= None)
         
@@ -62,8 +50,7 @@ class EventManager(models.Manager):
 
         return all_events
 
-    #este usamos para traer un solo tipo de cita, ya sea de tipo tutoria u orientacion academica -- ver como modificar
-    #def get_running_events(self, user):
+    #este usamos para traer un solo tipo de cita, ya sea de tipo tutoria u orientacion academica 
     def get_running_events(self, tipo_cita):
         if tipo_cita == 'Tutoria':
             
@@ -106,20 +93,17 @@ class EstadoActividadAcademica(models.Model):
 from accounts.models.user import Facultad, Materia, Departamento, FuncionarioDocente, Persona
 from calendarapp.models.calendario import Convocatoria
 
-
-
 class Event(EventAbstract):
     """ Event model """
 
-    id_estado_actividad_academica= models.ForeignKey(EstadoActividadAcademica, on_delete=models.PROTECT, related_name='estado_acti_aca')
-    id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.PROTECT, related_name='convocatoria')
-    id_facultad= models.ForeignKey(Facultad, on_delete=models.PROTECT, related_name='facultad')
-    id_materia= models.ForeignKey(Materia, on_delete=models.SET_NULL, blank=True, null=True)
-    id_departamento= models.ForeignKey(Departamento, on_delete=models.PROTECT, related_name='departamento')
-    id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.PROTECT, related_name='funcionario_docente_encarcado')
-   #comento esto
-    id_persona_solicitante= models.ForeignKey(Persona, on_delete=models.SET_NULL, blank=True, null=True)
-    id_persona_alta= models.ForeignKey(Persona, on_delete=models.PROTECT, related_name='persona_alta')
+    id_estado_actividad_academica= models.ForeignKey(EstadoActividadAcademica, on_delete=models.CASCADE, related_name='estado_acti_aca')
+    id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='convocatoria')
+    id_facultad= models.ForeignKey(Facultad, on_delete=models.CASCADE, related_name='facultad')
+    id_materia= models.ForeignKey(Materia, on_delete=models.CASCADE, blank=True, null=True)
+    id_departamento= models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name='departamento')
+    id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.CASCADE, related_name='funcionario_docente_encarcado')
+    id_persona_solicitante= models.ForeignKey(Persona, on_delete=models.CASCADE, blank=True, null=True)
+    id_persona_alta= models.ForeignKey(Persona, on_delete=models.CASCADE, related_name='persona_alta')
     datetime_inicio_estimado = models.DateTimeField()
     datetime_fin_estimado = models.DateTimeField()
     datetime_inicio_real = models.DateTimeField(null= True, blank=True)
@@ -127,33 +111,12 @@ class Event(EventAbstract):
     datetime_registro = models.DateTimeField() #auto_now=True
     observacion= models.CharField(max_length=500, null= True, blank=True)
     nro_curso= models.CharField(max_length=30, null= True, blank=True)
-    id_persona_ultima_modificacion= models.ForeignKey(Persona, on_delete=models.SET_NULL, blank=True, null=True, related_name='evento_modificacion')
-    #comento esto
-    #participante_acti_academ= models.ManyToManyField(Persona, blank=True, help_text='Los participantes de la actividad academica', related_name='participante_acti_academica', through= 'DetalleActividadAcademica')
+    id_persona_ultima_modificacion= models.ForeignKey(Persona, on_delete=models.CASCADE, blank=True, null=True, related_name='evento_modificacion')
 
     objects = EventManager()
 
     def __str__(self):
         return self.id_actividad_academica.__str__() 
-
-    # def get_absolute_url(self):
-    #     return reverse("calendarapp:event-detail", args=(self.id_actividad_academica,))
-    
-    """Este código Django define un método get_html_url dentro de un modelo de la aplicación calendarapp. Este método utiliza el decorador @property para indicar que se trata de una propiedad calculada dinámicamente, en lugar de un campo de base de datos almacenado en la instancia del modelo.
-
-    El propósito del método get_html_url es devolver un enlace HTML que apunte a la página de detalles de un evento. En la primera línea, se utiliza la función reverse de Django para construir la URL de la página de detalles del evento, especificando el nombre de la vista event-detail y el ID del evento actual (self.id) como argumentos.
-
-    Luego, se utiliza una cadena de formato de f-string para construir la etiqueta HTML de anclaje (<a>) que incluirá el título del evento (self.title) y la URL de la página de detalles. La URL se incrusta en la cadena de formato mediante llaves ({}) y la expresión de formato {url}.
-
-    Finalmente, el método devuelve la cadena de la etiqueta HTML completa con el enlace al detalle del evento.
-
-    Este método puede ser utilizado por otros componentes de la aplicación que necesiten representar los eventos en forma de enlaces HTML. Por ejemplo, puede ser utilizado para generar enlaces de eventos en una vista de calendario o en una lista de eventos."""
-
-    # @property
-    # def get_html_url(self):
-    #     url = reverse("calendarapp:event-detail", args=(self.id_actividad_academica,))
-    #     return f'<a href="{url}"> {self.id_actividad_academica} </a>'
-    
     class Meta:
         verbose_name_plural = "Actividades Academicas"
         #permisos personalizados
@@ -163,19 +126,6 @@ class DetalleActividadAcademica(models.Model):
     id_detalle_actividad_Academica= models.AutoField(primary_key=True)
     id_participante= models.ForeignKey(Persona, on_delete=models.CASCADE, related_name='persona_participante')
     id_actividad_academica= models.ForeignKey(Event, on_delete=models.CASCADE, related_name='actividad_academica')
-    # es_docente = models.BooleanField(default=False)
-    # es_funcionario = models.BooleanField(default=False)
-    # es_alumno = models.BooleanField(default=False)
-
-    # class Meta:
-    #     constraints = [
-    #         CheckConstraint(
-    #             check=Q(es_docente=True, es_funcionario=False, es_alumno=False) |
-    #                   Q(es_docente=False, es_funcionario=True, es_alumno=False) |
-    #                   Q(es_docente=False, es_funcionario=False, es_alumno=True),
-    #             name='unicos_participantes'
-    #         )
-    #     ]
     
     def toJSON(self):
         item = model_to_dict(self)
@@ -195,7 +145,7 @@ class UnidadMedida(models.Model):
 
 class Parametro(models.Model):
     id_parametro = models.AutoField(primary_key=True)
-    id_unidad_medida =  models.ForeignKey(UnidadMedida, on_delete=models.PROTECT, related_name='unidad_medida_parametro')
+    id_unidad_medida =  models.ForeignKey(UnidadMedida, on_delete=models.CASCADE, related_name='unidad_medida_parametro')
     descripcion_parametro = models.CharField(max_length=50, null= True)
     valor = models.IntegerField()
     es_orientacion_academica = models.BooleanField(default=False) 
@@ -216,8 +166,8 @@ class Parametro(models.Model):
         return '%s %s' % (self.descripcion_parametro, self.valor) 
         
 class Cita(models.Model):
-    id_cita= models.ForeignKey(Event, on_delete=models.PROTECT, related_name='ori_academ_cita', primary_key=True)
-    id_parametro = models.ForeignKey(Parametro, on_delete=models.PROTECT, related_name='parametro_cita')
+    id_cita= models.ForeignKey(Event, on_delete=models.CASCADE, related_name='ori_academ_cita', primary_key=True)
+    id_parametro = models.ForeignKey(Parametro, on_delete=models.CASCADE, related_name='parametro_cita')
     es_tutoria = models.BooleanField(default=False)
     es_orientacion_academica = models.BooleanField(default=False)
     es_notificable = models.BooleanField(default=True)
@@ -249,9 +199,9 @@ class TipoTutoria(models.Model):
 
 
 class Tutoria(models.Model):
-    id_tutoria = models.ForeignKey(Event, on_delete=models.PROTECT, related_name='acri_academ_tutoria', primary_key=True)
-    id_cita = models.ForeignKey(Cita, on_delete=models.SET_NULL, related_name='tutoria_cita', null= True)
-    id_tipo_tutoria = models.ForeignKey(TipoTutoria, on_delete=models.PROTECT, related_name='tipo_tutoria')
+    id_tutoria = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='acri_academ_tutoria', primary_key=True)
+    id_cita = models.ForeignKey(Cita, on_delete=models.CASCADE, related_name='tutoria_cita', null= True)
+    id_tipo_tutoria = models.ForeignKey(TipoTutoria, on_delete=models.CASCADE, related_name='tipo_tutoria')
     nombre_trabajo = models.CharField(max_length=200, null= True)
 
 class TipoOrientacionAcademica(models.Model):
@@ -266,7 +216,7 @@ class TipoOrientacionAcademica(models.Model):
 
 class Motivo(models.Model):
     id_motivo = models.AutoField(primary_key=True)
-    id_tipo_orientacion_academica= models.ForeignKey(TipoOrientacionAcademica, on_delete=models.SET_NULL, related_name='motivo_orientacion_academica',  null= True)
+    id_tipo_orientacion_academica= models.ForeignKey(TipoOrientacionAcademica, on_delete=models.CASCADE, related_name='motivo_orientacion_academica',  null= True)
     descripcion_motivo = models.CharField(max_length=500)
 
     def __str__(self):
@@ -276,10 +226,10 @@ class Motivo(models.Model):
         verbose_name_plural = "Motivos de Orientacion Academica"
 
 class OrientacionAcademica(models.Model):
-    id_orientacion_academica = models.ForeignKey(Event, on_delete=models.PROTECT, related_name='acti_academ_orient_academ', primary_key=True)
-    id_cita = models.ForeignKey(Cita, on_delete=models.SET_NULL, related_name='cita_ori_academ', null= True)
-    id_motivo= models.ForeignKey(Motivo, on_delete=models.PROTECT, related_name='motivo_ori_academ')
-    id_tipo_orientacion_academica= models.ForeignKey(TipoOrientacionAcademica, on_delete=models.PROTECT, related_name='tipo_ori_academ')
+    id_orientacion_academica = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='acti_academ_orient_academ', primary_key=True)
+    id_cita = models.ForeignKey(Cita, on_delete=models.CASCADE, related_name='cita_ori_academ', null= True)
+    id_motivo= models.ForeignKey(Motivo, on_delete=models.CASCADE, related_name='motivo_ori_academ')
+    id_tipo_orientacion_academica= models.ForeignKey(TipoOrientacionAcademica, on_delete=models.CASCADE, related_name='tipo_ori_academ')
 
 
 
@@ -306,14 +256,13 @@ class EstadoTarea(models.Model):
 class Tarea(models.Model):
 
     id_tarea = models.AutoField(primary_key=True)
-    #id_tarea_relacionada = models.ForeignKey('self', on_delete=models.CASCADE, related_name='subtarea', null=True, blank=True)
-    id_persona_finalizacion = models.ForeignKey(Persona,  related_name='persona_tarea_finalizacion', on_delete=models.SET_NULL, null= True)
-    id_persona_alta = models.ForeignKey(Persona, related_name='persona_tarea_alta', on_delete=models.SET_NULL, null= True)
-    id_persona_responsable = models.ForeignKey(Persona, related_name='persona_tarea_responsalbe', on_delete=models.SET_NULL, null= True)
-    id_tutoria = models.ForeignKey(Tutoria, related_name='tarea_tutoria', on_delete=models.SET_NULL, null= True)
-    id_orientacion_academica = models.ForeignKey(OrientacionAcademica, related_name='tarea_ori_academ', on_delete=models.SET_NULL, null= True)
-    id_estado_tarea = models.ForeignKey(EstadoTarea, on_delete=models.PROTECT, related_name='tarea_estado')
-    id_tipo_tarea = models.ForeignKey(TipoTarea, on_delete=models.PROTECT, related_name='tarea_tipo')
+    id_persona_finalizacion = models.ForeignKey(Persona,  related_name='persona_tarea_finalizacion', on_delete=models.CASCADE, null= True)
+    id_persona_alta = models.ForeignKey(Persona, related_name='persona_tarea_alta', on_delete=models.CASCADE, null= True)
+    id_persona_responsable = models.ForeignKey(Persona, related_name='persona_tarea_responsalbe', on_delete=models.CASCADE, null= True)
+    id_tutoria = models.ForeignKey(Tutoria, related_name='tarea_tutoria', on_delete=models.CASCADE, null= True)
+    id_orientacion_academica = models.ForeignKey(OrientacionAcademica, related_name='tarea_ori_academ', on_delete=models.CASCADE, null= True)
+    id_estado_tarea = models.ForeignKey(EstadoTarea, on_delete=models.CASCADE, related_name='tarea_estado')
+    id_tipo_tarea = models.ForeignKey(TipoTarea, on_delete=models.CASCADE, related_name='tarea_tipo')
     datetime_inicio_estimado = models.DateTimeField(null= True)
     datetime_inicio_real = models.DateTimeField(null= True)
     datetime_vencimiento = models.DateTimeField(null= True)
@@ -322,12 +271,8 @@ class Tarea(models.Model):
     datetime_ultima_modificacion = models.DateTimeField(auto_now=True)
     observacion = models.CharField(max_length=500)
     es_notificable = models.BooleanField(default=True)
-    id_persona_ultima_modificacion= models.ForeignKey(Persona, on_delete=models.SET_NULL, blank=True, null=True, related_name='tarea_modificacion')
+    id_persona_ultima_modificacion= models.ForeignKey(Persona, on_delete=models.CASCADE, blank=True, null=True, related_name='tarea_modificacion')
 
-
-    # def __str__(self):
-    #     return self.id_tarea_relacionada
-    
     class Meta:
         verbose_name_plural = "Tareas"
         
@@ -335,11 +280,6 @@ class Tarea(models.Model):
 #aqui construimos nuestros singals
 from django.db.models.signals import post_save, pre_save
 from notify.signals import notificar
-
-#websocket
-# from channels.layers import get_channel_layer
-# from asgiref.sync import async_to_sync
-
 
 def notify_cita(sender, instance, created, **kwargs):
 
@@ -360,20 +300,10 @@ def notify_cita(sender, instance, created, **kwargs):
             notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= 'cita_tutoria' , id_tipo= id_actividad)
             # enviar_notificacion_a_usuario(encargado.id, 'notificar')
             
-    except:
-        print('error')
+    except Exception as e:
+        print(f"Se ha producido un error: {e}")
     
 post_save.connect(notify_cita, sender= Cita)
-
-# def enviar_notificacion_a_usuario(user_id, message):
-#     channel_layer = get_channel_layer()
-#     channel_name = f"user_{user_id}"
-#     # Usa async_to_sync para añadir la conexión actual al grupo de canales
-#     async_to_sync(channel_layer.group_add)(channel_name, channel_layer.channel_name)
-#     async_to_sync(channel_layer.group_send)(channel_name, {
-#         "type": "send_notification",
-#         "message": message,
-#     })
 
 #cambia el estado de Event 
 def detectar_cambio_estado(sender, instance, **kwargs):
@@ -500,8 +430,9 @@ def detectar_cambio_estado(sender, instance, **kwargs):
         else:
             print('no paso')    
     
-    except:
-        print('error')
+    except Exception as e:
+        print(f"Se ha producido un error: {e}")
+        
 pre_save.connect(detectar_cambio_estado, sender= Event)
 
 #notificar tarea
@@ -510,7 +441,6 @@ def notify_tarea(sender, instance, created, **kwargs):
     try:
         #para que notifique una sola vez
         if created:
-            
             if (instance.id_estado_tarea.descripcion_estado_tarea == 'Pendiente' or instance.id_estado_tarea.descripcion_estado_tarea == 'Iniciada'):
                 tipo_actividad= ''
                 id_actividad=''
@@ -565,8 +495,8 @@ def notify_tarea(sender, instance, created, **kwargs):
                 notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= tipo_actividad , id_tipo= id_actividad)
             else:
                 print('no notifico')
-    except:
-        print('error')
+    except Exception as e:
+        print(f"Se ha producido un error: {e}")
     
 post_save.connect(notify_tarea, sender= Tarea)
 
@@ -581,81 +511,85 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
             
             # Comprueba si el campo id_estado_actividad_academica ha cambiado
             if original_instance.id_estado_tarea != instance.id_estado_tarea:
-                print('entro porque cambio')
-                # Realiza aquí las acciones que desees cuando el campo cambie
-                # Puedes acceder a instance.id_estado_tarea para obtener el nuevo valor y
-                # original_instance.id_estado_tarea para obtener el valor anterior
-                
-                #traemos del user del solicitante
-                ins_solicitante= Persona.objects.filter(id= instance.id_persona_alta.id).first()
-                #ins_encargado= Persona.objects.filter(id= instance.id_persona_responsable.id).first()
-                tipo= ''
-                nombre_actividad= ''
-                title= ''
-                id_actividad= ''
-                cita_existente_tutoria= None
-                cita_existente_orrientacion= None
-                #print(ins_solicitante)
-                #print(ins_encargado)
-                
-                #Verificamos si existe una cita relacionada
-                #Verificamos si existe una cita relacionada
-                if instance.id_tutoria is not None:
-                    cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria.id_tutoria.id_actividad_academica).first()
-                elif instance.id_orientacion_academica is not None:
-                    cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica).first()
-                
-                if cita_existente_tutoria is not None:
-                    print('entro en cita tutoria')
-                    tipo= 'tarea_cita_tutoria'
-                    nombre_actividad= 'Tarea de cita de Tutoría'
-                    id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
-                        
-                elif cita_existente_orrientacion is not None:
-                    print('entro en cita orientacion')
-                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
-                    tipo= 'tarea_cita_orientacion'
-                    nombre_actividad= 'Tarea de cita de Orientación Académica'
-                        
-                elif instance.id_tutoria != None:
-                    print('entro en tutoria')
-                    id_actividad= instance.id_tutoria.id_tutoria
-                    tipo= 'tarea_tutoria'
-                    nombre_actividad= 'Tarea de Tutoría'
+                try:
+                    print('entro porque cambio')
+                    # Realiza aquí las acciones que desees cuando el campo cambie
+                    # Puedes acceder a instance.id_estado_tarea para obtener el nuevo valor y
+                    # original_instance.id_estado_tarea para obtener el valor anterior
                     
-                elif instance.id_orientacion_academica != None:
-                    print('entro en orientacion')
-                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica
-                    tipo= 'tarea_orientacion'
-                    nombre_actividad= 'Tarea de Orientación Académica'                    
-                
-                #preguntamos si es que la persona que modifico es diferente de la solicitante avisar al solicitante
-                if instance.id_persona_ultima_modificacion !=  instance.id_persona_alta:
-                    ins_persona_modificacion= Persona.objects.get(id= instance.id_persona_ultima_modificacion.id)
-                    originador= ins_persona_modificacion.usuario.all().first()
-                    #print(originador)
-                    destinatario = ins_solicitante.usuario.all().first()
-                    #print(destinatario)
-                    destino= destinatario.email
+                    #traemos del user del solicitante
+                    ins_solicitante= Persona.objects.filter(id= instance.id_persona_alta.id).first()
+                    #ins_encargado= Persona.objects.filter(id= instance.id_persona_responsable.id).first()
+                    tipo= ''
+                    nombre_actividad= ''
+                    title= ''
+                    id_actividad= ''
+                    cita_existente_tutoria= None
+                    cita_existente_orrientacion= None
+                    #print(ins_solicitante)
+                    #print(ins_encargado)
                     
-                    if instance.id_estado_tarea.descripcion_estado_tarea == 'Cancelada':
-                        contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue cancelada.</a> <br> Atte equipo AcOms.'
-                        title = nombre_actividad + ' cancelada.'
-                        enviarcorreo(title, contenido, destino)
-                        notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                    #Verificamos si existe una cita relacionada
+                    #Verificamos si existe una cita relacionada
+                    if instance.id_tutoria is not None:
+                        cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria.id_tutoria.id_actividad_academica).first()
+                    elif instance.id_orientacion_academica is not None:
+                        cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica).first()
                     
-                    elif instance.id_estado_tarea.descripcion_estado_tarea == 'Iniciada':
-                        contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue confirmada.</a> <br> Atte equipo AcOms.'
-                        title = nombre_actividad + ' iniciada.'
-                        enviarcorreo(title, contenido, destino)
-                        notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                    if cita_existente_tutoria is not None:
+                        print('entro en cita tutoria')
+                        tipo= 'tarea_cita_tutoria'
+                        nombre_actividad= 'Tarea de cita de Tutoría'
+                        id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
+                            
+                    elif cita_existente_orrientacion is not None:
+                        print('entro en cita orientacion')
+                        id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                        tipo= 'tarea_cita_orientacion'
+                        nombre_actividad= 'Tarea de cita de Orientación Académica'
+                            
+                    elif instance.id_tutoria != None:
+                        print('entro en tutoria')
+                        id_actividad= instance.id_tutoria.id_tutoria
+                        tipo= 'tarea_tutoria'
+                        nombre_actividad= 'Tarea de Tutoría'
                         
+                    elif instance.id_orientacion_academica != None:
+                        print('entro en orientacion')
+                        id_actividad= instance.id_orientacion_academica.id_orientacion_academica
+                        tipo= 'tarea_orientacion'
+                        nombre_actividad= 'Tarea de Orientación Académica'                    
+                    
+                    #preguntamos si es que la persona que modifico es diferente de la solicitante avisar al solicitante
+                    if instance.id_persona_ultima_modificacion !=  instance.id_persona_alta:
+                        ins_persona_modificacion= Persona.objects.get(id= instance.id_persona_ultima_modificacion.id)
+                        originador= ins_persona_modificacion.usuario.all().first()
+                        #print(originador)
+                        destinatario = ins_solicitante.usuario.all().first()
+                        #print(destinatario)
+                        destino= destinatario.email
                         
-                    elif instance.id_estado_tarea.descripcion_estado_tarea == 'Finalizada':
-                        contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue finalizada.</a> <br> Atte equipo AcOms.'
-                        title = nombre_actividad + ' finalizada.'
-                        enviarcorreo(title, contenido, destino)
-                        notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                        if instance.id_estado_tarea.descripcion_estado_tarea == 'Cancelada':
+                            contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue cancelada.</a> <br> Atte equipo AcOms.'
+                            title = nombre_actividad + ' cancelada.'
+                            enviarcorreo(title, contenido, destino)
+                            notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                        
+                        elif instance.id_estado_tarea.descripcion_estado_tarea == 'Iniciada':
+                            contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue confirmada.</a> <br> Atte equipo AcOms.'
+                            title = nombre_actividad + ' iniciada.'
+                            enviarcorreo(title, contenido, destino)
+                            notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                            
+                            
+                        elif instance.id_estado_tarea.descripcion_estado_tarea == 'Finalizada':
+                            contenido= f'Estimad@: <br> Le informamos que su "{nombre_actividad}" fue finalizada.</a> <br> Atte equipo AcOms.'
+                            title = nombre_actividad + ' finalizada.'
+                            enviarcorreo(title, contenido, destino)
+                            notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                except Exception as e:
+                        print(f"Se ha producido un error: {e}")
+                        
                 else:
                     print('no notifico a nadie')
             else:
@@ -668,20 +602,61 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
 pre_save.connect(detectar_cambio_estado_tarea, sender= Tarea)
 
 #configurar el setting.py, crear logica de envio de correo, obtener el mail del token
+# def enviarcorreo(asunto, contenido, destinatario):
+#     message= Mail(
+#         from_email= 'beatrizmoon@hotmail.com' ,
+#         to_emails= destinatario,
+#         subject= asunto,
+#         html_content= contenido
+#     )
+
+#     try:
+#         #si es necesario hacer la obtencion del token con una variable global 
+#         sg= SendGridAPIClient(os.environ.get('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'))
+#         response = sg.send(message)
+#     except Exception as e:
+#         pass
+    
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 def enviarcorreo(asunto, contenido, destinatario):
-    message= Mail(
-        from_email= 'beatrizmoon@hotmail.com' ,
-        to_emails= destinatario,
-        subject= asunto,
-        html_content= contenido
-    )
+    
+    # Configura tus credenciales de Outlook
+    sender_email = 'kaliuzzi@uaa.edu.py'
+    sender_password = 'Yad92906'
+
+    # Configura el servidor SMTP de Outlook
+    smtp_server = 'smtp-mail.outlook.com'
+    smtp_port = 587  # Puerto de Outlook para TLS (587)
+
+    # Crea un objeto SMTP
+    server = smtplib.SMTP(smtp_server, smtp_port)
+
+    # Inicia la conexión TLS (segura)
+    server.starttls()
+
+    # Inicia sesión en tu cuenta de Gmail
+    server.login(sender_email, sender_password)
+
+    # Crea el mensaje de correo
+    subject = asunto
+    body = contenido
+    recipient_email = destinatario
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
 
     try:
-        #si es necesario hacer la obtencion del token con una variable global 
-        sg= SendGridAPIClient(os.environ.get('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'))
-        response = sg.send(message)
-        #print(response.status_code)
-        #print(response.body)
-        #print(response.headers)
+        # Envía el correo
+        server.sendmail(sender_email, recipient_email, msg.as_string())
+        # Cierra la conexión SMTP
+        server.quit()
+        print('Correo enviado con éxito')
     except Exception as e:
-        pass
+        print(f"Se ha producido un error: {e}")
+        

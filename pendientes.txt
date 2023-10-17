@@ -3,5 +3,10 @@
 - cambiar la forma de traer en las tutorias y orientaciones las materias asignadas al docente, por el departament asignado a los mismos en 
 -cambiar la forma de traer la facultad en la carga de tutoria
 tutoria_create
-- cambiar los CASCADE y PROTECT por SET_NULL
+- cambiar los CASCADE y CASCADE por CASCADE
+- CASCADE por CASCADE
 - solo enviar la notificacion si es que el usuario exista
+cargar en static la carpeta lib
+
+
+agregue una nueva tabla de materiacarrera, agregar en la documentacion, der, implemetnacion

@@ -674,13 +674,17 @@
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'campo': 'facultad'
+                        'campo': 'facultad_funcionario'
                     },
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_facultad').html(data);
                         actualizarfuncionariodocente()
                        
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
                  //cuando este en produccion favor cambiar la facultad para que traiga por las facultades que corresponden al departamento del funcionario docente
@@ -709,6 +713,10 @@
                     success: function(data) {
                         $('#id_id_convocatoria').html(data);
                        
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar convocatoria.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -724,6 +732,10 @@
                         $('#id_id_tipo_orientacion_academica').html(data);
                         $('#id_id_tipo_orientacion_academica_add').html(data);
                         actualizartipo_motivo_ori_academ();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo orientacion.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -740,6 +752,10 @@
                     success: function(data) {
                         $('#id_id_tipo_motivo').html(data);
                     
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar motivo orientacion.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -759,6 +775,10 @@
                     success: function(data) {
                         $('#id_id_solicitante').html(data);
                         $('#id_id_responsable_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar personas.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -772,6 +792,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_tipo_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -785,6 +809,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_estado_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar estado tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -830,6 +858,10 @@
                                 //});
                                 //traemos las materias que esten asociadas al funcionario docente
                             }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar funcionario.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });                        
             }
@@ -843,6 +875,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_materia').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar materia.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
 
                 });

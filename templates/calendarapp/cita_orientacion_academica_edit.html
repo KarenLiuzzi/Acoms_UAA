@@ -309,7 +309,7 @@
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'campo': 'facultad'
+                        'campo': 'facultad_alumno'
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -321,6 +321,10 @@
                         band_boton_selects= band_boton_selects + 1
                         validar_cambio();
                         actualizarfuncionariodocente();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -332,7 +336,7 @@
                     url: '/actualizar_campo/',
                     data: {
                         'id_facultad': selected_option,
-                        'campo': 'todos_funcionarios_docentes'
+                        'campo': 'todos_funcionarios_docentes_facultad'
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -343,6 +347,10 @@
                         }
                         band_boton_selects= band_boton_selects + 1
                         validar_cambio();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar funcionario.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -475,7 +483,8 @@
                                 return '<button type="button" class="btn btn-primary btn-flat btn-submit"><i class="bi bi-calendar-check"></i>Registrar Cita</button>';
                             }
                         },
-                    ]
+                    ],
+                    order: [] // Desactivar el ordenamiento por defecto
                 });
                 
             }

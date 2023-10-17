@@ -285,6 +285,10 @@ $(document).ready(function() {
                 success: function(data) {
                     $('#id_id_facultad').html(data);    
                    
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -299,6 +303,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_tipo_tarea').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar tipo tarea.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -312,6 +320,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_estado_tarea').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar estado.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }
@@ -326,6 +338,10 @@ $(document).ready(function() {
                 success: function(data) {
                     $('#id_id_persona_responsable').html(data);
                     $('#id_id_persona_alta').html(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    var errorMessage = 'Ocurrió un error al actualizar personas.';
+                    alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                 }
             });
         }

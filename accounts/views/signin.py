@@ -26,7 +26,6 @@ class SignInView(View):
             if user:
                 login(request, user)
                 return redirect("calendarapp:calendar")
-                #return redirect(settings.LOGIN_REDIRECT_URL)
             else:
                 messages.error(request, 'Los datos son incorrectos, vuelve a intentarlo.')
         context = {"form": forms}

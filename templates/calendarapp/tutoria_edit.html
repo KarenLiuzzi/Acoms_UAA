@@ -514,9 +514,9 @@
                             orderable: false,
                             render: function (data, type, row) {
                                 if (row.estado && row.estado.includes("Pendiente")) {
-                                    return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea" ><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a> <a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                    return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea" ><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>';
                                 } else if (row.estado && row.estado.includes("Iniciada")){
-                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" ><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" ><i class="bi bi-check2"></i></a> <a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" ><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" ><i class="bi bi-check2"></i></a>';
                                 } else {
                                     return '' //'<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
                                 }
@@ -714,7 +714,7 @@
                 $.ajax({
                     url: '/actualizar_campo/',
                     data: {
-                        'campo': 'facultad'
+                        'campo': 'facultad_funcionario'
                     },
                     dataType: 'json',
                     success: function(data) {
@@ -725,6 +725,10 @@
                         band_boton_selects += 1
                         actualizarfuncionariodocente()
                        
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar facultad.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
                  //cuando este en produccion favor cambiar la facultad para que traiga por las facultades que corresponden al departamento del funcionario docente
@@ -787,6 +791,10 @@
                                 band_boton_selects += 1
                                 actualizarmaterias_func_doce($('#id_id_funcionario_docente_encargado').val())
                             }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar funcionario.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });                        
             }
@@ -814,6 +822,10 @@
                                 band_boton_selects += 1
                             }
                             actualizarconvocatoria();
+                     },
+                     error: function(xhr, textStatus, errorThrown) {
+                         var errorMessage = 'Ocurrió un error al actualizar materias.';
+                         alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                      }       
                 });
             }
@@ -832,6 +844,10 @@
                         }
                         band_boton_selects += 1
                         actualizartipo_tutoria();                       
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar convocatoria.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -850,6 +866,10 @@
                         }
                         band_boton_selects += 1
                         actualizar_personas();
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo tutoria.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -868,6 +888,10 @@
                         }
                         band_boton_selects += 1
                         $('#id_id_responsable_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar personas.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -881,6 +905,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_tipo_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar tipo tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }
@@ -894,6 +922,10 @@
                     dataType: 'json',
                     success: function(data) {
                         $('#id_id_estado_tarea').html(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var errorMessage = 'Ocurrió un error al actualizar estado tarea.';
+                        alert(errorMessage + ' ' + textStatus + ': ' + errorThrown);
                     }
                 });
             }

@@ -1,17 +1,12 @@
-from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect, JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from calendarapp.models.event import Event, Tutoria, OrientacionAcademica, TipoTarea, Tarea,TipoTutoria, DetalleActividadAcademica ,Cita,TipoOrientacionAcademica, EstadoActividadAcademica, EstadoTarea, Motivo, Convocatoria
+from django.http import  JsonResponse
+from calendarapp.models.event import Tutoria, OrientacionAcademica, TipoTarea, Tarea,TipoTutoria, DetalleActividadAcademica ,Cita,TipoOrientacionAcademica, EstadoActividadAcademica, EstadoTarea, Motivo, Convocatoria
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from datetime import datetime, timedelta, date
-from django.db.models.functions import Coalesce
-from django.db.models import Sum
+from datetime import datetime, timedelta
 from django.views.generic import TemplateView
 from calendarapp.forms import ReportForm
-from django.urls import reverse_lazy
 from django.db.models import Q
-from accounts.models.user import Persona, Departamento, Facultad, Materia, FuncionarioDocente
+from accounts.models.user import Persona, Facultad, Materia, FuncionarioDocente
 
 
 
@@ -20,242 +15,284 @@ def actualizar_campos_reportes(request):
     campo = request.GET.get('campo')
     
     if campo == "facultad":
-        contador= 0
-        queryset= ""
-        queryset = Facultad.objects.all()
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item.id_facultad}">{item.descripcion_facultad}</option>'
-                contador += 1
-            else:
-                options += f'<option value="{item.id_facultad}">{item.descripcion_facultad}</option>'  
-                contador += 1
+        try:
+            contador= 0
+            queryset= ""
+            queryset = Facultad.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item.id_facultad}">{item.descripcion_facultad}</option>'
+                    contador += 1
+                else:
+                    options += f'<option value="{item.id_facultad}">{item.descripcion_facultad}</option>'  
+                    contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
                 
     elif campo == "materias": 
-         # Traer todas las materias 
-        contador= 0
-        queryset= ""
-        queryset = Materia.objects.all()
-        
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'
-                contador += 1
-            else:
-                options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'     
-                contador += 1  
+        try:
+            # Traer todas las materias 
+            contador= 0
+            queryset= ""
+            queryset = Materia.objects.all()
             
-    if campo == "personas":
-        contador= 0
-        queryset= ""
-        queryset= Persona.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'
+                    contador += 1
+                else:
+                    options += f'<option value="{item.id_materia}">{item.descripcion_materia}</option>'     
+                    contador += 1  
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
         
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item.id}">{item.nombre} {item.apellido} {item.documento}</option>'
-                contador += 1
-            else:
-                options += f'<option value="{item.id}">{item.nombre} {item.apellido} {item.documento}</option>'  
-                contador += 1
+    if campo == "personas":
+        try:
+            contador= 0
+            queryset= ""
+            queryset= Persona.objects.all()
+            
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item.id}">{item.nombre} {item.apellido} {item.documento}</option>'
+                    contador += 1
+                else:
+                    options += f'<option value="{item.id}">{item.nombre} {item.apellido} {item.documento}</option>'  
+                    contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
                  
-    elif campo == 'todos_funcionarios_docentes':
-        contador= 0
-        #cambiar  para traer todos los funcionarios_docentes que pertenezcan a un departamento que se encuentre en la facultad seleccionada
-        '''
-        #pd: descomentar una vez que el modelo de func/doc tenga el campo de departamento
-        selected_option = request.GET.get('id_facultad')
-        #treaer los departamentos que esten dentro de la facultad
-        departamentos =  Departamento.objects.filter(id_facultad= selected_option).values("id_departamento")
-        #traer los funcionarios docentes que se encuentren dentro de esos departamentos        
-        funcionario_docente=  FuncionarioDocente.objects.filter(id_departamento__in=departamentos).values('id_funcionario_docente', 'id_funcionario_docente__nombre', 'id_funcionario_docente__apellido')
-        '''
-        funcionario_docente=  FuncionarioDocente.objects.all().values('id_funcionario_docente', 'id_funcionario_docente__nombre', 'id_funcionario_docente__apellido')
-        queryset= funcionario_docente
+    elif campo == 'todos_funcionarios_docentes': 
+        try:
+            contador= 0
+            #cambiar  para traer todos los funcionarios_docentes que pertenezcan a un departamento que se encuentre en la facultad seleccionada
+            '''
+            #pd: descomentar una vez que el modelo de func/doc tenga el campo de departamento
+            selected_option = request.GET.get('id_facultad')
+            #treaer los departamentos que esten dentro de la facultad
+            departamentos =  Departamento.objects.filter(id_facultad= selected_option).values("id_departamento")
+            #traer los funcionarios docentes que se encuentren dentro de esos departamentos        
+            funcionario_docente=  FuncionarioDocente.objects.filter(id_departamento__in=departamentos).values('id_funcionario_docente', 'id_funcionario_docente__nombre', 'id_funcionario_docente__apellido')
+            '''
+            funcionario_docente=  FuncionarioDocente.objects.all().values('id_funcionario_docente', 'id_funcionario_docente__nombre', 'id_funcionario_docente__apellido')
+            queryset= funcionario_docente
 
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item["id_funcionario_docente"]}">{item["id_funcionario_docente__nombre"]} {item["id_funcionario_docente__apellido"]}</option>'
-                contador += 1
-            else:
-                options += f'<option value="{item["id_funcionario_docente"]}">{item["id_funcionario_docente__nombre"]} {item["id_funcionario_docente__apellido"]}</option>' 
-                contador += 1
-                
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item["id_funcionario_docente"]}">{item["id_funcionario_docente__nombre"]} {item["id_funcionario_docente__apellido"]}</option>'
+                    contador += 1
+                else:
+                    options += f'<option value="{item["id_funcionario_docente"]}">{item["id_funcionario_docente__nombre"]} {item["id_funcionario_docente__apellido"]}</option>' 
+                    contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
+        
     elif campo == "tipo_tutoria":
-        contador= 0
-        queryset= ""
-        queryset = TipoTutoria.objects.all()
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item.id_tipo_tutoria}">{item.descripcion_tipo_tutoria}</option>'
-                contador += 1
-            else:
-                options += f'<option value="{item.id_tipo_tutoria}">{item.descripcion_tipo_tutoria}</option>'  
-                contador += 1
-                
+        try:
+            contador= 0
+            queryset= ""
+            queryset = TipoTutoria.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item.id_tipo_tutoria}">{item.descripcion_tipo_tutoria}</option>'
+                    contador += 1
+                else:
+                    options += f'<option value="{item.id_tipo_tutoria}">{item.descripcion_tipo_tutoria}</option>'  
+                    contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")      
             
     elif campo == "tipo_ori_academ":
-        contador= 0
-        queryset= ""
-        queryset = TipoOrientacionAcademica.objects.all()
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item.id_tipo_orientacion_academica}">{item.descripcion_tipo_orientacion_academica}</option>'
-                contador += 1
-            else:
-                options += f'<option value="{item.id_tipo_orientacion_academica}">{item.descripcion_tipo_orientacion_academica}</option>'  
-                contador += 1
-      
+        try:
+            contador= 0
+            queryset= ""
+            queryset = TipoOrientacionAcademica.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item.id_tipo_orientacion_academica}">{item.descripcion_tipo_orientacion_academica}</option>'
+                    contador += 1
+                else:
+                    options += f'<option value="{item.id_tipo_orientacion_academica}">{item.descripcion_tipo_orientacion_academica}</option>'  
+                    contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
         
     elif campo == "motivos_ori_academ":
-        contador= 0
-        selected_option= ""
-        
-        queryset= ""
-        #traer todos los motivos de acuerdo al tipo de orientacion academica
-        queryset = Motivo.objects.all()
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'   
-                contador += 1
-            else:
-                options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'     
-                contador += 1
+        try:
+            contador= 0
+            selected_option= ""
+            
+            queryset= ""
+            #traer todos los motivos de acuerdo al tipo de orientacion academica
+            queryset = Motivo.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'   
+                    contador += 1
+                else:
+                    options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'     
+                    contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
             
     elif campo == "motivo_ori_academ":
-        contador= 0
-        selected_option= ""
-        selected_option = request.GET.get('selected_option')
-        
-        queryset= ""
-        if selected_option != "":
-            #traer todos los motivos de acuerdo al tipo de orientacion academica
-            queryset = Motivo.objects.filter(id_tipo_orientacion_academica= selected_option)
-            # Pasar los datos del queryset a datos HTML
-        else:
-             queryset = Motivo.objects.all()
-             
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'   
-                contador += 1
+        try:
+            
+            contador= 0
+            selected_option= ""
+            selected_option = request.GET.get('selected_option')
+            
+            queryset= ""
+            if selected_option != "":
+                #traer todos los motivos de acuerdo al tipo de orientacion academica
+                queryset = Motivo.objects.filter(id_tipo_orientacion_academica= selected_option)
+                # Pasar los datos del queryset a datos HTML
             else:
-                options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'     
-                contador += 1
+                queryset = Motivo.objects.all()
+                
+            options = ''
+            for item in queryset:
+                if contador == 0:
+                    options += f'<option value="">-----------------</option>'
+                    options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'   
+                    contador += 1
+                else:
+                    options += f'<option value="{item.id_motivo}">{item.descripcion_motivo}</option>'  
+                    contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
                  
     if campo == "tipo_tareas":
-        contador= 0
-        queryset= TipoTarea.objects.all()
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-                if contador == 0:
-                    options += f'<option value="">-----------------</option>'
-                    options += f'<option value="{item.id_tipo_tarea}">{item.descripcion_tipo_tarea} </option>'   
-                    contador += 1
-                else:
-                    options += f'<option value="{item.id_tipo_tarea}">{item.descripcion_tipo_tarea} </option>'     
-                    contador += 1
+        try:
+            contador= 0
+            queryset= TipoTarea.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                    if contador == 0:
+                        options += f'<option value="">-----------------</option>'
+                        options += f'<option value="{item.id_tipo_tarea}">{item.descripcion_tipo_tarea} </option>'   
+                        contador += 1
+                    else:
+                        options += f'<option value="{item.id_tipo_tarea}">{item.descripcion_tipo_tarea} </option>'     
+                        contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
             
     if campo == "estado_tareas":
-        contador= 0
-        queryset= EstadoTarea.objects.all()
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-                if contador == 0:
-                    options += f'<option value="">-----------------</option>'
-                    options += f'<option value="{item.id_estado_tarea}">{item.descripcion_estado_tarea} </option>'
-                    options += f'<option value="Vencida">Vencida</option>'  
-                    contador += 1
-                else:
-                    options += f'<option value="{item.id_estado_tarea}">{item.descripcion_estado_tarea} </option>'     
-                    contador += 1
+        try:
+            contador= 0
+            queryset= EstadoTarea.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                    if contador == 0:
+                        options += f'<option value="">-----------------</option>'
+                        options += f'<option value="{item.id_estado_tarea}">{item.descripcion_estado_tarea} </option>'
+                        options += f'<option value="Vencida">Vencida</option>'  
+                        contador += 1
+                    else:
+                        options += f'<option value="{item.id_estado_tarea}">{item.descripcion_estado_tarea} </option>'     
+                        contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
                     
     if campo == "estado_actividades_con_cita":
-        contador= 0
-        queryset= EstadoActividadAcademica.objects.exclude(descripcion_estado_actividad_academica='Iniciada')
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-                if contador == 0:
-                    options += f'<option value="">-----------------</option>'
-                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'
-                    options += f'<option value="Vencida">Vencida</option>'
-                    contador += 1
-                else:
-                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'   
-                    contador += 1
+        try:
+            contador= 0
+            queryset= EstadoActividadAcademica.objects.exclude(descripcion_estado_actividad_academica='Iniciada')
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                    if contador == 0:
+                        options += f'<option value="">-----------------</option>'
+                        options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'
+                        options += f'<option value="Vencida">Vencida</option>'
+                        contador += 1
+                    else:
+                        options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'   
+                        contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
     
     if campo == "estado_actividades_sin_cita":
-        contador= 0
-        queryset= EstadoActividadAcademica.objects.exclude(descripcion_estado_actividad_academica='Confirmado')
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-                if contador == 0:
-                    options += f'<option value="">-----------------</option>'
-                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'  
-                    options += f'<option value="Vencida">Vencida</option>'
+        try:
+            contador= 0
+            queryset= EstadoActividadAcademica.objects.exclude(descripcion_estado_actividad_academica='Confirmado')
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                    if contador == 0:
+                        options += f'<option value="">-----------------</option>'
+                        options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'  
+                        options += f'<option value="Vencida">Vencida</option>'
+                        contador += 1
+                    else:
+                        options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'     
                     contador += 1
-                else:
-                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'     
-                    contador += 1
-                    
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")         
+        
     if campo == "estado_actividades_all":
-        contador= 0
-        queryset= EstadoActividadAcademica.objects.all()
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
+        try:
+            contador= 0
+            queryset= EstadoActividadAcademica.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
+                    if contador == 0:
+                        options += f'<option value="">-----------------</option>'
+                        options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>' 
+                        options += f'<option value="Vencida">Vencida</option>' 
+                        contador += 1
+                    else:
+                        options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'     
+                        contador += 1
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
+        
+    if campo == "convocatoria":
+        try:
+            
+            contador= 0
+            # Obtén la fecha actual
+            queryset= ""
+            #traemos la convocatoria actual
+            queryset= Convocatoria.objects.all()
+            # Pasar los datos del queryset a datos HTML
+            options = ''
+            for item in queryset:
                 if contador == 0:
                     options += f'<option value="">-----------------</option>'
-                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>' 
-                    options += f'<option value="Vencida">Vencida</option>' 
+                    options += f'<option value="{item.id_convocatoria}">{item.id_semestre.descripcion_semestre} {item.anho} </option>'
                     contador += 1
                 else:
-                    options += f'<option value="{item.id_estado_actividad_academica}">{item.descripcion_estado_actividad_academica} </option>'     
+                    options += f'<option value="{item.id_convocatoria}">{item.id_semestre.descripcion_semestre} {item.anho} </option>'   
                     contador += 1
-
-    if campo == "convocatoria":
-        contador= 0
-        # Obtén la fecha actual
-        queryset= ""
-        #traemos la convocatoria actual
-        queryset= Convocatoria.objects.all()
-        # Pasar los datos del queryset a datos HTML
-        options = ''
-        for item in queryset:
-            if contador == 0:
-                options += f'<option value="">-----------------</option>'
-                options += f'<option value="{item.id_convocatoria}">{item.id_semestre.descripcion_semestre} {item.anho} </option>'
-                contador += 1
-            else:
-                options += f'<option value="{item.id_convocatoria}">{item.id_semestre.descripcion_semestre} {item.anho} </option>'   
-                contador += 1
-            
+        except Exception as e:
+            print(f"Se ha producido un error: {e}")
+        
     return JsonResponse(options, safe=False)
 
 class ReporteTutoriaView(TemplateView):
