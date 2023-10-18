@@ -106,6 +106,11 @@
                                                             {% else %}
                                                                 <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
                                                             {%endif%}
+                                                        {% comment %} {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Vencido' and event.es_tutoria %}
+                                                            {% if perms.calendarapp.iniciar_cita  %}
+                                                                <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i> </a>
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                           {%endif%}{% endcomment %} 
 
                                                         {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' and event.es_orientacion_academica %}
                                                             {% if perms.calendarapp.iniciar_cita  %}
@@ -123,7 +128,11 @@
                                                             {% else %}
                                                                 <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
                                                             {% endif %}
-                                                        {% else %}
+                                                        {% comment %} {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Vencido' and event.es_orientacion_academica %}
+                                                            {% if perms.calendarapp.iniciar_cita  %}
+                                                                <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i> </a>
+                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
+                                                           {% endif %} {% endcomment %} 
                                                             {% comment %} <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
                                                             <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button> {% endcomment %}
                                                         {% endif %}

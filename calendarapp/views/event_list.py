@@ -31,6 +31,7 @@ class AllEventsListView(ListView):
             if current_user.has_perm('calendarapp.iniciar_cita'):
                 ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
                 event= Event.objects.get_all_events().filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+                
                 for objeto in event:
                         if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                             objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
@@ -157,6 +158,7 @@ class RunningEventsListView(ListView):
 
     def get_queryset(self):
         try:
+            
             parametro = self.kwargs['tipo_cita']
             request = self.request
             current_user= request.user

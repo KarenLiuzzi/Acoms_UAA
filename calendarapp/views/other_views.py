@@ -2082,6 +2082,8 @@ def obtener_horarios_cita(request):
         
         # Convertir la cadena JSON a un diccionario
         horario_func_doc = json.loads(horario_func_doc)
+        
+        #print(horario_func_doc)
 
         
         #generamos varias listas para agregar las fechas y horas de acuerdo al dia de la semana 
@@ -2214,6 +2216,8 @@ def obtener_horarios_cita(request):
             df2 = pd.DataFrame()
             
         #print(df2,'horarios del calendario')
+        
+        #df2.to_excel("C:/Users/beatr/Documents/df2.xlsx", index=False)
 
         '''ahora que ya tenemos generado todos los horarios por dias vamos a preguntar cuales de ellos ya estan con estado "Pendiente" para poder excluir
         traer todos los registros de citas donde la convocatoria aun no haya terminado y la fecha sea de hoy con la hora superior a la actual '''
@@ -2255,6 +2259,7 @@ def obtener_horarios_cita(request):
         '''caso si tiene registros de calendario y hay casos para excluir se procede a hacer la exclusion
         preguntamos si es que ambos dt estan con datos entonces hacemos la exclusion'''
         if (not dt_aa.empty and not df2.empty):
+            print('entro en exclusion')
             # Convertir en tipos de datos correctos para poder operar
             df2['fecha'] = pd.to_datetime(df2['fecha']).dt.date
             df2['dia'] = df2['dia'].astype(str)
@@ -2262,7 +2267,7 @@ def obtener_horarios_cita(request):
             df2['hora_fin'] = pd.to_datetime(df2["hora_fin"].astype(str)).dt.time
 
             #ordenamos por fecha 
-            df2.sort_values(by='fecha', ascending=True, inplace=True)
+            df2.sort_values(by='fecha', inplace=True)
 
             #procedemos a borrar duplicados
             df2.drop_duplicates(keep='first', inplace=True)
@@ -2286,9 +2291,18 @@ def obtener_horarios_cita(request):
 
         # caso si no exite otras citas y tiene calendario devolver los horarios sin exclusion
         elif (not df2.empty and dt_aa.empty):
+            print('entro en no exclusion')
+            # Convertir en tipos de datos correctos para poder operar
             df2['fecha'] = pd.to_datetime(df2['fecha']).dt.date
-            #ordenamos por fecha 
-            df2.sort_values(by='fecha', ascending=True, inplace=True)
+            df2['dia'] = df2['dia'].astype(str)
+            df2['hora_inicio'] = pd.to_datetime(df2["hora_inicio"].astype(str)).dt.time
+            df2['hora_fin'] = pd.to_datetime(df2["hora_fin"].astype(str)).dt.time
+            
+            # Eliminar registros donde fecha sea hoy y la hora_inicio supere la hora actual
+            df2.drop(df2[(df2['fecha'] == datetime.now().date()) & (df2['hora_inicio'] < datetime.now().time())].index, inplace=True)
+            
+             #ordenamos por fecha 
+            df2.sort_values(by='fecha', inplace=True)
             
             #agregar columna de Mes
             df2['mes'] = df2['fecha'].apply(lambda x: meses_espanol[x.month])

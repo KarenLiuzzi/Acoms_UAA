@@ -293,11 +293,19 @@ def notify_cita(sender, instance, created, **kwargs):
             ins_solicitante= Persona.objects.get(id= instance.id_cita.id_persona_solicitante.id)
             ins_encargado= Persona.objects.get(id= instance.id_cita.id_funcionario_docente_encargado.id_funcionario_docente.id)
             
+            tipo_cita= ''
+            if instance.es_tutoria== True:
+                tipo_cita= 'cita_tutoria'
+            elif instance.es_orientacion_academica== True:
+                tipo_cita= 'cita_orientacion'
+            else:
+                tipo_cita= ''
+                
             solicitante= ins_solicitante.usuario.all().first()
             encargado = ins_encargado.usuario.all().first()
             id_actividad= instance.id_cita.id_actividad_academica
 
-            notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= 'cita_tutoria' , id_tipo= id_actividad)
+            notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= tipo_cita , id_tipo= id_actividad)
             # enviar_notificacion_a_usuario(encargado.id, 'notificar')
             
     except Exception as e:
