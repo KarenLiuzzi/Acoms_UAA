@@ -117,17 +117,17 @@
                             {% endif %}
                         </div>
 
-                        {% if cita.id_cita.motivo_cancelacion %}
+                        {% if cita.motivo_cancelacion %}
                             <div class="form-group">
                                 <label class="label texto-destacado">Motivo de Cancelación: </label>
-                                    {{ cita.id_cita.motivo_cancelacion|title}}
+                                    {{ cita.motivo_cancelacion|title}}
                             </div>
                         {% endif %}
 
-                        {% if cita.id_cita.motivo_rechazo %}
+                        {% if cita.motivo_rechazo %}
                             <div class="form-group">
                                 <label class="label texto-destacado">Motivo de Rechazo: </label>
-                                    {{ cita.id_cita.motivo_rechazo|title}}
+                                    {{ cita.motivo_rechazo|title}}
                             </div>
                         {% endif %}
 

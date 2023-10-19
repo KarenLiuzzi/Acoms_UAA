@@ -9,4 +9,6 @@ tutoria_create
 cargar en static la carpeta lib
 
 
-agregue una nueva tabla de materiacarrera, agregar en la documentacion, der, implemetnacion
+ordenar por mas reciente la lista de notificaciones 
+agregar motivo de rechazo/cancelacion en el detalle de cita orientacion
+agregar o no un nuevo numero item de volumetria de cita vencida o no 
