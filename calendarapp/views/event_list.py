@@ -13,8 +13,8 @@ from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from accounts.models.user import FuncionarioDocente
 from itertools import chain
-from django.db.models import Q
-
+from django.db.models import Q,  F, Case, When, Value, IntegerField
+from django.db.models.functions import Coalesce
 class AllEventsListView(ListView):
     """ All event list views """
 
@@ -31,13 +31,33 @@ class AllEventsListView(ListView):
             if current_user.has_perm('calendarapp.iniciar_cita'):
                 ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
                 event= Event.objects.get_all_events().filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+                # Anotar el queryset con una expresión que determine el campo de ordenamiento
+                event = event.annotate(
+                    datetime_to_order=Case(
+                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
+                        default=F('id_cita__datetime_inicio_estimado')
+                    )
+                )
+
+                event = event.order_by('-datetime_to_order')
                 
                 for objeto in event:
                         if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                             objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
                 return event
+                
             else:
                 event= Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona)
+                # Anotar el queryset con una expresión que determine el campo de ordenamiento
+                event = event.annotate(
+                    datetime_to_order=Case(
+                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
+                        default=F('id_cita__datetime_inicio_estimado')
+                    )
+                )
+
+                event = event.order_by('-datetime_to_order')
+                
                 for objeto in event:
                         if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                             objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
@@ -168,12 +188,30 @@ class RunningEventsListView(ListView):
             if current_user.has_perm('calendarapp.iniciar_cita'):
                 ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
                 event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_funcionario_docente_encargado= ins_funcionario_docente)
+                event = event.annotate(
+                    datetime_to_order=Case(
+                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
+                        default=F('id_cita__datetime_inicio_estimado')
+                    )
+                )
+
+                event = event.order_by('-datetime_to_order')
+                
                 for objeto in event:
                         if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                             objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
                 return event
             else:
                 event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
+                event = event.annotate(
+                    datetime_to_order=Case(
+                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
+                        default=F('id_cita__datetime_inicio_estimado')
+                    )
+                )
+
+                event = event.order_by('-datetime_to_order')
+                
                 for objeto in event:
                         if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                             objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'

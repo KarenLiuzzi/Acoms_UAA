@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="row">
-        <div class="col-md-6 col-lg-3">
+        <div class="col-md-4 col-lg-3">
             <div class="widget-small primary coloured-icon">
                 <i class="icon bi bi-check-circle-fill fa-3x"></i>
                 <div class="info">
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-lg-3">
+        <div class="col-md-4 col-lg-3">
             <div class="widget-small info coloured-icon">
                 <i class="icon fa fa-thumbs-o-up fa-3x"></i>
                 <div class="info">
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-lg-3">
+        <div class="col-md-4 col-lg-3">
             <div class="widget-small warning coloured-icon">
                 <i class="icon bi bi-hourglass-split fa-3x"></i>
                 <div class="info">
@@ -35,12 +35,21 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-lg-3">
+        <div class="col-md-4 col-lg-3">
             <div class="widget-small danger coloured-icon">
                 <i class="icon bi bi-x-circle-fill fa-3x"></i>
                 <div class="info">
                     <h5>Citas Canceladas</h5>
                     <p><b>{{ citas_canceladas }}</b></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-3">
+            <div class="widget-small warning coloured-icon">
+                <i class="icon bi bi-hourglass-bottom fa-3x"></i>
+                <div class="info">
+                    <h5>Citas Vencidas</h5>
+                    <p><b>{{ citas_vencidas }}</b></p>
                 </div>
             </div>
         </div>
@@ -358,5 +367,6 @@
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
         },
+        order: [] // Desactivar el ordenamiento por defecto   
     });</script>
 {% endblock extrascripts %}

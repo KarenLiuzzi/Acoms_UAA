@@ -62,19 +62,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="label texto-destacado" >Fecha estimada:</label>
+                            <label class="label texto-destacado" >Fecha de inicio y fin estimado:</label>
 
                             {% if tutoria.id_tutoria.datetime_inicio_estimado %}
-                                {{ tutoria.id_tutoria.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_estimado|time:"H:i" }}
+                                {{ tutoria.id_tutoria.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_estimado|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_fin_estimado|time:"H:i" }}
                             {% else %}
                                 ----------
                             {% endif %} 
                         </div>
 
                         <div class="form-group">
-                            <label class="label texto-destacado">Fecha real:</label>
+                            <label class="label texto-destacado">Fecha de inicio y fin real:</label>
                             {% if tutoria.id_tutoria.datetime_fin_real %}
-                            {{ tutoria.id_tutoria.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_real|time:"H:i" }}
+                            {{ tutoria.id_tutoria.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ tutoria.id_tutoria.datetime_fin_real|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_fin_real|time:"H:i" }}
                             {% else %}
                                 ----------
                             {% endif %} 
