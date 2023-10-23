@@ -8,6 +8,24 @@ from django.forms.models import model_to_dict
 from itertools import chain
 from datetime import datetime
 
+
+# Función para extraer la fecha de cada tipo de objeto
+def get_fecha(event):
+    if isinstance(event, Cita):
+        if event.id_cita.datetime_inicio_real:
+            return event.id_cita.datetime_inicio_real
+        else:
+            return event.id_cita.datetime_inicio_estimado
+    elif isinstance(event, Tutoria):
+        if event.id_tutoria.datetime_inicio_real:
+            return event.id_tutoria.datetime_inicio_real
+        else:
+            return event.id_tutoria.datetime_inicio_estimado
+    elif isinstance(event, OrientacionAcademica):
+        if event.id_orientacion_academica.datetime_inicio_real:
+            return event.id_orientacion_academica.datetime_inicio_real
+        else:
+            return event.id_orientacion_academica.datetime_inicio_estimado
 class DashboardView(LoginRequiredMixin, View):
     login_url = "accounts:signin"
     template_name = "calendarapp/dashboard.html"
@@ -21,9 +39,11 @@ class DashboardView(LoginRequiredMixin, View):
         ins_persona=  Persona.objects.get(id= dict["id_persona"])
         latest_events = Event.objects.all() #filter(user=request.user).order_by("-id")[:10]
         citas_finalizadas= 0
+        lista_events= []
         citas_confirmadas= 0
         citas_canceladas= 0
         citas_pendientes= 0
+        citas_vencidas= 0
         #devolvemos solo aquellos registros que correspondan al usuario logeado
         if current_user.has_perm('calendarapp.iniciar_cita'):
             ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
@@ -32,11 +52,13 @@ class DashboardView(LoginRequiredMixin, View):
             for objeto in citas:
                 if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                     objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                    citas_vencidas += 1
                     
             citas_finalizadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
             citas_confirmadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmado').count()
             citas_canceladas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelado').count()
             citas_pendientes= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente').count()
+            citas_vencidas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Vencido').count()
             #tutorias sin citas
             tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
             for objeto in tutorias:
@@ -49,18 +71,20 @@ class DashboardView(LoginRequiredMixin, View):
                     objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
             
             # Combinar los dos querysets en una sola variable
-            running_events= list(chain(citas, tutorias, orientaciones))
+            lista_events= list(chain(citas, tutorias, orientaciones))
+            running_events = sorted(lista_events, key=get_fecha, reverse=True)
         else:
              #actividades con citas
             citas = Cita.objects.select_related("id_cita").filter(id_cita__id_persona_alta= ins_persona)
             for objeto in citas:
                 if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                     objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                    citas_vencidas += 1
                     
             citas_finalizadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
             citas_confirmadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmado').count()
             citas_canceladas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelado').count()
-            citas_pendientes= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente').count()
+
             # #tutorias sin citas
             tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
             for objeto in tutorias:
@@ -73,8 +97,8 @@ class DashboardView(LoginRequiredMixin, View):
                     objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
             
             # Combinar los dos querysets en una sola variable
-            running_events= list(chain(citas, tutorias, orientaciones))
-            
+            lista_events= list(chain(citas, tutorias, orientaciones))
+            running_events = sorted(lista_events, key=get_fecha, reverse=True)
         context = {
             "total_event": events.count(),
             "running_events": running_events,
@@ -82,6 +106,7 @@ class DashboardView(LoginRequiredMixin, View):
             "citas_finalizadas": citas_finalizadas,
             "citas_confirmadas": citas_confirmadas,
             "citas_canceladas": citas_canceladas,
-            "citas_pendientes": citas_pendientes,            
+            "citas_pendientes": citas_pendientes,      
+            "citas_vencidas": citas_vencidas,
         }
         return render(request, self.template_name, context)

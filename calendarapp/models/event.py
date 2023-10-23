@@ -494,11 +494,7 @@ def notify_tarea(sender, instance, created, **kwargs):
                     title = 'Te asignaron una tarea en una orientación académica'
                 
                 solicitante= ins_solicitante.usuario.all().first()
-                #agregamos
-                if encargado is not None:
-                    encargado = ins_encargado.usuario.all().first()
-                else:
-                    encargado= None
+                encargado = ins_encargado.usuario.all().first()
 
                 notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= tipo_actividad , id_tipo= id_actividad)
             else:
@@ -572,29 +568,30 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
                 if instance.id_persona_ultima_modificacion !=  instance.id_persona_alta:
                     ins_persona_modificacion= Persona.objects.get(id= instance.id_persona_ultima_modificacion.id)
                     originador= ins_persona_modificacion.usuario.all().first()
+                    destino= ''
                     #print(originador)
                     destinatario = ins_solicitante.usuario.all().first()
-                    #print(destinatario)
-                    destino= destinatario.email
+                    if destinatario is not None:
+                        destinatario= destinatario.email
                     
-                    if instance.id_estado_tarea.descripcion_estado_tarea == 'Cancelada':
-                        contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue cancelada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
-                        title = nombre_actividad + ' cancelada.'
-                        enviarcorreo(title, contenido, destino)
-                        notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
-                    
-                    elif instance.id_estado_tarea.descripcion_estado_tarea == 'Iniciada':
-                        contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue confirmada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
-                        title = nombre_actividad + ' iniciada.'
-                        enviarcorreo(title, contenido, destino)
-                        notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                        if instance.id_estado_tarea.descripcion_estado_tarea == 'Cancelada':
+                            contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue cancelada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
+                            title = nombre_actividad + ' cancelada.'
+                            enviarcorreo(title, contenido, destino)
+                            notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
                         
-                        
-                    elif instance.id_estado_tarea.descripcion_estado_tarea == 'Finalizada':
-                        contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue finalizada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
-                        title = nombre_actividad + ' finalizada.'
-                        enviarcorreo(title, contenido, destino)
-                        notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                        elif instance.id_estado_tarea.descripcion_estado_tarea == 'Iniciada':
+                            contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue confirmada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
+                            title = nombre_actividad + ' iniciada.'
+                            enviarcorreo(title, contenido, destino)
+                            notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                            
+                            
+                        elif instance.id_estado_tarea.descripcion_estado_tarea == 'Finalizada':
+                            contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue finalizada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
+                            title = nombre_actividad + ' finalizada.'
+                            enviarcorreo(title, contenido, destino)
+                            notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
 
                         
                 else:

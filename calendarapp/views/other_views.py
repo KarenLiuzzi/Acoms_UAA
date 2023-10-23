@@ -3810,7 +3810,7 @@ class TareasView(LoginRequiredMixin, ListView):
             current_user= request.user
             dict = model_to_dict(current_user)
             ins_persona=  Persona.objects.get(id= dict["id_persona"])
-            tareas= Tarea.objects.all().filter(id_persona_responsable= ins_persona)
+            tareas= Tarea.objects.all().filter(id_persona_responsable= ins_persona).order_by('-datetime_inicio_estimado')
             #devolvemos solo aquellos registros que correspondan al usuario logeado
             tarea_finalizada=  tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Finalizada').count()
             tarea_iniciada =tareas.filter( id_estado_tarea__descripcion_estado_tarea= 'Iniciada').count()

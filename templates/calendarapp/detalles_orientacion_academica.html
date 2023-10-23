@@ -62,19 +62,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="label texto-destacado" >Fecha estimada:</label>
+                            <label class="label texto-destacado" >Fecha de inicio y fin estimado:</label>
 
                             {% if orientacion_academica.id_orientacion_academica.datetime_inicio_estimado %}
-                                {{ orientacion_academica.id_orientacion_academica.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_estimado|time:"H:i" }}
+                                {{ orientacion_academica.id_orientacion_academica.datetime_inicio_estimado|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_estimado|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_estimado|time:"H:i" }}
                             {% else %}
                                 ----------
                             {% endif %} 
                         </div>
 
                         <div class="form-group">
-                            <label class="label texto-destacado">Fecha real:</label>
+                            <label class="label texto-destacado">Fecha de inicio y fin real:</label>
                             {% if orientacion_academica.id_orientacion_academica.datetime_fin_real %}
-                            {{ orientacion_academica.id_orientacion_academica.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_real|time:"H:i" }}
+                            {{ orientacion_academica.id_orientacion_academica.datetime_inicio_real|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_real|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_fin_real|time:"H:i" }}
                             {% else %}
                                 ----------
                             {% endif %} 

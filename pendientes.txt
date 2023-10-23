@@ -6,9 +6,10 @@ tutoria_create
 - cambiar los CASCADE y CASCADE por CASCADE
 - CASCADE por CASCADE
 - solo enviar la notificacion si es que el usuario exista
-cargar en static la carpeta lib
 
 
-ordenar por mas reciente la lista de notificaciones 
-agregar motivo de rechazo/cancelacion en el detalle de cita orientacion
+- cargar en static la carpeta lib
+
 agregar o no un nuevo numero item de volumetria de cita vencida o no 
+ver para agregar fecha de inicio real y estimado en tutoria y orientacion sin cita
+agregar add tipo de tutoria, orientacion en iniciar cita de tutoria y orientacion

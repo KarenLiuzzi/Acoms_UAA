@@ -26,7 +26,7 @@ class NotificationList(ListView):
     
     #filtramos solo las notificaciones que estan destinadas al usuario logeado
     def get_queryset(self):
-        return self.request.user.notificaciones.all()
+        return self.request.user.notificaciones.all().order_by('-timestamp') #descendente
     
     
     
