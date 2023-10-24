@@ -167,6 +167,49 @@
                 </div>
             </div>
 
+            {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizado' %}
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="card card-secondary">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="bi bi-person-video3"></i> Datos de la Tutoría</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label class="label texto-destacado" for="id_tipo_tutoria">Tipo de Tutoría:</label>
+                                        {% if tutoria.id_tipo_tutoria.descripcion_tipo_tutoria %}
+                                            {{ tutoria.id_tipo_tutoria.descripcion_tipo_tutoria|title}}
+                                        {% else %}
+                                            ----------
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="label texto-destacado" for="nombre_trabajo_grado">Nombre de Trabajo de Grado:</label>
+                                        {% if tutoria.nombre_trabajo %}
+                                            {{ tutoria.nombre_trabajo|title}}
+                                        {% else %}
+                                            ----------
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="label texto-destacado" for="observacion">Observación:</label>
+                                        {% if cita.id_cita.observacion %}
+                                            {{ cita.id_cita.observacion|title}}
+                                        {% else %}
+                                            ----------
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %} 
+
+
             <div class="col-lg-12">
                 <div class="card card-secondary">
                     <div class="card-header">
@@ -398,7 +441,8 @@
                         }
                 }
             }                
-            ]
+            ],
+            order: [],
         });
 
         $('#tblTareas tbody')

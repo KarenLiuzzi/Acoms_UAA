@@ -81,9 +81,10 @@ class Persona(models.Model):
     
     def toJSON(self):
         item = model_to_dict(self)
-        # item['nombre'] = self.nombre
-        # item['apellido'] = self.apellido
-        # item['documento'] = self.documento
+        item['id'] = self.id
+        item['nombre'] = self.nombre
+        item['apellido'] = self.apellido
+        item['documento'] = self.documento
         return item
 
     class Meta:

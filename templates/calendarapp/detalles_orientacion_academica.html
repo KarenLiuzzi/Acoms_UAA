@@ -98,6 +98,13 @@
                                 {% endif %}
                         </div>
 
+                        {% if orientacion_academica.motivo_cancelacion %}
+                            <div class="form-group">
+                                <label class="label texto-destacado">Motivo de Cancelación: </label>
+                                    {{ orientacion_academica.motivo_cancelacion|title}}
+                            </div>
+                        {% endif %}
+
                         <div class="form-group">
                             <label class="label texto-destacado">Observación:</label>
                             {% if orientacion_academica.id_orientacion_academica.observacion %}

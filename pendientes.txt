@@ -6,10 +6,16 @@ tutoria_create
 - cambiar los CASCADE y CASCADE por CASCADE
 - CASCADE por CASCADE
 - solo enviar la notificacion si es que el usuario exista
-
-
+- agregar o no un nuevo numero item de volumetria de cita vencida o no 
+- citas vencidas no funciona
 - cargar en static la carpeta lib
 
-agregar o no un nuevo numero item de volumetria de cita vencida o no 
 ver para agregar fecha de inicio real y estimado en tutoria y orientacion sin cita
 agregar add tipo de tutoria, orientacion en iniciar cita de tutoria y orientacion
+- ordernar la lista de tareas en los detalles de cita tutoria orientacion y sin cita
+- tablas objetos adaptables a dispositivos diferentes
+- poner rechazo en citas
+- en la tutorias/orientaciones hay que poner para que igual vencido pueda realizar acciones?
+ordernar tareas en orientaion y tutoria sin cita
+- odernar los registros de tutorias y orientaciones sin previa cita
+agregar un procesando o espere en la pantalla 

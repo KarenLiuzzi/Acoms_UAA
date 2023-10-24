@@ -58,8 +58,7 @@ class DashboardView(LoginRequiredMixin, View):
             citas_confirmadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmado').count()
             citas_canceladas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelado').count()
             citas_pendientes= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente').count()
-            citas_vencidas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Vencido').count()
-            #tutorias sin citas
+           #tutorias sin citas
             tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
             for objeto in tutorias:
                 if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():

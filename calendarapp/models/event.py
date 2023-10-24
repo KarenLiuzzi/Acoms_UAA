@@ -203,7 +203,8 @@ class Tutoria(models.Model):
     id_cita = models.ForeignKey(Cita, on_delete=models.CASCADE, related_name='tutoria_cita', null= True)
     id_tipo_tutoria = models.ForeignKey(TipoTutoria, on_delete=models.CASCADE, related_name='tipo_tutoria')
     nombre_trabajo = models.CharField(max_length=200, null= True)
-
+    motivo_cancelacion = models.CharField(max_length=500, null= True)
+    
 class TipoOrientacionAcademica(models.Model):
     id_tipo_orientacion_academica = models.AutoField(primary_key=True)
     descripcion_tipo_orientacion_academica = models.CharField(max_length=500)
@@ -230,7 +231,7 @@ class OrientacionAcademica(models.Model):
     id_cita = models.ForeignKey(Cita, on_delete=models.CASCADE, related_name='cita_ori_academ', null= True)
     id_motivo= models.ForeignKey(Motivo, on_delete=models.CASCADE, related_name='motivo_ori_academ')
     id_tipo_orientacion_academica= models.ForeignKey(TipoOrientacionAcademica, on_delete=models.CASCADE, related_name='tipo_ori_academ')
-
+    motivo_cancelacion = models.CharField(max_length=500, null= True)
 
 
 class TipoTarea(models.Model):
@@ -483,13 +484,13 @@ def notify_tarea(sender, instance, created, **kwargs):
                     
                 elif instance.id_tutoria != None:
                     #print('entro en tutoria')
-                    id_actividad= instance.id_tutoria.id_tutoria
+                    id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
                     tipo_actividad= 'tarea_tutoria'            
                     title = 'Te asignaron una tarea en una tutoría'
                     
                 elif instance.id_orientacion_academica != None:
                     #print('entro en orientacion')
-                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica
+                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
                     tipo_actividad= 'tarea_orientacion'
                     title = 'Te asignaron una tarea en una orientación académica'
                 
@@ -554,13 +555,13 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
                         
                 elif instance.id_tutoria != None:
                     print('entro en tutoria')
-                    id_actividad= instance.id_tutoria.id_tutoria
+                    id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
                     tipo= 'tarea_tutoria'
                     nombre_actividad= 'Tarea de Tutoría'
                     
                 elif instance.id_orientacion_academica != None:
                     print('entro en orientacion')
-                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica
+                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
                     tipo= 'tarea_orientacion'
                     nombre_actividad= 'Tarea de Orientación Académica'                    
                 
@@ -572,7 +573,7 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
                     #print(originador)
                     destinatario = ins_solicitante.usuario.all().first()
                     if destinatario is not None:
-                        destinatario= destinatario.email
+                        destino= destinatario.email
                     
                         if instance.id_estado_tarea.descripcion_estado_tarea == 'Cancelada':
                             contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue cancelada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
@@ -581,7 +582,7 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
                             notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
                         
                         elif instance.id_estado_tarea.descripcion_estado_tarea == 'Iniciada':
-                            contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue confirmada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
+                            contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue iniciada. Puede verificar el mismo ingresando al portal web. Atte equipo AcOms.'
                             title = nombre_actividad + ' iniciada.'
                             enviarcorreo(title, contenido, destino)
                             notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
@@ -602,7 +603,7 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
             print('no entro ')
             
     except Exception as e:
-        print(f"Se ha producido un error: {e}")
+        print(f"Se ha producido un error en notficiar tarea: {e}")
         
 pre_save.connect(detectar_cambio_estado_tarea, sender= Tarea)
 
