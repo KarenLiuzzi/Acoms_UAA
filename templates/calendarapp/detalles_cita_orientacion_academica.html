@@ -139,7 +139,7 @@
                 </div>
             </div>
 
-            {% if orientacion_academica %}
+            {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizado' %}
 
                 <div class="card-body">
                     <div class="row">
@@ -426,7 +426,8 @@
                             }
                     }
                 }                
-                ]
+                ],
+                order: [],
             });
 
             $('#tblTareas tbody')

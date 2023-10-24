@@ -98,18 +98,19 @@ class ActividadesAcademicasListView(ListView):
                 events= list(chain(tutorias, orientaciones))
             
             else:
-                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
                 for objeto in tutorias:
                         if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
                             objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
 
-                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
                 for objeto in orientaciones:
                         if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
                             objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
                     
                 # Combinar los dos querysets en una sola variable
-                events= list(chain(tutorias, orientaciones))        
+                events= list(chain(tutorias, orientaciones)) 
+                
             return events
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -280,6 +281,7 @@ class RunningActividadesAcademicasListView(ListView):
                         if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
                             objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
                     running_events = list(chain(tutorias, orientaciones))
+             
 
             return running_events
         except Exception as e:
@@ -406,10 +408,13 @@ def CancelarCita(request, id_cita):
     else:
         
         return render(request, "calendarapp/cancelar_cita.html", context = {"id_cita": id_cita})
-    
+
+@csrf_exempt
 def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
     if request.method == "POST":
-        
+
+            campo = request.POST.get('motivo')
+            
             # Eliminar todos los mensajes de error
             storage = messages.get_messages(request)
             for message in storage:
@@ -426,6 +431,9 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
                     estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
                     tutoria.id_estado_actividad_academica= estado
                     tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                    hijo_tutoria= Tutoria.objects.get(id_tutoria= id_tutoria)
+                    hijo_tutoria.motivo_cancelacion= campo
+                    hijo_tutoria.save()
                     tutoria.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
                 else:
@@ -435,6 +443,9 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
                     estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
                     orientacion_academica.id_estado_actividad_academica= estado
                     orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                    hijo_orientacion= OrientacionAcademica.objects.get(id_orientacion_academica= id_ori_academ)
+                    hijo_orientacion.motivo_cancelacion= campo
+                    hijo_orientacion.save()
                     orientacion_academica.save()
                     return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
             except Exception as e:

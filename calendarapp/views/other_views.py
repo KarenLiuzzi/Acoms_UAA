@@ -793,7 +793,7 @@ class CitaOrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = []
         try:
-            tarea= Tarea.objects.filter(id_orientacion_academica= self.get_object().id_cita.id_actividad_academica)
+            tarea= Tarea.objects.filter(id_orientacion_academica= self.get_object().id_cita.id_actividad_academica).order_by('-datetime_inicio_estimado')
             tareas_lista = list(tarea)
             if tareas_lista:
                 for tarea in tareas_lista:
@@ -874,8 +874,8 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
     def get_details_tutoria(self):
         data = Tutoria.objects.none()
         try:
-            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona
-            tutoria= Tutoria.objects.filter(id_tutoria=self.get_object().id_cita)
+            #obtenemos todos los id de los participantes y devolvemos los datos de la tabla persona            
+            tutoria= Tutoria.objects.filter(id_tutoria=self.get_object().id_cita).first()
             data= tutoria
                     
         except Exception as e:
@@ -885,7 +885,7 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = []
         try:
-            tarea= Tarea.objects.filter(id_tutoria= self.get_object().id_cita.id_actividad_academica)
+            tarea= Tarea.objects.filter(id_tutoria= self.get_object().id_cita.id_actividad_academica).order_by('-datetime_inicio_estimado')
             tareas_lista = list(tarea)
             if tareas_lista:
                 for tarea in tareas_lista:

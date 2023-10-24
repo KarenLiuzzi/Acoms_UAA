@@ -20,7 +20,7 @@
             <div class="col-lg-7">
                 <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="bi bi-calendar4-event"></i> Datos de la Tutoría
+                        <h3 class="card-title"><i class="bi bi-person-video3"></i> Datos de la Tutoría
                         </h3>
                     </div>
                     <div class="card-body">
@@ -117,6 +117,13 @@
                                 ----------
                             {% endif %}
                         </div>
+
+                        {% if tutoria.motivo_cancelacion %}
+                            <div class="form-group">
+                                <label class="label texto-destacado">Motivo de Cancelación: </label>
+                                    {{ tutoria.motivo_cancelacion|title}}
+                            </div>
+                        {% endif %}
 
                         {% if tutoria.id_tipo_tutoria %}
                             <div class="form-group">
