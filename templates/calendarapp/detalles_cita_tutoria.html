@@ -167,7 +167,7 @@
                 </div>
             </div>
 
-            {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizado' %}
+            {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizada' %}
 
                 <div class="card-body">
                     <div class="row">
@@ -219,7 +219,7 @@
 
                         <div class="tile">
                             <div>
-                                {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizado' %}
+                                {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizada' %}
                                     <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Tarea">
                                         <i class="bi bi-plus-lg"></i> Agregar Tarea
                                     </button>
@@ -269,7 +269,7 @@
 
     {% endif %}
 
-    {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmado' %}
+    {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmada' %}
 
     <div class="card-footer">
 
@@ -389,7 +389,7 @@
         function format(t) {
             var html = '<table class="table">';
             html += '<thead>';
-            html += '<tr><th scope="col">Finalizado por</th>';
+            html += '<tr><th scope="col">Finalizada por</th>';
             html += '<th scope="col">Registrado por</th>';
             html += '<th scope="col">Fecha alta</th>';
             html += '<th scope="col">Fecha Inicio real</th>';

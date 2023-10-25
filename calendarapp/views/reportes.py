@@ -239,7 +239,7 @@ def actualizar_campos_reportes(request):
     if campo == "estado_actividades_sin_cita":
         try:
             contador= 0
-            queryset= EstadoActividadAcademica.objects.exclude(descripcion_estado_actividad_academica='Confirmado')
+            queryset= EstadoActividadAcademica.objects.exclude(descripcion_estado_actividad_academica='Confirmada')
             # Pasar los datos del queryset a datos HTML
             options = ''
             for item in queryset:
@@ -349,7 +349,7 @@ class ReporteTutoriaView(TemplateView):
                     if id_estado != 'Vencida':
                         queryset = queryset.filter(id_tutoria__id_estado_actividad_academica=id_estado)
                     else:
-                        queryset = queryset.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado ', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now())
+                        queryset = queryset.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now())
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_tutoria__id_persona_solicitante=id_persona_solicitante)
@@ -461,7 +461,7 @@ class ReporteOrientacionAcademicaView(TemplateView):
                     if id_estado != 'Vencida':
                         queryset = queryset.filter(id_orientacion_academica__id_estado_actividad_academica=id_estado)
                     else:
-                        queryset = queryset.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado ', 'Finalizado']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now())
+                        queryset = queryset.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now())
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_orientacion_academica__id_persona_solicitante=id_persona_solicitante)
@@ -585,7 +585,7 @@ class ReporteCitasView(TemplateView):
                     if id_estado != 'Vencida':
                         queryset = queryset.filter(id_cita__id_estado_actividad_academica=id_estado)
                     else:
-                        queryset = queryset.filter(~Q(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado ', 'Finalizado']), id_cita__datetime_fin_estimado__lte= datetime.now())
+                        queryset = queryset.filter(~Q(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_cita__datetime_fin_estimado__lte= datetime.now())
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_cita__id_persona_solicitante=id_persona_solicitante)
