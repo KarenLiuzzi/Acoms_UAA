@@ -19,3 +19,10 @@ agregar add tipo de tutoria, orientacion en iniciar cita de tutoria y orientacio
 ordernar tareas en orientaion y tutoria sin cita
 - odernar los registros de tutorias y orientaciones sin previa cita
 agregar un procesando o espere en la pantalla 
+- agregar un filtro para el administrador dentro de reportes
+- avisar en tarea cancelada tambien?
+ver numeros de tarea y orden de lista tarea
+- adaptar tabla al tamaño de pantalla
+-calendario no se visualiza en pantalla pequeña
+tarda mucho
+
