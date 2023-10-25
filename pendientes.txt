@@ -1,3 +1,5 @@
+
+Listo
 - cuidado con el firts value del ABM de caldendario fucnionario docente
 - cambiar la forma de traer  el departamento al cual esta asociado el funcionario docente en CitaOrientacionAcademicaCreateView y 
 - cambiar la forma de traer en las tutorias y orientaciones las materias asignadas al docente, por el departament asignado a los mismos en 
@@ -8,21 +10,24 @@ tutoria_create
 - solo enviar la notificacion si es que el usuario exista
 - agregar o no un nuevo numero item de volumetria de cita vencida o no 
 - citas vencidas no funciona
-- cargar en static la carpeta lib
-
 ver para agregar fecha de inicio real y estimado en tutoria y orientacion sin cita
 agregar add tipo de tutoria, orientacion en iniciar cita de tutoria y orientacion
 - ordernar la lista de tareas en los detalles de cita tutoria orientacion y sin cita
-- tablas objetos adaptables a dispositivos diferentes
-- poner rechazo en citas
-- en la tutorias/orientaciones hay que poner para que igual vencido pueda realizar acciones?
-ordernar tareas en orientaion y tutoria sin cita
+- en la tutorias/orientaciones hay que poner para que igual Vencida pueda realizar acciones? Si
+- ordernar tareas en orientaion y tutoria sin cita
 - odernar los registros de tutorias y orientaciones sin previa cita
-agregar un procesando o espere en la pantalla 
+-ver numeros de tarea y orden de lista tarea
 - agregar un filtro para el administrador dentro de reportes
-- avisar en tarea cancelada tambien?
-ver numeros de tarea y orden de lista tarea
-- adaptar tabla al tamaño de pantalla
--calendario no se visualiza en pantalla pequeña
-tarda mucho
 
+
+Pendiente
+- cargar en static la carpeta lib
+- poner rechazo en citas
+- tarda mucho
+- agregar un procesando o espere en la pantalla 
+- tablas objetos adaptables a dispositivos diferentes
+- modificar todos los estados de cita rechazado por femenino 
+RechazarCita
+- agregar persona que mnodifico por ultima vez en todos los detalles
+-al ir a otras paginas de las listas no funciona mi modal de ningun tipo
+- agregar notificaciones en rechazado

@@ -2,7 +2,7 @@ from django.urls import path
 from calendarapp.views.other_views import TutoriaCreateView, formCalendarioFuncDoc, obtener_horarios_cita ,EditCalendarioFuncDoc, tipo_cita, tipo_acti_academ, AddCalendarioFuncDoc, delCalendarioFuncDoc, ori_academica, actualizar_campo, CitaTutoriaCreateView, CitaOrientacionAcademicaCreateView, CitaTutoriaUpdateView, CitaOrientacionAcademicaUpdateView, CitaTutoriaDetalle, CitaOrientacionAcademicaDetalle, CitaTutoriaIniciarView, CitaOrientacionAcademicaIniciarView, OrientacionAcademicaCreateView, TutoriaDetalle, OrientacionAcademicaDetalle, TutoriaUpdateView, TareasView, OrientacionAcademicaUpdateView, AddTarea#ListCalendarioFuncDoc
 
 from calendarapp.views import CalendarView, CalendarViewNew, AllEventsListView, RunningEventsListView, DetalleCita, CancelarCita
-from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView, DetalleActividadesAcademicas, CancelarActividadAcademica, FinalizarActividadAcademica, CancelarTarea, IniciarTarea, FinalizarTarea, About
+from calendarapp.views.event_list import AprobarCita, ActividadesAcademicasListView, RunningActividadesAcademicasListView, DetalleActividadesAcademicas, CancelarActividadAcademica, FinalizarActividadAcademica, CancelarTarea, IniciarTarea, FinalizarTarea, About, RechazarCita
 from calendarapp.views.reportes import ReporteTutoriaView, actualizar_campos_reportes, ReporteOrientacionAcademicaView, ReporteCitasView, ReporteTareasView
 app_name = "calendarapp"
 
@@ -22,6 +22,7 @@ urlpatterns = [
     path("detallesCita/<int:id_cita>/", DetalleCita, name="detalles_cita"),
     path("cita/confirmar/<int:id_cita>/", AprobarCita, name="confirmar_cita"),
     path("cita/cancelar/<int:id_cita>/", CancelarCita, name="cancelar_cita"),
+    path("cita/rechazar/<int:id_cita>/", RechazarCita, name="rechazar_cita"),
     path("tutoria/", CitaTutoriaCreateView.as_view(), name="tuto"),
     path("orientacionAcademica/", CitaOrientacionAcademicaCreateView.as_view(), name="academica"),
     path("modificarCitaTutoria/<int:pk>/", CitaTutoriaUpdateView.as_view(), name="modificar_cita_tutoria"),
@@ -33,6 +34,9 @@ urlpatterns = [
     path("moredetallesCitaOriAcadem/<int:pk>/", CitaOrientacionAcademicaDetalle.as_view() , name="more_cita_detalles_ori_academica"),
     path("iniciarCitaTutoria/<int:pk>/", CitaTutoriaIniciarView.as_view() , name="iniciar_cita_tutoria"),
     path("iniciarCitaOrientacionAcademica/<int:pk>/", CitaOrientacionAcademicaIniciarView.as_view() , name="iniciar_cita_ori_academ"),
+    
+    
+    
     
     #Actividades Academicas
     path("tipoActiAcadem/", tipo_acti_academ, name="tipo_acti_academ"),

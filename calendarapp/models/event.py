@@ -120,7 +120,7 @@ class Event(EventAbstract):
     class Meta:
         verbose_name_plural = "Actividades Academicas"
         #permisos personalizados
-        permissions= [('iniciar_cita', 'Iniciar cita'), ('finalizar_cita', 'Finalizar cita' ), ('editar_cita', 'Editar cita'), ('cancelar_cita', 'Cancelar cita'), ('confirmar_cita', 'Confirmar cita'), ('registrar_cita', 'registar cita'), ('editar_actividad_academica', 'Editar Actividad Academica'), ('registrar_actividad_academica', 'Registrar Actividad Academica'), ('cancelar_actividad_academica', 'Cancelar Actividad Academica'), ('finalizar_actividad_academica', 'Finalizar Actividad Academica')]
+        permissions= [('iniciar_cita', 'Iniciar cita'), ('finalizar_cita', 'Finalizar cita' ), ('editar_cita', 'Editar cita'), ('cancelar_cita', 'Cancelar cita'), ('confirmar_cita', 'Confirmar cita'), ('registrar_cita', 'registar cita'),('rechazar_cita', 'rechazar cita'), ('editar_actividad_academica', 'Editar Actividad Academica'), ('registrar_actividad_academica', 'Registrar Actividad Academica'), ('cancelar_actividad_academica', 'Cancelar Actividad Academica'), ('finalizar_actividad_academica', 'Finalizar Actividad Academica')]
 
 class DetalleActividadAcademica(models.Model):
     id_detalle_actividad_Academica= models.AutoField(primary_key=True)
@@ -382,7 +382,7 @@ def detectar_cambio_estado(sender, instance, **kwargs):
                         destino= None
                     #print(destino)
                     
-                    if instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Cancelado':
+                    if instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Cancelada':
                         title = nombre_actividad + ' cancelada.'
                         
                         if (tipo== 'cita_tutoria' or  tipo== 'cita_orientacion'):
@@ -403,7 +403,7 @@ def detectar_cambio_estado(sender, instance, **kwargs):
                         destino= None
                     #print(destino)
                         
-                    if instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Cancelado':
+                    if instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Cancelada':
                         title = nombre_actividad + ' cancelada.'
                         
                         if (tipo== 'cita_tutoria' or  tipo== 'cita_orientacion'):
@@ -417,7 +417,7 @@ def detectar_cambio_estado(sender, instance, **kwargs):
                             enviarcorreo(title, contenido, destino)
                             notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
                     
-                    elif instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmado':
+                    elif instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmada':
                         title = nombre_actividad + ' confirmada.'
                         
                         if (tipo== 'cita_tutoria' or  tipo== 'cita_orientacion'):
@@ -425,7 +425,7 @@ def detectar_cambio_estado(sender, instance, **kwargs):
                             enviarcorreo(title, contenido, destino)
                             notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
                         
-                    elif instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizado':
+                    elif instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizada':
                         title = nombre_actividad + ' finalizada.'
                         
                         if (tipo== 'tutoria' or  tipo== 'orientacion'):

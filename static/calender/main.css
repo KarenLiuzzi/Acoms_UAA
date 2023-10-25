@@ -1473,3 +1473,9 @@ A VERTICAL event
   border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #d89219);
 
 }
+
+.event-border-color-pink .fc-daygrid-event-dot{
+
+  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #FFB6C1);
+
+}

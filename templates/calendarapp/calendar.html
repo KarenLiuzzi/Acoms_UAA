@@ -34,9 +34,10 @@
                   <!-- Elementos a la derecha -->
                   <div>
                     <i class="bi bi-circle-fill" style="color: #dcd91f;"></i> <text style="color: #555555">Pendiente</text>
-                    <i class="bi bi-circle-fill" style="color: #d89219;"></i> <text style="color: #555555">Confirmado</text>
-                    <i class="bi bi-circle-fill" style="color: #ba0f4e;"></i> <text style="color: #555555">Cancelado</text>
-                    <i class="bi bi-circle-fill" style="color: #0cc55c;"></i> <text style="color: #555555">Finalizado</text>
+                    <i class="bi bi-circle-fill" style="color: #d89219;"></i> <text style="color: #555555">Confirmada</text>
+                    <i class="bi bi-circle-fill" style="color: #FFB6C1;"></i> <text style="color: #555555">Rechazada</text>
+                    <i class="bi bi-circle-fill" style="color: #ba0f4e;"></i> <text style="color: #555555">Cancelada</text>
+                    <i class="bi bi-circle-fill" style="color: #0cc55c;"></i> <text style="color: #555555">Finalizada</text>
                   </div>
               </div>
 
@@ -275,21 +276,26 @@
               eventClassList.push('event-color-blue');
               eventClassList.push('event-border-color-yellow');
 
-            } else if (tipo === 'ori_academica' & estado == 'Cancelado') {
+            } else if (tipo === 'ori_academica' & estado == 'Cancelada') {
               eventClassList.push('event-color-blue');
               eventClassList.push('event-border-color-red');
             }
-            else if (tipo === 'ori_academica' & estado == 'Finalizado') {
+            else if (tipo === 'ori_academica' & estado == 'Finalizada') {
               eventClassList.push('event-color-blue');
               eventClassList.push('event-border-color-green');
             }
 
-            else if (tipo === 'ori_academica' & estado == 'Confirmado') {
+            else if (tipo === 'ori_academica' & estado == 'Confirmada') {
               eventClassList.push('event-color-blue');
               eventClassList.push('event-border-color-orange');
             }
 
-            else if (tipo === 'tutoria' & estado == 'Cancelado') {
+            else if (tipo === 'ori_academica' & estado == 'Rechazada') {
+              eventClassList.push('event-color-blue');
+              eventClassList.push('event-border-color-pink');
+            }
+
+            else if (tipo === 'tutoria' & estado == 'Cancelada') {
               eventClassList.push('event-color-purple');
               eventClassList.push('event-border-color-red');
             }
@@ -299,14 +305,19 @@
               eventClassList.push('event-border-color-yellow');
             }
             
-            else if (tipo === 'tutoria' & estado == 'Finalizado') {
+            else if (tipo === 'tutoria' & estado == 'Finalizada') {
               eventClassList.push('event-color-purple');
               eventClassList.push('event-border-color-green');
             }
             
-            else if (tipo === 'tutoria' & estado == 'Confirmado') {
+            else if (tipo === 'tutoria' & estado == 'Confirmada') {
               eventClassList.push('event-color-purple');
               eventClassList.push('event-border-color-orange');
+            }
+            
+            else if (tipo === 'tutoria' & estado == 'Rechazada') {
+              eventClassList.push('event-color-purple');
+              eventClassList.push('event-border-color-pink');
             };
               
 
@@ -330,22 +341,27 @@
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;'>•</i>");
 
                 } 
-                else if (tipo === 'ori_academica' & estado == 'Cancelado') {
+                else if (tipo === 'ori_academica' & estado == 'Cancelada') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;'>•</i>");
 
                 }
-                else if (tipo === 'ori_academica' & estado == 'Finalizado') {
+                else if (tipo === 'ori_academica' & estado == 'Finalizada') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
                 }
                 
-                else if (tipo === 'ori_academica' & estado == 'Confirmado') {
+                else if (tipo === 'ori_academica' & estado == 'Confirmada') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #d89219;'>•</i>");
                 }
 
-                else if (tipo === 'tutoria' & estado == 'Cancelado') {
+                else if (tipo === 'ori_academica' & estado == 'Rechazada') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #FFB6C1;'>•</i>");
+                }
+
+                else if (tipo === 'tutoria' & estado == 'Cancelada') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;'>•</i>");
 
@@ -355,16 +371,21 @@
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;'>•</i>");
 
                 }
-                else if (tipo === 'tutoria' & estado == 'Finalizado') {
+                else if (tipo === 'tutoria' & estado == 'Finalizada') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
                 
                 }
-                else if (tipo === 'tutoria' & estado == 'Confirmado') {
+                else if (tipo === 'tutoria' & estado == 'Confirmada') {
 
                   $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #d89219;'>•</i>");
                 
-                }                    
+                }   
+                else if (tipo === 'tutoria' & estado == 'Rechazada') {
+
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #FFB6C1;'>•</i>");
+                
+                }                   
               } 
             }  
               
@@ -501,7 +522,7 @@
               container.appendChild(newLinkIniciarOripend);
             }
 
-          } else if (estado == "Confirmado"){
+          } else if (estado == "Confirmada"){
             //habilitar solo al usuario staff
             if (tipo_usuario== "staff") {
 
@@ -521,6 +542,26 @@
 
               // Agregar el nuevo elemento <a> al <div>
               container.appendChild(newLinkIniciarOriconf);
+            }
+          } else if (estado == "Rechazada"){
+            //habilitar solo al usuario normal
+            if (tipo_usuario== "normal"){
+              // Crear un nuevo elemento <a> para editar
+              const linkrechazado = document.createElement("a");
+              linkrechazado.className = "btn btn-primary mt-2";
+              linkrechazado.id = "editar_ori_academica";
+              linkrechazado.href = '/modificarCitaOriAcademica/'+ id_cita; // Agrega aquí la URL deseada
+              linkrechazado.title = "Editar";
+
+              // Crear un nuevo elemento <i> para el icono
+              const iconrechazado = document.createElement("i");
+              iconrechazado.className = "bi bi-pencil-fill"; // Clase para el icono 
+
+              // Agregar el icono al elemento <a>
+              linkrechazado.appendChild(iconrechazado);
+
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(linkrechazado);
             }
           }
 
@@ -566,7 +607,7 @@
               container.appendChild(newLinkIniciarOripend);
             }
 
-          } else if (estado == "Confirmado"){
+          } else if (estado == "Confirmada"){
             //habilitar solo al usuario staff
             if (tipo_usuario== "staff") {
               // Crear un nuevo elemento <a> para iniciar cita  
@@ -585,6 +626,26 @@
 
               // Agregar el nuevo elemento <a> al <div>
               container.appendChild(newLinkIniciarOriconf);
+            }
+          } else if (estado == "Rechazada"){
+            //habilitar solo al usuario normal
+            if (tipo_usuario== "normal"){
+              // Crear un nuevo elemento <a> para editar
+              const linkrechtuto = document.createElement("a");
+              linkrechtuto.className = "btn btn-primary mt-2";
+              linkrechtuto.id = "editar_tutoria";
+              linkrechtuto.href = '/modificarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
+              linkrechtuto.title = "Editar";
+
+              // Crear un nuevo elemento <i> para el icono
+              const iconrechatuto = document.createElement("i");
+              iconrechatuto.className = "bi bi-pencil-fill"; // Clase para el icono 
+
+              // Agregar el icono al elemento <a>
+                linkrechtuto.appendChild(iconrechatuto);
+
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(linkrechtuto);
             }
           }
         }

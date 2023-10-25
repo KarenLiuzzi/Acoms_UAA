@@ -58,8 +58,8 @@ class AllEventsListView(ListView):
                 event = event.order_by('-datetime_to_order')
                 
                 for objeto in event:
-                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                 return event
                 
             else:
@@ -75,11 +75,11 @@ class AllEventsListView(ListView):
                 event = event.order_by('-datetime_to_order')
                 
                 for objeto in event:
-                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                 return event
         except Exception as e:
-            print(f"Se ha producido un error: {e}")
+            print(f"Se ha producido un error en obtener lista de citas: {e}")
 
 class ActividadesAcademicasListView(ListView):
     """ All event list views """
@@ -103,13 +103,13 @@ class ActividadesAcademicasListView(ListView):
                 ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
                 for objeto in tutorias:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
 
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
                 for objeto in orientaciones:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                     
                 # Combinar los dos querysets en una sola variable
                 lista_events= list(chain(tutorias, orientaciones))
@@ -118,13 +118,13 @@ class ActividadesAcademicasListView(ListView):
             else:
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
                 for objeto in tutorias:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
 
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
                 for objeto in orientaciones:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                     
                 # Combinar los dos querysets en una sola variable
                 lista_events= list(chain(tutorias, orientaciones))
@@ -157,25 +157,25 @@ class ActividadesAcademicasListView(ListView):
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_tutoria__datetime_fin_estimado__gt= datetime.now()).count()
-                tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
-                tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
-                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
+                tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_orientacion_academica__datetime_fin_estimado__gt= datetime.now()).count()
-                orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
-                orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
-                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
+                orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             else:
                 
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_tutoria__datetime_fin_estimado__gt= datetime.now()).count()
-                tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
-                tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
-                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
+                tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_orientacion_academica__datetime_fin_estimado__gt= datetime.now()).count()
-                orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
-                orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
-                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count() 
+                orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count() 
             
             data= {'tutoria_iniciada': tutoria_iniciada, 'tutoria_cancelada': tutoria_cancelada, 'tutoria_finalizada': tutoria_finalizada,
                 'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada, 'tutoria_vencida': tutoria_vencida, 'orientacion_vencida': orientacion_vencida}
@@ -218,8 +218,8 @@ class RunningEventsListView(ListView):
                 event = event.order_by('-datetime_to_order')
                 
                 for objeto in event:
-                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                 return event
             else:
                 event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
@@ -233,8 +233,8 @@ class RunningEventsListView(ListView):
                 event = event.order_by('-datetime_to_order')
                 
                 for objeto in event:
-                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                 return event
         #return Event.objects.get_running_events(user=self.request.user) 
         except Exception as e:
@@ -262,43 +262,43 @@ class RunningActividadesAcademicasListView(ListView):
                 if parametro == 'Tutoria':
                     running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
                     for objeto in running_events:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                 elif parametro== "OriAcademica":
                     running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
                     for objeto in running_events:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                 else: 
                     tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
                     for objeto in tutorias:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                     orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
                     for objeto in orientaciones:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                     running_events = list(chain(tutorias, orientaciones))
             else:
                 if parametro == 'Tutoria':
                     running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
                     for objeto in running_events:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                 elif parametro== "OriAcademica":
                     running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
                     for objeto in running_events:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                 else: 
                     tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
                     for objeto in tutorias:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                     orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
                     for objeto in orientaciones:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizado', 'Cancelado') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencido'
+                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                     running_events = list(chain(tutorias, orientaciones))
              
 
@@ -330,25 +330,25 @@ class RunningActividadesAcademicasListView(ListView):
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_tutoria__datetime_fin_estimado__gt= datetime.now()).count()
-                tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
-                tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
-                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
+                tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_orientacion_academica__datetime_fin_estimado__gt= datetime.now()).count()
-                orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
-                orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
-                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
+                orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             else:
                 
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_tutoria__datetime_fin_estimado__gt= datetime.now()).count()
-                tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
-                tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
-                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
+                tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_orientacion_academica__datetime_fin_estimado__gt= datetime.now()).count()
-                orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelado').count()
-                orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizado').count()
-                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelado', 'Finalizado']) , id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
+                orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']) , id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             
             data= {'tutoria_iniciada': tutoria_iniciada, 'tutoria_cancelada': tutoria_cancelada, 'tutoria_finalizada': tutoria_finalizada,
                 'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada, 'tutoria_vencida': tutoria_vencida, 'orientacion_vencida': orientacion_vencida}
@@ -408,7 +408,7 @@ def CancelarCita(request, id_cita):
                 
                 with transaction.atomic():
                     record = Event.objects.get(id_actividad_academica=id_cita)
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelada').first()
                     record.id_estado_actividad_academica= estado
                     ins_persona= Persona.objects.get(id= dict["id_persona"])
                     record.id_persona_ultima_modificacion= ins_persona
@@ -427,6 +427,44 @@ def CancelarCita(request, id_cita):
     else:
         
         return render(request, "calendarapp/cancelar_cita.html", context = {"id_cita": id_cita})
+    
+    
+@csrf_exempt
+def RechazarCita(request, id_cita):
+    if request.method == "POST":
+        
+            campo = request.POST.get('motivo')
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
+            try:
+                dict = model_to_dict(request.user)
+                
+                with transaction.atomic():
+                    record = Event.objects.get(id_actividad_academica=id_cita)
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Rechazada').first()
+                    record.id_estado_actividad_academica= estado
+                    ins_persona= Persona.objects.get(id= dict["id_persona"])
+                    record.id_persona_ultima_modificacion= ins_persona
+                    #motivo_cancelacion
+                    record_cita= Cita.objects.get(id_cita=id_cita)
+                    record_cita.motivo_rechazo= campo
+                    record_cita.save()
+                    record.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Rechazada."})})
+
+            except Exception as e:
+                print(f"Se ha producido un error: {e}")
+                messages.error(request, 'Ocurrió un error al intentar rechazar la cita.')
+                return render(request, "calendarapp/rechazar_cita.html", context = {"id_cita": id_cita})
+                
+    else:
+        
+        return render(request, "calendarapp/rechazar_cita.html", context = {"id_cita": id_cita})
 
 @csrf_exempt
 def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
@@ -447,7 +485,7 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
                     tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
                     print(tutoria)
                     #obtenemos instancia de estado cancelado
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelada').first()
                     tutoria.id_estado_actividad_academica= estado
                     tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     hijo_tutoria= Tutoria.objects.get(id_tutoria= id_tutoria)
@@ -459,7 +497,7 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
                     #obtenemos la instancia de orientacion academica a cancelar
                     orientacion_academica= Event.objects.get(id_actividad_academica= id_ori_academ)
                     #obtenemos instancia de estado cancelado
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelado').first()
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelada').first()
                     orientacion_academica.id_estado_actividad_academica= estado
                     orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     hijo_orientacion= OrientacionAcademica.objects.get(id_orientacion_academica= id_ori_academ)
@@ -492,7 +530,7 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
                     #obtenemos la instancia de tutoria a cancelar
                     tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
                     #obtenemos instancia de estado cancelado
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizado').first()
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizada').first()
                     tutoria.id_estado_actividad_academica= estado
                     tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     tutoria.save()
@@ -501,7 +539,7 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
                     #obtenemos la instancia de orientacion academica a cancelar
                     orientacion_academica= Event.objects.get(id_actividad_academica= id_ori_academ)
                     #obtenemos instancia de estado cancelado
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizado').first()
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizada').first()
                     orientacion_academica.id_estado_actividad_academica= estado
                     orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     orientacion_academica.save()
@@ -530,7 +568,7 @@ def AprobarCita(request, id_cita):
             try:
                     dict = model_to_dict(request.user)
                     record = Event.objects.get(id_actividad_academica=id_cita)
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Confirmado').first()
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Confirmada').first()
                     record.id_estado_actividad_academica= estado
                     record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                     record.save()
