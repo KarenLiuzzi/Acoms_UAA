@@ -958,7 +958,7 @@ class OrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = []
         try:
-            tarea= Tarea.objects.filter(id_orientacion_academica= self.get_object())
+            tarea= Tarea.objects.filter(id_orientacion_academica= self.get_object()).order_by('-datetime_inicio_estimado')
             tareas_lista = list(tarea)
             if tareas_lista:
                 for tarea in tareas_lista:
@@ -1040,7 +1040,7 @@ class TutoriaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = []
         try:
-            tarea= Tarea.objects.filter(id_tutoria= self.get_object())
+            tarea= Tarea.objects.filter(id_tutoria= self.get_object()).order_by('-datetime_inicio_estimado')
             tareas_lista = list(tarea)
             if tareas_lista:
                 for tarea in tareas_lista:
