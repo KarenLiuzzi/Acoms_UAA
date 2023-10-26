@@ -15,7 +15,7 @@ from accounts.models.user import FuncionarioDocente
 from itertools import chain
 from django.db.models import Q,  F, Case, When, Value, IntegerField
 from django.db.models.functions import Coalesce
-
+from django.utils.decorators import method_decorator
 
 
 # Función para extraer la fecha de cada tipo de objeto
@@ -36,9 +36,28 @@ class AllEventsListView(ListView):
 
     template_name = "calendarapp/events_list.html"
     model = Event
+    
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
+        # Devuelve un queryset vacío
+        return Event.objects.none()
+    
+    def get_citas(self):
         try:
+            lista_eventos= []
+            fecha= ''
+            dia= ''
+            horario= ''
+            estado= ''
+            encargado= ''
+            solicitante= ''
+            tipo= '' 
+            id= ''
+            tipo_usuario= ''
+            dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
             request = self.request
             current_user= request.user
             dict = model_to_dict(current_user)
@@ -57,10 +76,34 @@ class AllEventsListView(ListView):
 
                 event = event.order_by('-datetime_to_order')
                 
-                for objeto in event:
-                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                return event
+                if event.exists():
+                    for objeto in event:
+                            if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                                objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            if objeto.id_cita.datetime_inicio_real:
+                                fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_cita.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_cita.datetime_inicio_real.strftime('%H:%M:%S')
+                            else:
+                                fecha= objeto.id_cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_cita.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            if objeto.es_tutoria== True:
+                                tipo= 'Tutoría'
+                            elif  objeto.es_orientacion_academica== True:
+                                tipo= 'Orientación Académica'
+                            id= str(objeto.id_cita.id_actividad_academica)
+                            tipo_usuario= 'staff'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                            lista_eventos.append(auxiliar) 
+                return lista_eventos
                 
             else:
                 event= Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona)
@@ -74,12 +117,43 @@ class AllEventsListView(ListView):
 
                 event = event.order_by('-datetime_to_order')
                 
-                for objeto in event:
-                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                return event
+                if event.exists():
+                    for objeto in event:
+                            if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                                objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            if objeto.id_cita.datetime_inicio_real:
+                                fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_cita.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_cita.datetime_inicio_real.strftime('%H:%M:%S')
+                            else:
+                                fecha= objeto.id_cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_cita.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            if objeto.es_tutoria== True:
+                                tipo= 'Tutoría'
+                            elif  objeto.es_orientacion_academica== True:
+                                tipo= 'Orientación Académica'
+                            id= str(objeto.id_cita.id_actividad_academica)
+                            tipo_usuario= 'normal'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                            lista_eventos.append(auxiliar) 
+                
+                return lista_eventos
+                
         except Exception as e:
             print(f"Se ha producido un error en obtener lista de citas: {e}")
+            
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['citas'] = self.get_citas()
+        return context
 
 class ActividadesAcademicasListView(ListView):
     """ All event list views """
@@ -390,6 +464,7 @@ def DetalleActividadesAcademicas(request, id_tutoria, id_ori_academ):
         return render(request,'calendarapp/detalles_actividad_academica.html', context= contexto)
     except Exception as e:
                 print(f"Se ha producido un error: {e}")
+
 
 @csrf_exempt
 def CancelarCita(request, id_cita):

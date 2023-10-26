@@ -18,7 +18,9 @@ agregar add tipo de tutoria, orientacion en iniciar cita de tutoria y orientacio
 - odernar los registros de tutorias y orientaciones sin previa cita
 -ver numeros de tarea y orden de lista tarea
 - agregar un filtro para el administrador dentro de reportes
-
+- modificar todos los estados de cita rechazado por femenino 
+RechazarCita
+- agregar persona que mnodifico por ultima vez en todos los detalles
 
 Pendiente
 - cargar en static la carpeta lib
@@ -26,8 +28,5 @@ Pendiente
 - tarda mucho
 - agregar un procesando o espere en la pantalla 
 - tablas objetos adaptables a dispositivos diferentes
-- modificar todos los estados de cita rechazado por femenino 
-RechazarCita
-- agregar persona que mnodifico por ultima vez en todos los detalles
 -al ir a otras paginas de las listas no funciona mi modal de ningun tipo
 - agregar notificaciones en rechazado

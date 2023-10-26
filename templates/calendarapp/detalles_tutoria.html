@@ -125,6 +125,12 @@
                             </div>
                         {% endif %}
 
+                        <div class="form-group">
+                            <label class="label texto-destacado">Última persona que modifico: </label>
+                                {{ tutoria.id_tutoria.id_persona_ultima_modificacion.nombre|add:' '|title}}{{ tutoria.id_tutoria.id_persona_ultima_modificacion.apellido|title }}
+                        </div>
+
+
                         {% if tutoria.id_tipo_tutoria %}
                             <div class="form-group">
                                 <label class="label texto-destacado">Tipo Tutoría: </label>

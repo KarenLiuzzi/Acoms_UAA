@@ -131,6 +131,12 @@
                             </div>
                         {% endif %}
 
+                       
+                        <div class="form-group">
+                            <label class="label texto-destacado">Última persona que modifico: </label>
+                                {{ cita.id_cita.id_persona_ultima_modificacion.nombre|add:' '|title}}{{ cita.id_cita.id_persona_ultima_modificacion.apellido|title }}
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -258,7 +264,9 @@
             <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
     
             <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=cita.id_cita %}">  <i class="bi bi-calendar-check"></i> Confirmar Cita </button>
-        
+
+            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Rechazar Cita" hx-get="{% url 'calendarapp:rechazar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-box-arrow-left"></i> </button>
+            
         {% else %}
 
             <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Editar Cita</a>
@@ -281,6 +289,20 @@
 
         {% else %}
             <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
+        {% endif %}
+    
+    </div>
+    {% endif %}
+
+    {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Rechazada' %}
+
+    <div class="card-footer">
+
+        {% if perms.calendarapp.iniciar_cita %}
+        {% else %}
+            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
+            <a class="btn btn-primary btn-flat" title="Reagendar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Reagendar Cita</a>
+            
         {% endif %}
     
     </div>
