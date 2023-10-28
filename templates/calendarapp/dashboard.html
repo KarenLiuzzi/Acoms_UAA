@@ -78,7 +78,7 @@
                     <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                         <div class="row">
                             <div class="col-sm-12">
-                                <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
+                                <table class="table table-hover table-bordered dataTable no-footer" id="tblEvents" role="grid" aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr role="row">
                                             {% comment %} <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 102.281px;">Fecha</th>
@@ -102,251 +102,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for event in running_events %}
-                                        <tr role="row" class="odd">
-                                            {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
-
-                                            <td>
-                                                {% if event.id_cita %}
-                                                    {{ event.id_cita }}
-                                                {% elif event.id_tutoria %}
-                                                    {{ event.id_tutoria }}
-                                                {% else %}
-                                                    {{ event.id_orientacion_academica }}
-                                                {% endif %} 
-                                            </td>
-                                            
-                                            <td>
-                                                {% if event.id_cita %}
-
-                                                    {% if event.id_cita.datetime_inicio_real %}
-                                                        {{ event.id_cita.datetime_inicio_real|date:"d/m/Y" }}
-                                                    {% else %}
-                                                        {{ event.id_cita.datetime_inicio_estimado|date:"d/m/Y" }}
-                                                    {% endif %} 
-
-                                                {% elif event.id_tutoria %}
-
-                                                    {% if event.id_tutoria.datetime_inicio_real %}
-                                                        {{ event.id_tutoria.datetime_inicio_real|date:"d/m/Y" }}
-                                                    {% else %}
-                                                        {{ event.id_tutoria.datetime_inicio_estimado|date:"d/m/Y" }}
-                                                    {% endif %} 
-
-                                                {% else %}
-
-                                                    {% if event.id_orientacion_academica.datetime_inicio_real %}
-                                                        {{ event.id_orientacion_academica.datetime_inicio_real|date:"d/m/Y" }}
-                                                    {% else %}
-                                                        {{ event.id_orientacion_academica.datetime_inicio_estimado|date:"d/m/Y" }}
-                                                    {% endif %} 
-
-                                                {% endif %} 
-                                            </td>
-                                            <td>
-                                                {% load humanize %}
-                                                {% if event.id_cita %}
-                                                    {% if event.id_cita.datetime_inicio_real %}
-                                                        {{ event.id_cita.datetime_inicio_real|date:'l'|title  }}
-                                                    {% else %}
-                                                        {{ event.id_cita.datetime_inicio_estimado|date:'l'|title  }}
-                                                    {% endif %} 
-
-                                                {% elif event.id_tutoria %}
-                                                    {% if event.id_tutoria.datetime_inicio_real %}
-                                                        {{ event.id_tutoria.datetime_inicio_real|date:'l'|title  }}
-                                                    {% else %}
-                                                        {{ event.id_tutoria.datetime_inicio_estimado|date:'l'|title  }}
-                                                    {% endif %} 
-
-                                                {% else %}
-
-                                                    {% if event.id_orientacion_academica.datetime_inicio_real %}
-                                                        {{ event.id_orientacion_academica.datetime_inicio_real|date:'l'|title  }}
-                                                    {% else %}
-                                                        {{ event.id_orientacion_academica.datetime_inicio_estimado|date:'l'|title  }}
-                                                    {% endif %} 
-                                                
-                                                {% endif %} 
-                                            </td>
-                                            <td>
-                                                {% if event.id_cita %}
-                                                    {% if event.id_cita.datetime_fin_real %}
-                                                        {{ event.id_cita.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ event.id_cita.datetime_fin_real|time:"H:i" }}
-                                                    {% else %}
-                                                        {{ event.id_cita.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ event.id_cita.datetime_fin_estimado|time:"H:i" }}
-                                                    {% endif %} 
-                                                {% elif event.id_tutoria %}
-
-                                                    {% if event.id_tutoria.datetime_fin_real %}
-                                                        {{ event.id_tutoria.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ event.id_tutoria.datetime_fin_real|time:"H:i" }}
-                                                    {% else %}
-                                                        {{ event.id_tutoria.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ event.id_tutoria.datetime_fin_estimado|time:"H:i" }}
-                                                    {% endif %} 
-
-                                                {% else %}
-
-                                                    {% if event.id_orientacion_academica.datetime_fin_real %}
-                                                        {{ event.id_orientacion_academica.datetime_inicio_real|time:"H:i"|add:' - ' }}{{ event.id_orientacion_academica.datetime_fin_real|time:"H:i" }}
-                                                    {% else %}
-                                                        {{ event.id_orientacion_academica.datetime_inicio_estimado|time:"H:i"|add:' - ' }}{{ event.id_orientacion_academica.datetime_fin_estimado|time:"H:i" }}
-                                                     {% endif %} 
-                                                
-                                                {% endif %}
-                                                    
-                                            </td>
-                                            <td>
-                                                {% if event.id_cita %}
-                                                    {{ event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica}}
-
-                                                {% elif event.id_tutoria %}
-                                                    {{ event.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica}}
-
-                                                {% else %}
-                                                    {{ event.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica}}
-                                                
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if event.id_cita %}
-                                                    {{ event.id_cita.id_funcionario_docente_encargado|title}}
-                                                
-                                                {% elif event.id_tutoria %}
-                                                    {{ event.id_tutoria.id_funcionario_docente_encargado|title}}
-
-                                                {% else %}
-                                                    {{ event.id_orientacion_academica.id_funcionario_docente_encargado|title}}
-                                                
-                                                {% endif %}
-                                            </td>
-
-                                            <td>
-                                                {% if event.id_cita %}
-                                                    {{ event.id_cita.id_persona_alta.nombre|add:' '|title}}{{ event.id_cita.id_persona_alta.apellido|title}}
-                                                {% elif event.id_tutoria %}
-                                                    {{ event.id_tutoria.id_persona_alta.nombre|add:' '|title}}{{ event.id_tutoria.id_persona_alta.apellido|title}}
-
-                                                {% else %}
-                                                    {{ event.id_orientacion_academica.id_persona_alta.nombre|add:' '|title}}{{ event.id_orientacion_academica.id_persona_alta.apellido|title}}
-                                                {% endif %}
-                                            </td>
-
-                                            <td>
-
-                                                {% if event.id_cita %}
-                                                    {% if event.es_tutoria %}
-                                                        Cita tutoría
-                                                    {% else %}
-                                                        Cita Orientación Académica
-                                                    {% endif %} 
-                                                {% elif event.id_tutoria %}
-                                                    Tutoría
-                                                {% else %}
-                                                    Orientación Académica                                                
-                                                {% endif %}
-                                            </td>
-                                            
-                                            <td>
-                                                <div>
-
-                                                    {% if event.id_cita %}
-
-                                                        <!-- Button trigger modal -->
-                                                        <button type="button" class="btn btn-primary"  hx-target="#dialog" hx-get="{% url 'calendarapp:detalles_cita' id_cita=event.id_cita %}" title="Detalles"> {% comment %} hx-get="{% url 'calendarapp:detalles_cita' id_cita=event.id_cita %}" {% endcomment %}
-                                                            <i class="bi bi-eye-fill"></i>
-                                                        </button> 
-                                                        
-                                                        <!-- Button trigger modal -->
-                                                        {% if event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' and event.es_tutoria  %}
-                                                            {% if perms.calendarapp.iniciar_cita %}
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                                <button type="button" class="btn btn-primary" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-calendar-check"></i>
-                                                            {% else %}
-                                                                <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-
-                                                            {% endif %}
-                                                            
-                                                        {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmada' and event.es_tutoria %}
-                                                            {% if perms.calendarapp.iniciar_cita %}
-                                                                <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i></a>
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            {% else %}
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            {% endif %}
-                                                        {% comment %} {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Vencida' and event.es_tutoria %}
-                                                            {% if perms.calendarapp.iniciar_cita %}
-                                                                <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_tutoria' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i></a>
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            {% endif %}{% endcomment %} 
-
-                                                        {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Pendiente' and event.es_orientacion_academica %}
-                                                            {% if perms.calendarapp.iniciar_cita %}
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                                <button type="button" class="btn btn-primary" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-calendar-check"></i>
-                                                            {% else %}
-                                                                <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-pencil-fill"></i> </a>
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            {% endif %}
-
-                                                        {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Confirmada' and event.es_orientacion_academica %}
-                                                        
-                                                            {% if perms.calendarapp.iniciar_cita %}
-                                                            <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i> </a>
-                                                            <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            {% else %}
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                            {% endif %}
-                                                        {% comment %} {% elif event.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Vencida' and event.es_orientacion_academica %}
-                                        
-                                                            {% if perms.calendarapp.iniciar_cita %}
-                                                                <a class="btn btn-primary" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=event.id_cita.id_actividad_academica %}"> <i class="bi bi-caret-right-fill"></i> </a>
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=event.id_cita.id_actividad_academica %}"> <i class="bi bi-x-circle-fill"></i> </button>
-                                                             {% endif %}{% endcomment %} 
-
-                                                        {% comment %} {% else %}
-                                                            <button type="button" class="btn btn-primary" disabled> <i class="bi bi-pencil-fill"></i> </button>
-                                                            <button type="button" class="btn btn-primary" disabled> <i class="bi bi-x-circle-fill"></i> </button> {% endcomment %}
-                                                        {% endif %}
-
-                                                    {% elif event.id_tutoria %}
-
-                                                        <!-- Button trigger modal -->
-                                                        <button type="button" class="btn btn-primary"  hx-target="#dialog" title="Detalles" hx-get="{% url 'calendarapp:detalles_acti_academ' id_tutoria=event.id_tutoria id_ori_academ=0 %}"> 
-                                                            <i class="bi bi-eye-fill"></i>
-                                                        </button> 
-                                                        
-                                                        <!-- Button trigger modal -->
-                                                        {% if event.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Iniciada' %}
-                                                            {% if perms.calendarapp.iniciar_cita %}
-                                                                <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_tutoria' pk=event.id_tutoria %}"> <i class="bi bi-pencil"></i> </a> {% comment %} href="{% url 'calendarapp:modificar_cita_tutoria' pk=event.id_tutoria.id_actividad_academica %}"> {% endcomment %}
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_tutoria=event.id_tutoria id_ori_academ=0 %}"> <i class="bi bi-x-lg"></i> </button> 
-                                                                <button type="button" class="btn btn-primary" hx-target="#dialog" title="Finalizar Tutoría" hx-get="{% url 'calendarapp:finalizar_actividad_academica' id_tutoria=event.id_tutoria id_ori_academ=0 %}"> <i class="bi bi-check2"></i> 
-                                                            {% endif %}
-
-                                                        {% endif %}
-
-                                                    {% else %}
-                                                    
-                                                        <!-- Button trigger modal -->
-                                                        <button type="button" class="btn btn-primary"  hx-target="#dialog" title="Detalles" hx-get="{% url 'calendarapp:detalles_acti_academ' id_tutoria=0 id_ori_academ=event.id_orientacion_academica %}"> 
-                                                            <i class="bi bi-eye-fill"></i>
-                                                        </button> 
-
-                                                        {% if event.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Iniciada'%} 
-                                                            {% if perms.calendarapp.iniciar_cita %}
-                                                                <a class="btn btn-primary" title="Editar" href="{% url 'calendarapp:modificar_orientacion' pk=event.id_orientacion_academica %}"> <i class="bi bi-pencil" ></i> </a>{% comment %}  href="{% url 'calendarapp:modificar_cita_ori_academica' pk=event.id_cita.id_actividad_academica %}" {% endcomment %}
-                                                                <button type="button" class="btn btn-danger" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_actividad_academica' id_tutoria=0 id_ori_academ=event.id_orientacion_academica %}"> <i class="bi bi-x-lg"></i> </button> 
-                                                                <button type="button" class="btn btn-primary" hx-target="#dialog" title="Finalizar Orientación Académica" hx-get="{% url 'calendarapp:finalizar_actividad_academica' id_tutoria=0 id_ori_academ=event.id_orientacion_academica %}" > <i class="bi bi-check2"></i> </button> 
-                                                            {% endif %}
-                                                        {% endif %}
-                                                    
-                                                    {% endif %}
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
@@ -357,16 +112,234 @@
         </div>
     </div>
 
+
+    <div id="modalEvent" class="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document"> 
+            
+        </div>
+    </div>
+
 </div>
 {% endblock content %}
 
 {% block extrascripts %}
-    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable({
-        language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
-        },
-        order: [] // Desactivar el ordenamiento por defecto   
-    });</script>
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+<script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+ <!-- Jquery Confirm -->
+ <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+ <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+ <!-- Functions -->
+ <script src="{% static 'js/functions.js' %}"></script>
+
+    <script> 
+
+        var tblEvents;
+        var lista_eventos = {{ running_events|safe }}
+
+        $(document).ready(function() {
+
+            tblEvents = $('#tblEvents').DataTable({
+                responsive: true,
+                //scrollX: true,
+                autoWidth: false,
+                destroy: true,
+                deferRender: true,
+                data: lista_eventos,
+                columns: [
+                    {"data": "id"},
+                    {"data": "fecha"},
+                    {"data": "dia"},
+                    {"data": "horario"},
+                    {"data": "estado"},
+                    {"data": "encargado"},
+                    {"data": "solicitante"},
+                    {"data": "tipo"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Pendiente' ) &&  (row.tipo_usuario == 'staff' )){
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="confirmar"  class="btn btn-primary" style="color: white;"  title="Confirmar Cita" value="/cita/confirmar/' + row.id + '"> <i class="bi bi-calendar-check"></i> </a> <a rel="rechazar"  class="btn btn-danger" style="color: white;" title="Rechazar Cita" value="/cita/rechazar/' + row.id + '"> <i class="bi bi-box-arrow-left"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                            } else if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Pendiente' ) &&  (row.tipo_usuario == 'normal' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;"title="Editar"  value="/modificarCitaTutoria/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                            } else if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Confirmada' ) &&  (row.tipo_usuario == 'staff' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="iniciar" class="btn btn-primary" style="color: white;"title="Iniciar Cita" value="/iniciarCitaTutoria/' + row.id + '"> <i class="bi bi-caret-right-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>'; 
+                            } else if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Confirmada' ) &&  (row.tipo_usuario == 'normal' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles">  <i class="bi bi-eye-fill"></i> </a> <a  class="btn btn-danger" style="color: white;"  title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                            } else if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Rechazada' ) &&  (row.tipo_usuario == 'normal' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i rel="editar" class="bi bi-eye-fill"></i> </a> <a class="btn btn-primary" style="color: white;"title="Reagendar" value="/modificarCitaTutoria/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                            }
+                            else if (row.tipo == 'Cita Tutoría') {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a>';
+                            } 
+                            
+                            else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Pendiente' ) &&  (row.tipo_usuario == 'staff' )){
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="confirmar"  class="btn btn-primary" style="color: white;"  title="Confirmar Cita" value="/cita/confirmar/' + row.id + '"> <i class="bi bi-calendar-check"></i> </a> <a rel="rechazar"  class="btn btn-danger" style="color: white;" title="Rechazar Cita" value="/cita/rechazar/' + row.id + '"> <i class="bi bi-box-arrow-left"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                            } else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Pendiente' ) &&  (row.tipo_usuario == 'normal' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;"title="Editar" value="/modificarCitaOriAcademica/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                            } else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Confirmada' ) &&  (row.tipo_usuario == 'staff' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i>  </a> <a rel="iniciar" class="btn btn-primary" style="color: white;"title="Iniciar Cita" value="/iniciarCitaOrientacionAcademica/' + row.id + '"> <i class="bi bi-caret-right-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>'; 
+                            } else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Confirmada' ) &&  (row.tipo_usuario == 'normal' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i>  </a> <a  class="btn btn-danger" style="color: white;"  title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                            } else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Rechazada' ) &&  (row.tipo_usuario == 'normal' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;"title="Reagendar" value="/modificarCitaTutoria/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                            }
+                            else if (row.tipo == 'Cita Orientación Académica') {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i> </a>';
+                            } 
+
+                            else if ((row.tipo == 'Tutoría') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'staff' )){
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;" title="Editar" value="/modificarTutoria/' + row.id + '"> <i class="bi bi-pencil"></i> </a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar" value="/actividad_academica/cancelar/' + row.id + '/0"> <i class="bi bi-x-lg"></i> </a> <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar Tutoría" value="/actividad_academica/finalizar/' + row.id + '/0"> <i class="bi bi-check2"></i> </a>';
+                            } else if ((row.tipo == 'Tutoría') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'normal' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles">';
+                            } 
+                            else if (row.tipo == 'Tutoría') {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles"> <i class="bi bi-eye-fill"></i> </a>';
+                            } 
+                            
+                            else if ((row.tipo == 'Orientación Académica') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'staff' )){
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/0/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;" title="Editar" value="/modificarOrientacion/' + row.id + '"> <i class="bi bi-pencil"></i> </a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar" value="/actividad_academica/cancelar/0/' + row.id + '"> <i class="bi bi-x-lg"></i> </a> <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar Orientación" value="/actividad_academica/finalizar/0/' + row.id + '"> <i class="bi bi-check2"></i> </a>';
+                            } else if ((row.tipo == 'Orientación Académica') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'normal' )) {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/0/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a>';
+                            } 
+                            else if (row.tipo == 'Orientación Académica') {
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/0/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i> </a>';
+                            } 
+                            
+                        }
+                    
+                    }
+                
+                ],
+                order: [] 
+            });
+
+
+            $('#tblEvents').on('click', 'a[rel="detalles"]', function(event) {
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+            $('#tblEvents').on('click', 'a[rel="cancelar"]', function(event) { 
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    //console.log(data)
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+            $('#tblEvents').on('click', 'a[rel="editar"]', function(event) { 
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    //console.log(data)
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+            $('#tblEvents').on('click', 'a[rel="finalizar"]', function(event) { 
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    //console.log(data)
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+            $('#tblEvents').on('click', 'a[rel="iniciar"]', function(event) {  
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    //console.log(data)
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+            $('#tblEvents').on('click', 'a[rel="confirmar"]', function(event) {
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    //console.log(data)
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+            
+
+        });
+
+    </script>
+
 {% endblock extrascripts %}

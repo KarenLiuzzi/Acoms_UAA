@@ -432,6 +432,16 @@ def detectar_cambio_estado(sender, instance, **kwargs):
                             contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue finalizada. Puede verificar el mismo ingresando al portal web.Atte equipo AcOms.'
                             enviarcorreo(title, contenido, destino)
                             notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                    
+                    elif instance.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Rechazada':
+                        title = nombre_actividad + ' rechazada.'
+                        
+                        if (tipo== 'tutoria' or  tipo== 'orientacion'):
+                            contenido= f'Estimad@: Le informamos que su "{nombre_actividad}" fue rechazada. Puede verificar el mismo ingresando al portal web.Atte equipo AcOms.'
+                            enviarcorreo(title, contenido, destino)
+                            notificar.send(originador, destiny= destinatario, verb= title, level='info', tipo= tipo , id_tipo= id_actividad)
+                    
+                
                 else:
                     print('no notifico a nadie')
             else:

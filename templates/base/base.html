@@ -20,7 +20,7 @@
     <body class="app sidebar-mini">
         <!-- Navbar-->
         <header class="app-header">
-            <a class="app-header__logo" href="/">AcOMs</a>
+            <a class="app-header__logo" href="/"> <i class="bi bi-building"></i> AcOMs</a>
             <!-- Sidebar toggle button-->
             <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
             <!-- Navbar Right Menu-->
@@ -344,6 +344,15 @@
                     });
         
                 });
+
+                $('.app-menu__item').on('click', function() {
+                    console.log('click')
+                    // Eliminar la clase "active" de todos los elementos
+                    $('.app-menu__item').removeClass('active');
+                    
+                    // Agregar la clase "active" solo al elemento actual
+                    $(this).addClass('active');
+                  });
             });
         
         </script> 

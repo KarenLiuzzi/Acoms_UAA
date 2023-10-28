@@ -160,12 +160,30 @@ class ActividadesAcademicasListView(ListView):
 
     template_name = "calendarapp/actividades_academicas_list.html"
     model = Event
-    context_object_name= "lista_actividades"
+    
+    
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
+        # Devuelve un queryset vacío
+        return Event.objects.none()
+
+    def get_actividades(self):
         try:
-            #return Event.objects.get_all_events(user=self.request.user)
-            #return Event.objects.get_all_acti_academ()
+            lista_actividades= []
+            fecha= ''
+            dia= ''
+            horario= ''
+            estado= ''
+            encargado= ''
+            solicitante= ''
+            tipo= '' 
+            id= ''
+            tipo_usuario= ''
+            fecha_auxiliar= ''
+            dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
             request = self.request
             current_user= request.user
             dict = model_to_dict(current_user)
@@ -176,34 +194,136 @@ class ActividadesAcademicasListView(ListView):
             if current_user.has_perm('calendarapp.iniciar_cita'):
                 ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
-                for objeto in tutorias:
+                 
+                if tutorias.exists():
+                    for objeto in tutorias:
                         if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
                             objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-
+                           
+                        if objeto.id_tutoria.datetime_inicio_real:
+                            fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
+                            dia= objeto.id_tutoria.datetime_inicio_real.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_tutoria.datetime_inicio_real.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_tutoria.datetime_inicio_real
+                        else:
+                            fecha= objeto.id_tutoria.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                            dia= objeto.id_tutoria.datetime_inicio_estimado.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
+                        encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
+                        solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                        
+                        estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                        tipo= 'Tutoría'
+                        id= str(objeto.id_tutoria.id_actividad_academica)
+                        tipo_usuario= 'staff'
+                        
+                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                        lista_actividades.append(auxiliar) 
+                        
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
-                for objeto in orientaciones:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                    
-                # Combinar los dos querysets en una sola variable
-                lista_events= list(chain(tutorias, orientaciones))
-                events = sorted(lista_events, key=get_fecha, reverse=True)
-            
+                if orientaciones.exists():
+                    for objeto in orientaciones:
+                            if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                                objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                        
+                            if objeto.id_orientacion_academica.datetime_inicio_real:
+                                fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_real
+                            else:
+                                fecha= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_orientacion_academica.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
+                            encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            tipo= 'Orientación Académica'
+                            id= str(objeto.id_orientacion_academica.id_actividad_academica)
+                            tipo_usuario= 'staff'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                            lista_actividades.append(auxiliar) 
+                            
+                events = sorted(lista_actividades, key=lambda x: x['fecha_auxiliar'], reverse=True)
+                for event in events:
+                    del event['fecha_auxiliar']
+
             else:
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
-                for objeto in tutorias:
+                if tutorias.exists():
+                    for objeto in tutorias:
                         if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
                             objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-
+                           
+                        if objeto.id_tutoria.datetime_inicio_real:
+                            fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
+                            dia= objeto.id_tutoria.datetime_inicio_real.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_tutoria.datetime_inicio_real.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_tutoria.datetime_inicio_real
+                        else:
+                            fecha= objeto.id_tutoria.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                            dia= objeto.id_tutoria.datetime_inicio_estimado.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
+                        encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
+                        solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                        
+                        estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                        tipo= 'Tutoría'
+                        id= str(objeto.id_tutoria.id_actividad_academica)
+                        tipo_usuario= 'normal'
+                        
+                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                        lista_actividades.append(auxiliar) 
+                        
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
-                for objeto in orientaciones:
+                if orientaciones.exists():
+                    for objeto in orientaciones:
                         if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
                             objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
                     
+                        if objeto.id_orientacion_academica.datetime_inicio_real:
+                            fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
+                            dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_real
+                        else:
+                            fecha= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                            dia= objeto.id_orientacion_academica.datetime_inicio_estimado.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
+                        encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
+                        solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                        
+                        estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                        tipo= 'Orientación Académica'
+                        id= str(objeto.id_orientacion_academica.id_actividad_academica)
+                        tipo_usuario= 'normal'
+                        
+                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                        lista_actividades.append(auxiliar) 
+                    
+                events = sorted(lista_actividades, key=lambda x: x['fecha_auxiliar'], reverse=True)
+                for event in events:
+                    del event['fecha_auxiliar']
+                    
+                #events = sorted(lista_actividades, key=fecha_auxiliar, reverse=True)
+                    
                 # Combinar los dos querysets en una sola variable
-                lista_events= list(chain(tutorias, orientaciones))
-                events = sorted(lista_events, key=get_fecha, reverse=True)
-                
+                # lista_events= list(chain(tutorias, orientaciones))
+                # events = sorted(lista_events, key=get_fecha, reverse=True)
             return events
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -261,6 +381,7 @@ class ActividadesAcademicasListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['datos'] = self.get_actividades_medicion()
+        context['actividades'] = self.get_actividades()
         return context
         
 
@@ -269,10 +390,30 @@ class RunningEventsListView(ListView):
 
     template_name = "calendarapp/events_list.html"
     model = Event
+    
+    
+    
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
+        # Devuelve un queryset vacío
+        return Event.objects.none()
+
+    def get_citas(self):
         try:
-            
+            lista_eventos= []
+            fecha= ''
+            dia= ''
+            horario= ''
+            estado= ''
+            encargado= ''
+            solicitante= ''
+            tipo= '' 
+            id= ''
+            tipo_usuario= ''
+            dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
             parametro = self.kwargs['tipo_cita']
             request = self.request
             current_user= request.user
@@ -291,10 +432,34 @@ class RunningEventsListView(ListView):
 
                 event = event.order_by('-datetime_to_order')
                 
-                for objeto in event:
-                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                return event
+                if event.exists():
+                    for objeto in event:
+                            if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                                objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            if objeto.id_cita.datetime_inicio_real:
+                                fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_cita.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_cita.datetime_inicio_real.strftime('%H:%M:%S')
+                            else:
+                                fecha= objeto.id_cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_cita.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            if objeto.es_tutoria== True:
+                                tipo= 'Tutoría'
+                            elif  objeto.es_orientacion_academica== True:
+                                tipo= 'Orientación Académica'
+                            id= str(objeto.id_cita.id_actividad_academica)
+                            tipo_usuario= 'staff'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                            lista_eventos.append(auxiliar) 
+                return lista_eventos
             else:
                 event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
                 event = event.annotate(
@@ -306,13 +471,42 @@ class RunningEventsListView(ListView):
 
                 event = event.order_by('-datetime_to_order')
                 
-                for objeto in event:
-                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                return event
+                if event.exists():
+                    for objeto in event:
+                            if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                                objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            if objeto.id_cita.datetime_inicio_real:
+                                fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_cita.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_cita.datetime_inicio_real.strftime('%H:%M:%S')
+                            else:
+                                fecha= objeto.id_cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_cita.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            if objeto.es_tutoria== True:
+                                tipo= 'Tutoría'
+                            elif  objeto.es_orientacion_academica== True:
+                                tipo= 'Orientación Académica'
+                            id= str(objeto.id_cita.id_actividad_academica)
+                            tipo_usuario= 'staff'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                            lista_eventos.append(auxiliar) 
+                return lista_eventos
         #return Event.objects.get_running_events(user=self.request.user) 
         except Exception as e:
             print(f"Se ha producido un error: {e}")
+            
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['citas'] = self.get_citas()
+        return context
         
     
 class RunningActividadesAcademicasListView(ListView):
@@ -320,10 +514,29 @@ class RunningActividadesAcademicasListView(ListView):
 
     template_name = "calendarapp/actividades_academicas_list.html"
     model = Event
-    context_object_name= "lista_actividades"
+    
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
+        # Devuelve un queryset vacío
+        return Event.objects.none()
+
+    def get_actividades(self):
         try:
+            lista_actividades= []
+            fecha= ''
+            dia= ''
+            horario= ''
+            estado= ''
+            encargado= ''
+            solicitante= ''
+            tipo= '' 
+            id= ''
+            tipo_usuario= ''
+            fecha_auxiliar= ''
+            dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
             parametro = self.kwargs['tipo_cita']
             request = self.request
             current_user= request.user
@@ -335,45 +548,245 @@ class RunningActividadesAcademicasListView(ListView):
                 ins_funcionario_docente= FuncionarioDocente.objects.get(id_funcionario_docente= ins_persona)
                 if parametro == 'Tutoria':
                     running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
-                    for objeto in running_events:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                    if running_events.exists():
+                        for objeto in running_events:
+                            if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                                objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            
+                            if objeto.id_tutoria.datetime_inicio_real:
+                                fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_tutoria.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_tutoria.datetime_inicio_real.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_real
+                            else:
+                                fecha= objeto.id_tutoria.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_tutoria.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
+                            encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            tipo= 'Tutoría'
+                            id= str(objeto.id_tutoria.id_actividad_academica)
+                            tipo_usuario= 'staff'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                            lista_actividades.append(auxiliar) 
+                        
                 elif parametro== "OriAcademica":
                     running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
-                    for objeto in running_events:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                    if running_events.exists():
+                        for objeto in running_events:
+                                if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                                    objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            
+                                if objeto.id_orientacion_academica.datetime_inicio_real:
+                                    fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
+                                    dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
+                                    dia= dias_semana[dia]
+                                    horario= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%H:%M:%S')
+                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_real
+                                else:
+                                    fecha= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                    dia= objeto.id_orientacion_academica.datetime_inicio_estimado.weekday()
+                                    dia= dias_semana[dia]
+                                    horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
+                                encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
+                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                
+                                estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                                tipo= 'Orientación Académica'
+                                id= str(objeto.id_orientacion_academica.id_actividad_academica)
+                                tipo_usuario= 'staff'
+                                
+                                auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                                lista_actividades.append(auxiliar) 
                 else: 
                     tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
-                    for objeto in tutorias:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                    if tutorias.exists():
+                        for objeto in tutorias:
+                            if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                                objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            
+                            if objeto.id_tutoria.datetime_inicio_real:
+                                fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_tutoria.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_tutoria.datetime_inicio_real.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_real
+                            else:
+                                fecha= objeto.id_tutoria.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_tutoria.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
+                            encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            tipo= 'Tutoría'
+                            id= str(objeto.id_tutoria.id_actividad_academica)
+                            tipo_usuario= 'staff'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                            lista_actividades.append(auxiliar) 
                     orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
-                    for objeto in orientaciones:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                    running_events = list(chain(tutorias, orientaciones))
+                    if orientaciones.exists():
+                        for objeto in orientaciones:
+                                if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                                    objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            
+                                if objeto.id_orientacion_academica.datetime_inicio_real:
+                                    fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
+                                    dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
+                                    dia= dias_semana[dia]
+                                    horario= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%H:%M:%S')
+                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_real
+                                else:
+                                    fecha= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                    dia= objeto.id_orientacion_academica.datetime_inicio_estimado.weekday()
+                                    dia= dias_semana[dia]
+                                    horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
+                                encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
+                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                
+                                estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                                tipo= 'Orientación Académica'
+                                id= str(objeto.id_orientacion_academica.id_actividad_academica)
+                                tipo_usuario= 'staff'
+                                
+                                auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                                lista_actividades.append(auxiliar) 
+                                
+                running_events = sorted(lista_actividades, key=lambda x: x['fecha_auxiliar'], reverse=True)
+                for event in running_events:
+                    del event['fecha_auxiliar']
+                    
             else:
                 if parametro == 'Tutoria':
                     running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
-                    for objeto in running_events:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                    if running_events.exists():
+                        for objeto in running_events:
+                            if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                                objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            
+                            if objeto.id_tutoria.datetime_inicio_real:
+                                fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_tutoria.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_tutoria.datetime_inicio_real.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_real
+                            else:
+                                fecha= objeto.id_tutoria.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_tutoria.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
+                            encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            tipo= 'Tutoría'
+                            id= str(objeto.id_tutoria.id_actividad_academica)
+                            tipo_usuario= 'staff'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                            lista_actividades.append(auxiliar) 
                 elif parametro== "OriAcademica":
                     running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
-                    for objeto in running_events:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                    if running_events.exists():
+                        for objeto in running_events:
+                                if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                                    objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            
+                                if objeto.id_orientacion_academica.datetime_inicio_real:
+                                    fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
+                                    dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
+                                    dia= dias_semana[dia]
+                                    horario= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%H:%M:%S')
+                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_real
+                                else:
+                                    fecha= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                    dia= objeto.id_orientacion_academica.datetime_inicio_estimado.weekday()
+                                    dia= dias_semana[dia]
+                                    horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
+                                encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
+                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                
+                                estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                                tipo= 'Orientación Académica'
+                                id= str(objeto.id_orientacion_academica.id_actividad_academica)
+                                tipo_usuario= 'staff'
+                                
+                                auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                                lista_actividades.append(auxiliar) 
                 else: 
                     tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
-                    for objeto in tutorias:
-                        if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                            objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                    if tutorias.exists():
+                        for objeto in tutorias:
+                            if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
+                                objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            
+                            if objeto.id_tutoria.datetime_inicio_real:
+                                fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
+                                dia= objeto.id_tutoria.datetime_inicio_real.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_tutoria.datetime_inicio_real.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_real
+                            else:
+                                fecha= objeto.id_tutoria.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                dia= objeto.id_tutoria.datetime_inicio_estimado.weekday()
+                                dia= dias_semana[dia]
+                                horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
+                            encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
+                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            
+                            estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                            tipo= 'Tutoría'
+                            id= str(objeto.id_tutoria.id_actividad_academica)
+                            tipo_usuario= 'staff'
+                            
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                            lista_actividades.append(auxiliar) 
                     orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
-                    for objeto in orientaciones:
-                        if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                            objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                    running_events = list(chain(tutorias, orientaciones))
+                    if orientaciones.exists():
+                        for objeto in orientaciones:
+                                if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
+                                    objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            
+                                if objeto.id_orientacion_academica.datetime_inicio_real:
+                                    fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
+                                    dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
+                                    dia= dias_semana[dia]
+                                    horario= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%H:%M:%S')
+                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_real
+                                else:
+                                    fecha= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                                    dia= objeto.id_orientacion_academica.datetime_inicio_estimado.weekday()
+                                    dia= dias_semana[dia]
+                                    horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
+                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
+                                encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
+                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                
+                                estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                                tipo= 'Orientación Académica'
+                                id= str(objeto.id_orientacion_academica.id_actividad_academica)
+                                tipo_usuario= 'staff'
+                                
+                                auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
+                                lista_actividades.append(auxiliar) 
+                                
+                running_events = sorted(lista_actividades, key=lambda x: x['fecha_auxiliar'], reverse=True)
+                for event in running_events:
+                    del event['fecha_auxiliar']
              
 
             return running_events
@@ -434,6 +847,7 @@ class RunningActividadesAcademicasListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['datos'] = self.get_actividades_medicion()
+        context['actividades'] = self.get_actividades()
         return context
     
 def DetalleCita(request, id_cita):
