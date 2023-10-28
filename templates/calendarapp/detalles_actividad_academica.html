@@ -1,6 +1,10 @@
 <div class="modal-content">
     <div class='modal-header text-center'>
-      <h3 class="modal-title w-100">Detalles de Actividad Académica</h3> 
+        {% if tutoria %}
+            <h3 class="modal-title w-100">Detalles de Tutoría</h3> 
+        {% else %}
+        <h3 class="modal-title w-100">Detalles de Orientación Académica</h3> 
+        {% endif %} 
     </div>
 
     <div class="modal-body">

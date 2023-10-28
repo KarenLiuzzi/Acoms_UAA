@@ -21,12 +21,14 @@ agregar add tipo de tutoria, orientacion en iniciar cita de tutoria y orientacio
 - modificar todos los estados de cita rechazado por femenino 
 RechazarCita
 - agregar persona que mnodifico por ultima vez en todos los detalles
+-al ir a otras paginas de las listas no funciona mi modal de ningun tipo
+- poner rechazo en citas
 
 Pendiente
 - cargar en static la carpeta lib
-- poner rechazo en citas
 - tarda mucho
 - agregar un procesando o espere en la pantalla 
 - tablas objetos adaptables a dispositivos diferentes
--al ir a otras paginas de las listas no funciona mi modal de ningun tipo
-- agregar notificaciones en rechazado
+- agregar notificaciones en rechazado (probar)
+probar si desaparecen los botones
+- resltar los menus cuando estas dentro

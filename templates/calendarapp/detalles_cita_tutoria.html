@@ -265,7 +265,7 @@
     
             <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=cita.id_cita %}">  <i class="bi bi-calendar-check"></i> Confirmar Cita </button>
 
-            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Rechazar Cita" hx-get="{% url 'calendarapp:rechazar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-box-arrow-left"></i> </button>
+            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Rechazar Cita" hx-get="{% url 'calendarapp:rechazar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-box-arrow-left"></i> Rechazar Cita </button>
             
         {% else %}
 
