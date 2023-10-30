@@ -23,12 +23,19 @@ RechazarCita
 - agregar persona que mnodifico por ultima vez en todos los detalles
 -al ir a otras paginas de las listas no funciona mi modal de ningun tipo
 - poner rechazo en citas
+- resltar los menus cuando estas dentro
+- cargar en static la carpeta lib
+- tablas objetos adaptables a dispositivos diferentes
+- cargar mas datos para la demo
+funciona el rechazar de cita y cancelar 
+pero no el confirmar
+no funciona el finalizar en actividad academica
+- agregar notificaciones en rechazado (probar)
+- probar si desaparecen los botones en las tablas nuevas agregadas
+
 
 Pendiente
-- cargar en static la carpeta lib
-- tarda mucho
-- agregar un procesando o espere en la pantalla 
-- tablas objetos adaptables a dispositivos diferentes
-- agregar notificaciones en rechazado (probar)
-probar si desaparecen los botones
-- resltar los menus cuando estas dentro
+- probar si los botones de abm de horarios funcionan en todos (arreglar)
+- agregar un procesando o espere en la pantalla, tambien en tareas
+
+

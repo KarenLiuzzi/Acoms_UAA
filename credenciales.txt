@@ -48,3 +48,35 @@ Maria
 Aguero
 mail karendreammoon@gmail.com
 pass HolaMundo!26!
+
+
+***************************NUEVO********************************
+Hugo correa
+2030406
+departamento ciencias y tecnologia 
+informatica
+hugocorrea@test.com
+HolaMundo!2023!
+
+blanca baez
+6050089
+departamento de e-learning
+blancabaez@test.com
+HolaMundo!2022!
+
+ricardo de castro
+3040653
+departamento de informatica
+ricardocastro@test.com
+HolaMundo!2025!
+
+
+sebastian grillo
+6040302
+departamento de informatica
+sebasgrillo@test.com
+HolaMundo!2026!
+
+miguel martinez 
+2040503
+Departamento informatica - ciencias exactas

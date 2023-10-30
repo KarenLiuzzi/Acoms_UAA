@@ -18,53 +18,17 @@
                         <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                    <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
+                                    <table class="table table-hover table-bordered dataTable no-footer" id="tblHorarios" role="grid" aria-describedby="sampleTable_info">
                                         <thead>
                                             <tr role="row">
-                                                {% comment %} <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 261.641px;">SL</th> {% endcomment %}
-                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 189.281px;" >Convocatoria</th>  {% comment %} 417.312px {% endcomment %}
-                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 102.141px;">Dia</th>
-                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102.141px;">Hora Inicio</th>
-                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.141px;">Hora Fin</th>
-                                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 189.281px;">Opciones</th>
-
-
+                                               <th>Convocatoria</th>  
+                                                <th >Dia</th>
+                                                <th >Hora Inicio</th>
+                                                <th >Hora Fin</th>
+                                                <th >Opciones</th>
                                             </tr>
                                         </thead>
-
-                                        {% comment %} <tbody hx-get= "{% url 'calendarapp:lista_cal_func_doc' %}" hx-trigger="load, calenarioListChange from:body" hx-target="this"> {% endcomment %}
-                                        {% comment %} <tbody hx-get= "{% url 'calendarapp:lista_cal_func_doc' %}" hx-trigger="calenarioListChange from:body" id="lista">
-                                            {% include 'calendarapp/lista_calendario.html' %}  {% endcomment %}
-                                            {% comment %} <tr>
-                                                <td class="spinner-border" role="status">
-                                                <span class="visually-hidden">Cargando...</span>
-                                                </td>
-                                            </tr>
-                                        </tbody> {% endcomment %}
-
                                         <tbody>
-                                            {% for registro in dict_cal_fun_doc %}
-                                                <tr role="row" class="odd" id="registro-{{registro.id_horario_semestral}}">
-                                                    {% comment %} <td class="sorting_1">{{ forloop.counter }}</td> {% endcomment %}
-                                                    <td>{{ registro.id_convocatoria.id_semestre.descripcion_semestre|add:' '|title }} {{ registro.id_convocatoria.anho }}</td>
-                                                    <td>{{ registro.id_dia.descripcion_dia|title }}</td>
-                                                    <td>{{ registro.hora_inicio|time:"H:i" }}</td>
-                                                    <td>{{ registro.hora_fin|time:"H:i" }}</td>
-                                                    <td>
-                                                        <div>
-                                                            <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary" hx-get="{% url 'calendarapp:edit_cal_func_doc' pk=registro.id_horario_semestral %}" hx-target="#dialog">
-                                                                Editar
-                                                            </button> 
-                                                            
-                                                            <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-danger" hx-get="{% url "calendarapp:del_cal_func_doc" pk=registro.id_horario_semestral %}" hx-target="#dialog">
-                                                                Eliminar
-                                                            </button> 
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -77,20 +41,101 @@
     </div>
 </div>
 
+<div id="modalEvent" class="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document"> 
+        
+    </div>
+</div>
+
 {% endblock content %}
 
-{% comment %} 
-modificar el formulario base de ABM 
-{% endcomment %}
-
 {% block extrascripts %}
-    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable({
-        language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json',
-        },
-    });</script>
+<link rel="stylesheet" href="{% static 'lib_extras/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'lib_extras/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+<script src="{% static 'lib_extras/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'lib_extras/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'lib_extras/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'lib_extras/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+ <!-- Jquery Confirm -->
+ <link rel="stylesheet" href="{% static 'lib_extras/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+ <script src="{% static 'lib_extras/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+ <!-- Functions -->
+ <script src="{% static 'js/functions.js' %}"></script>
+
+    <script>
+
+        var tblHorarios;
+        var lista_Horarios = {{ dict_cal_fun_doc|safe }}
+
+        $(document).ready(function() {
+
+            $('#AdminCalendarioMenu').addClass('active');
+
+
+            tblHorarios = $('#tblHorarios').DataTable({
+                responsive: true,
+                //scrollX: true,
+                autoWidth: false,
+                destroy: true,
+                deferRender: true,
+                data: lista_Horarios,
+                columns: [
+                    {"data": "convocatoria"},
+                    {"data": "dia"},
+                    {"data": "hora_inicio"},
+                    {"data": "hora_fin"},
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                             return '<a rel="editar" class="btn btn-primary" style="color: white;" title="Editar" value="/formulariofundoc/edit/' + row.id + '">Editar</a> <a rel="eliminar" class="btn btn-danger" style="color: white;" title="Eliminar" value="/formulariofundoc/delete/' + row.id + '"> Eliminar </a>';
+                        }
+                    }
+                ],
+                order: [] 
+            });
+
+            $('#tblHorarios').on('click', 'a[rel="editar"]', function(event) {
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+            $('#tblHorarios').on('click', 'a[rel="eliminar"]', function(event) { 
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    //console.log(data)
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+
+        });
+    </script>
 
 {% endblock extrascripts %}
 
