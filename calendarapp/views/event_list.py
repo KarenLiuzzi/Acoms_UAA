@@ -494,7 +494,7 @@ class RunningEventsListView(ListView):
                             elif  objeto.es_orientacion_academica== True:
                                 tipo= 'Orientación Académica'
                             id= str(objeto.id_cita.id_actividad_academica)
-                            tipo_usuario= 'staff'
+                            tipo_usuario= 'normal'
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
                             lista_eventos.append(auxiliar) 
@@ -693,7 +693,7 @@ class RunningActividadesAcademicasListView(ListView):
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
                             id= str(objeto.id_tutoria.id_actividad_academica)
-                            tipo_usuario= 'staff'
+                            tipo_usuario= 'normal'
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
@@ -722,7 +722,7 @@ class RunningActividadesAcademicasListView(ListView):
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'
                                 id= str(objeto.id_orientacion_academica.id_actividad_academica)
-                                tipo_usuario= 'staff'
+                                tipo_usuario= 'normal'
                                 
                                 auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                                 lista_actividades.append(auxiliar) 
@@ -751,7 +751,7 @@ class RunningActividadesAcademicasListView(ListView):
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
                             id= str(objeto.id_tutoria.id_actividad_academica)
-                            tipo_usuario= 'staff'
+                            tipo_usuario= 'normal'
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
@@ -779,7 +779,7 @@ class RunningActividadesAcademicasListView(ListView):
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'
                                 id= str(objeto.id_orientacion_academica.id_actividad_academica)
-                                tipo_usuario= 'staff'
+                                tipo_usuario= 'normal'
                                 
                                 auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                                 lista_actividades.append(auxiliar) 
@@ -917,6 +917,36 @@ def CancelarCita(request, id_cita):
         
         return render(request, "calendarapp/cancelar_cita.html", context = {"id_cita": id_cita})
     
+        
+@csrf_exempt
+def AprobarCita(request, id_cita):
+    if request.method == "POST":
+        
+            # Eliminar todos los mensajes de error
+            storage = messages.get_messages(request)
+            for message in storage:
+                if message.level == messages.ERROR:
+                    storage.discard(message)
+                
+            try:
+                dict = model_to_dict(request.user)
+                with transaction.atomic():
+                    
+                    record = Event.objects.get(id_actividad_academica=id_cita)
+                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Confirmada').first()
+                    record.id_estado_actividad_academica= estado
+                    record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                    record.save()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Confirmada."})})
+
+            except Exception as e:
+                print(f"Se ha producido un error: {e}")
+                messages.error(request, 'Ocurrió un error al intentar confirmar la cita.')
+                return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})
+                
+    else:
+        
+        return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})
     
 @csrf_exempt
 def RechazarCita(request, id_cita):
@@ -1004,6 +1034,7 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
         
         return render(request, "calendarapp/cancelar_actividad_academica.html", context = {"id_tutoria": id_tutoria, "id_ori_academ": id_ori_academ})  
 
+@csrf_exempt
 def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
     if request.method == "POST":
         
@@ -1043,35 +1074,6 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
         
         return render(request, "calendarapp/finalizar_actividad_academica.html", context = {"id_tutoria": id_tutoria, "id_ori_academ": id_ori_academ})  
     
-        
-@csrf_exempt
-def AprobarCita(request, id_cita):
-    if request.method == "POST":
-        
-            # Eliminar todos los mensajes de error
-            storage = messages.get_messages(request)
-            for message in storage:
-                if message.level == messages.ERROR:
-                    storage.discard(message)
-                
-            try:
-                    dict = model_to_dict(request.user)
-                    record = Event.objects.get(id_actividad_academica=id_cita)
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Confirmada').first()
-                    record.id_estado_actividad_academica= estado
-                    record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
-                    record.save()
-                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Cita Confirmada."})})
-
-            except Exception as e:
-                print(f"Se ha producido un error: {e}")
-                messages.error(request, 'Ocurrió un error al intentar confirmar la cita.')
-                
-                return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})
-                
-    else:
-        
-        return render(request, "calendarapp/confirmar_cita.html", context = {"id_cita": id_cita})
 
 @csrf_exempt
 def CancelarTarea(request, id_tarea):

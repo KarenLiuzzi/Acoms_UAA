@@ -254,7 +254,23 @@ def formCalendarioFuncDoc(request):
                 dict = model_to_dict(current_user)
                 persona=  dict["id_persona"]
                 dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
-                context = { "dict_cal_fun_doc": dict_cal_fun_doc}
+                convocatoria= ''
+                dia= ''
+                hora_inicio= ''
+                hora_fin= ''
+                id= ''
+                auxiliar= {}
+                lista_horarios= []
+                if dict_cal_fun_doc.exists():
+                    for horario in dict_cal_fun_doc:
+                        convocatoria= horario.id_convocatoria.id_semestre.descripcion_semestre + ' ' + str(horario.id_convocatoria.anho)
+                        dia= horario.id_dia.descripcion_dia
+                        hora_inicio= horario.hora_inicio.strftime("%H:%M:%S")
+                        hora_fin= horario.hora_fin.strftime("%H:%M:%S")
+                        id= horario.id_horario_semestral
+                        auxiliar= {'convocatoria': convocatoria, 'dia': dia, 'hora_inicio': hora_inicio, 'hora_fin': hora_fin, 'id': id}
+                        lista_horarios.append(auxiliar)
+                context = { "dict_cal_fun_doc": lista_horarios}
                 return render(request,'calendarapp/calendario_form.html', context= context)
     except Exception as e:
         print(f"Se ha producido un error: {e}")
@@ -264,6 +280,7 @@ def EditCalendarioFuncDoc(request, pk):
     try:
         hor_sem= get_object_or_404(HorarioSemestral, id_horario_semestral= pk)
         if request.method == "POST":
+            print('post')
             #modiicar el form
             form = HorarioSemestralForm(request.POST, instance=hor_sem, user=request.user)
             if form.is_valid():
@@ -271,6 +288,7 @@ def EditCalendarioFuncDoc(request, pk):
                 return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
             
         else:
+            print('get')
             form= HorarioSemestralForm(instance= hor_sem, user=request.user)
         
         #modificar el html

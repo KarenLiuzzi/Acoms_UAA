@@ -123,15 +123,15 @@
 {% endblock content %}
 
 {% block extrascripts %}
-<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
-<link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
-<script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
-<script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
-<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
-<script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'lib_extras/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'lib_extras/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+<script src="{% static 'lib_extras/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'lib_extras/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'lib_extras/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'lib_extras/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
  <!-- Jquery Confirm -->
- <link rel="stylesheet" href="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
- <script src="{% static 'lib/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+ <link rel="stylesheet" href="{% static 'lib_extras/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+ <script src="{% static 'lib_extras/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
  <!-- Functions -->
  <script src="{% static 'js/functions.js' %}"></script>
 
@@ -166,7 +166,7 @@
                             } else if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Pendiente' ) &&  (row.tipo_usuario == 'normal' )) {
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;"title="Editar"  value="/modificarCitaTutoria/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
                             } else if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Confirmada' ) &&  (row.tipo_usuario == 'staff' )) {
-                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="iniciar" class="btn btn-primary" style="color: white;"title="Iniciar Cita" value="/iniciarCitaTutoria/' + row.id + '"> <i class="bi bi-caret-right-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>'; 
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a class="btn btn-primary" style="color: white;"title="Iniciar Cita" href="/iniciarCitaTutoria/' + row.id + '"> <i class="bi bi-caret-right-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>'; 
                             } else if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Confirmada' ) &&  (row.tipo_usuario == 'normal' )) {
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles">  <i class="bi bi-eye-fill"></i> </a> <a  class="btn btn-danger" style="color: white;"  title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
                             } else if ((row.tipo == 'Cita Tutoría') && (row.estado == 'Rechazada' ) &&  (row.tipo_usuario == 'normal' )) {
@@ -179,20 +179,20 @@
                             else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Pendiente' ) &&  (row.tipo_usuario == 'staff' )){
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="confirmar"  class="btn btn-primary" style="color: white;"  title="Confirmar Cita" value="/cita/confirmar/' + row.id + '"> <i class="bi bi-calendar-check"></i> </a> <a rel="rechazar"  class="btn btn-danger" style="color: white;" title="Rechazar Cita" value="/cita/rechazar/' + row.id + '"> <i class="bi bi-box-arrow-left"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
                             } else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Pendiente' ) &&  (row.tipo_usuario == 'normal' )) {
-                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;"title="Editar" value="/modificarCitaOriAcademica/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a class="btn btn-primary" style="color: white;"title="Editar" href="/modificarCitaOriAcademica/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
                             } else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Confirmada' ) &&  (row.tipo_usuario == 'staff' )) {
-                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i>  </a> <a rel="iniciar" class="btn btn-primary" style="color: white;"title="Iniciar Cita" value="/iniciarCitaOrientacionAcademica/' + row.id + '"> <i class="bi bi-caret-right-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>'; 
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i>  </a> <a class="btn btn-primary" style="color: white;"title="Iniciar Cita" href="/iniciarCitaOrientacionAcademica/' + row.id + '"> <i class="bi bi-caret-right-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>'; 
                             } else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Confirmada' ) &&  (row.tipo_usuario == 'normal' )) {
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i>  </a> <a  class="btn btn-danger" style="color: white;"  title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
                             } else if ((row.tipo == 'Cita Orientación Académica') && (row.estado == 'Rechazada' ) &&  (row.tipo_usuario == 'normal' )) {
-                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;"title="Reagendar" value="/modificarCitaTutoria/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i> </a> <a class="btn btn-primary" style="color: white;"title="Reagendar" href="/modificarCitaTutoria/' + row.id + '"> <i class="bi bi-pencil-fill"></i> </a> <a rel="cancelar"  class="btn btn-danger" style="color: white;" title="Cancelar" value="/cita/cancelar/' + row.id + '"> <i class="bi bi-x-circle-fill"></i> </a>';
                             }
                             else if (row.tipo == 'Cita Orientación Académica') {
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesCita/' + row.id + '" title="Detalles"><i class="bi bi-eye-fill"></i> </a>';
                             } 
 
                             else if ((row.tipo == 'Tutoría') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'staff' )){
-                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;" title="Editar" value="/modificarTutoria/' + row.id + '"> <i class="bi bi-pencil"></i> </a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar" value="/actividad_academica/cancelar/' + row.id + '/0"> <i class="bi bi-x-lg"></i> </a> <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar Tutoría" value="/actividad_academica/finalizar/' + row.id + '/0"> <i class="bi bi-check2"></i> </a>';
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a class="btn btn-primary" style="color: white;" title="Editar" href="/modificarTutoria/' + row.id + '"> <i class="bi bi-pencil"></i> </a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar" value="/actividad_academica/cancelar/' + row.id + '/0"> <i class="bi bi-x-lg"></i> </a> <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar Tutoría" value="/actividad_academica/finalizar/' + row.id + '/0"> <i class="bi bi-check2"></i> </a>';
                             } else if ((row.tipo == 'Tutoría') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'normal' )) {
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles">';
                             } 
@@ -201,7 +201,7 @@
                             } 
                             
                             else if ((row.tipo == 'Orientación Académica') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'staff' )){
-                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/0/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a rel="editar" class="btn btn-primary" style="color: white;" title="Editar" value="/modificarOrientacion/' + row.id + '"> <i class="bi bi-pencil"></i> </a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar" value="/actividad_academica/cancelar/0/' + row.id + '"> <i class="bi bi-x-lg"></i> </a> <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar Orientación" value="/actividad_academica/finalizar/0/' + row.id + '"> <i class="bi bi-check2"></i> </a>';
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/0/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a class="btn btn-primary" style="color: white;" title="Editar" href="/modificarOrientacion/' + row.id + '"> <i class="bi bi-pencil"></i> </a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar" value="/actividad_academica/cancelar/0/' + row.id + '"> <i class="bi bi-x-lg"></i> </a> <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar Orientación" value="/actividad_academica/finalizar/0/' + row.id + '"> <i class="bi bi-check2"></i> </a>';
                             } else if ((row.tipo == 'Orientación Académica') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'normal' )) {
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/0/' + row.id + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a>';
                             } 
@@ -257,47 +257,8 @@
                 });
             });
 
-            $('#tblEvents').on('click', 'a[rel="editar"]', function(event) { 
-                event.preventDefault();
-            
-                // Obtener la URL del valor del atributo "value" del elemento <a>
-                var url = $(this).attr("value");
-                    
-                // Obtener el elemento modal
-                var modal = $('#modalEvent');
-
-                // Realizar una solicitud AJAX para cargar el contenido
-                $.get(url, function(data) {
-                    //console.log(data)
-                    // Insertar el contenido en el elemento con la clase "modal-dialog"
-                    modal.find('.modal-dialog').html(data);
-
-                    // Mostrar el modal
-                    modal.modal('show');
-                });
-            });
 
             $('#tblEvents').on('click', 'a[rel="finalizar"]', function(event) { 
-                event.preventDefault();
-            
-                // Obtener la URL del valor del atributo "value" del elemento <a>
-                var url = $(this).attr("value");
-                    
-                // Obtener el elemento modal
-                var modal = $('#modalEvent');
-
-                // Realizar una solicitud AJAX para cargar el contenido
-                $.get(url, function(data) {
-                    //console.log(data)
-                    // Insertar el contenido en el elemento con la clase "modal-dialog"
-                    modal.find('.modal-dialog').html(data);
-
-                    // Mostrar el modal
-                    modal.modal('show');
-                });
-            });
-
-            $('#tblEvents').on('click', 'a[rel="iniciar"]', function(event) {  
                 event.preventDefault();
             
                 // Obtener la URL del valor del atributo "value" del elemento <a>
@@ -337,6 +298,7 @@
                 });
             });
             
+            $('#dashboardMenu').addClass('active');
 
         });
 
