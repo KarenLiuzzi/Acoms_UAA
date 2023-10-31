@@ -32,10 +32,13 @@ pero no el confirmar
 no funciona el finalizar en actividad academica
 - agregar notificaciones en rechazado (probar)
 - probar si desaparecen los botones en las tablas nuevas agregadas
-
+-dot mas grande en vista de semana
+- hacer que cuando el usuario da click en cualquier lugar del saemana dia no haga ninguna acciones
 
 Pendiente
 - probar si los botones de abm de horarios funcionan en todos (arreglar)
-- agregar un procesando o espere en la pantalla, tambien en tareas
+- agregar un procesando o espere en la pantalla, tambien en tareas, probar
+en el dashboard no se muestran bien los botones
+boton de + en tareas no se ve en tutorias, orientaciones, citas
 
 
