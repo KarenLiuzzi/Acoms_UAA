@@ -1000,30 +1000,31 @@ def CancelarActividadAcademica(request, id_tutoria, id_ori_academ):
             try:
                 dict = model_to_dict(request.user)
                 if id_tutoria > 0:
-                    #obtenemos la instancia de tutoria a cancelar
-                    tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
-                    print(tutoria)
-                    #obtenemos instancia de estado cancelado
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelada').first()
-                    tutoria.id_estado_actividad_academica= estado
-                    tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
-                    hijo_tutoria= Tutoria.objects.get(id_tutoria= id_tutoria)
-                    hijo_tutoria.motivo_cancelacion= campo
-                    hijo_tutoria.save()
-                    tutoria.save()
-                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
+                    with transaction.atomic():
+                        #obtenemos la instancia de tutoria a cancelar
+                        tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
+                        #obtenemos instancia de estado cancelado
+                        estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelada').first()
+                        tutoria.id_estado_actividad_academica= estado
+                        tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                        hijo_tutoria= Tutoria.objects.get(id_tutoria= id_tutoria)
+                        hijo_tutoria.motivo_cancelacion= campo
+                        hijo_tutoria.save()
+                        tutoria.save()
+                        return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
                 else:
-                    #obtenemos la instancia de orientacion academica a cancelar
-                    orientacion_academica= Event.objects.get(id_actividad_academica= id_ori_academ)
-                    #obtenemos instancia de estado cancelado
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelada').first()
-                    orientacion_academica.id_estado_actividad_academica= estado
-                    orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
-                    hijo_orientacion= OrientacionAcademica.objects.get(id_orientacion_academica= id_ori_academ)
-                    hijo_orientacion.motivo_cancelacion= campo
-                    hijo_orientacion.save()
-                    orientacion_academica.save()
-                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
+                    with transaction.atomic():
+                        #obtenemos la instancia de orientacion academica a cancelar
+                        orientacion_academica= Event.objects.get(id_actividad_academica= id_ori_academ)
+                        #obtenemos instancia de estado cancelado
+                        estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Cancelada').first()
+                        orientacion_academica.id_estado_actividad_academica= estado
+                        orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                        hijo_orientacion= OrientacionAcademica.objects.get(id_orientacion_academica= id_ori_academ)
+                        hijo_orientacion.motivo_cancelacion= campo
+                        hijo_orientacion.save()
+                        orientacion_academica.save()
+                        return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
             except Exception as e:
                 print(f"Se ha producido un error: {e}")
                 messages.error(request, 'Ocurrió un error al intentar cancelar la Actividad Académica.')
@@ -1047,23 +1048,25 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
             try:
                 dict = model_to_dict(request.user)
                 if id_tutoria > 0:
-                    #obtenemos la instancia de tutoria a cancelar
-                    tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
-                    #obtenemos instancia de estado cancelado
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizada').first()
-                    tutoria.id_estado_actividad_academica= estado
-                    tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
-                    tutoria.save()
-                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
+                    with transaction.atomic():
+                        #obtenemos la instancia de tutoria a cancelar
+                        tutoria= Event.objects.get(id_actividad_academica= id_tutoria)
+                        #obtenemos instancia de estado cancelado
+                        estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizada').first()
+                        tutoria.id_estado_actividad_academica= estado
+                        tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                        tutoria.save()
+                        return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
                 else:
-                    #obtenemos la instancia de orientacion academica a cancelar
-                    orientacion_academica= Event.objects.get(id_actividad_academica= id_ori_academ)
-                    #obtenemos instancia de estado cancelado
-                    estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizada').first()
-                    orientacion_academica.id_estado_actividad_academica= estado
-                    orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
-                    orientacion_academica.save()
-                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
+                    with transaction.atomic():
+                        #obtenemos la instancia de orientacion academica a cancelar
+                        orientacion_academica= Event.objects.get(id_actividad_academica= id_ori_academ)
+                        #obtenemos instancia de estado cancelado
+                        estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizada').first()
+                        orientacion_academica.id_estado_actividad_academica= estado
+                        orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                        orientacion_academica.save()
+                        return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
             except Exception as e:
                 print(f"Se ha producido un error: {e}")
                 messages.error(request, 'Ocurrió un error al intentar finalizar la Actividad Académica.')
@@ -1079,59 +1082,83 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
 def CancelarTarea(request, id_tarea):
     if request.method == "POST":                
         try:
-            dict = model_to_dict(request.user)
-            record = Tarea.objects.get(id_tarea=id_tarea)
-            estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Cancelada').first()
-            record.id_estado_tarea= estado
-            record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
-            record.save()
-            data= json.dumps([{"name": 200}])
-            return HttpResponse(data)
-
+            with transaction.atomic():
+                dict = model_to_dict(request.user)
+                record = Tarea.objects.get(id_tarea=id_tarea)
+                estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Cancelada').first()
+                record.id_estado_tarea= estado
+                record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                record.save()
+                # data= json.dumps([{"name": 200}])
+                # return HttpResponse(data)
+                return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Cancelada."})})
         except Exception as e:
             print(f"Se ha producido un error: {e}")
-            data= json.dumps([{"name": 500}])
-            return HttpResponse(data)    
+            # data= json.dumps([{"name": 500}])
+            # return HttpResponse(data)    
+            messages.error(request, 'Ocurrió un error al intentar cancelar la Tarea.')
+            return render(request, "calendarapp/cancelar_tarea.html", context = {"id_tarea": id_tarea})
+                
+    else:
+        
+        return render(request, "calendarapp/cancelar_tarea.html", context = {"id_tarea": id_tarea})  
+
         
 @csrf_exempt
 def FinalizarTarea(request, id_tarea):
     if request.method == "POST":                
             try:
-                dict = model_to_dict(request.user)
-                record = Tarea.objects.get(id_tarea=id_tarea)
-                estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Finalizada').first()
-                record.id_estado_tarea= estado
-                record.datetime_finalizacion= datetime.now()
-                ins_persona= Persona.objects.get(pk= dict["id_persona"])                
-                record.id_persona_finalizacion= ins_persona
-                record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
-                record.save()
-                data= json.dumps([{"name": 200}])
-                return HttpResponse(data)
-
+                with transaction.atomic():
+                    dict = model_to_dict(request.user)
+                    record = Tarea.objects.get(id_tarea=id_tarea)
+                    estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Finalizada').first()
+                    record.id_estado_tarea= estado
+                    record.datetime_finalizacion= datetime.now()
+                    ins_persona= Persona.objects.get(pk= dict["id_persona"])                
+                    record.id_persona_finalizacion= ins_persona
+                    record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                    record.save()
+                    # data= json.dumps([{"name": 200}])
+                    # return HttpResponse(data)
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Cancelada."})})
+        
             except Exception as e:
                 print(f"Se ha producido un error: {e}")
-                data= json.dumps([{"name": 500}])
-                return HttpResponse(data)
+                # data= json.dumps([{"name": 500}])
+                # return HttpResponse(data)
+                messages.error(request, 'Ocurrió un error al intentar finalizar la Tarea.')
+                return render(request, "calendarapp/finalizar_tarea.html", context = {"id_tarea": id_tarea})
+                
+    else:
+        
+        return render(request, "calendarapp/finalizar_tarea.html", context = {"id_tarea": id_tarea})  
             
 @csrf_exempt
 def IniciarTarea(request, id_tarea):
     if request.method == "POST":                
             try:
-                dict = model_to_dict(request.user)
-                record = Tarea.objects.get(id_tarea=id_tarea)
-                estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Iniciada').first()
-                record.id_estado_tarea= estado
-                record.datetime_inicio_real= datetime.now()
-                record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
-                record.save()
-                data= json.dumps([{"name": 200}])
-                return HttpResponse(data)
-
+                with transaction.atomic():
+                    dict = model_to_dict(request.user)
+                    record = Tarea.objects.get(id_tarea=id_tarea)
+                    estado= EstadoTarea.objects.filter(descripcion_estado_tarea='Iniciada').first()
+                    record.id_estado_tarea= estado
+                    record.datetime_inicio_real= datetime.now()
+                    record.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
+                    record.save()
+                    # data= json.dumps([{"name": 200}])
+                    # return HttpResponse(data)
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tarea Cancelada."})})
+        
             except Exception as e:
                 print(f"Se ha producido un error: {e}")
-                data= json.dumps([{"name": 500}])
-                return HttpResponse(data)
+                # data= json.dumps([{"name": 500}])
+                # return HttpResponse(data)
+                messages.error(request, 'Ocurrió un error al intentar iniciar la Tarea.')
+                return render(request, "calendarapp/iniciar_tarea.html", context = {"id_tarea": id_tarea})
+                
+    else:
+        
+        return render(request, "calendarapp/iniciar_tarea.html", context = {"id_tarea": id_tarea})  
                 
                 
 def About(request):

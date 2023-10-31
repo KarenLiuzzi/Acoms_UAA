@@ -193,12 +193,12 @@
           locale: 'es',
           initialDate: today,
           navLinks: true, // can click day/week names to navigate views
-          selectable: true,
+          selectable: false, // para evitar que seleccione otros horarios
           selectMirror: true,
 
           //dias y horas configuraciones
           //division de las horas en filas
-          slotDuration: '00:10',
+          slotDuration: '00:05',
           //formato de las horas en filas
           slotLabelFormat :{
             hour: 'numeric',
@@ -330,6 +330,7 @@
           },
 
           eventDidMount: function(info) {
+            console.log(info)
             var icon = info.event.extendedProps.icon;
             var tipo = info.event.extendedProps.tipo_cita;
             var estado = info.event.extendedProps.estado;    
@@ -342,52 +343,52 @@
 
                 if (tipo === 'ori_academica' & estado == 'Pendiente') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;font-size: 24px;'>•</i>");
 
                 } 
                 else if (tipo === 'ori_academica' & estado == 'Cancelada') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;font-size: 24px;'>•</i>");
 
                 }
                 else if (tipo === 'ori_academica' & estado == 'Finalizada') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;font-size: 24px;'>•</i>");
                 }
                 
                 else if (tipo === 'ori_academica' & estado == 'Confirmada') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #d89219;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #d89219;font-size: 24px;'>•</i>");
                 }
 
                 else if (tipo === 'ori_academica' & estado == 'Rechazada') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #FFB6C1;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #FFB6C1;font-size: 24px;'>•</i>");
                 }
 
                 else if (tipo === 'tutoria' & estado == 'Cancelada') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #ba0f4e;font-size: 24px;'>•</i>");
 
                 }
                 else if (tipo === 'tutoria' & estado == 'Pendiente') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #dcd91f;font-size: 24px;'>•</i>");
 
                 }
                 else if (tipo === 'tutoria' & estado == 'Finalizada') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #0cc55c;font-size: 24px;'>•</i>");
                 
                 }
                 else if (tipo === 'tutoria' & estado == 'Confirmada') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #d89219;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #d89219;font-size: 24px;'>•</i>");
                 
                 }   
                 else if (tipo === 'tutoria' & estado == 'Rechazada') {
 
-                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #FFB6C1;'>•</i>");
+                  $(info.el).find('.fc-event-title').prepend("<i class='largeDot' style='color: #FFB6C1;font-size: 24px;'>•</i>");
                 
                 }                   
               } 

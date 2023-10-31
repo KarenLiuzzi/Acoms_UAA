@@ -61,7 +61,6 @@ class DashboardView(LoginRequiredMixin, View):
         ins_persona=  Persona.objects.get(id= dict["id_persona"])
         latest_events = Event.objects.all() #filter(user=request.user).order_by("-id")[:10]
         citas_finalizadas= 0
-        lista_events= []
         citas_confirmadas= 0
         citas_canceladas= 0
         citas_pendientes= 0
@@ -197,7 +196,7 @@ class DashboardView(LoginRequiredMixin, View):
                             elif  objeto.es_orientacion_academica== True:
                                 tipo= 'Cita Orientación Académica'
                             id= str(objeto.id_cita.id_actividad_academica)
-                            tipo_usuario= 'staff'
+                            tipo_usuario= 'normal'
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
@@ -233,7 +232,7 @@ class DashboardView(LoginRequiredMixin, View):
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
                             id= str(objeto.id_tutoria.id_actividad_academica)
-                            tipo_usuario= 'staff'
+                            tipo_usuario= 'normal'
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
@@ -262,7 +261,7 @@ class DashboardView(LoginRequiredMixin, View):
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'
                                 id= str(objeto.id_orientacion_academica.id_actividad_academica)
-                                tipo_usuario= 'staff'
+                                tipo_usuario= 'normal'
                                 
                                 auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                                 lista_actividades.append(auxiliar) 

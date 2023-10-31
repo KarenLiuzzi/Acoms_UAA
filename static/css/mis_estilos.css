@@ -11,11 +11,11 @@
 
 
 td.details-control {
-  background: url('../lib/datatables-1.10.20/images/details_open.png') no-repeat center center;
+  background: url('../lib_extras/datatables-1.10.20/images/details_open.png') no-repeat center center;
   cursor: pointer;
 }
 tr.shown td.details-control {
-  background: url('../lib/datatables-1.10.20/images/details_close.png') no-repeat center center;
+  background: url('../lib_extras/datatables-1.10.20/images/details_close.png') no-repeat center center;
 }
 
 .app-notification__item-container {

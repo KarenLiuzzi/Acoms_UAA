@@ -363,6 +363,11 @@
         </div>
     </div>
 
+    <div id="modalEvent" class="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document"> 
+            
+        </div>
+    </div>
    
 </div>
 
@@ -480,27 +485,66 @@
                 }
             })
 
-            .on('click', 'a[rel="iniciar"]', function () {
-                var parameters= new FormData()
-                var iniciar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
-                submit_with_ajax(iniciar_link, 'Notificación', '¿Estás seguro de iniciar la tarea?',  parameters, function () {
-                    location.href = window.location.pathname;
-                });
-            })
+            $('#tblTareas').on('click', 'a[rel="iniciar"]', function(event) {
+                // var parameters= new FormData()
+                // var iniciar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
+                // submit_with_ajax(iniciar_link, 'Notificación', '¿Estás seguro de iniciar la tarea?',  parameters, function () {
+                //     location.href = window.location.pathname;
+                // });
 
-            .on('click', 'a[rel="cancelar"]', function () {
-                var parameters= new FormData()
-                var cancelar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
-                submit_with_ajax(cancelar_link, 'Notificación', '¿Estás seguro de cancelar la tarea?',  parameters, function () {
-                    location.href = window.location.pathname;
-                });
-            })
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
 
-            .on('click', 'a[rel="finalizar"]', function () {
-                var parameters= new FormData()
-                var finalizar_link = $(this).attr('value');  // Capturar el valor del atributo 'value'
-                submit_with_ajax(finalizar_link, 'Notificación', '¿Estás seguro de finalizar la tarea?',  parameters, function () {
-                    location.href = window.location.pathname;
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+            $('#tblTareas').on('click', 'a[rel="cancelar"]', function(event) {
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
+            $('#tblTareas').on('click', 'a[rel="finalizar"]', function(event) {
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
                 });
             });
 

@@ -1,5 +1,5 @@
 {% load static %}
-<form hx-post= "{{request.path}}" class="modal-content">
+<form hx-post= "{{request.path}}" class="modal-content" id="formIniciar">
     {% csrf_token %}
       <div class='modal-header text-center'>
         <h3 class="modal-title w-100">Iniciar Tarea</h3> 
@@ -23,11 +23,87 @@
       </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary" id="cancelar">Aceptar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cerrar">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="iniciar">Aceptar</button>
         </div>  
             
       </div>
 </form>  
 
+
+
+<div id="avisoProcesando" class="aviso-procesando">
+  <p>Procesando...</p>
+  <img src="{% static 'images/loading.gif' %}" alt="Procesando">
+
+</div>
+
+<!-- Jquery Confirm -->
+<link rel="stylesheet" href="{% static 'lib_extras/jquery-confirm-v3.3.4/jquery-confirm.min.css' %}">
+<script src="{% static 'lib_extras/jquery-confirm-v3.3.4/jquery-confirm.min.js' %}"></script>
+<!-- Functions -->
+<script src="{% static 'js/functions.js' %}"></script>
+
+<script>
+  
+  $(document).ready(function() {
+      // Obtener el formulario y el botón de cancelar
+      var form = document.getElementById('formIniciar');
+      var botonIniciar = document.getElementById('iniciar');
+      var botonCerrar = document.getElementById('cerrar');
+
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+      
+      // Agregar el evento click al botón de cancelar
+      botonIniciar.addEventListener('click', function() {
+        botonIniciar.disabled = true;
+        botonCerrar.disabled = true;
+        // Mostrar el aviso de procesando
+        mostrarAvisoDeProcesando();
+
+        $.ajax({
+          url: form.getAttribute('hx-post'),
+          type: 'POST',
+        }).done(function (data) {
+          ocultarAvisoDeProcesando();
+          // Habilitar los botones
+          //botonIniciar.disabled = false;
+          //botonCerrar.disabled = false;
+
+            location.reload();
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            ocultarAvisoDeProcesando();
+            // Habilitar los botones
+            botonIniciar.disabled = false;
+            botonCerrar.disabled = false;
+
+            alert(textStatus + ': ' + errorThrown);
+        }).always(function (data) {
+
+        });
+      });
+
+      function mostrarAvisoDeProcesando() {
+        document.getElementById('avisoProcesando').style.display = 'flex'; // Muestra el aviso
+      }
+    
+      function ocultarAvisoDeProcesando() {
+        document.getElementById('avisoProcesando').style.display = 'none'; // Oculta el aviso
+      }
+      
+  });
+</script>
 
