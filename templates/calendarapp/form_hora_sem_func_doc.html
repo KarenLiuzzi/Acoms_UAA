@@ -1,19 +1,14 @@
-{% comment %} el request.path se usa para poder usar la misma url del get para el metodo post {% endcomment %}
-<form hx-post="{{request.path}}" class="modal-content">
+{% extends 'base/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<form  action="{{request.path}}" class="modal-content" method="post">
     {% csrf_token %}
       <div class='modal-header text-center'>
         <h3 class="modal-title w-100">Horario Semestral</h3> 
       </div>
-    
-      {% comment %} <p class="or">
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <span class="text-danger"> {{ message }} </span>
-                {% endfor %}
-            </ul>
-        {% endif %} 
-      </p> {% endcomment %}
+
 
       <p class="or">
       {% if form.errors %}
@@ -71,13 +66,14 @@
     
         <div class="modal-footer">
           {% comment %} cuidado con las versiones de Bootstrap! {% endcomment %}
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <a type="button" class="btn btn-secondary" data-dismiss="modal" href="{% url 'calendarapp:form_cal_func_doc' %}">Cancelar</a>
           <button type="submit" class="btn btn-primary">Guardar</button>
         </div>  
             
       </div>
     </form>  
 
+{% endblock content %}
   {% comment %} {% block extrascripts %}
         <!-- Agregue este código JavaScript al final de la plantilla -->
         <script>

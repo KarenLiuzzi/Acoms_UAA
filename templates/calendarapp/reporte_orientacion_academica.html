@@ -236,18 +236,24 @@ $(document).ready(function() {
                     data: parameters,
                     dataSrc: ""
                 },
-                order: false,
-                paging: false,
+                order: true,
+                paging: true,
                 ordering: false,
-                info: false,
-                searching: false,
+                info: true,
+                searching: true,
                 dom: 'Bfrtip',
                 buttons: [
                     {
                         extend: 'excelHtml5',
-                        text: 'Descargar Excel <i class="bi bi-filetype-xlsx"></i>',
+                        text: 'Descargar Reporte <i class="bi bi-filetype-xlsx"></i>',
                         titleAttr: 'Excel',
-                        className: 'btn btn-primary btn-flat btn-xs'
+                        className: 'btn btn-primary btn-flat btn-xs',
+                        title: function () {
+                            var currentDate = new Date();
+                            var formattedDate =  currentDate.getDate() + '_' +  (currentDate.getMonth() + 1) + '_' +  currentDate.getFullYear();
+                            var formattedTime = currentDate.getHours() + '_' + currentDate.getMinutes() + '_' + currentDate.getSeconds();
+                            return 'Reporte_Orientaciones_Academicas_' + formattedDate + '__' + formattedTime;
+                        }
                     }
                 ],
                 initComplete: function (settings, json) {

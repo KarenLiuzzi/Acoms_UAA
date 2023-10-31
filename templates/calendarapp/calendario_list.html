@@ -9,9 +9,9 @@
                 <div class="table-responsive">
                     <div class="tile">
                         <div>
-                            <button type="button" class="btn btn-primary mt-2" hx-get="{% url 'calendarapp:add_cal_func_doc' %}" hx-target="#dialog" >
+                            <a type="button" class="btn btn-primary mt-2" href="{% url 'calendarapp:add_cal_func_doc' %}">
                                 Agregar
-                            </button>
+                            </a>
                         </div>
                         <br>
 
@@ -87,30 +87,11 @@
                     {
                         "data": null,
                         "render": function(data, type, row) {
-                             return '<a rel="editar" class="btn btn-primary" style="color: white;" title="Editar" value="/formulariofundoc/edit/' + row.id + '">Editar</a> <a rel="eliminar" class="btn btn-danger" style="color: white;" title="Eliminar" value="/formulariofundoc/delete/' + row.id + '"> Eliminar </a>';
+                             return '<a rel="editar" class="btn btn-primary" style="color: white;" title="Editar" href="/formulariofundoc/edit/' + row.id + '">Editar</a> <a rel="eliminar" class="btn btn-danger" style="color: white;" title="Eliminar" value="/formulariofundoc/delete/' + row.id + '"> Eliminar </a>';
                         }
                     }
                 ],
                 order: [] 
-            });
-
-            $('#tblHorarios').on('click', 'a[rel="editar"]', function(event) {
-                event.preventDefault();
-            
-                // Obtener la URL del valor del atributo "value" del elemento <a>
-                var url = $(this).attr("value");
-                    
-                // Obtener el elemento modal
-                var modal = $('#modalEvent');
-
-                // Realizar una solicitud AJAX para cargar el contenido
-                $.get(url, function(data) {
-                    // Insertar el contenido en el elemento con la clase "modal-dialog"
-                    modal.find('.modal-dialog').html(data);
-
-                    // Mostrar el modal
-                    modal.modal('show');
-                });
             });
 
             $('#tblHorarios').on('click', 'a[rel="eliminar"]', function(event) { 

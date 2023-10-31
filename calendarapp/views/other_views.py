@@ -4,7 +4,7 @@ from turtle import title
 from django.contrib import messages
 from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
@@ -271,45 +271,89 @@ def formCalendarioFuncDoc(request):
                         auxiliar= {'convocatoria': convocatoria, 'dia': dia, 'hora_inicio': hora_inicio, 'hora_fin': hora_fin, 'id': id}
                         lista_horarios.append(auxiliar)
                 context = { "dict_cal_fun_doc": lista_horarios}
-                return render(request,'calendarapp/calendario_form.html', context= context)
+                return render(request,'calendarapp/calendario_list.html', context= context)
     except Exception as e:
         print(f"Se ha producido un error: {e}")
 
+@csrf_exempt
 @login_required
 def EditCalendarioFuncDoc(request, pk):
     try:
         hor_sem= get_object_or_404(HorarioSemestral, id_horario_semestral= pk)
         if request.method == "POST":
-            print('post')
-            #modiicar el form
             form = HorarioSemestralForm(request.POST, instance=hor_sem, user=request.user)
-            if form.is_valid():
-                form.save()
-                return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Modificado."})})
-            
+            with transaction.atomic():
+                #modiicar el form
+                if form.is_valid():
+                    form.save()
+                    current_user = request.user
+                    dict = model_to_dict(current_user)
+                    persona=  dict["id_persona"]
+                    dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
+                    convocatoria= ''
+                    dia= ''
+                    hora_inicio= ''
+                    hora_fin= ''
+                    id= ''
+                    auxiliar= {}
+                    lista_horarios= []
+                    if dict_cal_fun_doc.exists():
+                        for horario in dict_cal_fun_doc:
+                            convocatoria= horario.id_convocatoria.id_semestre.descripcion_semestre + ' ' + str(horario.id_convocatoria.anho)
+                            dia= horario.id_dia.descripcion_dia
+                            hora_inicio= horario.hora_inicio.strftime("%H:%M:%S")
+                            hora_fin= horario.hora_fin.strftime("%H:%M:%S")
+                            id= horario.id_horario_semestral
+                            auxiliar= {'convocatoria': convocatoria, 'dia': dia, 'hora_inicio': hora_inicio, 'hora_fin': hora_fin, 'id': id}
+                            lista_horarios.append(auxiliar)
+                    context = { "dict_cal_fun_doc": lista_horarios}
+                    return render(request,'calendarapp/calendario_list.html', context= context)
         else:
-            print('get')
             form= HorarioSemestralForm(instance= hor_sem, user=request.user)
-        
-        #modificar el html
+            #modificar el html
         return render(request, "calendarapp/form_hora_sem_func_doc.html", context = {"form": form, "hor_sem": hor_sem})
     except Exception as e:
-                print(f"Se ha producido un error: {e}")
+        print(f"Se ha producido un error: {e}")
+        return HttpResponseBadRequest("Ocurrió un error en la solicitud")
 
 @login_required
 def AddCalendarioFuncDoc(request):
     try:
         if request.method == "POST":
             form = HorarioSemestralForm(request.POST, user=request.user)
-            if form.is_valid():
-                form.save()
-                return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro agregado."})})
+            with transaction.atomic():
+                if form.is_valid():
+                    form.save()
+                    current_user = request.user
+                    dict = model_to_dict(current_user)
+                    persona=  dict["id_persona"]
+                    dict_cal_fun_doc= HorarioSemestral.objects.filter(id_funcionario_docente= persona)
+                    convocatoria= ''
+                    dia= ''
+                    hora_inicio= ''
+                    hora_fin= ''
+                    id= ''
+                    auxiliar= {}
+                    lista_horarios= []
+                    if dict_cal_fun_doc.exists():
+                        for horario in dict_cal_fun_doc:
+                            convocatoria= horario.id_convocatoria.id_semestre.descripcion_semestre + ' ' + str(horario.id_convocatoria.anho)
+                            dia= horario.id_dia.descripcion_dia
+                            hora_inicio= horario.hora_inicio.strftime("%H:%M:%S")
+                            hora_fin= horario.hora_fin.strftime("%H:%M:%S")
+                            id= horario.id_horario_semestral
+                            auxiliar= {'convocatoria': convocatoria, 'dia': dia, 'hora_inicio': hora_inicio, 'hora_fin': hora_fin, 'id': id}
+                            lista_horarios.append(auxiliar)
+                    context = { "dict_cal_fun_doc": lista_horarios}
+                    return render(request,'calendarapp/calendario_list.html', context= context)
         else:
             form = HorarioSemestralForm(user=request.user)
         return render(request, "calendarapp/form_hora_sem_func_doc.html", context = {"form": form})
     except Exception as e:
             print(f"Se ha producido un error: {e}")
+            return HttpResponseBadRequest("Ocurrió un error en la solicitud")
 
+@csrf_exempt
 @login_required
 def delCalendarioFuncDoc(request, pk):
     if request.method == "POST":
@@ -321,9 +365,10 @@ def delCalendarioFuncDoc(request, pk):
                     storage.discard(message)
                     
             try:
-                record = HorarioSemestral.objects.get(id_horario_semestral=pk)
-                record.delete()
-                return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Eliminado."})})
+                with transaction.atomic():
+                    record = HorarioSemestral.objects.get(id_horario_semestral=pk)
+                    record.delete()
+                    return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Registro Eliminado."})})
 
             except Exception as e:
                 messages.error(request, f"Ocurrió un error al intentar eliminar el registro. {e}")
