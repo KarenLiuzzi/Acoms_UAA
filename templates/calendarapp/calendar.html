@@ -27,14 +27,14 @@
               <div style="display: flex; justify-content: space-between; padding-left: 20px; padding-top: 15px; padding-right: 30px; padding-bottom: 25px;">
                 <!-- Elementos a la izquierda -->
                   <div>
-                    <i class="bi bi-circle-fill" style="color: rgb(131, 97, 205)"></i> <text style="color: #555555"> Tutoria </text>
+                    <i class="bi bi-circle-fill" style="color: #7979e4"></i> <text style="color: #555555"> Tutoria </text>
                     <i class="bi bi-circle-fill" style="color: rgb(89, 141, 214)"></i> <text style="color: #555555">Orientación Académica</text>
                   </div>
                 
                   <!-- Elementos a la derecha -->
                   <div>
-                    <i class="bi bi-circle-fill" style="color: #dcd91f;"></i> <text style="color: #555555">Pendiente</text>
-                    <i class="bi bi-circle-fill" style="color: #d89219;"></i> <text style="color: #555555">Confirmada</text>
+                    <i class="bi bi-circle-fill" style="color: #fcf264;"></i> <text style="color: #555555">Pendiente</text>
+                    <i class="bi bi-circle-fill" style="color: #0cb7f2;"></i> <text style="color: #555555">Confirmada</text>
                     <i class="bi bi-circle-fill" style="color: #FFB6C1;"></i> <text style="color: #555555">Rechazada</text>
                     <i class="bi bi-circle-fill" style="color: #ba0f4e;"></i> <text style="color: #555555">Cancelada</text>
                     <i class="bi bi-circle-fill" style="color: #0cc55c;"></i> <text style="color: #555555">Finalizada</text>
@@ -167,6 +167,14 @@
         </div>
      </div>
 </div>
+
+
+<div id="modalAccionesEvents" class="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document"> 
+      
+  </div>
+</div>
+
 {% endblock content %}
 
 {% block extrascripts %}
@@ -174,9 +182,9 @@
   {% comment %} usamos este enlace porque no traducia correstamente los botones del header {% endcomment %}
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/locales-all.js"></script>
   <script>
+
+
       document.addEventListener('DOMContentLoaded', function() {
-
-
         $('#calendarMenu').addClass('active');
 
         var calendarEl = document.getElementById('calendar');
@@ -330,7 +338,6 @@
           },
 
           eventDidMount: function(info) {
-            console.log(info)
             var icon = info.event.extendedProps.icon;
             var tipo = info.event.extendedProps.tipo_cita;
             var estado = info.event.extendedProps.estado;    
@@ -399,6 +406,7 @@
 
         
         calendar.render();
+
       });
 
       function mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita, tipo_usuario) {
@@ -508,23 +516,106 @@
 
               // Agregar el nuevo elemento <a> al <div>
               container.appendChild(link);
-            } else {
-              // Crear un nuevo elemento <a> para iniciar cita  
-              const newLinkIniciarOripend = document.createElement("a");
-              newLinkIniciarOripend.className = "btn btn-primary mt-2";
-              newLinkIniciarOripend.id = "iniciar_cita_orientacion";
-              newLinkIniciarOripend.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
-              newLinkIniciarOripend.title = "Iniciar Cita";
-    
+
+              // Crear un nuevo elemento <a> para cancelar
+              const link_cancelar = document.createElement("a");
+              link_cancelar.className = "btn btn-primary mt-2";
+              link_cancelar.id = "cancelar_ori_academica";
+              link_cancelar.style = "color: white;";
+              link_cancelar.setAttribute("data-url", '/cita/cancelar/'+ id_cita); // Agrega aquí la URL deseada
+              link_cancelar.title = "Cancelar";
+
               // Crear un nuevo elemento <i> para el icono
-              const newIconIniciarOripend = document.createElement("i");
-              newIconIniciarOripend.className = "bi bi-caret-right-fill"; // Clase para el icono 
+              const icon_cancelar = document.createElement("i");
+              icon_cancelar.className = "bi bi-x-circle-fill"; // Clase para el icono 
 
               // Agregar el icono al elemento <a>
-              newLinkIniciarOripend.appendChild(newIconIniciarOripend);
+              link_cancelar.appendChild(icon_cancelar);
 
               // Agregar el nuevo elemento <a> al <div>
-              container.appendChild(newLinkIniciarOripend);
+              container.appendChild(link_cancelar);
+
+              link_cancelar.addEventListener('click', function (event) {
+                event.preventDefault();
+                // Obtener la URL del atributo "data-url" del elemento <a>
+                var url = link_cancelar.getAttribute("data-url");
+                // Obtener el elemento modal
+                var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function (data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+              });  
+
+            } else {
+              // Crear un nuevo elemento <a> para confirmar cita  
+              const newLinkConfirmar = document.createElement("a");
+              newLinkConfirmar.className = "btn btn-primary mt-2";
+              newLinkConfirmar.id = "confirmar_cita_orientacion";
+              newLinkConfirmar.style = "color: white;";
+              newLinkConfirmar.setAttribute("data-url", '/cita/confirmar/'+ id_cita); // Agrega aquí la URL deseada
+              newLinkConfirmar.title = "Confirmar Cita";
+    
+              // Crear un nuevo elemento <i> para el icono
+              const newIconConfirmar = document.createElement("i");
+              newIconConfirmar.className = "bi bi-calendar-check"; // Clase para el icono 
+
+              // Agregar el icono al elemento <a>
+                newLinkConfirmar.appendChild(newIconConfirmar);
+
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkConfirmar);
+
+              newLinkConfirmar.addEventListener('click', function (event) {
+                event.preventDefault();
+                // Obtener la URL del atributo "data-url" del elemento <a>
+                var url = newLinkConfirmar.getAttribute("data-url");
+                // Obtener el elemento modal
+                var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function (data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+              });  
+
+              // Crear un nuevo elemento <a> para rechazar cita  
+                const newLinkRechazarOripend = document.createElement("a");
+                newLinkRechazarOripend.className = "btn btn-primary mt-2";
+                newLinkRechazarOripend.id = "rechazar_cita_orientacion";
+                newLinkRechazarOripend.style = "color: white;";
+                newLinkRechazarOripend.setAttribute("data-url", '/cita/rechazar/'+ id_cita); // Agrega aquí la URL deseada
+                newLinkRechazarOripend.title = "Rechazar Cita";
+      
+                // Crear un nuevo elemento <i> para el icono
+                const newIconrechazarorie = document.createElement("i");
+                newIconrechazarorie.className = "bi bi-box-arrow-left"; // Clase para el icono 
+  
+                // Agregar el icono al elemento <a>
+                  newLinkRechazarOripend.appendChild(newIconrechazarorie);
+  
+                // Agregar el nuevo elemento <a> al <div>
+                container.appendChild(newLinkRechazarOripend);
+
+                newLinkRechazarOripend.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  // Obtener la URL del atributo "data-url" del elemento <a>
+                  var url = newLinkRechazarOripend.getAttribute("data-url");
+                  // Obtener el elemento modal
+                  var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                  // Realizar una solicitud AJAX para cargar el contenido
+                  $.get(url, function (data) {
+                      // Insertar el contenido en el elemento con la clase "modal-dialog"
+                      modal.find('.modal-dialog').html(data);
+                      // Mostrar el modal
+                      modal.modal('show');
+                  });
+                });  
             }
 
           } else if (estado == "Confirmada"){
@@ -535,6 +626,7 @@
               const newLinkIniciarOriconf = document.createElement("a");
               newLinkIniciarOriconf.className = "btn btn-primary mt-2";
               newLinkIniciarOriconf.id = "iniciar_cita_orientacion";
+              newLinkIniciarOriconf.style = "color: white;";
               newLinkIniciarOriconf.href = '/iniciarCitaOrientacionAcademica/'+ id_cita; // Agrega aquí la URL deseada
               newLinkIniciarOriconf.title = "Iniciar Cita";
 
@@ -547,26 +639,126 @@
 
               // Agregar el nuevo elemento <a> al <div>
               container.appendChild(newLinkIniciarOriconf);
+
+              // Crear un nuevo elemento <a> para cancelar
+                const link_cancelar = document.createElement("a");
+                link_cancelar.className = "btn btn-primary mt-2";
+                link_cancelar.id = "cancelar_ori_academica";
+                link_cancelar.style = "color: white;";
+                link_cancelar.setAttribute("data-url", '/cita/cancelar/'+ id_cita); // Agrega aquí la URL deseada
+                link_cancelar.title = "Cancelar";
+  
+                // Crear un nuevo elemento <i> para el icono
+                const icon_cancelar = document.createElement("i");
+                icon_cancelar.className = "bi bi-x-circle-fill"; // Clase para el icono 
+  
+                // Agregar el icono al elemento <a>
+                link_cancelar.appendChild(icon_cancelar);
+  
+                // Agregar el nuevo elemento <a> al <div>
+                container.appendChild(link_cancelar);
+
+                link_cancelar.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  // Obtener la URL del atributo "data-url" del elemento <a>
+                  var url = link_cancelar.getAttribute("data-url");
+                  // Obtener el elemento modal
+                  var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                  // Realizar una solicitud AJAX para cargar el contenido
+                  $.get(url, function (data) {
+                      // Insertar el contenido en el elemento con la clase "modal-dialog"
+                      modal.find('.modal-dialog').html(data);
+                      // Mostrar el modal
+                      modal.modal('show');
+                  });
+                });  
+
+            } else {// Crear un nuevo elemento <a> para cancelar
+              const link_cancelar = document.createElement("a");
+              link_cancelar.className = "btn btn-primary mt-2";
+              link_cancelar.id = "cancelar_ori_academica";
+              link_cancelar.style = "color: white;";
+              link_cancelar.setAttribute("data-url", '/cita/cancelar/'+ id_cita); // Agrega aquí la URL deseada
+              link_cancelar.title = "Cancelar";
+
+              // Crear un nuevo elemento <i> para el icono
+              const icon_cancelar = document.createElement("i");
+              icon_cancelar.className = "bi bi-x-circle-fill"; // Clase para el icono 
+
+              // Agregar el icono al elemento <a>
+              link_cancelar.appendChild(icon_cancelar);
+
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(link_cancelar);
+
+              link_cancelar.addEventListener('click', function (event) {
+                event.preventDefault();
+                // Obtener la URL del atributo "data-url" del elemento <a>
+                var url = link_cancelar.getAttribute("data-url");
+                // Obtener el elemento modal
+                var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function (data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+              });  
             }
           } else if (estado == "Rechazada"){
             //habilitar solo al usuario normal
             if (tipo_usuario== "normal"){
               // Crear un nuevo elemento <a> para editar
-              const linkrechazado = document.createElement("a");
-              linkrechazado.className = "btn btn-primary mt-2";
-              linkrechazado.id = "editar_ori_academica";
-              linkrechazado.href = '/modificarCitaOriAcademica/'+ id_cita; // Agrega aquí la URL deseada
-              linkrechazado.title = "Editar";
+              const linkmodificarOrie = document.createElement("a");
+              linkmodificarOrie.className = "btn btn-primary mt-2";
+              linkmodificarOrie.id = "editar_ori_academica";
+              linkmodificarOrie.href = '/modificarCitaOriAcademica/'+ id_cita; // Agrega aquí la URL deseada
+              linkmodificarOrie.title = "Editar";
 
               // Crear un nuevo elemento <i> para el icono
-              const iconrechazado = document.createElement("i");
-              iconrechazado.className = "bi bi-pencil-fill"; // Clase para el icono 
+              const iconrmodificarori = document.createElement("i");
+              iconrmodificarori.className = "bi bi-pencil-fill"; // Clase para el icono 
 
               // Agregar el icono al elemento <a>
-              linkrechazado.appendChild(iconrechazado);
+                linkmodificarOrie.appendChild(iconrmodificarori);
 
               // Agregar el nuevo elemento <a> al <div>
-              container.appendChild(linkrechazado);
+              container.appendChild(linkmodificarOrie);
+
+              // Crear un nuevo elemento <a> para cancelar
+                const link_cancelar = document.createElement("a");
+                link_cancelar.className = "btn btn-primary mt-2";
+                link_cancelar.id = "cancelar_ori_academica";
+                link_cancelar.style = "color: white;";
+                link_cancelar.setAttribute("data-url",'/cita/cancelar/'+ id_cita); // Agrega aquí la URL deseada
+                link_cancelar.title = "Cancelar";
+  
+                // Crear un nuevo elemento <i> para el icono
+                const icon_cancelar = document.createElement("i");
+                icon_cancelar.className = "bi bi-x-circle-fill"; // Clase para el icono 
+  
+                // Agregar el icono al elemento <a>
+                link_cancelar.appendChild(icon_cancelar);
+  
+                // Agregar el nuevo elemento <a> al <div>
+                container.appendChild(link_cancelar);
+
+                link_cancelar.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  // Obtener la URL del atributo "data-url" del elemento <a>
+                  var url = link_cancelar.getAttribute("data-url");
+                  // Obtener el elemento modal
+                  var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                  // Realizar una solicitud AJAX para cargar el contenido
+                  $.get(url, function (data) {
+                      // Insertar el contenido en el elemento con la clase "modal-dialog"
+                      modal.find('.modal-dialog').html(data);
+                      // Mostrar el modal
+                      modal.modal('show');
+                  });
+                });  
+
             }
           }
 
@@ -593,23 +785,108 @@
 
               // Agregar el nuevo elemento <a> al <div>
               container.appendChild(link);
-            } else {
-              // Crear un nuevo elemento <a> para iniciar cita  
-              const newLinkIniciarOripend = document.createElement("a");
-              newLinkIniciarOripend.className = "btn btn-primary mt-2";
-              newLinkIniciarOripend.id = "iniciar_cita_tutoria";
-              newLinkIniciarOripend.href = '/iniciarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
-              newLinkIniciarOripend.title = "Iniciar Cita";
-    
+
+              // Crear un nuevo elemento <a> para cancelar
+              const link_cancelar = document.createElement("a");
+              link_cancelar.className = "btn btn-primary mt-2";
+              link_cancelar.id = "cancelar_tutoria";
+              link_cancelar.style = "color: white;";
+              link_cancelar.setAttribute("data-url", '/cita/cancelar/'+ id_cita); // Agrega aquí la URL deseada
+              link_cancelar.title = "Cancelar";
+
               // Crear un nuevo elemento <i> para el icono
-              const newIconIniciarOripend = document.createElement("i");
-              newIconIniciarOripend.className = "bi bi-caret-right-fill"; // Clase para el icono 
+              const icon_cancelar = document.createElement("i");
+              icon_cancelar.className = "bi bi-x-circle-fill"; // Clase para el icono 
 
               // Agregar el icono al elemento <a>
-              newLinkIniciarOripend.appendChild(newIconIniciarOripend);
+              link_cancelar.appendChild(icon_cancelar);
 
               // Agregar el nuevo elemento <a> al <div>
-              container.appendChild(newLinkIniciarOripend);
+              container.appendChild(link_cancelar);
+
+              link_cancelar.addEventListener('click', function (event) {
+                event.preventDefault();
+                // Obtener la URL del atributo "data-url" del elemento <a>
+                var url = link_cancelar.getAttribute("data-url");
+                // Obtener el elemento modal
+                var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function (data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+              });  
+
+
+            } else {
+              // Crear un nuevo elemento <a> para confirmar cita  
+              const newLinkConfirmartuto = document.createElement("a");
+              newLinkConfirmartuto.className = "btn btn-primary mt-2";
+              newLinkConfirmartuto.id = "confirmar_cita_tutoria";
+              newLinkConfirmartuto.style = "color: white;";
+              newLinkConfirmartuto.setAttribute("data-url", '/cita/confirmar/'+ id_cita); // Agrega aquí la URL deseada
+              newLinkConfirmartuto.title = "Confirmar Cita";
+    
+              // Crear un nuevo elemento <i> para el icono
+              const newIconConfirmartutoria = document.createElement("i");
+              newIconConfirmartutoria.className = "bi bi-calendar-check"; // Clase para el icono 
+
+              // Agregar el icono al elemento <a>
+                newLinkConfirmartuto.appendChild(newIconConfirmartutoria);
+
+              // Agregar el nuevo elemento <a> al <div>
+              container.appendChild(newLinkConfirmartuto);
+
+              newLinkConfirmartuto.addEventListener('click', function (event) {
+                event.preventDefault();
+                // Obtener la URL del atributo "data-url" del elemento <a>
+                var url = newLinkConfirmartuto.getAttribute("data-url");
+                // Obtener el elemento modal
+                var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function (data) {
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+              });  
+
+
+              // Crear un nuevo elemento <a> para rechazar cita  
+                const newLinkRechazartutoria = document.createElement("a");
+                newLinkRechazartutoria.className = "btn btn-primary mt-2";
+                newLinkRechazartutoria.id = "rechazar_cita_tutoria";
+                newLinkRechazartutoria.style = "color: white;";
+                newLinkRechazartutoria.setAttribute("data-url", '/cita/rechazar/'+ id_cita); // Agrega aquí la URL deseada
+                newLinkRechazartutoria.title = "Rechazar Cita";
+      
+                // Crear un nuevo elemento <i> para el icono
+                const newIconRechazartutoria = document.createElement("i");
+                newIconRechazartutoria.className = "bi bi-box-arrow-left"; // Clase para el icono 
+  
+                // Agregar el icono al elemento <a>
+                newLinkRechazartutoria.appendChild(newIconRechazartutoria);
+  
+                // Agregar el nuevo elemento <a> al <div>
+                container.appendChild(newLinkRechazartutoria);
+
+                newLinkRechazartutoria.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  // Obtener la URL del atributo "data-url" del elemento <a>
+                  var url = newLinkRechazartutoria.getAttribute("data-url");
+                  // Obtener el elemento modal
+                  var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                  // Realizar una solicitud AJAX para cargar el contenido
+                  $.get(url, function (data) {
+                      // Insertar el contenido en el elemento con la clase "modal-dialog"
+                      modal.find('.modal-dialog').html(data);
+                      // Mostrar el modal
+                      modal.modal('show');
+                  });
+                });     
             }
 
           } else if (estado == "Confirmada"){
@@ -631,6 +908,74 @@
 
               // Agregar el nuevo elemento <a> al <div>
               container.appendChild(newLinkIniciarOriconf);
+
+              // Crear un nuevo elemento <a> para cancelar
+                const link_cancelar = document.createElement("a");
+                link_cancelar.className = "btn btn-primary mt-2";
+                link_cancelar.id = "cancelar_tutoria";
+                link_cancelar.style = "color: white;";
+                link_cancelar.setAttribute("data-url", '/cita/cancelar/'+ id_cita); // Agrega aquí la URL deseada
+                link_cancelar.title = "Cancelar";
+  
+                // Crear un nuevo elemento <i> para el icono
+                const icon_cancelar = document.createElement("i");
+                icon_cancelar.className = "bi bi-x-circle-fill"; // Clase para el icono 
+  
+                // Agregar el icono al elemento <a>
+                link_cancelar.appendChild(icon_cancelar);
+  
+                // Agregar el nuevo elemento <a> al <div>
+                container.appendChild(link_cancelar);
+
+                link_cancelar.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  // Obtener la URL del atributo "data-url" del elemento <a>
+                  var url = link_cancelar.getAttribute("data-url");
+                  // Obtener el elemento modal
+                  var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                  // Realizar una solicitud AJAX para cargar el contenido
+                  $.get(url, function (data) {
+                      // Insertar el contenido en el elemento con la clase "modal-dialog"
+                      modal.find('.modal-dialog').html(data);
+                      // Mostrar el modal
+                      modal.modal('show');
+                  });
+                });  
+
+            } else {
+              // Crear un nuevo elemento <a> para cancelar
+                const link_cancelar = document.createElement("a");
+                link_cancelar.className = "btn btn-primary mt-2";
+                link_cancelar.id = "cancelar_tutoria";
+                link_cancelar.style = "color: white;";
+                link_cancelar.setAttribute("data-url", '/cita/cancelar/'+ id_cita); // Agrega aquí la URL deseada
+                link_cancelar.title = "Cancelar";
+  
+                // Crear un nuevo elemento <i> para el icono
+                const icon_cancelar = document.createElement("i");
+                icon_cancelar.className = "bi bi-x-circle-fill"; // Clase para el icono 
+  
+                // Agregar el icono al elemento <a>
+                link_cancelar.appendChild(icon_cancelar);
+  
+                // Agregar el nuevo elemento <a> al <div>
+                container.appendChild(link_cancelar);
+
+                link_cancelar.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  // Obtener la URL del atributo "data-url" del elemento <a>
+                  var url = link_cancelar.getAttribute("data-url");
+                  // Obtener el elemento modal
+                  var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                  // Realizar una solicitud AJAX para cargar el contenido
+                  $.get(url, function (data) {
+                      // Insertar el contenido en el elemento con la clase "modal-dialog"
+                      modal.find('.modal-dialog').html(data);
+                      // Mostrar el modal
+                      modal.modal('show');
+                  });
+                });  
+
             }
           } else if (estado == "Rechazada"){
             //habilitar solo al usuario normal
@@ -639,6 +984,7 @@
               const linkrechtuto = document.createElement("a");
               linkrechtuto.className = "btn btn-primary mt-2";
               linkrechtuto.id = "editar_tutoria";
+              linkrechtuto.style = "color: white;";
               linkrechtuto.href = '/modificarCitaTutoria/'+ id_cita; // Agrega aquí la URL deseada
               linkrechtuto.title = "Editar";
 
@@ -651,21 +997,58 @@
 
               // Agregar el nuevo elemento <a> al <div>
               container.appendChild(linkrechtuto);
+
+              // Crear un nuevo elemento <a> para cancelar
+                const link_cancelar = document.createElement("a");
+                link_cancelar.className = "btn btn-primary mt-2";
+                link_cancelar.id = "cancelar_tutoria";
+                link_cancelar.style = "color: white;";
+                link_cancelar.setAttribute("data-url", '/cita/cancelar/'+ id_cita); // Agrega aquí la URL deseada
+                link_cancelar.title = "Cancelar";
+  
+                // Crear un nuevo elemento <i> para el icono
+                const icon_cancelar = document.createElement("i");
+                icon_cancelar.className = "bi bi-x-circle-fill"; // Clase para el icono 
+  
+                // Agregar el icono al elemento <a>
+                link_cancelar.appendChild(icon_cancelar);
+  
+                // Agregar el nuevo elemento <a> al <div>
+                container.appendChild(link_cancelar);
+
+                link_cancelar.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  // Obtener la URL del atributo "data-url" del elemento <a>
+                  var url = link_cancelar.getAttribute("data-url");
+                  // Obtener el elemento modal
+                  var modal = $('#modalAccionesEvents'); // Asegúrate de que modal exista en tu HTML
+                  // Realizar una solicitud AJAX para cargar el contenido
+                  $.get(url, function (data) {
+                      // Insertar el contenido en el elemento con la clase "modal-dialog"
+                      modal.find('.modal-dialog').html(data);
+                      // Mostrar el modal
+                      modal.modal('show');
+                  });
+                });  
+
             }
           }
         }
-
         // Abrir el modal
         modal.style.display = 'block'
         //calendar.unselect()
       }
 
+      
+
+      
       const closeBtn1 = document.getElementById('modalClose1');
       const closeBtn2 = document.getElementById('modalClose2');
       closeBtn1.addEventListener('click',()=>{
         const eventModal = document.getElementById('eventModal')
         eventModal.style.display = 'none';
       });
+
       {% comment %} closeBtn2.addEventListener('click',()=>{
         const eventModal = document.getElementById('eventModal')
         eventModal.style.display = 'none';

@@ -1445,7 +1445,7 @@ A VERTICAL event
   }
 
   .event-color-purple {
-    background-color: rgb(131, 97, 205);
+    background-color: #7979e4;
   }
   
   .event-color-blue {
@@ -1454,7 +1454,7 @@ A VERTICAL event
 
 .event-border-color-yellow .fc-daygrid-event-dot{
   
-  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #dcd91f);
+  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #fcf264);
 }
 
 .event-border-color-red .fc-daygrid-event-dot{
@@ -1470,7 +1470,7 @@ A VERTICAL event
 
 .event-border-color-orange .fc-daygrid-event-dot{
 
-  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #d89219);
+  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #0cb7f2);
 
 }
 

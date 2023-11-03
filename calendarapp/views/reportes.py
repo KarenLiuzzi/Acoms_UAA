@@ -327,14 +327,16 @@ class ReporteTutoriaView(TemplateView):
                 if cita == 'no':
                     #excluimos los que fueron generados por citas
                     queryset = queryset.filter(id_cita= None)
-                else:
-                    #pass
-                    queryset = queryset.exclude(id_cita__isnull=True)
+                # else:
+                #     #pass
+                #     queryset = queryset.exclude(id_cita__isnull=True)
                     
                 if len(start_date) and len(end_date):
                     # Ajusta las fechas para incluir los registros del día completo
-                    end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
-                    queryset = queryset.filter(id_tutoria__datetime_inicio_estimado__range=[start_date, end_date])
+                    #end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
+                    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                    queryset = queryset.filter(id_tutoria__datetime_inicio_estimado__range=[start_date, end_date]).order_by('-id_tutoria__datetime_inicio_estimado')
 
                 if id_facultad:
                     queryset = queryset.filter(id_tutoria__id_facultad=id_facultad)
@@ -434,20 +436,17 @@ class ReporteOrientacionAcademicaView(TemplateView):
                 # Si alguno de los campos no tiene valor, dentro del queryset no se filtran y se obtienen todos los registros que tengan campos 
                 
                 queryset = OrientacionAcademica.objects.select_related("id_orientacion_academica").all()
-                
                 #traemos solo los que no fueron generados por citas
                 if cita == 'no':
                     #excluimos los que fueron generados por citas
                     queryset = queryset.filter(id_cita= None)
-                else:
-                    #pass
-                    queryset = queryset.exclude(id_cita__isnull=True)
+                
                     
                 if len(start_date) and len(end_date):
                     # Ajusta las fechas para incluir los registros del día completo
-                    end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
-                    queryset = queryset.filter(id_orientacion_academica__datetime_inicio_estimado__range=[start_date, end_date])
-
+                    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                    queryset = queryset.filter(id_orientacion_academica__datetime_inicio_estimado__range=[start_date, end_date]).order_by('-id_orientacion_academica__datetime_inicio_estimado')
                 if id_facultad:
                     queryset = queryset.filter(id_orientacion_academica__id_facultad=id_facultad)
 
@@ -569,8 +568,10 @@ class ReporteCitasView(TemplateView):
                     
                 if len(start_date) and len(end_date):
                     # Ajusta las fechas para incluir los registros del día completo
-                    end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
-                    queryset = queryset.filter(id_cita__datetime_inicio_estimado__range=[start_date, end_date])
+                    #end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
+                    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                    queryset = queryset.filter(id_cita__datetime_inicio_estimado__range=[start_date, end_date]).order_by('-id_cita__datetime_inicio_estimado')
 
                 if id_facultad:
                     queryset = queryset.filter(id_cita__id_facultad=id_facultad)
@@ -710,8 +711,10 @@ class ReporteTareasView(TemplateView):
                     
                 if len(start_date) and len(end_date):
                     # Ajusta las fechas para incluir los registros del día completo
-                    end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
-                    queryset = queryset.filter(datetime_inicio_estimado__range=[start_date, end_date])                
+                    #end_date = (datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
+                    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                    queryset = queryset.filter(datetime_inicio_estimado__range=[start_date, end_date]).order_by('-datetime_inicio_estimado')            
 
                 if id_estado_tarea:
                     if id_estado_tarea != 'Vencida':
