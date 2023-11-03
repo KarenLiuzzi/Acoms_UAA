@@ -38,10 +38,218 @@ no funciona el finalizar en actividad academica
 en el dashboard no se muestran bien los botones
 boton de + en tareas no se ve en tutorias, orientaciones, citas
 - probar si los botones de abm de horarios funcionan en todos (arreglar)
+-reporte no trae correctamente la cantidad en tutorias y orientaciones
+- cambiar esto en dashbaoard, citas  y calendario
+- detalles de cita tutoria y orientacion
 
+
+-- SQLite
+update calendarapp_event
+set id_estado_actividad_academica_id= 2
+where id_actividad_academica= 48 ;
+
+Pendiente 5
+Rechazada 6
+Cancelada 4
+Finalizada 3
+Confirmada 2
 
 Pendiente
-reporte no trae correctamente la cantidad en tutorias y orientaciones
-35 citas
-9 orientaciones
-9 tutorias
+avisar cancelado solo cuando este de confirmado a cancelado 
+excalidraw.com
+https://ccbv.co.uk/projects/Django/3.2/
+solo en linux
+dia
+recha
+
+en el calendario cuando esta pendiente y es staff debe iniciar o confirmar? probar de confirmar 
+rechazar y cancelar? son necesarios?
+
+
+ver event_list y dashboard 
+
+
+ $('#cancelar_ori_academica').on('click', function(event) { 
+        event.preventDefault();
+    
+        // Obtener la URL del valor del atributo "value" del elemento <a>
+        var url = $(this).attr("href");
+            
+        // Obtener el elemento modal
+        var modal = $('#modalAccionesEvents');
+
+        // Realizar una solicitud AJAX para cargar el contenido
+        $.get(url, function(data) {
+            //console.log(data)
+            // Insertar el contenido en el elemento con la clase "modal-dialog"
+            modal.find('.modal-dialog').html(data);
+
+            // Mostrar el modal
+            modal.modal('show');
+        });
+    });
+
+
+ $('#cancelar_tutoria').on('click', function(event) { 
+      event.preventDefault();
+  
+      // Obtener la URL del valor del atributo "value" del elemento <a>
+      var url = $(this).attr("href");
+          
+      // Obtener el elemento modal
+      var modal = $('#modalAccionesEvents');
+
+      // Realizar una solicitud AJAX para cargar el contenido
+      $.get(url, function(data) {
+          //console.log(data)
+          // Insertar el contenido en el elemento con la clase "modal-dialog"
+          modal.find('.modal-dialog').html(data);
+
+          // Mostrar el modal
+          modal.modal('show');
+      });
+  });
+
+  $('#confirmar_cita_orientacion').on('click', function(event) { 
+    event.preventDefault();
+
+    // Obtener la URL del valor del atributo "value" del elemento <a>
+    var url = $(this).attr("href");
+        
+    // Obtener el elemento modal
+    var modal = $('#modalAccionesEvents');
+
+    // Realizar una solicitud AJAX para cargar el contenido
+    $.get(url, function(data) {
+        //console.log(data)
+        // Insertar el contenido en el elemento con la clase "modal-dialog"
+        modal.find('.modal-dialog').html(data);
+
+        // Mostrar el modal
+        modal.modal('show');
+    });
+});
+
+$('#confirmar_cita_tutoria').on('click', function(event) { 
+  event.preventDefault();
+
+  // Obtener la URL del valor del atributo "value" del elemento <a>
+  var url = $(this).attr("href");
+      
+  // Obtener el elemento modal
+  var modal = $('#modalAccionesEvents');
+
+  // Realizar una solicitud AJAX para cargar el contenido
+  $.get(url, function(data) {
+      //console.log(data)
+      // Insertar el contenido en el elemento con la clase "modal-dialog"
+      modal.find('.modal-dialog').html(data);
+
+      // Mostrar el modal
+      modal.modal('show');
+  });
+});
+
+$('#editar_ori_academica').on('click', function(event) { 
+  event.preventDefault();
+
+  // Obtener la URL del valor del atributo "value" del elemento <a>
+  var url = $(this).attr("href");
+      
+  // Obtener el elemento modal
+  var modal = $('#modalAccionesEvents');
+
+  // Realizar una solicitud AJAX para cargar el contenido
+  $.get(url, function(data) {
+      //console.log(data)
+      // Insertar el contenido en el elemento con la clase "modal-dialog"
+      modal.find('.modal-dialog').html(data);
+
+      // Mostrar el modal
+      modal.modal('show');
+  });
+});
+
+$('#editar_tutoria').on('click', function(event) { 
+  event.preventDefault();
+
+  // Obtener la URL del valor del atributo "value" del elemento <a>
+  var url = $(this).attr("href");
+      
+  // Obtener el elemento modal
+  var modal = $('#modalAccionesEvents');
+
+  // Realizar una solicitud AJAX para cargar el contenido
+  $.get(url, function(data) {
+      //console.log(data)
+      // Insertar el contenido en el elemento con la clase "modal-dialog"
+      modal.find('.modal-dialog').html(data);
+
+      // Mostrar el modal
+      modal.modal('show');
+  });
+});
+
+$('#iniciar_cita_orientacion').on('click', function(event) { 
+  event.preventDefault();
+
+  // Obtener la URL del valor del atributo "value" del elemento <a>
+  var url = $(this).attr("href");
+      
+  // Obtener el elemento modal
+  var modal = $('#modalAccionesEvents');
+
+  // Realizar una solicitud AJAX para cargar el contenido
+  $.get(url, function(data) {
+      //console.log(data)
+      // Insertar el contenido en el elemento con la clase "modal-dialog"
+      modal.find('.modal-dialog').html(data);
+
+      // Mostrar el modal
+      modal.modal('show');
+  });
+});
+
+
+$('#iniciar_cita_tutoria').on('click', function(event) { 
+  event.preventDefault();
+
+  // Obtener la URL del valor del atributo "value" del elemento <a>
+  var url = $(this).attr("href");
+      
+  // Obtener el elemento modal
+  var modal = $('#modalAccionesEvents');
+
+  // Realizar una solicitud AJAX para cargar el contenido
+  $.get(url, function(data) {
+      //console.log(data)
+      // Insertar el contenido en el elemento con la clase "modal-dialog"
+      modal.find('.modal-dialog').html(data);
+
+      // Mostrar el modal
+      modal.modal('show');
+  });
+});
+
+
+$('#rechazar_cita_orientacion').on('click', function(event) { 
+  event.preventDefault();
+
+  // Obtener la URL del valor del atributo "value" del elemento <a>
+  var url = $(this).attr("href");
+      
+  // Obtener el elemento modal
+  var modal = $('#modalAccionesEvents');
+
+  // Realizar una solicitud AJAX para cargar el contenido
+  $.get(url, function(data) {
+      //console.log(data)
+      // Insertar el contenido en el elemento con la clase "modal-dialog"
+      modal.find('.modal-dialog').html(data);
+
+      // Mostrar el modal
+      modal.modal('show');
+  });
+});
+
+

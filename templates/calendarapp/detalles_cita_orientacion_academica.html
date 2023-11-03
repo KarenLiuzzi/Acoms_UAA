@@ -249,8 +249,6 @@
     
         <div class="card-footer">
             {% if perms.calendarapp.iniciar_cita %}
-
-               <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
             
                 <button type="button" class="btn btn-primary btn-flat" hx-target="#dialog" title="Confirmar Cita" hx-get="{% url 'calendarapp:confirmar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-calendar-check"></i> Confirmar Cita </button>
                 
