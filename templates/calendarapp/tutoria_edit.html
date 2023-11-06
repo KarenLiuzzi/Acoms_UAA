@@ -596,25 +596,23 @@
             $('textarea[name="nombre_trabajo"]').val(lista_tutoria[0]['nombre_trabajo']);
             $('textarea[name="observacion"]').val(lista_event[0]['observacion']);
 
-            // Convertir la cadena a un objeto datetime
-            var aux_fecha_inicio= new Date(lista_event[0]['datetime_inicio_estimado']);
-            var aux_fecha_fin= new Date(lista_event[0]['datetime_fin_estimado']);
-
-            // Formatear la fecha y hora en un formato reconocido por el input datetime-local
-            var formattedaux_fecha_inicio = aux_fecha_inicio.getFullYear() + "-" +
-            ("0" + (aux_fecha_inicio.getMonth() + 1)).slice(-2) + "-" +
-            ("0" + aux_fecha_inicio.getDate()).slice(-2) + "T" +
-            ("0" + aux_fecha_inicio.getHours()).slice(-2) + ":" +
-            ("0" + aux_fecha_inicio.getMinutes()).slice(-2);
-
-            var formattedaux_fecha_fin = aux_fecha_fin.getFullYear() + "-" +
-            ("0" + (aux_fecha_fin.getMonth() + 1)).slice(-2) + "-" +
-            ("0" + aux_fecha_fin.getDate()).slice(-2) + "T" +
-            ("0" + aux_fecha_fin.getHours()).slice(-2) + ":" +
-            ("0" + aux_fecha_fin.getMinutes()).slice(-2);
-
-            horaInicioInput.value= formattedaux_fecha_inicio
-            horaFinInput.value= formattedaux_fecha_fin
+             // Convertir la cadena a un objeto datetime
+             var aux_fecha_inicio= new Date(lista_event[0]['datetime_inicio_estimado']);
+             var aux_fecha_fin= new Date(lista_event[0]['datetime_fin_estimado']);
+             // Formatear la fecha y hora en un formato reconocido por el input datetime-local
+             var formattedaux_fecha_inicio = aux_fecha_inicio.getFullYear() + "-" +
+             ("0" + aux_fecha_inicio.getDate()).slice(-2) + "-" +
+             ("0" + (aux_fecha_inicio.getMonth() + 1)).slice(-2) + "T" +
+             ("0" + aux_fecha_inicio.getHours()).slice(-2) + ":" +
+             ("0" + aux_fecha_inicio.getMinutes()).slice(-2);
+ 
+             var formattedaux_fecha_fin = aux_fecha_fin.getFullYear() + "-" +
+             ("0" + aux_fecha_fin.getDate()).slice(-2) + "-" +
+              ("0" + (aux_fecha_fin.getMonth() + 1)).slice(-2) + "T" +
+             ("0" + aux_fecha_fin.getHours()).slice(-2) + ":" +
+             ("0" + aux_fecha_fin.getMinutes()).slice(-2);
+             horaInicioInput.value= formattedaux_fecha_inicio
+             horaFinInput.value= formattedaux_fecha_fin
 
 
             //funcion para crear tabla vacia de tareas

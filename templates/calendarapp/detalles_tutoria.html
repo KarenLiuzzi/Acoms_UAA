@@ -50,7 +50,7 @@
                         <div class="form-group">
                         <label class="label texto-destacado">Solicitante:</label>
                             {% if tutoria.id_tutoria.id_persona_alta %}
-                                {{ tutoria.id_tutoria.id_persona_alta.nombre|add:' '|title}}{{ tutoria.id_tutoria.id_persona_alta.apellido|title }} 
+                                {{ tutoria.id_tutoria.id_persona_solicitante.nombre|add:' '|title}}{{ tutoria.id_tutoria.id_persona_solicitante.apellido|title }} 
                             {% else %}
                                 ----------
                             {% endif %}

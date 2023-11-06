@@ -125,7 +125,7 @@ class DashboardView(LoginRequiredMixin, View):
                                 horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
                                 fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
                             encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
                             
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
@@ -154,7 +154,7 @@ class DashboardView(LoginRequiredMixin, View):
                                     horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
                                     fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
                                 encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
                                 
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'
@@ -208,7 +208,7 @@ class DashboardView(LoginRequiredMixin, View):
             citas_pendientes= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente', id_cita__datetime_fin_estimado__gt= datetime.now()).count()
            
             # #tutorias sin citas
-            tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+            tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
             if tutorias.exists():
                         for objeto in tutorias:
                             if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
@@ -227,7 +227,7 @@ class DashboardView(LoginRequiredMixin, View):
                                 horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
                                 fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
                             encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
                             
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
@@ -237,7 +237,7 @@ class DashboardView(LoginRequiredMixin, View):
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
             #orientaciones sin citas
-            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
             if orientaciones.exists():
                         for objeto in orientaciones:
                                 if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
@@ -256,7 +256,7 @@ class DashboardView(LoginRequiredMixin, View):
                                     horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
                                     fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
                                 encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
                                 
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'

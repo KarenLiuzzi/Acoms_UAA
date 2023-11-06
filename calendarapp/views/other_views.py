@@ -1,5 +1,6 @@
 # cal/views.py
 import json
+from django.utils import timezone
 from turtle import title
 from django.contrib import messages
 from django.forms import model_to_dict
@@ -3428,6 +3429,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                     #convertimos nuestras fechas en formato datetime 
                     fecha_hora_inicio = datetime.strptime(actividad_academica['datetime_inicio_estimado'], '%Y-%m-%d %H:%M:%S')
                     fecha_hora_fin = datetime.strptime(actividad_academica['datetime_fin_estimado'], '%Y-%m-%d %H:%M:%S')
+
                     #obtener las instancias de los objectos 
                     ins_convocatoria= Convocatoria.objects.get(id_convocatoria= actividad_academica['convocatoria'])
                     ins_facultad= Facultad.objects.get(id_facultad= actividad_academica['id_facultad'])

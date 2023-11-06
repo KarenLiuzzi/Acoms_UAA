@@ -6,7 +6,8 @@ from django.contrib.auth.models import Permission
 #registramos nuestros modelos en la pantalla de admin
 
 admin.site.register(Permission)
-
+admin.site.site_header= "Administración de AcOms"
+admin.site.site_title= "Administración de AcOms"
 
 @admin.register(TipoOrientacionAcademica)
 class TipoOrientacionAcademicaAdmin(admin.ModelAdmin):

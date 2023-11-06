@@ -81,6 +81,8 @@ class Persona(models.Model):
     
     def toJSON(self):
         item = model_to_dict(self)
+        #eliminamos este elemento porque causa errores
+        del item['carrera_alumno']
         item['id'] = self.id
         item['nombre'] = self.nombre
         item['apellido'] = self.apellido
