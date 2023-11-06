@@ -3,6 +3,26 @@ prueba@test.com
 estaesasi
 4978990
 
+
+#cargamos una persona especifica para el objecto de persona/alumno
+id 5
+ci 147258
+Maria
+Aguero
+mail karendreammoon@gmail.com
+pass HolaMundo!26!
+
+#cargamos una persona especifica para el objecto de persona/DocenteFuncionario este es el que tiene cargado registros de su calendario
+id 3
+ci 789654
+Luis 
+Diaz
+mail luidi@test.com
+pass HolaMundo!25!
+va ser docente de TIC
+intro a la info y paginas web
+
+
 nuevo persona de prueba 
 fulanita 
 fulanita@test.com 
@@ -22,15 +42,7 @@ Gonzalez
 mail jorgonz@test.com
 pass HolaMundo!23!
 
-#cargamos una persona especifica para el objecto de persona/Docente este es el que tiene cargado registros de su calendario
-id 3
-ci 789654
-Luis 
-Diaz
-mail luidi@test.com
-pass HolaMundo!25!
-va ser docente de TIC
-intro a la info y paginas web
+
 
 #cargamos una persona especifica para el objecto de persona/alumno
 id 4
@@ -41,13 +53,7 @@ mail glogui@test.com
 pass HolaMundo!25!
 
 
-#cargamos una persona especifica para el objecto de persona/alumno
-id 5
-ci 147258
-Maria
-Aguero
-mail karendreammoon@gmail.com
-pass HolaMundo!26!
+
 
 
 ***************************NUEVO********************************

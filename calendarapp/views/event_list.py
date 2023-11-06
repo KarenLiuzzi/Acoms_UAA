@@ -213,7 +213,7 @@ class ActividadesAcademicasListView(ListView):
                             horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
                             fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
                         encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                        solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                        solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
                         
                         estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                         tipo= 'Tutoría'
@@ -242,7 +242,7 @@ class ActividadesAcademicasListView(ListView):
                                 horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
                                 fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
                             encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                            solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
                             
                             estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Orientación Académica'
@@ -276,14 +276,14 @@ class ActividadesAcademicasListView(ListView):
                             horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
                             fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
                         encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                        solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                        solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
                         
                         estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                         tipo= 'Tutoría'
                         id= str(objeto.id_tutoria.id_actividad_academica)
                         tipo_usuario= 'normal'
                         
-                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                         lista_actividades.append(auxiliar) 
                         
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
@@ -305,14 +305,14 @@ class ActividadesAcademicasListView(ListView):
                             horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
                             fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
                         encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                        solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                        solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
                         
                         estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                         tipo= 'Orientación Académica'
                         id= str(objeto.id_orientacion_academica.id_actividad_academica)
                         tipo_usuario= 'normal'
                         
-                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                         lista_actividades.append(auxiliar) 
                     
                 events = sorted(lista_actividades, key=lambda x: x['fecha_auxiliar'], reverse=True)
@@ -566,7 +566,7 @@ class RunningActividadesAcademicasListView(ListView):
                                 horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
                                 fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
                             encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
                             
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
@@ -596,7 +596,7 @@ class RunningActividadesAcademicasListView(ListView):
                                     horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
                                     fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
                                 encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
                                 
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'
@@ -625,7 +625,7 @@ class RunningActividadesAcademicasListView(ListView):
                                 horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
                                 fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
                             encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
                             
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
@@ -653,7 +653,7 @@ class RunningActividadesAcademicasListView(ListView):
                                     horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
                                     fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
                                 encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
                                 
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'
@@ -669,7 +669,7 @@ class RunningActividadesAcademicasListView(ListView):
                     
             else:
                 if parametro == 'Tutoria':
-                    running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+                    running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
                     if running_events.exists():
                         for objeto in running_events:
                             if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
@@ -688,7 +688,7 @@ class RunningActividadesAcademicasListView(ListView):
                                 horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
                                 fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
                             encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
                             
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
@@ -698,7 +698,7 @@ class RunningActividadesAcademicasListView(ListView):
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
                 elif parametro== "OriAcademica":
-                    running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+                    running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
                     if running_events.exists():
                         for objeto in running_events:
                                 if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
@@ -717,7 +717,7 @@ class RunningActividadesAcademicasListView(ListView):
                                     horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
                                     fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
                                 encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
                                 
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'
@@ -727,7 +727,7 @@ class RunningActividadesAcademicasListView(ListView):
                                 auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                                 lista_actividades.append(auxiliar) 
                 else: 
-                    tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+                    tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
                     if tutorias.exists():
                         for objeto in tutorias:
                             if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
@@ -746,7 +746,7 @@ class RunningActividadesAcademicasListView(ListView):
                                 horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
                                 fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
                             encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_tutoria.id_persona_alta.nombre + ' ' + objeto.id_tutoria.id_persona_alta.apellido
+                            solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
                             
                             estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             tipo= 'Tutoría'
@@ -755,7 +755,7 @@ class RunningActividadesAcademicasListView(ListView):
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
-                    orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+                    orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
                     if orientaciones.exists():
                         for objeto in orientaciones:
                                 if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
@@ -774,7 +774,7 @@ class RunningActividadesAcademicasListView(ListView):
                                     horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
                                     fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
                                 encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                                solicitante= objeto.id_orientacion_academica.id_persona_alta.nombre + ' ' + objeto.id_orientacion_academica.id_persona_alta.apellido
+                                solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
                                 
                                 estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                                 tipo= 'Orientación Académica'

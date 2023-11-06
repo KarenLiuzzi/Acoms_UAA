@@ -140,7 +140,7 @@
 {% endblock content %}
 
 {% block extrascripts %}
-<link rel="stylesheet" href="{% static 'lib_extra/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'lib_extras/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
 <link rel="stylesheet" href="{% static 'lib_extras/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
 <script src="{% static 'lib_extras/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
 <script src="{% static 'lib_extras/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
@@ -181,7 +181,7 @@
                             if ((row.tipo == 'Tutoría') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'staff' )){
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles"> <i class="bi bi-eye-fill"></i> </a> <a class="btn btn-primary" style="color: white;" title="Editar" href="/modificarTutoria/' + row.id + '"> <i class="bi bi-pencil"></i> </a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar" value="/actividad_academica/cancelar/' + row.id + '/0"> <i class="bi bi-x-lg"></i> </a> <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar Tutoría" value="/actividad_academica/finalizar/' + row.id + '/0"> <i class="bi bi-check2"></i> </a>';
                             } else if ((row.tipo == 'Tutoría') && (row.estado == 'Iniciada' ) &&  (row.tipo_usuario == 'normal' )) {
-                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles">';
+                                return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles"> <i class="bi bi-eye-fill"></i> </a>';
                             } 
                             else if (row.tipo == 'Tutoría') {
                                 return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   value="/detallesActiAcademicas/' + row.id + '/0" title="Detalles"> <i class="bi bi-eye-fill"></i> </a>';

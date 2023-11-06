@@ -49,8 +49,8 @@
 
                         <div class="form-group">
                         <label class="label texto-destacado">Solicitante:</label>
-                            {% if orientacion_academica.id_orientacion_academica.id_persona_alta %}
-                                {{ orientacion_academica.id_orientacion_academica.id_persona_alta.nombre|add:' '|title}}{{ orientacion_academica.id_orientacion_academica.id_persona_alta.apellido|title }} 
+                            {% if orientacion_academica.id_orientacion_academica.id_persona_solicitante %}
+                                {{ orientacion_academica.id_orientacion_academica.id_persona_solicitante.nombre|add:' '|title}}{{ orientacion_academica.id_orientacion_academica.id_persona_solicitante.apellido|title }} 
                             {% else %}
                                 ----------
                             {% endif %}
