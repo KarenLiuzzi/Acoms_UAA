@@ -1,11 +1,8 @@
-# Tesis de licenciatura en ciencias informaticas UAA
-
-https://www.youtube.com/watch?v=HvnPeeLEVq0&t=0s
-
+# Trabajo de grado de licenciatura en ciencias informaticas UAA
 
 ## Como preparar
 ```
-git clone https://github.com/sajib1066/event-calendar.git
+git clone 
 ```
 ```
 cd event-calendar
