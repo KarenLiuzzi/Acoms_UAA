@@ -99,7 +99,11 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
             tipo_usuario= {'tipo_usuario': 'normal'}
             #los que son usuarios normales deben ver solo las citas que fueron generadas por ellos
             #events= events.filter(id_cita__id_persona_solicitante= ins_persona)
+            #vamos a agregar tambien aquellos registros en donde el usuario fue participante
+            events_participante= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
+            events_participante= events.filter(id_cita__id_actividad_academica__in = events_participante)
             events= events.filter(id_cita__id_persona_alta= ins_persona)
+            events = events.union(events_participante)
             
         #events_month = Event.objects.get_running_events(tipo_cita= '')
         event_list = []
@@ -856,6 +860,10 @@ class CitaOrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = []
         try:
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
             tarea= Tarea.objects.filter(id_orientacion_academica= self.get_object().id_cita.id_actividad_academica).order_by('-datetime_inicio_estimado')
             tareas_lista = list(tarea)
             if tareas_lista:
@@ -905,12 +913,13 @@ class CitaOrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
                     else:
                         datetime_ultima_modificacion= ''
                     observacion = tarea.observacion
+                    id_persona_actual =  ins_user_actual.id
                     
                     auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
                     'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_orientacion_academica': id_orientacion_academica, 
                     'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
                     'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
-                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}  
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion,'id_persona_actual': id_persona_actual}  
                     data.append(auxiliar)     
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -960,6 +969,10 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = []
         try:
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
             tarea= Tarea.objects.filter(id_tutoria= self.get_object().id_cita.id_actividad_academica).order_by('-datetime_inicio_estimado')
             tareas_lista = list(tarea)
             if tareas_lista:
@@ -1009,12 +1022,13 @@ class CitaTutoriaDetalle(LoginRequiredMixin, DetailView):
                     else:
                         datetime_ultima_modificacion= ''
                     observacion = tarea.observacion
+                    id_persona_actual =  ins_user_actual.id
                     
                     auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
                     'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_tutoria': id_tutoria, 
                     'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
                     'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
-                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}  
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion, 'id_persona_actual': id_persona_actual}  
                     data.append(auxiliar)
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -1045,6 +1059,10 @@ class OrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = []
         try:
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
             tarea= Tarea.objects.filter(id_orientacion_academica= self.get_object()).order_by('-datetime_inicio_estimado')
             tareas_lista = list(tarea)
             if tareas_lista:
@@ -1094,12 +1112,13 @@ class OrientacionAcademicaDetalle(LoginRequiredMixin, DetailView):
                     else:
                         datetime_ultima_modificacion= ''
                     observacion = tarea.observacion
+                    id_persona_actual =  ins_user_actual.id
                     
                     auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
                     'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_orientacion_academica': id_orientacion_academica, 
                     'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
                     'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
-                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}  
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion, 'id_persona_actual': id_persona_actual}  
                     data.append(auxiliar)     
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -1139,6 +1158,11 @@ class TutoriaDetalle(LoginRequiredMixin, DetailView):
     def get_tareas(self):
         data = []
         try:
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            
             tarea= Tarea.objects.filter(id_tutoria= self.get_object()).order_by('-datetime_inicio_estimado')
             tareas_lista = list(tarea)
             if tareas_lista:
@@ -1188,12 +1212,13 @@ class TutoriaDetalle(LoginRequiredMixin, DetailView):
                     else:
                         datetime_ultima_modificacion= ''
                     observacion = tarea.observacion
+                    id_persona_actual= ins_user_actual.id
                     
                     auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
                     'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_tutoria': id_tutoria, 
                     'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
                     'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
-                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}  
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion, 'id_persona_actual': id_persona_actual}  
                     data.append(auxiliar)
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -3313,6 +3338,10 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
     def get_datos_tareas(self):
         data = []
         try:
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
             #obtenemos todos los datos de la instancia acti academ tutoria
             tareas = Tarea.objects.filter(id_tutoria= self.get_object().id_actividad_academica)
             tareas_lista = list(tareas)
@@ -3363,12 +3392,13 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
                     else:
                         datetime_ultima_modificacion= ''
                     observacion = tarea.observacion
+                    id_persona_actual= ins_user_actual.id
                     
                     auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
                     'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_tutoria': id_tutoria, 
                     'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
                     'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
-                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}                    
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion, 'id_persona_actual': id_persona_actual}                    
                     data.append(auxiliar)                
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -3779,6 +3809,11 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
     def get_datos_tareas(self):
         data = []
         try:
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            
             #obtenemos todos los datos de la instancia acti academ orientacion academica
             tareas = Tarea.objects.filter(id_orientacion_academica= self.get_object().id_actividad_academica)
             tareas_lista = list(tareas)
@@ -3829,12 +3864,12 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                     else:
                         datetime_ultima_modificacion= ''
                     observacion = tarea.observacion
-                    
+                    id_persona_actual= ins_user_actual.id
                     auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
                     'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_orientacion_academica': id_orientacion_academica, 
                     'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
                     'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
-                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion}                    
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion, 'id_persona_actual': id_persona_actual}                    
                     data.append(auxiliar)                
         except Exception as e:
             print(f"Se ha producido un error: {e}")

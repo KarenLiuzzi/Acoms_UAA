@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from django.shortcuts import render
 from accounts.models.user import Persona
 from calendarapp.models import Event
-from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica, Tutoria, OrientacionAcademica, Tarea, EstadoTarea
+from calendarapp.models.event import Cita, EstadoActividadAcademica,DetalleActividadAcademica, Tutoria, OrientacionAcademica, Tarea, EstadoTarea, DetalleActividadAcademica
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib import messages
@@ -106,7 +106,16 @@ class AllEventsListView(ListView):
                 return lista_eventos
                 
             else:
-                event= Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona)
+                event_= Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona)
+                
+                participante_cita= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
+                
+                events_participante= Event.objects.get_all_events().filter(id_cita__id_actividad_academica__in= participante_cita)
+                #unimos ambos registros
+                if events_participante.exists():                 
+                    event = event_.union(events_participante)
+                else:
+                    event= event_
                 # Anotar el queryset con una expresión que determine el campo de ordenamiento
                 event = event.annotate(
                     datetime_to_order=Case(
@@ -257,7 +266,16 @@ class ActividadesAcademicasListView(ListView):
                     del event['fecha_auxiliar']
 
             else:
-                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
+                participantes_events= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
+                tutorias_= Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
+                tutorias_participante= Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_actividad_academica__in= participantes_events)
+                
+                if tutorias_participante.exists():
+                    #unimos ambos registros 
+                    tutorias = tutorias_.union(tutorias_participante)
+                else:
+                    tutorias= tutorias_
+                
                 if tutorias.exists():
                     for objeto in tutorias:
                         if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
@@ -286,7 +304,15 @@ class ActividadesAcademicasListView(ListView):
                         auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                         lista_actividades.append(auxiliar) 
                         
-                orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+                orientaciones_ = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+                orientaciones_participante= OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_actividad_academica__in= participantes_events)
+                
+                if orientaciones_participante.exists():
+                    #unimos ambos registros 
+                    orientaciones = orientaciones_.union(orientaciones_participante)
+                else:
+                    orientaciones= orientaciones_
+                
                 if orientaciones.exists():
                     for objeto in orientaciones:
                         if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
@@ -359,18 +385,30 @@ class ActividadesAcademicasListView(ListView):
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
                 orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             else:
-                
+                participantes_events= DetalleActividadAcademica.objects.get(id_participante= ins_persona).values('id_actividad_academica')
+                tutorias_participantes= Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_actividad_academica__in= participantes_events)
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+                orientaciones_participantes= OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_actividad_academica__in= participantes_events)
+                
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_tutoria__datetime_fin_estimado__gt= datetime.now()).count()
+                tutoria_iniciada += tutorias_participantes.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_tutoria__datetime_fin_estimado__gt= datetime.now()).count()
                 tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                tutoria_cancelada += tutorias_participantes.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
                 tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                tutoria_finalizada += tutorias_participantes.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
                 tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
+                tutoria_vencida += tutorias_participantes.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
+                
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_orientacion_academica__datetime_fin_estimado__gt= datetime.now()).count()
+                orientacion_iniciada += orientaciones_participantes.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_orientacion_academica__datetime_fin_estimado__gt= datetime.now()).count()
                 orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                orientacion_cancelada += orientaciones_participantes.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                orientacion_finalizada += orientaciones_participantes.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
                 orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count() 
-            
+                orientacion_vencida += orientaciones_participantes.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count() 
+                
             data= {'tutoria_iniciada': tutoria_iniciada, 'tutoria_cancelada': tutoria_cancelada, 'tutoria_finalizada': tutoria_finalizada,
                 'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada, 'tutoria_vencida': tutoria_vencida, 'orientacion_vencida': orientacion_vencida}
         except Exception as e:
@@ -461,7 +499,14 @@ class RunningEventsListView(ListView):
                             lista_eventos.append(auxiliar) 
                 return lista_eventos
             else:
-                event= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
+                detalle_events= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
+                event_= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
+                event_participantes= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_actividad_academica__in= detalle_events)
+                if event_participantes.exists():
+                    event= event_
+                else:
+                    event= event_
+                    
                 event = event.annotate(
                     datetime_to_order=Case(
                         When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
@@ -668,8 +713,17 @@ class RunningActividadesAcademicasListView(ListView):
                     del event['fecha_auxiliar']
                     
             else:
+                event_participante= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
                 if parametro == 'Tutoria':
-                    running_events = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
+                    running_events_ = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
+                    running_events_parti= Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_actividad_academica__in= event_participante)
+                    
+                    if running_events_parti.exists():
+                        #unimos ambos registros 
+                        running_events = running_events_.union(running_events_parti)
+                    else:
+                        running_events = running_events_
+                    
                     if running_events.exists():
                         for objeto in running_events:
                             if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
@@ -698,7 +752,15 @@ class RunningActividadesAcademicasListView(ListView):
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
                 elif parametro== "OriAcademica":
-                    running_events = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+                    running_events_ = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+                    running_events_parti= OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_actividad_academica__in= event_participante)
+                    
+                    if running_events_parti.exists():
+                        #unimos ambos registros 
+                        running_events = running_events_.union(running_events_parti)
+                    else:
+                        running_events = running_events_
+                    
                     if running_events.exists():
                         for objeto in running_events:
                                 if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
@@ -727,7 +789,15 @@ class RunningActividadesAcademicasListView(ListView):
                                 auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                                 lista_actividades.append(auxiliar) 
                 else: 
-                    tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
+                    tutorias_ = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
+                    tutorias_parti= Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_actividad_academica__in= event_participante)
+                    
+                    if tutorias_parti.exists():
+                        #unimos ambos registros 
+                        tutorias = tutorias_.union(tutorias_parti)
+                    else:
+                        tutorias = tutorias_
+                    
                     if tutorias.exists():
                         for objeto in tutorias:
                             if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
@@ -755,7 +825,15 @@ class RunningActividadesAcademicasListView(ListView):
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
-                    orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+                    orientaciones_ = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+                    orientaciones_parti= OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_actividad_academica__in= event_participante)
+                    
+                    if orientaciones_parti.exists():
+                        #unimos ambos registros 
+                        orientaciones = orientaciones_.union(orientaciones_parti)
+                    else:
+                        orientaciones = orientaciones_
+                    
                     if orientaciones.exists():
                         for objeto in orientaciones:
                                 if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
@@ -825,18 +903,27 @@ class RunningActividadesAcademicasListView(ListView):
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
                 orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             else:
-                
-                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
+                event_participante= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
+                tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_actividad_academica__in= event_participante)
+                tutorias_parti = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_alta= ins_persona)
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_alta= ins_persona)
+                orientaciones_parti= OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_actividad_academica__in= event_participante)
                 tutoria_iniciada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_tutoria__datetime_fin_estimado__gt= datetime.now()).count()
+                tutoria_iniciada += tutorias_parti.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_tutoria__datetime_fin_estimado__gt= datetime.now()).count()
                 tutoria_cancelada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                tutoria_cancelada +=tutorias_parti.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
                 tutoria_finalizada= tutorias.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                tutoria_finalizada += tutorias_parti.filter(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
                 tutoria_vencida= tutorias.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
+                tutoria_vencida += tutorias_parti.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now()).count() 
                 orientacion_iniciada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_orientacion_academica__datetime_fin_estimado__gt= datetime.now()).count()
+                orientacion_iniciada += orientaciones_parti.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Iniciada', id_orientacion_academica__datetime_fin_estimado__gt= datetime.now()).count()
                 orientacion_cancelada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
+                orientacion_cancelada += orientaciones_parti.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Cancelada').count()
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                orientacion_finalizada += orientaciones_parti.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
                 orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']) , id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
-            
+                orientacion_vencida += orientaciones_parti.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']) , id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             data= {'tutoria_iniciada': tutoria_iniciada, 'tutoria_cancelada': tutoria_cancelada, 'tutoria_finalizada': tutoria_finalizada,
                 'orientacion_iniciada': orientacion_iniciada, 'orientacion_cancelada': orientacion_cancelada, 'orientacion_finalizada': orientacion_finalizada, 'tutoria_vencida': tutoria_vencida, 'orientacion_vencida': orientacion_vencida}
         except Exception as e:

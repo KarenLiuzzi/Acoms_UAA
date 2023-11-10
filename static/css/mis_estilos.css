@@ -65,3 +65,11 @@ tr.shown td.details-control {
 .aviso-procesando img {
   width: 64px; /* Ajusta el tamaño según tus necesidades */
 }
+
+.bienvenida {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin: 10px 0 10px 120px; /* Añade un margen de 10px a la derecha y 10px arriba y abajo */
+  margin-bottom: 10px;
+}

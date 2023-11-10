@@ -1,7 +1,7 @@
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
-from calendarapp.models.event import Cita, Tutoria, OrientacionAcademica
+from calendarapp.models.event import Cita, Tutoria, OrientacionAcademica, DetalleActividadAcademica
 from accounts.models.user import Persona, FuncionarioDocente
 from calendarapp.models import Event
 from django.forms.models import model_to_dict
@@ -74,6 +74,8 @@ class DashboardView(LoginRequiredMixin, View):
                     for objeto in citas:
                             if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                                 objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                                citas_vencidas += 1
+                                
                             if objeto.id_cita.datetime_inicio_real:
                                 fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
                                 dia= objeto.id_cita.datetime_inicio_real.weekday()
@@ -99,19 +101,16 @@ class DashboardView(LoginRequiredMixin, View):
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
-                            citas_vencidas += 1
+                            
                     
             citas_finalizadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
-            citas_confirmadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmada').count()
+            citas_confirmadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmada', id_cita__datetime_fin_estimado__gt= datetime.now()).count()
             citas_canceladas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelada').count()
             citas_pendientes= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente', id_cita__datetime_fin_estimado__gt= datetime.now()).count()
            #tutorias sin citas
             tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_funcionario_docente_encargado= ins_funcionario_docente)
             if tutorias.exists():
                         for objeto in tutorias:
-                            if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                                objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                            
                             if objeto.id_tutoria.datetime_inicio_real:
                                 fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
                                 dia= objeto.id_tutoria.datetime_inicio_real.weekday()
@@ -138,9 +137,6 @@ class DashboardView(LoginRequiredMixin, View):
             orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_funcionario_docente_encargado= ins_funcionario_docente)
             if orientaciones.exists():
                         for objeto in orientaciones:
-                                if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                                    objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                            
                                 if objeto.id_orientacion_academica.datetime_inicio_real:
                                     fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
                                     dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
@@ -169,12 +165,38 @@ class DashboardView(LoginRequiredMixin, View):
                 del event['fecha_auxiliar']
                     
         else:
-             #actividades con citas
-            citas = Cita.objects.select_related("id_cita").filter(id_cita__id_persona_alta= ins_persona)
+            #detalle participante
+            registros_participante= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
+            
+            #actividades con citas
+            citas_ = Cita.objects.select_related("id_cita").filter(id_cita__id_persona_alta= ins_persona)
+            citas_finalizadas_sin_parti= citas_.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+            citas_confirmadas_sin_parti= citas_.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmada', id_cita__datetime_fin_estimado__gt= datetime.now()).count()
+            citas_canceladas_sin_parti= citas_.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelada').count()
+            citas_pendientes_sin_parti= citas_.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente', id_cita__datetime_fin_estimado__gt= datetime.now()).count()
+            
+            citas_participante = Cita.objects.select_related("id_cita").filter(id_cita__id_actividad_academica__in= registros_participante)
+            
+            if citas_participante.exists():
+                citas_finalizadas_parti= citas_participante.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
+                citas_confirmadas_parti= citas_participante.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmada', id_cita__datetime_fin_estimado__gt= datetime.now()).count()
+                citas_canceladas_parti= citas_participante.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelada').count()
+                citas_pendientes_parti= citas_participante.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente', id_cita__datetime_fin_estimado__gt= datetime.now()).count()
+                #unimos ambos registros 
+                citas = citas_.union(citas_participante)
+            else:
+                citas_finalizadas_parti= 0
+                citas_confirmadas_parti= 0
+                citas_canceladas_parti= 0
+                citas_pendientes_parti= 0
+                citas = citas_
+            
             if citas.exists():
                     for objeto in citas:
                             if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
                                 objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                                citas_vencidas += 1
+                                
                             if objeto.id_cita.datetime_inicio_real:
                                 fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
                                 dia= objeto.id_cita.datetime_inicio_real.weekday()
@@ -200,20 +222,27 @@ class DashboardView(LoginRequiredMixin, View):
                             
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
-                            citas_vencidas += 1
+                            
                     
-            citas_finalizadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
-            citas_confirmadas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Confirmada').count()
-            citas_canceladas= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Cancelada').count()
-            citas_pendientes= citas.filter(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica=  'Pendiente', id_cita__datetime_fin_estimado__gt= datetime.now()).count()
+            citas_finalizadas= citas_finalizadas_sin_parti + citas_finalizadas_parti
+            citas_confirmadas= citas_confirmadas_sin_parti + citas_confirmadas_parti
+            citas_canceladas= citas_canceladas_sin_parti + citas_canceladas_parti
+            citas_pendientes= citas_pendientes_sin_parti + citas_pendientes_parti
            
             # #tutorias sin citas
-            tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
+            tutorias_ = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
+            
+            tutorias_participante = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_actividad_academica__in= registros_participante)
+            
+            if tutorias_participante.exists():
+                #unimos ambos registros 
+                tutorias = tutorias_.union(tutorias_participante)
+            else:
+                tutorias = tutorias_
+            
+            
             if tutorias.exists():
-                        for objeto in tutorias:
-                            if objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada') and objeto.id_tutoria.datetime_fin_estimado <= datetime.now():
-                                objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                            
+                        for objeto in tutorias:                            
                             if objeto.id_tutoria.datetime_inicio_real:
                                 fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
                                 dia= objeto.id_tutoria.datetime_inicio_real.weekday()
@@ -237,12 +266,17 @@ class DashboardView(LoginRequiredMixin, View):
                             auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
                             lista_actividades.append(auxiliar) 
             #orientaciones sin citas
-            orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+            orientaciones_ = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
+            orientaciones_participante = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_actividad_academica__in= registros_participante)
+            
+            if tutorias_participante.exists():
+                #unimos ambos registros 
+                orientaciones = orientaciones_.union(orientaciones_participante)
+            else:
+                orientaciones = orientaciones_            
+            
             if orientaciones.exists():
-                        for objeto in orientaciones:
-                                if objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada') and objeto.id_orientacion_academica.datetime_fin_estimado <= datetime.now():
-                                    objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                            
+                        for objeto in orientaciones:                                    
                                 if objeto.id_orientacion_academica.datetime_inicio_real:
                                     fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
                                     dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
