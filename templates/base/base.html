@@ -29,6 +29,9 @@
                     <input class="app-search__input" type="search" placeholder="Search" />
                     <button class="app-search__button"><i class="fa fa-search"></i></button>
                 </li> {% endcomment %}
+
+                <h4 class="bienvenida"> Bienvenid@ {{ request.user.id_persona.nombre}} {{request.user.id_persona.apellido  }} </h4>
+
                 <!--Notification Menu-->
                 <li class="dropdown">
                     <a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications"><i class="fa fa-bell-o fa-lg"></i></a>
