@@ -125,12 +125,20 @@ class Alumno(models.Model):
 class FuncionarioDocente(models.Model):
     id_funcionario_docente= models.ForeignKey(Persona, on_delete=models.CASCADE, primary_key=True, related_name='funcionario_docente')
     id_departamento= models.ForeignKey(Departamento, on_delete=models.CASCADE, null= True, related_name='departamento_funcionario_docente')
+    id_facultad= models.ForeignKey(Facultad, on_delete=models.CASCADE, null= True, related_name='facultad_funcionario_docente')
     
     def __str__(self):
          return '%s %s' % (self.id_funcionario_docente.nombre, self.id_funcionario_docente.apellido)
 
+
     class Meta:
         verbose_name_plural = "Funcionarios/Docentes"
+        constraints = [
+            models.CheckConstraint(
+                check=~models.Q(id_departamento__isnull=False, id_facultad__isnull=False),
+                name='departamento_facultad_constraint',
+            )
+        ]
 
 class Docente(models.Model):
     id_docente= models.ForeignKey(FuncionarioDocente, on_delete=models.CASCADE, primary_key=True, related_name='docente')

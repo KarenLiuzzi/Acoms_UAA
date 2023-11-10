@@ -6,13 +6,40 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 
 #registramos nuestros modelos en la pantalla de admin
-# admin.site.register(Persona)
-# admin.site.register(TipoDocumento)
-# admin.site.register(Alumno)
-# admin.site.register(Funcionario)
-# admin.site.register(Docente)
+admin.site.register(Persona)
+admin.site.register(TipoDocumento)
+admin.site.register(Alumno)
+admin.site.register(Funcionario)
+admin.site.register(Docente)
 # admin.site.register(FuncionarioDocente)
-#admin.site.register(User)
+# admin.site.register(User)
+
+class FuncionarioDocenteForm(forms.ModelForm):
+    class Meta:
+        model = FuncionarioDocente
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(FuncionarioDocenteForm, self).__init__(*args, **kwargs)
+        # Modificamos las propiedades del campo id_departamento y id_facultad según tus requisitos
+        self.fields['id_departamento'].required = False
+        self.fields['id_facultad'].required = False
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        id_departamento = cleaned_data.get('id_departamento')
+        id_facultad = cleaned_data.get('id_facultad')
+
+        if id_departamento and id_facultad:
+            raise ValidationError('¡Por favor, selecciona solo un departamento o una facultad, no ambos!')
+        
+        if id_departamento is None and id_facultad is None:
+            raise ValidationError('¡Por favor, selecciona un departamento o una facultad, no ambos!')
+        
+class FuncionarioDocenteAdmin(admin.ModelAdmin):
+    form = FuncionarioDocenteForm
+
+admin.site.register(FuncionarioDocente, FuncionarioDocenteAdmin)
    
 class UserFormCreate(forms.ModelForm):
     # Personaliza el formulario de creación de usuarios

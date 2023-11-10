@@ -96,6 +96,7 @@
                 <th scope="col">Observación</th>
                 <th scope="col">Alta por Cita</th>
                 <th scope="col">Participantes</th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -167,7 +168,7 @@ $(document).ready(function() {
                 {},
                 {},
                 {},
-                {}
+                {}, {},
             ],
             data: [] // Datos vacíos para crear una tabla sin contenido
         });
@@ -248,11 +249,34 @@ $(document).ready(function() {
                             var formattedDate =  currentDate.getDate() + '_' +  (currentDate.getMonth() + 1) + '_' +  currentDate.getFullYear();
                             var formattedTime = currentDate.getHours() + '_' + currentDate.getMinutes() + '_' + currentDate.getSeconds();
                             return 'Reporte_Tutorias_' + formattedDate + '__' + formattedTime;
+                        },
+                        exportOptions: {
+                            columns: ':not(:last-child)'  // Excluye la última columna en la exportación
                         }
                     }
                 ],
+                columnDefs: [
+                        {
+                            targets: [-1],
+                            class: 'text-center',
+                            orderable: false,
+                            render: function (data, type, row) {
+                                // Accede al valor de la columna si es cita o no
+                                var valorColumnaMenosDos = row[10];
+
+                                 // Verifica si el valor de la última columna es "Si"
+                                if (valorColumnaMenosDos === 'Si') {
+                                    // Crea un enlace (<a>) con un href o cualquier otro atributo que necesites
+                                    return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   href="/moredetallesCitaTutoria/' + data + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a>';
+                                } else {
+                                    // Devuelve el valor original si no es "Si"
+                                    return '<a rel="detalles"  class="btn btn-primary" style="color: white;"   href="/moredetallesTutoria/' + data + '" title="Detalles"> <i class="bi bi-eye-fill"></i> </a>';
+                                }
+                            }
+                        },
+                    ],
                 initComplete: function (settings, json) {
-                }
+                } 
             });
         }
 

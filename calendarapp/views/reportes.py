@@ -370,6 +370,7 @@ class ReporteTutoriaView(TemplateView):
                         anho_convocatoria = str(s.id_tutoria.id_convocatoria.anho) if s.id_tutoria.id_convocatoria.anho else ''
                         solicitante= s.id_tutoria.id_persona_solicitante.nombre + ' ' + s.id_tutoria.id_persona_solicitante.apellido if s.id_tutoria.id_persona_solicitante else ''
                         generado_cita= 'Si' if s.id_cita else 'No'
+                        id= s.id_cita.id_cita.id_actividad_academica if s.id_cita else s.id_tutoria.id_actividad_academica
                         cantidad_participantes= 0
                         cantidad_participantes= DetalleActividadAcademica.objects.filter(id_actividad_academica = s.id_tutoria.id_actividad_academica).count()
                         if cantidad_participantes > 0 :
@@ -388,7 +389,8 @@ class ReporteTutoriaView(TemplateView):
                             s.id_tipo_tutoria.descripcion_tipo_tutoria,
                             s.id_tutoria.observacion, 
                             generado_cita,
-                            cantidad_participantes                            
+                            cantidad_participantes,
+                            id                              
                         ])
                     
                 
@@ -482,6 +484,7 @@ class ReporteOrientacionAcademicaView(TemplateView):
                         anho_convocatoria = str(s.id_orientacion_academica.id_convocatoria.anho) if s.id_orientacion_academica.id_convocatoria.anho else ''
                         solicitante= s.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + s.id_orientacion_academica.id_persona_solicitante.apellido if s.id_orientacion_academica.id_persona_solicitante else ''
                         generado_cita= 'Si' if s.id_cita else 'No'
+                        id= s.id_cita.id_cita.id_actividad_academica if s.id_cita else s.id_orientacion_academica.id_actividad_academica
                         materia= '' 
                         if s.id_orientacion_academica.id_materia:
                             materia= s.id_orientacion_academica.id_materia.descripcion_materia 
@@ -507,7 +510,8 @@ class ReporteOrientacionAcademicaView(TemplateView):
                             s.id_tipo_orientacion_academica.descripcion_tipo_orientacion_academica,
                             s.id_motivo.descripcion_motivo, 
                             s.id_orientacion_academica.observacion,
-                            generado_cita, cantidad_participantes                            
+                            generado_cita, cantidad_participantes,
+                            id                            
                         ])
                     
                 
@@ -631,7 +635,8 @@ class ReporteCitasView(TemplateView):
                             s.id_cita.observacion,
                             s.motivo_cancelacion,
                             s.motivo_rechazo,   
-                            cantidad_participantes  
+                            cantidad_participantes,
+                            s.id_cita.id_actividad_academica  
                         ])
                 
             else:
@@ -764,10 +769,24 @@ class ReporteTareasView(TemplateView):
                         datetime_ultima_modificacion = s.datetime_ultima_modificacion.strftime('%Y-%m-%d %H:%M:%S')
                         observacion = s.observacion
                         tipo= ''
+                        id= ''
                         if s.id_orientacion_academica:
-                            tipo= 'Orientación'
+                            id= s.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                            #verificamos si existe en la tabla de cita
+                            cita_ori= Cita.objects.filter(id_cita= s.id_orientacion_academica.id_orientacion_academica.id_actividad_academica, es_orientacion_academica= True)
+                            if cita_ori.exists():
+                                tipo= 'Cita Orientación'
+                                
+                            else:
+                                tipo= 'Orientación'
                         elif s.id_tutoria:
-                            tipo= 'Tutoría'
+                            id= s.id_tutoria.id_tutoria.id_actividad_academica
+                            #verificamos si existe en la tabla de cita
+                            cita_tuto= Cita.objects.filter(id_cita= s.id_tutoria.id_tutoria.id_actividad_academica, es_tutoria= True)
+                            if cita_tuto.exists():
+                                tipo= 'Cita Tutoría'
+                            else:
+                                tipo= 'Tutoría'
                         
                         data.append([
                             datetime_inicio_estimado,
@@ -783,7 +802,8 @@ class ReporteTareasView(TemplateView):
                             persona_finalizacion,
                             datetime_ultima_modificacion,
                             id_actividad,
-                            tipo
+                            tipo,
+                            id
                         ])
                 
             else:

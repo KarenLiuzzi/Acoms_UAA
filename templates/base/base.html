@@ -30,7 +30,7 @@
                     <button class="app-search__button"><i class="fa fa-search"></i></button>
                 </li> {% endcomment %}
 
-                <h4 class="bienvenida"> Bienvenid@ {{ request.user.id_persona.nombre}} {{request.user.id_persona.apellido  }} </h4>
+                <h4 class="bienvenida"> Bienvenid@, {{ request.user.id_persona.nombre}} {{request.user.id_persona.apellido  }} </h4>
 
                 <!--Notification Menu-->
                 <li class="dropdown">
@@ -236,7 +236,7 @@
 
                 {% if perms.calendarapp.iniciar_cita %}
                     <li class="treeview">
-                        <a class="app-menu__item" href="#" data-toggle="treeview"><i class="bi bi-clipboard2-data app-menu__icon fa fa-th-list"></i><span class="app-menu__label"> Reportes </span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                        <a class="app-menu__item" href="#" data-toggle="treeview"><i class="bi bi-clipboard2-data app-menu__icon fa fa-th-list"></i><span class="app-menu__label"> Consultas/Reportes </span><i class="treeview-indicator fa fa-angle-right"></i></a>
                         <ul class="treeview-menu">
                             <li>
                                 <a class="treeview-item" href="{% url 'calendarapp:reporte_tutoria' %}" id="ReporteTutoria"> <i class="icon fa fa-circle-o"></i> Tutorías</a>
