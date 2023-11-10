@@ -347,6 +347,7 @@
         var tblParticipantes;
         var lista_participantes = {{ det|safe }}
         var lista_cita = {{ cita|safe }}
+        var per_act= {{ persona_actual|safe}}
 
         var actividad_academica = {
             items: {
@@ -872,8 +873,17 @@
                             title: 'Alerta!',
                             content: 'El participante ya fue agregado en la lista!',
                         });
-                    }
-                    else{
+                    } else if (per_act[0]['persona_actual'] == ui.item["id"]){
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'La persona encargada no puede agregarse como participante!',
+                        });
+                    } else if (lista_cita[0]['id_persona_solicitante'] == ui.item["id"]){
+                        $.alert({
+                            title: 'Alerta!',
+                            content: 'La persona solicitante no puede agregarse como participante!',
+                        });
+                    } else{
                         actividad_academica.add(ui.item);
                         $(this).val('');
                     }

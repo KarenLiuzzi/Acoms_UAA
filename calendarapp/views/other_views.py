@@ -553,6 +553,13 @@ def actualizar_campo(request):
             #traer los funcionarios docentes que se encuentren dentro de esos departamentos        
             queryset=  FuncionarioDocente.objects.filter(id_departamento__in=departamentos).values('id_funcionario_docente', 'id_funcionario_docente__nombre', 'id_funcionario_docente__apellido')
             
+            #agregado
+            #traemos tambien los funcionarios que esten asociados a la facultad seleccionada
+            facultad_funcionarios= FuncionarioDocente.objects.filter(id_facultad= selected_option).values('id_funcionario_docente', 'id_funcionario_docente__nombre', 'id_funcionario_docente__apellido')
+            if facultad_funcionarios.exists():
+                #unimos ambos
+                queryset= queryset.union(facultad_funcionarios)
+            
             # Pasar los datos del queryset a datos HTML
             options = ''
             for item in queryset:
@@ -1350,12 +1357,27 @@ class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
             #probar
         return JsonResponse(data, safe=False) #, json_dumps_params=[{"showMessage": "Registro Guardado."}]
     
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Solicitud de una Cita para Tutoría'
         context['entity'] = 'Tutoría'
         context['list_url'] = self.success_url
         context['action'] = 'add'
+        context['persona_actual'] = self.get_persona_actual()
         return context
 
 #clase de creacion para una cita de tipo Orientacion Academica
@@ -1455,6 +1477,20 @@ class CitaOrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
+
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1462,6 +1498,7 @@ class CitaOrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
         context['entity'] = 'Orientación Academica'
         context['list_url'] = self.success_url
         context['action'] = 'add'
+        context['persona_actual'] = self.get_persona_actual()
         return context
 
 #Clase de editar de una cita tipo Tutoria
@@ -1618,6 +1655,20 @@ class CitaTutoriaUpdateView(LoginRequiredMixin, UpdateView):
         except Exception as e:
             print(f"Se ha producido un error: {e}")
         return data
+    
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1628,6 +1679,7 @@ class CitaTutoriaUpdateView(LoginRequiredMixin, UpdateView):
         context['det'] = json.dumps(self.get_details_participantes())
         context['horario'] = json.dumps(self.get_datos_horario())
         context['cita'] = json.dumps(self.get_datos_cita())
+        context['persona_actual'] = self.get_persona_actual()
         return context
 
 #Clase de editar de una cita tipo Orientacion Academica
@@ -1785,6 +1837,20 @@ class CitaOrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
         except Exception as e:
             print(f"Se ha producido un error: {e}")
         return data
+    
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1795,6 +1861,7 @@ class CitaOrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
         context['det'] = json.dumps(self.get_details_participantes())
         context['horario'] = json.dumps(self.get_datos_horario())
         context['cita'] = json.dumps(self.get_datos_cita())
+        context['persona_actual'] = self.get_persona_actual()
         return context  
 
 
@@ -1946,7 +2013,8 @@ class CitaTutoriaIniciarView(LoginRequiredMixin, ValidatePermissionRequiredMixin
                 motivo= item.motivo
                 hora_inicio= item.id_cita.datetime_inicio_estimado.strftime('%H:%M')
                 hora_fin= item.id_cita.datetime_fin_estimado.strftime('%H:%M')
-                auxiliar= {'id_facultad': id_facultad, 'id_funcionario_docente_encargado': id_funcionario_docente_encargado, 'id_materia': id_materia, 'nro_curso': nro_curso, 'motivo': motivo, 'hora_inicio': hora_inicio, 'hora_fin': hora_fin}
+                id_persona_solicitante= item.id_cita.id_persona_alta.id
+                auxiliar= {'id_facultad': id_facultad, 'id_funcionario_docente_encargado': id_funcionario_docente_encargado, 'id_materia': id_materia, 'nro_curso': nro_curso, 'motivo': motivo, 'hora_inicio': hora_inicio, 'hora_fin': hora_fin, 'id_persona_solicitante': id_persona_solicitante}
             data.append(auxiliar)                
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -1969,6 +2037,22 @@ class CitaTutoriaIniciarView(LoginRequiredMixin, ValidatePermissionRequiredMixin
         except Exception as e:
             print(f"Se ha producido un error: {e}")
         return data
+    
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Iniciar Cita de Tutoría'
@@ -1977,6 +2061,7 @@ class CitaTutoriaIniciarView(LoginRequiredMixin, ValidatePermissionRequiredMixin
         context['action'] = 'iniciar'
         context['det'] = json.dumps(self.get_details_participantes())
         context['cita'] = json.dumps(self.get_datos_cita())
+        context['persona_actual'] = self.get_persona_actual()
         return context        
 
 
@@ -2135,7 +2220,8 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, ValidatePermission
                 motivo= item.motivo
                 hora_inicio= item.id_cita.datetime_inicio_estimado.strftime('%H:%M')
                 hora_fin= item.id_cita.datetime_fin_estimado.strftime('%H:%M')
-                auxiliar= {'id_facultad': id_facultad, 'id_funcionario_docente_encargado': id_funcionario_docente_encargado, 'nro_curso': nro_curso, 'motivo': motivo, 'hora_inicio': hora_inicio, 'hora_fin': hora_fin}
+                id_persona_solicitante= item.id_cita.id_persona_alta.id
+                auxiliar= {'id_facultad': id_facultad, 'id_funcionario_docente_encargado': id_funcionario_docente_encargado, 'nro_curso': nro_curso, 'motivo': motivo, 'hora_inicio': hora_inicio, 'hora_fin': hora_fin, 'id_persona_solicitante': id_persona_solicitante}
             data.append(auxiliar)                
         except Exception as e:
             print(f"Se ha producido un error: {e}")
@@ -2158,6 +2244,22 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, ValidatePermission
         except Exception as e:
             print(f"Se ha producido un error: {e}")
         return data
+    
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Iniciar Cita de Orientación Académica'
@@ -2166,6 +2268,7 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, ValidatePermission
         context['action'] = 'iniciar'
         context['det'] = json.dumps(self.get_details_participantes())
         context['cita'] = json.dumps(self.get_datos_cita())
+        context['persona_actual'] = self.get_persona_actual()
         return context        
     
 def obtener_horarios_cita(request):
@@ -2703,11 +2806,27 @@ class TutoriaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,Cre
             #probar
         return JsonResponse(data, safe=False)
     
+    
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Registro de una Tutoría'
         context['entity'] = 'Tutoría'
         context['list_url'] = self.success_url
+        context['persona_actual'] = self.get_persona_actual()
         return context
     
     
@@ -2957,11 +3076,26 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
             #probar
         return JsonResponse(data, safe=False)
     
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
+            
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Registro de una Orientación Académica'
         context['entity'] = 'Orientación Académica'
         context['list_url'] = self.success_url
+        context['persona_actual'] = self.get_persona_actual()
         return context
     
     
@@ -3404,6 +3538,21 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
             print(f"Se ha producido un error: {e}")
         return data
     
+    
+    def get_persona_actual(self):
+            try:
+                data= []
+                request = self.request
+                current_user= request.user
+                dict = model_to_dict(current_user)
+                ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+                persona= {'persona_actual': ins_user_actual.id}
+                data.append(persona)
+                return data
+            
+            except Exception as e:
+                print('error', e)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Edición de una Tutoría'
@@ -3413,6 +3562,7 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
         context['tutoria'] = json.dumps(self.get_datos_tutoria())
         context['event'] = self.get_datos_event()
         context['tarea'] = self.get_datos_tareas()
+        context['persona_actual'] = self.get_persona_actual()
         return context
     
 
@@ -3875,6 +4025,20 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
             print(f"Se ha producido un error: {e}")
         return data
     
+    def get_persona_actual(self):
+        try:
+            data= []
+            request = self.request
+            current_user= request.user
+            dict = model_to_dict(current_user)
+            ins_user_actual=  Persona.objects.get(id= dict["id_persona"])
+            persona= {'persona_actual': ins_user_actual.id}
+            data.append(persona)
+            return data
+        
+        except Exception as e:
+            print('error', e)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Edición de una Orientación Académica'
@@ -3884,6 +4048,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
         context['orientacion'] = json.dumps(self.get_datos_ori_academica())
         context['event'] = self.get_datos_event()
         context['tarea'] = self.get_datos_tareas()
+        context['persona_actual'] = self.get_persona_actual()
         return context
     
 class TareasView(LoginRequiredMixin, ListView):

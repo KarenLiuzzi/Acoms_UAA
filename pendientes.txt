@@ -74,12 +74,13 @@ https://github.com/sajib1066/event-calendar.git
 ver event_list y dashboard 
 agregar los registros en donde el alumno estuvo como participante *(probar)
 habilitar botones de tareas solo a los encargados (detalles, edicion, (iniciar, finalizar) cancelar solo al solicitante), cuando da de alta, *(probar)
+validar que el usuario participante sea diferente del usuario que solicita *(probar)
 reportes/consultas con boton de detalle
 el administrador podra usar solo a quien le cayo
-agregar relacion persona con facultad tb ()
-mutuamente excluyente
+agregar relacion persona con facultad tb () *(probar)
+mutuamente excluyente *(probar)
 una seccion especial para el administrador
-validar que el usuario participante sea diferente del usuario que solicita
+
 disenho al panel de administración
 
 print del asana y github
