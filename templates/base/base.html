@@ -179,7 +179,7 @@
         </header>
         <!-- Sidebar menu-->
         <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-        <aside class="app-sidebar">
+            <aside class="app-sidebar">
             {% comment %} <div class="app-sidebar__user">
                 <img class="app-sidebar__user-avatar" src="https://sajib1066.github.io/images/me.jpg" alt="User Image" height="50px" width="50px"/>
                 <div>
@@ -189,7 +189,7 @@
             </div> {% endcomment %}
             <ul class="app-menu">
                 <li>
-                    <a class="app-menu__item" href="{% url 'dashboard' %}" id="dashboardMenu"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a>
+                    <a class="app-menu__item" href="{% url 'dashboard' %}" id="dashboardMenu"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Principal</span></a>
                 </li>
                 <li>
                     <a class="app-menu__item" href="{% url 'calendarapp:calendar' %}" id="calendarMenu"><i class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Calendario</span></a>
@@ -262,15 +262,20 @@
                     <a class="app-menu__item" href="{% url 'calendarapp:about' %}" id="AboutMenu"> <i class="bi bi-journal-text app-menu__icon fa fa-file-code-o bi bi-person-exclamation"></i><span class="app-menu__label"> Acerca de</span></a>
                 </li>
             </ul>
-        </aside>
+            </aside>
         <main class="app-content">
             <div class="app-title">
                 {% block breadcrumb %}
+                
                 {% endblock breadcrumb %}
             </div>
             {% block content %}
             {% endblock content %}
+        
+            
+
         </main>
+        
         
         <div id="modal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             {% comment %} el this sirve para indicar a htmx que este el el dialogo que debe cerrar, el document le agregue para que funcione cerrar el dialogo  {% endcomment %}
@@ -307,6 +312,11 @@
                 font-weight: 500;
             }
         </style>
+
+        
+        
+
+        
 
         <!-- Essential javascripts for application to work-->
         {% include 'base/js.html' %}   
@@ -376,6 +386,12 @@
             }
     
         </script> {% endcomment %}
-        
+
+        <footer class="main-footer text-sm">
+            <div class="float-right d-none d-sm-inline">
+                <strong> Copyright © 2023 .</strong> Todos los derechos reservados.
+                <b>Versión de AcOms</b> 1.0.0
+            </div>
+        </footer>
     </body>
 </html>

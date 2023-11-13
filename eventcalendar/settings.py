@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -85,6 +86,108 @@ DATABASES = {
     }
 }
 
+JAZZMIN_SETTINGS = {
+    'css_includes': [
+        'css/mis_estilos.css',
+    ],
+    
+      # Welcome text on the login screen
+    "welcome_sign": "Bienvenido al panel de Administración AcOms",
+    "custom_css": "css/main.css",
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "Administración AcOms",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "Administración AcOms",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "Administración AcOms",
+
+    # Logo to use for your site, must be present in static files, used for brand on top left
+    "site_logo":  "images/favicon.ico",
+
+    # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
+    "login_logo": "images/favicon.ico",
+
+    # Logo to use for login form in dark themes (defaults to login_logo)
+    "login_logo_dark": None,
+
+    # CSS classes that are applied to the logo above
+    "site_logo_classes": None,
+    # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
+    "site_icon":  "images/favicon.ico",
+    "copyright": None,
+    "user_avatar": None,    
+    "default_icon_parents": None,
+    "default_icon_children": None,
+    
+    "icons": {
+        "auth.permission": "fas fa-users-cog",
+        "accounts.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        
+        "calendarapp.dia": "",
+        "calendarapp.estadoactividadacademica": "",
+        "calendarapp.estadotarea": "",
+        "calendarapp.convocatoria": "",
+        "calendarapp.motivo": "",
+        "calendarapp.parametro": "",
+        "calendarapp.tipotarea": "",
+        "calendarapp.tipotutoria": "",
+        "calendarapp.tipoorientacionacademica": "",
+        "calendarapp.unidadmedida": "", 
+        "calendarapp.semestre": "",
+    },
+    
+    # Custom links to append to app groups, keyed on app name
+    "custom_links": {
+        "user": [{
+            "icon": "fas fa-user",
+        }]
+    },
+    
+     # Whether to aut expand the menu
+    "navigation_expanded": False,
+    
+}
+# JAZZMIN_SETTINGS["show_ui_builder"] = True
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": True,
+    "footer_small_text": True,
+    "body_small_text": False,
+    "brand_small_text": True,
+    "brand_colour": "navbar-lightblue",
+    "accent": "accent-navy",
+    "navbar": "navbar-lightblue navbar-dark",
+    "no_navbar_border": True,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-info",
+    "sidebar_nav_small_text": True,
+    "sidebar_disable_expand": True,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_flat_style": True,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn btn-primary",
+        "secondary": "btn btn-secondary",
+        "info": "btn btn-primary",
+        "warning": "btn btn-warning",
+        "danger": "btn btn-danger",
+        "success": "btn btn-primary"
+    },
+    "actions_sticky_top": True
+    
+}
+JAZZMIN_SETTINGS["show_ui_builder"] = True
+
+##3c8dbc
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

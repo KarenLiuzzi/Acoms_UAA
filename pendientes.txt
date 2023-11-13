@@ -90,3 +90,15 @@ Que se ejcute de manera periodica
 web services (API) para  
 JSON
 Datos dammies para que la web services consuma
+
+ver si se puede cambiar el icono de inisio de sesion
+ver si se puede cambiar el aspecto del login
+
+verde por cyan
+#009688
+mas oscuro #007d71
+rgb(23, 162, 184)
+#3c8dbc - ultimo
+
+gris oscuro por claro
+claro #4f5962
