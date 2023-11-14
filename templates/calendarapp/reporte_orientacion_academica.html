@@ -39,12 +39,14 @@
                     {{ form.id_materia }}
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="form-group form-inline">
-                    <label>Funcionario/docente:</label>
-                    {{ form.id_funcionario_docente_encargado }}
+            {% if user.is_superuser %}
+                <div class="col-lg-4">
+                    <div class="form-group form-inline">
+                        <label>Funcionario/docente:</label>
+                        {{ form.id_funcionario_docente_encargado }}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-lg-4">
@@ -201,7 +203,11 @@ $(document).ready(function() {
             //traemos los datos seleccionados
             var id_facultad=   $('select[name="id_facultad"]').val();
             var id_materia =  $('select[name="id_materia"]').val();
-            var id_funcionario_docente_encargado =  $('select[name="id_funcionario_docente_encargado"]').val();
+            if ($('#id_id_funcionario_docente_encargado').length) {
+                var id_funcionario_docente_encargado =  $('select[name="id_funcionario_docente_encargado"]').val();
+            } else {
+                var id_funcionario_docente_encargado = ""
+            }
             var id_estado =  $('select[name="id_estado"]').val();
             var id_persona_solicitante =  $('select[name="id_persona_solicitante"]').val();
             var id_tipo_orientacion_academica = $('select[name="id_tipo_orientacion_academica"]').val();
@@ -320,7 +326,10 @@ $(document).ready(function() {
         actualizarfacultad();
         actualizar_personas();
         actualizarmateria();
-        actualizarencargado();
+        // Verifica si el elemento con el ID 'id_id_funcionario_docente_encargado' existe
+        if ($('#id_id_funcionario_docente_encargado').length) {
+            actualizarencargado();
+        }
         actualizartipo_ori_academ();
         actualizartipo_motivo_ori_academ_all();
         actualizarestado();

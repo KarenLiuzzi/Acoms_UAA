@@ -75,24 +75,22 @@ ver event_list y dashboard
 agregar los registros en donde el alumno estuvo como participante *(probar)
 habilitar botones de tareas solo a los encargados (detalles, edicion, (iniciar, finalizar) cancelar solo al solicitante), cuando da de alta, *(probar)
 validar que el usuario participante sea diferente del usuario que solicita *(probar)
-reportes/consultas con boton de detalle
-el administrador podra usar solo a quien le cayo
+reportes/consultas con boton de detalle *(probar)
+el administrador podra usar solo a quien le cayo *(probar)
 agregar relacion persona con facultad tb () *(probar)
 mutuamente excluyente *(probar)
-una seccion especial para el administrador
-
-disenho al panel de administración
-
+una seccion especial para el administrador *(probar)
+disenho al panel de administración *(probar)
 print del asana y github
+ver si se puede cambiar el icono de inisio de sesion
+ver si se puede cambiar el aspecto del login
+
 diagrama de componentes
 en la 1 hora sobre la solucion json 
 Que se ejcute de manera periodica 
 web services (API) para  
 JSON
 Datos dammies para que la web services consuma
-
-ver si se puede cambiar el icono de inisio de sesion
-ver si se puede cambiar el aspecto del login
 
 verde por cyan
 #009688
@@ -102,3 +100,6 @@ rgb(23, 162, 184)
 
 gris oscuro por claro
 claro #4f5962
+
+preguntar para agregar mas detalle al nombre?
+preguntar para cambiar el ultimo objetivo especifico

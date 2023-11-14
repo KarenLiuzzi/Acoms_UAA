@@ -107,7 +107,7 @@ JAZZMIN_SETTINGS = {
     "site_logo":  "images/favicon.ico",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "images/favicon.ico",
+    "login_logo": "images/inicio.ico",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
     "login_logo_dark": None,
@@ -149,8 +149,17 @@ JAZZMIN_SETTINGS = {
      # Whether to aut expand the menu
     "navigation_expanded": False,
     
+     # Links to put along the top menu
+    "topmenu_links": [
+
+        # Url that gets reversed (Permissions can be added)
+        {"name": "Ir al Portal web",  "url": "http://127.0.0.1:8000/"},
+    ],
+    
 }
-# JAZZMIN_SETTINGS["show_ui_builder"] = True
+
+#JAZZMIN_SETTINGS["show_ui_builder"] = True
+
 
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": True,
@@ -185,7 +194,6 @@ JAZZMIN_UI_TWEAKS = {
     "actions_sticky_top": True
     
 }
-JAZZMIN_SETTINGS["show_ui_builder"] = True
 
 ##3c8dbc
 
