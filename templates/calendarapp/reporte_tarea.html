@@ -51,12 +51,14 @@
                     {{ form.id_persona_responsable }}
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="form-group form-inline">
-                    <label>Solicitante:</label>
-                    {{ form.id_persona_alta }}
+            {% if user.is_superuser %}
+                <div class="col-lg-4">
+                    <div class="form-group form-inline">
+                        <label>Solicitante:</label>
+                        {{ form.id_persona_alta }}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             <div class="col-lg-4">
                 <div class="form-group form-inline">
                     <label>Tipo de Actividad:</label>
@@ -188,8 +190,11 @@ $(document).ready(function() {
             var id_facultad=   $('select[name="id_facultad"]').val();
             var id_tipo_tarea =  $('select[name="id_tipo_tarea"]').val();
             var id_estado_tarea =  $('select[name="id_estado_tarea"]').val();
-
-            var id_persona_alta =  $('select[name="id_persona_alta"]').val();
+            if ($('#id_id_persona_alta').length) {
+                var id_persona_alta =  $('select[name="id_persona_alta"]').val();
+            } else {
+                var id_persona_alta = ""
+            }
             var id_persona_responsable =  $('select[name="id_persona_responsable"]').val();
             
             var parameters = {
@@ -377,7 +382,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(data) {
                     $('#id_id_persona_responsable').html(data);
-                    $('#id_id_persona_alta').html(data);
+                    // Verifica si el elemento con el ID 'id_id_funcionario_docente_encargado' existe
+                    if ($('#id_id_persona_alta').length) {
+                        $('#id_id_persona_alta').html(data);
+                    }
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     var errorMessage = 'Ocurrió un error al actualizar personas.';

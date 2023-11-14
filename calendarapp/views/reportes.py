@@ -344,8 +344,14 @@ class ReporteTutoriaView(TemplateView):
                 if id_materia:
                     queryset = queryset.filter(id_tutoria__id_materia=id_materia)
 
-                if id_funcionario_docente_encargado:
+                if id_funcionario_docente_encargado and id_funcionario_docente_encargado != "":
                     queryset = queryset.filter(id_tutoria__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
+                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == "":
+                    #obtenemos el funcionario docente que esta solicitando
+                    current_user = request.user.id_persona
+                    #traemos el id del func_doc
+                    funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user)
+                    queryset = queryset.filter(id_tutoria__id_funcionario_docente_encargado= funcionario_docente)
 
                 if id_estado:
                     if id_estado != 'Vencida':
@@ -455,8 +461,14 @@ class ReporteOrientacionAcademicaView(TemplateView):
                 if id_materia:
                     queryset = queryset.filter(id_orientacion_academica__id_materia=id_materia)
 
-                if id_funcionario_docente_encargado:
+                if id_funcionario_docente_encargado and id_funcionario_docente_encargado != "":
                     queryset = queryset.filter(id_orientacion_academica__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
+                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == "":
+                    #obtenemos el funcionario docente que esta solicitando
+                    current_user = request.user.id_persona
+                    #traemos el id del func_doc
+                    funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user)
+                    queryset = queryset.filter(id_orientacion_academica__id_funcionario_docente_encargado= funcionario_docente)
 
                 if id_estado:
                     if id_estado != 'Vencida':
@@ -583,8 +595,15 @@ class ReporteCitasView(TemplateView):
                 if id_materia:
                     queryset = queryset.filter(id_cita__id_materia=id_materia)
 
-                if id_funcionario_docente_encargado:
+                if id_funcionario_docente_encargado and id_funcionario_docente_encargado != "":
                     queryset = queryset.filter(id_cita__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
+                    
+                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == "":
+                    #obtenemos el funcionario docente que esta solicitando
+                    current_user = request.user.id_persona
+                    #traemos el id del func_doc
+                    funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user)
+                    queryset = queryset.filter(id_cita__id_funcionario_docente_encargado= funcionario_docente)
 
                 if id_estado:
                     if id_estado != 'Vencida':
@@ -732,9 +751,14 @@ class ReporteTareasView(TemplateView):
                     
                 if id_persona_responsable:
                     queryset = queryset.filter(id_persona_responsable= id_persona_responsable)
-                    
-                if id_persona_alta:
+                
+                if id_persona_alta and id_persona_alta != "":
                     queryset = queryset.filter(id_persona_alta= id_persona_alta)
+                
+                elif id_persona_alta and id_persona_alta == "":
+                    #obtenemos la persona que esta solicitando
+                    current_user = request.user.id_persona
+                    queryset = queryset.filter(id_cita__id_funcionario_docente_encargado= current_user)
                     
                 #preguntamos si existen registros 
                 if queryset.exists():

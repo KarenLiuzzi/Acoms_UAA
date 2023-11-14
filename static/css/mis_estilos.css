@@ -1,6 +1,6 @@
 .texto-destacado {
     font-weight: bold;
-    color: #009688;
+    color: #3c8dbc;
   }
 
 
@@ -72,4 +72,13 @@ tr.shown td.details-control {
   color: white;
   margin: 10px 0 10px 120px; /* Añade un margen de 10px a la derecha y 10px arriba y abajo */
   margin-bottom: 10px;
+}
+
+#header {
+  background-color: #3c8dbc;
+  border-color: #008075;
+}
+
+#nav-bar {
+  background-color: #3c8dbc;
 }
