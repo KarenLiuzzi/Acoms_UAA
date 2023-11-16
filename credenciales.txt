@@ -12,6 +12,15 @@ Aguero
 mail karendreammoon@gmail.com
 pass HolaMundo!26!
 
+#cargamos una persona especifica para el objecto de persona/alumno
+id 5
+ci 6109876
+Guadalupe
+Diaz
+mail guada.diaz@test.com
+pass HolaMundo!26!
+
+
 #cargamos una persona especifica para el objecto de persona/DocenteFuncionario este es el que tiene cargado registros de su calendario
 id 3
 ci 789654

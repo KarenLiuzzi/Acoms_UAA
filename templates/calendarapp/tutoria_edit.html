@@ -514,20 +514,10 @@
                             class: 'text-center',
                             orderable: false,
                             render: function (data, type, row) {
-                                if (row.estado && row.estado.includes("Pendiente") && (row.id_persona_actual == row.id_persona_responsable )) {
-                                    return '<a rel="iniciar" class="btn btn-primary" style="color: white;" title="Iniciar tarea" ><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>';
-                                } else if (row.estado && row.estado.includes("Pendiente") &&  (row.id_persona_actual != row.id_persona_responsable )) {
-                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea"><i class="bi bi-x-lg"></i></a>';
-                                } else if (row.estado && row.estado.includes("Iniciada") && (row.id_persona_actual == row.id_persona_responsable )) {
-                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" ><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" ><i class="bi bi-check2"></i></a>';
-                                } else if (row.estado && row.estado.includes("Iniciada") && (row.id_persona_actual != row.id_persona_responsable )) {
-                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" ><i class="bi bi-x-lg"></i></a>';
-                                } else {
-                                    return '' //'<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
-                                }
-                                //return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                                return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
                             }
-                        },
+                                //return '<a rel="removetarea" class="btn btn-danger btn-xs btn-flat" style="color: white;"><i class="bi bi-dash"></i></a>';
+                        }
                     ]
 
                 });
@@ -602,22 +592,24 @@
             $('textarea[name="observacion"]').val(lista_event[0]['observacion']);
 
              // Convertir la cadena a un objeto datetime
-             var aux_fecha_inicio= new Date(lista_event[0]['datetime_inicio_estimado']);
-             var aux_fecha_fin= new Date(lista_event[0]['datetime_fin_estimado']);
-             // Formatear la fecha y hora en un formato reconocido por el input datetime-local
-             var formattedaux_fecha_inicio = aux_fecha_inicio.getFullYear() + "-" +
-             ("0" + aux_fecha_inicio.getDate()).slice(-2) + "-" +
-             ("0" + (aux_fecha_inicio.getMonth() + 1)).slice(-2) + "T" +
-             ("0" + aux_fecha_inicio.getHours()).slice(-2) + ":" +
-             ("0" + aux_fecha_inicio.getMinutes()).slice(-2);
- 
-             var formattedaux_fecha_fin = aux_fecha_fin.getFullYear() + "-" +
-             ("0" + aux_fecha_fin.getDate()).slice(-2) + "-" +
-              ("0" + (aux_fecha_fin.getMonth() + 1)).slice(-2) + "T" +
-             ("0" + aux_fecha_fin.getHours()).slice(-2) + ":" +
-             ("0" + aux_fecha_fin.getMinutes()).slice(-2);
-             horaInicioInput.value= formattedaux_fecha_inicio
-             horaFinInput.value= formattedaux_fecha_fin
+            var aux_fecha_inicio= new Date(lista_event[0]['datetime_inicio_estimado']);
+            var aux_fecha_fin= new Date(lista_event[0]['datetime_fin_estimado']);
+
+            // Formatear la fecha y hora en un formato reconocido por el input datetime-local
+            var formattedaux_fecha_inicio = aux_fecha_inicio.getFullYear() + "-" +
+            ("0" + (aux_fecha_inicio.getMonth() + 1)).slice(-2) + "-" +
+            ("0" + aux_fecha_inicio.getDate()).slice(-2) + "T" +
+            ("0" + aux_fecha_inicio.getHours()).slice(-2) + ":" +
+            ("0" + aux_fecha_inicio.getMinutes()).slice(-2);
+
+            var formattedaux_fecha_fin = aux_fecha_fin.getFullYear() + "-" +
+            ("0" + (aux_fecha_fin.getMonth() + 1)).slice(-2) + "-" +
+            ("0" + aux_fecha_fin.getDate()).slice(-2) + "T" +
+            ("0" + aux_fecha_fin.getHours()).slice(-2) + ":" +
+            ("0" + aux_fecha_fin.getMinutes()).slice(-2);
+
+            horaInicioInput.value= formattedaux_fecha_inicio
+            horaFinInput.value= formattedaux_fecha_fin
 
 
             //funcion para crear tabla vacia de tareas

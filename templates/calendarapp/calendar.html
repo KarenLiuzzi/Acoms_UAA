@@ -183,6 +183,7 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/locales-all.js"></script>
   <script>
 
+    var id_persona= {{ request.user.id_persona.id }}
 
       document.addEventListener('DOMContentLoaded', function() {
         $('#calendarMenu').addClass('active');
@@ -266,10 +267,11 @@
             var tipo = info.event.extendedProps.tipo;
             var participantes = info.event.extendedProps.participantes;
             var tipo_usuario= info.event.extendedProps.tipo_usuario;
+            var id_solicitante= info.event.extendedProps.id_solicitante;
             
 
             // Mostrar el modal con los detalles del evento
-            mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita, tipo_usuario);
+            mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita, tipo_usuario, id_solicitante);
 
           },
 
@@ -409,11 +411,10 @@
 
       });
 
-      function mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita, tipo_usuario) {
+      function mostrarModal(horario, fecha, encargado, solicitante, motivo, estado, convocatoria, facultad, materia, observacion, curso, tipo, participantes, id_cita, tipo_usuario, id_solicitante) {
         // Obtener el modal
 
         var modal = document.getElementById('eventModal')
-          
 
     
         // Obtener los elementos del modal
@@ -431,6 +432,7 @@
         var modaltipo = modal.querySelector('#tipo');
         var modalparticipantes = modal.querySelector('#participantes');
         var modalid_cita = modal.querySelector('#id_cita');
+        
         //var modaliniciar_cita = modal.querySelector('#id_iniciar_cita');
         modalparticipantes.innerHTML = '';
 
@@ -465,7 +467,7 @@
         modalmateria.textContent = materia;
         modalobservacion.textContent = observacion;
         modalcurso.textContent = curso;
-        modaltipo.textContent = tipo;
+        modaltipo.textContent = tipo;        
 
       // Obtener el elemento <div> con el ID "container" para insertar nuestros botones dinamicamente
         const container = document.getElementById("container");
@@ -499,7 +501,7 @@
           if (estado == "Pendiente") {
 
             //habilitar solo al usuario normal
-            if (tipo_usuario== "normal"){
+            if (tipo_usuario== "normal" && id_solicitante == id_persona){
               // Crear un nuevo elemento <a> para editar
               const link = document.createElement("a");
               link.className = "btn btn-primary mt-2";
@@ -550,7 +552,7 @@
                 });
               });  
 
-            } else {
+            } else if (tipo_usuario== "staff") {
               // Crear un nuevo elemento <a> para confirmar cita  
               const newLinkConfirmar = document.createElement("a");
               newLinkConfirmar.className = "btn btn-primary mt-2";
@@ -673,7 +675,7 @@
                   });
                 });  
 
-            } else {// Crear un nuevo elemento <a> para cancelar
+            } else if (tipo_usuario== "normal" && id_solicitante== id_persona) {// Crear un nuevo elemento <a> para cancelar
               const link_cancelar = document.createElement("a");
               link_cancelar.className = "btn btn-primary mt-2";
               link_cancelar.id = "cancelar_ori_academica";
@@ -708,7 +710,7 @@
             }
           } else if (estado == "Rechazada"){
             //habilitar solo al usuario normal
-            if (tipo_usuario== "normal"){
+            if (tipo_usuario== "normal" && id_solicitante== id_persona){
               // Crear un nuevo elemento <a> para editar
               const linkmodificarOrie = document.createElement("a");
               linkmodificarOrie.className = "btn btn-primary mt-2";
@@ -768,7 +770,7 @@
 
           if (estado == "Pendiente") {
              //habilitar solo al usuario normal
-            if (tipo_usuario== "normal"){
+            if (tipo_usuario== "normal" && id_solicitante== id_persona){
               // Crear un nuevo elemento <a> para editar
               const link = document.createElement("a");
               link.className = "btn btn-primary mt-2";
@@ -820,7 +822,7 @@
               });  
 
 
-            } else {
+            } else if (tipo_usuario== "staff") {
               // Crear un nuevo elemento <a> para confirmar cita  
               const newLinkConfirmartuto = document.createElement("a");
               newLinkConfirmartuto.className = "btn btn-primary mt-2";
@@ -942,7 +944,7 @@
                   });
                 });  
 
-            } else {
+            } else if (tipo_usuario== "normal" && id_solicitante== id_persona) {
               // Crear un nuevo elemento <a> para cancelar
                 const link_cancelar = document.createElement("a");
                 link_cancelar.className = "btn btn-primary mt-2";
@@ -979,7 +981,7 @@
             }
           } else if (estado == "Rechazada"){
             //habilitar solo al usuario normal
-            if (tipo_usuario== "normal"){
+            if (tipo_usuario== "normal" && id_solicitante== id_persona){
               // Crear un nuevo elemento <a> para editar
               const linkrechtuto = document.createElement("a");
               linkrechtuto.className = "btn btn-primary mt-2";
