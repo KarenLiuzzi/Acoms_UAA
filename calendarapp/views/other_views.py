@@ -230,7 +230,8 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     "curso": curso,
                     "tipo": tipo,
                     "participantes": participantes_lista,
-                    "tipo_usuario": tipo_usuario['tipo_usuario']
+                    "tipo_usuario": tipo_usuario['tipo_usuario'],
+                    "id_solicitante": event.id_cita.id_persona_alta.id
                 }
                 
             )
@@ -3410,8 +3411,8 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
             else:
                 id_persona_solicitante= ''
             id_persona_alta= ins_evet.id_persona_alta.id
-            datetime_inicio_estimado= ins_evet.datetime_inicio_estimado.strftime('%d-%m-%Y %H:%M:%S')
-            datetime_fin_estimado = ins_evet.datetime_fin_estimado.strftime('%d-%m-%Y %H:%M:%S')
+            datetime_inicio_estimado= ins_evet.datetime_inicio_estimado.strftime('%Y-%m-%d %H:%M:%S')
+            datetime_fin_estimado = ins_evet.datetime_fin_estimado.strftime('%Y-%m-%d %H:%M:%S')
             if ins_evet.datetime_inicio_real:
                 datetime_inicio_real = ins_evet.datetime_inicio_real.strftime('%d-%m-%Y %H:%M:%S')
             else:
@@ -3895,8 +3896,8 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
             else:
                 id_persona_solicitante= ''
             id_persona_alta= ins_evet.id_persona_alta.id
-            datetime_inicio_estimado= ins_evet.datetime_inicio_estimado.strftime('%d-%m-%Y %H:%M:%S')
-            datetime_fin_estimado = ins_evet.datetime_fin_estimado.strftime('%d-%m-%Y %H:%M:%S')
+            datetime_inicio_estimado= ins_evet.datetime_inicio_estimado.strftime('%Y-%m-%d %H:%M:%S')
+            datetime_fin_estimado = ins_evet.datetime_fin_estimado.strftime('%Y-%m-%d %H:%M:%S')
             if ins_evet.datetime_inicio_real:
                 datetime_inicio_real = ins_evet.datetime_inicio_real.strftime('%d-%m-%Y %H:%M:%S')
             else:

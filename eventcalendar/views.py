@@ -193,36 +193,37 @@ class DashboardView(LoginRequiredMixin, View):
             
             if citas.exists():
                     for objeto in citas:
-                            if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                                objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                                citas_vencidas += 1
-                                
-                            if objeto.id_cita.datetime_inicio_real:
-                                fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
-                                dia= objeto.id_cita.datetime_inicio_real.weekday()
-                                dia= dias_semana[dia]
-                                horario= objeto.id_cita.datetime_inicio_real.strftime('%H:%M:%S')
-                                fecha_auxiliar= objeto.id_cita.datetime_inicio_real
-                            else:
-                                fecha= objeto.id_cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
-                                dia= objeto.id_cita.datetime_inicio_estimado.weekday()
-                                dia= dias_semana[dia]
-                                horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
-                                fecha_auxiliar= objeto.id_cita.datetime_inicio_estimado
-                            encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                            citas_vencidas += 1
                             
-                            estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
-                            if objeto.es_tutoria== True:
-                                tipo= 'Cita Tutoría'
-                            elif  objeto.es_orientacion_academica== True:
-                                tipo= 'Cita Orientación Académica'
-                            id= str(objeto.id_cita.id_actividad_academica)
-                            tipo_usuario= 'normal'
-                            
-                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
-                            lista_actividades.append(auxiliar) 
-                            
+                        if objeto.id_cita.datetime_inicio_real:
+                            fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
+                            dia= objeto.id_cita.datetime_inicio_real.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_cita.datetime_inicio_real.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_cita.datetime_inicio_real
+                        else:
+                            fecha= objeto.id_cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                            dia= objeto.id_cita.datetime_inicio_estimado.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_cita.datetime_inicio_estimado
+                        encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
+                        solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
+                        id_solicitante= objeto.id_cita.id_persona_alta.id
+                        
+                        estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                        if objeto.es_tutoria== True:
+                            tipo= 'Cita Tutoría'
+                        elif  objeto.es_orientacion_academica== True:
+                            tipo= 'Cita Orientación Académica'
+                        id= str(objeto.id_cita.id_actividad_academica)
+                        tipo_usuario= 'normal'
+                        
+                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar, 'id_solicitante': id_solicitante}                    
+                        lista_actividades.append(auxiliar) 
+                        
                     
             citas_finalizadas= citas_finalizadas_sin_parti + citas_finalizadas_parti
             citas_confirmadas= citas_confirmadas_sin_parti + citas_confirmadas_parti
@@ -242,64 +243,66 @@ class DashboardView(LoginRequiredMixin, View):
             
             
             if tutorias.exists():
-                        for objeto in tutorias:                            
-                            if objeto.id_tutoria.datetime_inicio_real:
-                                fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
-                                dia= objeto.id_tutoria.datetime_inicio_real.weekday()
-                                dia= dias_semana[dia]
-                                horario= objeto.id_tutoria.datetime_inicio_real.strftime('%H:%M:%S')
-                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_real
-                            else:
-                                fecha= objeto.id_tutoria.datetime_inicio_estimado.strftime('%d-%m-%Y')
-                                dia= objeto.id_tutoria.datetime_inicio_estimado.weekday()
-                                dia= dias_semana[dia]
-                                horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
-                                fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
-                            encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
-                            
-                            estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
-                            tipo= 'Tutoría'
-                            id= str(objeto.id_tutoria.id_actividad_academica)
-                            tipo_usuario= 'normal'
-                            
-                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
-                            lista_actividades.append(auxiliar) 
+                for objeto in tutorias:                            
+                    if objeto.id_tutoria.datetime_inicio_real:
+                        fecha= objeto.id_tutoria.datetime_inicio_real.strftime('%d-%m-%Y')
+                        dia= objeto.id_tutoria.datetime_inicio_real.weekday()
+                        dia= dias_semana[dia]
+                        horario= objeto.id_tutoria.datetime_inicio_real.strftime('%H:%M:%S')
+                        fecha_auxiliar= objeto.id_tutoria.datetime_inicio_real
+                    else:
+                        fecha= objeto.id_tutoria.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                        dia= objeto.id_tutoria.datetime_inicio_estimado.weekday()
+                        dia= dias_semana[dia]
+                        horario= objeto.id_tutoria.datetime_inicio_estimado.strftime('%H:%M:%S')
+                        fecha_auxiliar= objeto.id_tutoria.datetime_inicio_estimado
+                    encargado= str(objeto.id_tutoria.id_funcionario_docente_encargado)
+                    solicitante= objeto.id_tutoria.id_persona_solicitante.nombre + ' ' + objeto.id_tutoria.id_persona_solicitante.apellido
+                    id_solicitante= objeto.id_tutoria.id_persona_solicitante.id
+                    
+                    estado= str(objeto.id_tutoria.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                    tipo= 'Tutoría'
+                    id= str(objeto.id_tutoria.id_actividad_academica)
+                    tipo_usuario= 'normal'
+                    
+                    auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar, 'id_solicitante': id_solicitante}                    
+                    lista_actividades.append(auxiliar) 
+                    
             #orientaciones sin citas
             orientaciones_ = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
             orientaciones_participante = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_actividad_academica__in= registros_participante)
             
-            if tutorias_participante.exists():
+            if orientaciones_participante.exists():
                 #unimos ambos registros 
                 orientaciones = orientaciones_.union(orientaciones_participante)
             else:
                 orientaciones = orientaciones_            
             
             if orientaciones.exists():
-                        for objeto in orientaciones:                                    
-                                if objeto.id_orientacion_academica.datetime_inicio_real:
-                                    fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
-                                    dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
-                                    dia= dias_semana[dia]
-                                    horario= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%H:%M:%S')
-                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_real
-                                else:
-                                    fecha= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y')
-                                    dia= objeto.id_orientacion_academica.datetime_inicio_estimado.weekday()
-                                    dia= dias_semana[dia]
-                                    horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
-                                    fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
-                                encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
-                                solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
-                                
-                                estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
-                                tipo= 'Orientación Académica'
-                                id= str(objeto.id_orientacion_academica.id_actividad_academica)
-                                tipo_usuario= 'normal'
-                                
-                                auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar}                    
-                                lista_actividades.append(auxiliar) 
-            
+                for objeto in orientaciones:                                    
+                        if objeto.id_orientacion_academica.datetime_inicio_real:
+                            fecha= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%d-%m-%Y')
+                            dia= objeto.id_orientacion_academica.datetime_inicio_real.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_orientacion_academica.datetime_inicio_real.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_real
+                        else:
+                            fecha= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                            dia= objeto.id_orientacion_academica.datetime_inicio_estimado.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_orientacion_academica.datetime_inicio_estimado.strftime('%H:%M:%S')
+                            fecha_auxiliar= objeto.id_orientacion_academica.datetime_inicio_estimado
+                        encargado= str(objeto.id_orientacion_academica.id_funcionario_docente_encargado)
+                        solicitante= objeto.id_orientacion_academica.id_persona_solicitante.nombre + ' ' + objeto.id_orientacion_academica.id_persona_solicitante.apellido
+                        id_solicitante= objeto.id_orientacion_academica.id_persona_solicitante.id
+                        estado= str(objeto.id_orientacion_academica.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                        tipo= 'Orientación Académica'
+                        id= str(objeto.id_orientacion_academica.id_actividad_academica)
+                        tipo_usuario= 'normal'
+                        
+                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'fecha_auxiliar': fecha_auxiliar, 'id_solicitante': id_solicitante}                    
+                        lista_actividades.append(auxiliar) 
+    
             running_events = sorted(lista_actividades, key=lambda x: x['fecha_auxiliar'], reverse=True)
             for event in running_events:
                 del event['fecha_auxiliar']

@@ -255,11 +255,11 @@
                 <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Rechazar Cita" hx-get="{% url 'calendarapp:rechazar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-box-arrow-left"></i> Rechazar Cita </button>
             
             {% else %}
-
-                <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Editar Cita</a>
-            
-                <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
-            
+                {% if request.user.id_persona.id == cita.id_cita.id_persona_alta.id %}
+                    <a class="btn btn-primary btn-flat" title="Editar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Editar Cita</a>
+                
+                    <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
+                {% endif %}
             {% endif %}
         </div>
 
@@ -275,8 +275,9 @@
             <a type="button" class="btn btn-primary btn-flat" title="Iniciar Cita" href="{% url 'calendarapp:iniciar_cita_ori_academ' pk=cita.id_cita %}"> <i class="bi bi-caret-right-fill"></i> Iniciar Cita </a>
 
         {% else %}
-            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
-        
+            {% if request.user.id_persona.id == cita.id_cita.id_persona_alta.id %}
+                <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
+            {% endif %}
         {% endif %}
     </div>
 
@@ -289,9 +290,10 @@
         {% if perms.calendarapp.iniciar_cita %}
 
         {% else %}
-            <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
-            <a class="btn btn-primary btn-flat" title="Reagendar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Reagendar Cita</a>
-            
+            {% if request.user.id_persona.id == cita.id_cita.id_persona_alta.id %}
+                <button type="button" class="btn btn-danger btn-flat" hx-target="#dialog" title="Cancelar" hx-get="{% url 'calendarapp:cancelar_cita' id_cita=cita.id_cita %}"> <i class="bi bi-x-lg"></i> Cancelar Cita </button>
+                <a class="btn btn-primary btn-flat" title="Reagendar" href="{% url 'calendarapp:modificar_cita_ori_academica' pk=cita.id_cita %}"> <i class="bi bi-pen"></i> Reagendar Cita</a>
+            {% endif %}
         {% endif %}
     </div>
 

@@ -71,10 +71,10 @@ recha
 https://www.youtube.com/watch?v=HvnPeeLEVq0&t=0s
 https://github.com/sajib1066/event-calendar.git
 
-ver event_list y dashboard 
-agregar los registros en donde el alumno estuvo como participante *(probar)
-habilitar botones de tareas solo a los encargados (detalles, edicion, (iniciar, finalizar) cancelar solo al solicitante), cuando da de alta, *(probar)
-validar que el usuario participante sea diferente del usuario que solicita *(probar)
+
+agregar los registros en donde el alumno estuvo como participante *(listo) 
+habilitar botones de tareas solo a los encargados (edicion, (iniciar, finalizar) cancelar solo al solicitante), cuando da de alta, *(probar) listo
+validar que el usuario participante sea diferente del usuario que solicita *(probar) 
 reportes/consultas con boton de detalle *(probar)
 el administrador podra usar solo a quien le cayo *(probar)
 agregar relacion persona con facultad tb () *(probar)
@@ -85,7 +85,10 @@ print del asana y github
 ver si se puede cambiar el icono de inisio de sesion
 ver si se puede cambiar el aspecto del login
 
-diagrama de componentes
+hacer que solo los solicitantes puedan editar o cancelar la cita, o tutoria y orientacion
+dentro de los detalles y en el calendario
+
+diagrama de componentes 
 en la 1 hora sobre la solucion json 
 Que se ejcute de manera periodica 
 web services (API) para  

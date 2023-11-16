@@ -13,7 +13,7 @@ from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from accounts.models.user import FuncionarioDocente
 from itertools import chain
-from django.db.models import Q,  F, Case, When, Value, IntegerField
+from django.db.models import Q,  F, Case, When, Value, IntegerField, DateTimeField
 from django.db.models.functions import Coalesce
 from django.utils.decorators import method_decorator
 
@@ -106,23 +106,29 @@ class AllEventsListView(ListView):
                 return lista_eventos
                 
             else:
-                event_= Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona)
+                event_= Event.objects.get_all_events().filter(id_cita__id_persona_alta= ins_persona).annotate(
+                    datetime_to_order=Case(
+                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
+                        default=F('id_cita__datetime_inicio_estimado'),
+                        output_field=DateTimeField()
+                    )
+                )
                 
                 participante_cita= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
                 
-                events_participante= Event.objects.get_all_events().filter(id_cita__id_actividad_academica__in= participante_cita)
+                events_participante= Event.objects.get_all_events().filter(id_cita__id_actividad_academica__in= participante_cita).annotate(
+                    datetime_to_order=Case(
+                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
+                        default=F('id_cita__datetime_inicio_estimado'),
+                        output_field=DateTimeField()
+                    )
+                )
+                
                 #unimos ambos registros
                 if events_participante.exists():                 
                     event = event_.union(events_participante)
                 else:
                     event= event_
-                # Anotar el queryset con una expresión que determine el campo de ordenamiento
-                event = event.annotate(
-                    datetime_to_order=Case(
-                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
-                        default=F('id_cita__datetime_inicio_estimado')
-                    )
-                )
 
                 event = event.order_by('-datetime_to_order')
                 
@@ -142,6 +148,7 @@ class AllEventsListView(ListView):
                                 horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
                             encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
                             solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
+                            id_solicitante= objeto.id_cita.id_persona_alta.id
                             
                             estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
                             if objeto.es_tutoria== True:
@@ -151,7 +158,7 @@ class AllEventsListView(ListView):
                             id= str(objeto.id_cita.id_actividad_academica)
                             tipo_usuario= 'normal'
                             
-                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
+                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'id_solicitante': id_solicitante}                    
                             lista_eventos.append(auxiliar) 
                 
                 return lista_eventos
@@ -385,7 +392,7 @@ class ActividadesAcademicasListView(ListView):
                 orientacion_finalizada= orientaciones.filter(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica= 'Finalizada').count()
                 orientacion_vencida= orientaciones.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now()).count()  
             else:
-                participantes_events= DetalleActividadAcademica.objects.get(id_participante= ins_persona).values('id_actividad_academica')
+                participantes_events= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
                 tutorias_participantes= Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_actividad_academica__in= participantes_events)
                 tutorias = Tutoria.objects.select_related("id_tutoria").filter(id_cita= None, id_tutoria__id_persona_solicitante= ins_persona)
                 orientaciones = OrientacionAcademica.objects.select_related("id_orientacion_academica").filter(id_cita= None, id_orientacion_academica__id_persona_solicitante= ins_persona)
@@ -500,49 +507,56 @@ class RunningEventsListView(ListView):
                 return lista_eventos
             else:
                 detalle_events= DetalleActividadAcademica.objects.filter(id_participante= ins_persona).values('id_actividad_academica')
-                event_= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona)
-                event_participantes= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_actividad_academica__in= detalle_events)
+                event_= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_persona_alta= ins_persona).annotate(
+                    datetime_to_order=Case(
+                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
+                        default=F('id_cita__datetime_inicio_estimado'),
+                        output_field=DateTimeField()
+                    )
+                )
+                
+                event_participantes= Event.objects.get_running_events(tipo_cita= parametro).filter(id_cita__id_actividad_academica__in= detalle_events).annotate(
+                    datetime_to_order=Case(
+                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
+                        default=F('id_cita__datetime_inicio_estimado'),
+                        output_field=DateTimeField()
+                    )
+                )
                 if event_participantes.exists():
-                    event= event_
+                    event= event_.union(event_participantes)
                 else:
                     event= event_
                     
-                event = event.annotate(
-                    datetime_to_order=Case(
-                        When(id_cita__datetime_inicio_real__isnull=False, then=F('id_cita__datetime_inicio_real')),
-                        default=F('id_cita__datetime_inicio_estimado')
-                    )
-                )
-
                 event = event.order_by('-datetime_to_order')
                 
                 if event.exists():
                     for objeto in event:
-                            if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
-                                objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
-                            if objeto.id_cita.datetime_inicio_real:
-                                fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
-                                dia= objeto.id_cita.datetime_inicio_real.weekday()
-                                dia= dias_semana[dia]
-                                horario= objeto.id_cita.datetime_inicio_real.strftime('%H:%M:%S')
-                            else:
-                                fecha= objeto.id_cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
-                                dia= objeto.id_cita.datetime_inicio_estimado.weekday()
-                                dia= dias_semana[dia]
-                                horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
-                            encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
-                            solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
-                            
-                            estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
-                            if objeto.es_tutoria== True:
-                                tipo= 'Tutoría'
-                            elif  objeto.es_orientacion_academica== True:
-                                tipo= 'Orientación Académica'
-                            id= str(objeto.id_cita.id_actividad_academica)
-                            tipo_usuario= 'normal'
-                            
-                            auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario}                    
-                            lista_eventos.append(auxiliar) 
+                        if objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica not in ('Finalizada', 'Cancelada', 'Rechazada') and objeto.id_cita.datetime_fin_estimado <= datetime.now():
+                            objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica = 'Vencida'
+                        if objeto.id_cita.datetime_inicio_real:
+                            fecha= objeto.id_cita.datetime_inicio_real.strftime('%d-%m-%Y')
+                            dia= objeto.id_cita.datetime_inicio_real.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_cita.datetime_inicio_real.strftime('%H:%M:%S')
+                        else:
+                            fecha= objeto.id_cita.datetime_inicio_estimado.strftime('%d-%m-%Y')
+                            dia= objeto.id_cita.datetime_inicio_estimado.weekday()
+                            dia= dias_semana[dia]
+                            horario= objeto.id_cita.datetime_inicio_estimado.strftime('%H:%M:%S')
+                        encargado= str(objeto.id_cita.id_funcionario_docente_encargado)
+                        solicitante= objeto.id_cita.id_persona_alta.nombre + ' ' + objeto.id_cita.id_persona_alta.apellido
+                        id_solicitante= objeto.id_cita.id_persona_alta.id
+                        
+                        estado= str(objeto.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica)
+                        if objeto.es_tutoria== True:
+                            tipo= 'Tutoría'
+                        elif  objeto.es_orientacion_academica== True:
+                            tipo= 'Orientación Académica'
+                        id= str(objeto.id_cita.id_actividad_academica)
+                        tipo_usuario= 'normal'
+                        
+                        auxiliar= {'fecha': fecha, 'dia': dia, 'horario': horario, 'estado': estado, 'encargado': encargado, 'solicitante': solicitante, 'tipo': tipo, 'id': id, 'tipo_usuario': tipo_usuario, 'id_solicitante': id_solicitante}                    
+                        lista_eventos.append(auxiliar)
                 return lista_eventos
         #return Event.objects.get_running_events(user=self.request.user) 
         except Exception as e:

@@ -346,9 +346,9 @@ class ReporteTutoriaView(TemplateView):
 
                 if id_funcionario_docente_encargado and id_funcionario_docente_encargado != "":
                     queryset = queryset.filter(id_tutoria__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
-                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == "":
+                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == ""  and request.user.is_superuser == False:
                     #obtenemos el funcionario docente que esta solicitando
-                    current_user = request.user.id_persona
+                    current_user = request.user.id_persona.id
                     #traemos el id del func_doc
                     funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user)
                     queryset = queryset.filter(id_tutoria__id_funcionario_docente_encargado= funcionario_docente)
@@ -463,9 +463,9 @@ class ReporteOrientacionAcademicaView(TemplateView):
 
                 if id_funcionario_docente_encargado and id_funcionario_docente_encargado != "":
                     queryset = queryset.filter(id_orientacion_academica__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
-                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == "":
+                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == "" and request.user.is_superuser == False:
                     #obtenemos el funcionario docente que esta solicitando
-                    current_user = request.user.id_persona
+                    current_user = request.user.id_persona.id
                     #traemos el id del func_doc
                     funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user)
                     queryset = queryset.filter(id_orientacion_academica__id_funcionario_docente_encargado= funcionario_docente)
@@ -598,9 +598,9 @@ class ReporteCitasView(TemplateView):
                 if id_funcionario_docente_encargado and id_funcionario_docente_encargado != "":
                     queryset = queryset.filter(id_cita__id_funcionario_docente_encargado= id_funcionario_docente_encargado)
                     
-                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == "":
+                elif id_funcionario_docente_encargado and id_funcionario_docente_encargado == "" and request.user.is_superuser == False:
                     #obtenemos el funcionario docente que esta solicitando
-                    current_user = request.user.id_persona
+                    current_user = request.user.id_persona.id
                     #traemos el id del func_doc
                     funcionario_docente=  FuncionarioDocente.objects.filter(id_funcionario_docente= current_user)
                     queryset = queryset.filter(id_cita__id_funcionario_docente_encargado= funcionario_docente)
@@ -755,9 +755,9 @@ class ReporteTareasView(TemplateView):
                 if id_persona_alta and id_persona_alta != "":
                     queryset = queryset.filter(id_persona_alta= id_persona_alta)
                 
-                elif id_persona_alta and id_persona_alta == "":
+                elif id_persona_alta and id_persona_alta == "" and request.user.is_superuser == False:
                     #obtenemos la persona que esta solicitando
-                    current_user = request.user.id_persona
+                    current_user = request.user.id_persona.id
                     queryset = queryset.filter(id_cita__id_funcionario_docente_encargado= current_user)
                     
                 #preguntamos si existen registros 
