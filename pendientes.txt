@@ -72,23 +72,23 @@ https://www.youtube.com/watch?v=HvnPeeLEVq0&t=0s
 https://github.com/sajib1066/event-calendar.git
 
 
-agregar los registros en donde el alumno estuvo como participante *(listo) 
-habilitar botones de tareas solo a los encargados (edicion, (iniciar, finalizar) cancelar solo al solicitante), cuando da de alta, *(probar) listo
-validar que el usuario participante sea diferente del usuario que solicita *(probar) 
-reportes/consultas con boton de detalle *(probar)
-el administrador podra usar solo a quien le cayo *(probar)
-agregar relacion persona con facultad tb () *(probar)
-mutuamente excluyente *(probar)
-una seccion especial para el administrador *(probar)
-disenho al panel de administración *(probar)
-print del asana y github
-ver si se puede cambiar el icono de inisio de sesion
-ver si se puede cambiar el aspecto del login
+agregar los registros en donde el alumno estuvo como participante, botones solo a los solicitantes *(listo) 
+habilitar botones de tareas solo a los encargados (iniciar, finalizar) cancelar solo al solicitante, cuando da de alta, *(listo) 
+validar que el usuario participante sea diferente del usuario que solicita *(listo) 
+reportes/consultas con boton de detalle *(listo)
+el administrador podra usar solo a quien le cayo *(listo)
+agregar relacion persona con facultad tb () *(listo)
+mutuamente excluyente *(listo)
+una seccion especial para el administrador *(listo)
+disenho al panel de administración *(listo)
+print del asana y github *(listo)
+ver si se puede cambiar el icono de inisio de sesion *(listo)
+ver si se puede cambiar el aspecto del login *(listo)
 
-hacer que solo los solicitantes puedan editar o cancelar la cita, o tutoria y orientacion
-dentro de los detalles y en el calendario
+hacer que solo los solicitantes puedan editar o cancelar la cita, o tutoria y orientacion *(listo)
+dentro de los detalles y en el calendario *(listo)
 
-diagrama de componentes 
+diagrama de componentes  *(listo)
 en la 1 hora sobre la solucion json 
 Que se ejcute de manera periodica 
 web services (API) para  
@@ -106,3 +106,17 @@ claro #4f5962
 
 preguntar para agregar mas detalle al nombre?
 preguntar para cambiar el ultimo objetivo especifico
+
+
+Cuales son las tablas que debemos cargar con servicios web
+Tipo documento, 
+Persona, listo
+Alumno, listo,
+Facultad, listo,
+Departamento, listo,
+Carrera, listo,
+Carrera alumno, listo,
+Materia, listo,
+Materia Carrera, , listo,
+
+

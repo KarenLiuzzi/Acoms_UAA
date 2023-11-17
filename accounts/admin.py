@@ -7,10 +7,10 @@ from django.contrib.auth.password_validation import validate_password
 
 #registramos nuestros modelos en la pantalla de admin
 admin.site.register(Persona)
-admin.site.register(TipoDocumento)
+# admin.site.register(TipoDocumento)
 admin.site.register(Alumno)
-admin.site.register(Funcionario)
-admin.site.register(Docente)
+# admin.site.register(Funcionario)
+# admin.site.register(Docente)
 # admin.site.register(FuncionarioDocente)
 # admin.site.register(User)
 
@@ -167,16 +167,16 @@ admin.site.register(User, UserAdmin)
 #     search_fields = ('descripcion_departamento',)  # Búsqueda por campo
 
 
-# @admin.register(Materia)
-# class MateriaAdmin(admin.ModelAdmin):
+@admin.register(Materia)
+class MateriaAdmin(admin.ModelAdmin):
 
-#     def departamento_nombre(self, obj):
-#         return '%s' % (obj.id_departamento.descripcion_departamento) 
-#     departamento_nombre.short_description = 'Departamento'
+    def departamento_nombre(self, obj):
+        return '%s' % (obj.id_departamento.descripcion_departamento) 
+    departamento_nombre.short_description = 'Departamento'
 
-#     list_display = ['descripcion_materia', 'departamento_nombre'] # Campos a mostrar en la lista
-#     list_filter = ('descripcion_materia',)  # Filtro por campo
-#     search_fields = ('descripcion_materia',)  # Búsqueda por campo
+    list_display = ['descripcion_materia', 'departamento_nombre'] # Campos a mostrar en la lista
+    list_filter = ('descripcion_materia',)  # Filtro por campo
+    search_fields = ('descripcion_materia',)  # Búsqueda por campo
 
 # #esto tb comentamos momentaneamente
 # # @admin.register(MateriaFuncionarioDocente)
