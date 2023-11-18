@@ -347,7 +347,7 @@ def importar_datos():
                     telefono = dato['telefono']
                     # Intenta actualizar el registro si ya existe, o crea uno nuevo si no existe
                     departamento, created = Departamento.objects.update_or_create(
-                        descripcion_departamento=descripcion_facultad,
+                        descripcion_departamento=descripcion_departamento, id_facultad= ins_facultad,
                         defaults={'descripcion_departamento': descripcion_departamento, 'id_facultad': ins_facultad , 'telefono': telefono}  
                     )
             except Exception as e:
@@ -418,7 +418,7 @@ def importar_datos():
                     
                     # Intenta actualizar el registro si ya existe, o crea uno nuevo si no existe
                     facultad, created = Carrera.objects.update_or_create(
-                        descripcion_carrera=descripcion_carrera,
+                        descripcion_carrera=descripcion_carrera, id_facultad= ins_facultad,
                         defaults={'descripcion_carrera': descripcion_carrera, 'id_facultad': ins_facultad}  
                     )
             
@@ -492,7 +492,7 @@ def importar_datos():
                     
                     # Intenta actualizar el registro si ya existe, o crea uno nuevo si no existe
                     carrera_alumno, created = CarreraAlumno.objects.update_or_create(
-                        id_alumno=ins_alumno,
+                        id_alumno=ins_alumno, id_carrera= ins_carrera,
                         defaults={'id_alumno': ins_alumno, 'id_carrera': ins_carrera}  
                     )
             
@@ -565,7 +565,7 @@ def importar_datos():
                     
                     # Intenta actualizar el registro si ya existe, o crea uno nuevo si no existe
                     materia, created = Materia.objects.update_or_create(
-                        descripcion_materia=descripcion_materia,
+                        descripcion_materia=descripcion_materia, id_departamento= ins_departamento,
                         defaults={'descripcion_materia': descripcion_materia, 'id_departamento': ins_departamento}  
                     )
             

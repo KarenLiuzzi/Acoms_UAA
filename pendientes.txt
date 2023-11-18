@@ -104,8 +104,7 @@ rgb(23, 162, 184)
 gris oscuro por claro
 claro #4f5962
 
-preguntar para agregar mas detalle al nombre?
-preguntar para cambiar el ultimo objetivo especifico
+
 
 
 Cuales son las tablas que debemos cargar con servicios web
@@ -120,3 +119,27 @@ Materia, listo,
 Materia Carrera, , listo,
 
 
+- Agregar los registros en donde el alumno estuvo como participante.
+- Habilitar botones de (iniciar, finalizar) en las tareas solo a los encargados y la opción (cancelar) estará habilitado tanto para el encargado como al solicitante.
+- Validar que el usuario participante sea diferente del usuario que solicita o registre.
+- Reportes/consultas con botón de detalle para visualizar el registro.
+- Habilitar la opción al administrador para que pueda filtrar por encargados de citas, tutorías y orientaciones respecto a las tareas a los solicitantes. En cuanto a los funcionarios/docentes solo podrán filtrar registros gestionados por ellos.
+- Agregar relación persona con facultad y departamento y que ambos sean mutuamente excluyentes.
+- Cambiar el diseño del panel de Administración para que se unifique con la del portal web.
+- Agregar print de pantalla del asana y github a la documentación.
+- Diagrama de componentes.
+- Utilizar web services para replicar la obtención y vuelco de los datos externos de la facultad que precisara el sistema.
+Tablas a cargar 
+Tipo documento, 
+Persona,
+Alumno, 
+Facultad, 
+Departamento, 
+Carrera, 
+Carrera alumno, 
+Materia, 
+Materia Carrera,
+
+Adicional (documentación)
+Agregar mas detalle al nombre del software
+Revisar el ultimo objetivo especifico
