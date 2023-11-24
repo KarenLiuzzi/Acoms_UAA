@@ -104,7 +104,8 @@ rgb(23, 162, 184)
 gris oscuro por claro
 claro #4f5962
 
-
+https://realpython.com/asynchronous-tasks-with-django-and-celery/
+https://rahulbeniwal26119.medium.com/django-celery-practical-implementation-under-9-mins-c42bbcee84aa
 
 
 Cuales son las tablas que debemos cargar con servicios web
@@ -120,13 +121,12 @@ Materia Carrera, , listo,
 
 
 - Agregar los registros en donde el alumno estuvo como participante.
-- Habilitar botones de (iniciar, finalizar) en las tareas solo a los encargados y la opción (cancelar) estará habilitado tanto para el encargado como al solicitante.
+- Habilitar botones de (iniciar, finalizar) en las tareas solo a los encargados y la opción (cancelar) estará habilitado tanto para el encargado como al solicitante. Orientacion 60
 - Validar que el usuario participante sea diferente del usuario que solicita o registre.
-- Reportes/consultas con botón de detalle para visualizar el registro.
-- Habilitar la opción al administrador para que pueda filtrar por encargados de citas, tutorías y orientaciones respecto a las tareas a los solicitantes. En cuanto a los funcionarios/docentes solo podrán filtrar registros gestionados por ellos.
 - Agregar relación persona con facultad y departamento y que ambos sean mutuamente excluyentes.
+- Reportes/consultas con botón de detalle para visualizar el registro. -
+- Habilitar la opción al administrador para que pueda filtrar por encargados de citas, tutorías y orientaciones respecto a las tareas a los solicitantes. En cuanto a los funcionarios/docentes solo podrán filtrar registros gestionados por ellos.
 - Cambiar el diseño del panel de Administración para que se unifique con la del portal web.
-- Agregar print de pantalla del asana y github a la documentación.
 - Diagrama de componentes.
 - Utilizar web services para replicar la obtención y vuelco de los datos externos de la facultad que precisara el sistema.
 Tablas a cargar 
@@ -141,5 +141,15 @@ Materia,
 Materia Carrera,
 
 Adicional (documentación)
+- Agregar print de pantalla del asana y github a la documentación.
 Agregar mas detalle al nombre del software
 Revisar el ultimo objetivo especifico
+
+
+agregar el envio de mail cuando falla alguna tarea
+ver si debe continuar o no con las siguientes insersiones
+agregar las validaciones dentro de las descripciones de casos de uso (detalle participantes, agregar tarea, calendario, funcioanrio/docente)
+agregar caso de uso de administrar funcionario/docente
+agregar ejemplos de como recibira los datos en json para poder insertar 
+ver mejor el diagrama de despliegue
+enviar al decano
