@@ -58,6 +58,9 @@ def importar_datos():
                     )
             except Exception as e:
                 print(f'Error al insertar datos de TipoDocumento: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla TipoDocumento. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
     #respuestas incorrectas lado del cliente
@@ -66,6 +69,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'TipoDocumento')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla TipoDocumento. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -73,6 +79,9 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'TipoDocumento')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla TipoDocumento. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
         
     
     ###########################################
@@ -149,6 +158,9 @@ def importar_datos():
             
             except Exception as e:
                 print(f'Error al insertar datos de persona: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Persona. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
     #respuestas incorrectas lado del cliente
@@ -157,6 +169,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Persona')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Persona. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -164,6 +179,9 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Persona')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Persona. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
         
     
     ###########################################
@@ -214,6 +232,9 @@ def importar_datos():
             
             except Exception as e:
                 print(f'Error al insertar datos de alumno: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Alumno. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
                 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
     #respuestas incorrectas lado del cliente
@@ -222,6 +243,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Alumno')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Alumno. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -229,6 +253,9 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Alumno')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Alumno. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
                 
     
     ###########################################
@@ -278,6 +305,9 @@ def importar_datos():
             
             except Exception as e:
                 print(f'Error al insertar datos de facultad: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Facultad. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
                 
 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
@@ -287,6 +317,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Facultad')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Facultad. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -294,6 +327,9 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Facultad')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Facultad. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
 
     ###########################################
@@ -352,6 +388,9 @@ def importar_datos():
                     )
             except Exception as e:
                 print(f'Error al insertar datos de Departamento: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Departamento. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
                 
 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
@@ -361,6 +400,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Departamento')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Departamento. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -368,6 +410,9 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Departamento')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Departamento. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
         
         
     ###########################################
@@ -424,6 +469,9 @@ def importar_datos():
             
             except Exception as e:
                 print(f'Error al insertar datos de Carrera: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Carrera. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
                 
 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
@@ -433,6 +481,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Carrera')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Carrera. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -440,6 +491,9 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Carrera')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Carrera. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
         
         
     ###########################################
@@ -498,6 +552,9 @@ def importar_datos():
             
             except Exception as e:
                 print(f'Error al insertar datos de CarreraAlumno: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla CarreraAlumno. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
                 
 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
@@ -507,6 +564,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'CarreraAlumno')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla CarreraAlumno. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -514,6 +574,10 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'CarreraAlumno')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla CarreraAlumno. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
+
 
 
 
@@ -571,6 +635,9 @@ def importar_datos():
             
             except Exception as e:
                 print(f'Error al insertar datos de Materia: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Materia. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
                 
 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
@@ -580,6 +647,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Materia')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Materia. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -587,6 +657,9 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'Materia')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla Materia. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
         
         
     ###########################################
@@ -645,6 +718,9 @@ def importar_datos():
             
             except Exception as e:
                 print(f'Error al insertar datos de MateriaCarrera: {str(e)}')
+                contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla MateriaCarrera. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+                title = 'Error en vuelco de datos AcOMs'
+                enviarcorreo(title, contenido)
                 
 
     # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
@@ -654,6 +730,9 @@ def importar_datos():
         cod_error= str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'MateriaCarrera')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla MateriaCarrera. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
 
     # respuestas incorrectas lado del servidor
     elif (199 < response.status_code < 300):
@@ -661,6 +740,9 @@ def importar_datos():
         cod_error = str(response.status_code)
         JSON = response.json()
         crear_archivo_error(JSON, cod_error, 'MateriaCarrera')
+        contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla MateriaCarrera. Puede verificar el mismo en el archivo txt generado. Atte equipo AcOms.'
+        title = 'Error en vuelco de datos AcOMs'
+        enviarcorreo(title, contenido)
     
 
     def crear_archivo_error(json, cod, tabla):
@@ -670,3 +752,49 @@ def importar_datos():
         with open('C:\\Users\\equipo\\Documents\\Errores\\Error_Tipo_' + tabla + '_' + cod + '_' + hoy + '.txt', 'w') as json_file:
             json.dump(data, json_file)
     
+
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def enviarcorreo(asunto, contenido):
+    
+    destinatario= 'hcorrea@uaa.edu.py '
+    # Configura tus credenciales de Outlook
+    sender_email = 'kaliuzzi@uaa.edu.py'
+    sender_password = 'Yad92906'
+
+    # Configura el servidor SMTP de Outlook
+    smtp_server = 'smtp-mail.outlook.com'
+    smtp_port = 587  # Puerto de Outlook para TLS (587)
+
+    # Crea un objeto SMTP
+    server = smtplib.SMTP(smtp_server, smtp_port)
+
+    # Inicia la conexión TLS (segura)
+    server.starttls()
+
+    # Inicia sesión en tu cuenta de Gmail
+    server.login(sender_email, sender_password)
+
+    # Crea el mensaje de correo
+    subject = asunto
+    body = contenido
+    recipient_email = destinatario
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        # Envía el correo
+        server.sendmail(sender_email, recipient_email, msg.as_string())
+        # Cierra la conexión SMTP
+        server.quit()
+        print('Correo enviado con éxito')
+    except Exception as e:
+        print(f"Se ha producido un error: {e}")
+        
