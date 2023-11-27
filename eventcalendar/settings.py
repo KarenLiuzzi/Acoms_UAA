@@ -126,6 +126,7 @@ JAZZMIN_SETTINGS = {
     "icons": {
         "auth.permission": "fas fa-users-cog",
         "accounts.user": "fas fa-user",
+        "accounts.funcionariodocente": "",
         "auth.Group": "fas fa-users",
         
         "calendarapp.dia": "",

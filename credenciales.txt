@@ -24,8 +24,8 @@ pass HolaMundo!26!
 #cargamos una persona especifica para el objecto de persona/DocenteFuncionario este es el que tiene cargado registros de su calendario
 id 3
 ci 789654
-Luis 
-Diaz
+blanca
+baez
 mail luidi@test.com
 pass HolaMundo!25!
 va ser docente de TIC
@@ -73,7 +73,7 @@ informatica
 hugocorrea@test.com
 HolaMundo!2023!
 
-blanca baez
+luis diaz
 6050089
 departamento de e-learning
 blancabaez@test.com

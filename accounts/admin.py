@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 
 #registramos nuestros modelos en la pantalla de admin
-# admin.site.register(Persona)
+#admin.site.register(Persona)
 # admin.site.register(TipoDocumento)
 # admin.site.register(Alumno)
 # admin.site.register(Funcionario)

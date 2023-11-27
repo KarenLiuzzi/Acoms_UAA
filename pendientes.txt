@@ -148,10 +148,8 @@ Revisar el ultimo objetivo especifico
 
 agregar el envio de mail cuando falla alguna tarea *listo
 agregar las validaciones dentro de las descripciones de casos de uso (detalle participantes, agregar tarea, calendario, funcioanrio/docente, tutoria, orientacion)
-agregar caso de uso de administrar funcionario/docente
+agregar caso de uso de administrar funcionario/docente *listo
 agregar ejemplos de como recibira los datos en json para poder insertar *listo
 ver mejor el diagrama de despliegue *listo
 enviar al decano
-
-
 agregar dia, funcionario/docente y permiso en diagramas *listo

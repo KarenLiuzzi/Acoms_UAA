@@ -100,9 +100,12 @@ class ConvocatoriaForm(forms.ModelForm):
         
         # Verificar si ya existe un objeto con la misma descripción
         existing_object = Convocatoria.objects.filter(id_semestre= id_semestre, anho = anho, fecha_inicio= fecha_inicio, fecha_fin= fecha_fin)
-        
+        convocatoria= Convocatoria.objects.filter(id_semestre= id_semestre, anho = anho)
         if existing_object.exists():
             raise ValidationError('¡Ya existe un registro con el rango de fechas para el semestre y año!')
+        
+        if convocatoria.exists():
+            raise ValidationError('¡Ya existe un registro para el semestre y año cargado!')
 
         if ((fecha_inicio and fecha_fin) and (fecha_inicio > fecha_fin)):
             raise ValidationError('¡La fecha inicio no puede ser mayor que la fecha fin!')
@@ -183,14 +186,30 @@ class ParametroForm(forms.ModelForm):
         valor = cleaned_data.get('valor')
         es_orientacion_academica = cleaned_data.get('es_orientacion_academica')
         es_tutoria = cleaned_data.get('es_tutoria')
-        
-        if descripcion_parametro is not None:
-            # Verificar si ya existe un objeto con la misma descripción
-            existing_object = Parametro.objects.filter(descripcion_parametro__contains= descripcion_parametro)
-        
-            if existing_object.exists():
-                raise ValidationError('¡La descripción ya existe en la base de datos!')
 
+        if valor is not None:
+            if valor <= 0:
+                raise ValidationError('¡El valor debe ser mayor que cero!')
+        
+        if (es_orientacion_academica == True and es_tutoria == True):
+            raise ValidationError('¡Por favor, selecciona solo un campo de tipo de actividad académica, no ambos!')
+        
+        if (es_orientacion_academica == False and es_tutoria == False):
+            raise ValidationError('¡Por favor, selecciona una actividad academica académica!')
+        
+        if es_orientacion_academica == True:
+            # Verificar si ya existe un objeto con la misma descripción
+            ins_es_orientacion_academica = Parametro.objects.filter(es_orientacion_academica= es_orientacion_academica)
+        
+            if ins_es_orientacion_academica.exists():
+                raise ValidationError('¡Ya existe un registro cargado para orientación académica en la base de datos!')
+                    
+        if es_tutoria == True:
+            # Verificar si ya existe un objeto con la misma descripción
+            ins_es_tutoria = Parametro.objects.filter(es_tutoria= es_tutoria)
+        
+            if ins_es_tutoria.exists():
+                raise ValidationError('¡Ya existe un registro cargado para tutoría en la base de datos!')
 class ParametroAdmin(admin.ModelAdmin):
 
     form= ParametroForm
