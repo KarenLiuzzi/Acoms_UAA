@@ -411,10 +411,15 @@ def actualizar_campo(request):
             selected_option = request.user.id_persona
             #traemos el departamento de funcionario
             funcionario_departamento =  FuncionarioDocente.objects.filter(id_funcionario_docente= selected_option).values("id_departamento")
-            departamento_facultad= Departamento.objects.filter(id_departamento__in = funcionario_departamento).values("id_facultad")
-            
-            queryset= ""
-            queryset= Facultad.objects.filter(id_facultad__in = departamento_facultad)
+            if funcionario_departamento.exists() and funcionario_departamento[0]['id_departamento'] != None: #en caso de que se trate de un funcionario que este asignado a un departamento
+                departamento_facultad= Departamento.objects.filter(id_departamento__in = funcionario_departamento).values("id_facultad")
+                
+                queryset= ""
+                queryset= Facultad.objects.filter(id_facultad__in = departamento_facultad)
+            else: #en caso de que se trate de un encargado de la facultad
+                funcionario_departamento =  FuncionarioDocente.objects.filter(id_funcionario_docente= selected_option).values("id_facultad")
+                queryset= ""
+                queryset= Facultad.objects.filter(id_facultad__in = funcionario_departamento)
             
             # Pasar los datos del queryset a datos HTML
             options = ''
