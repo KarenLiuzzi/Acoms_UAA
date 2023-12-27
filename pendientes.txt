@@ -153,3 +153,5 @@ agregar ejemplos de como recibira los datos en json para poder insertar *listo
 ver mejor el diagrama de despliegue *listo
 enviar al decano
 agregar dia, funcionario/docente y permiso en diagramas *listo
+
+ver en registro de iniciar orientacion academica xq no funciona la carga de tareas

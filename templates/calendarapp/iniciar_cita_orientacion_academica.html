@@ -655,6 +655,10 @@
             actualizartipo_ori_academ();
             cambiarValorHora();
             actualizarmateria();
+            //actualizamos una vez se haya cargado los primeros datos para no alterar la carga de datos
+            actualizar_personas();
+            actualizar_tipo_tarea();
+            actualizar_estado_tarea();
 
             function actualizar_personas() {
                 $.ajax({
@@ -825,10 +829,6 @@
                         if (band_boton_selects == 1) {
                             $('#id_id_funcionario_docente_encargado').val(lista_cita[0]['id_funcionario_docente_encargado']);
 
-                            //actualizamos una vez se haya cargado los primeros datos para no alterar la carga de datos
-                            actualizar_personas();
-                            actualizar_tipo_tarea();
-                            actualizar_estado_tarea();
                         }
                         band_boton_selects= band_boton_selects + 1
                     },

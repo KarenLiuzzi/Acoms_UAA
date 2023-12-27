@@ -556,6 +556,11 @@
             actualizartipo_tutoria();
             cambiarValorHora();
 
+            //actualizamos una vez se haya cargado los primeros datos para no alterar la carga de datos
+            actualizar_personas();
+            actualizar_tipo_tarea();
+            actualizar_estado_tarea();
+
 
             //funcion para crear tabla vacia de tareas
             function reiniciar_tblTareas() {
@@ -789,10 +794,7 @@
                         //ponemos los valores ya cargados en los selects, solo si es la primera vez
                         if (band_boton_selects == 2){
                             $('#id_id_materia').val(lista_cita[0]['id_materia']);
-                            //actualizamos una vez se haya cargado los primeros datos para no alterar la carga de datos
-                            actualizar_personas();
-                            actualizar_tipo_tarea();
-                            actualizar_estado_tarea();
+                            
                         }
                         band_boton_selects= band_boton_selects + 1
                         
