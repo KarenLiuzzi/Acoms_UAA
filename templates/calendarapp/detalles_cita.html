@@ -44,8 +44,8 @@
           <div class="row">
             <div class="col-md-20">
               <label class="label" for="receptor">Motivo:</label>
-              {% if cita.id_cita.motivo %}
-                {{ cita.id_cita.motivo}} 
+              {% if cita.motivo and  cita.motivo != '' %}
+                {{ cita.motivo}} 
               {% else %}
                 ----------
               {% endif %}
