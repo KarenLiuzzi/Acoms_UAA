@@ -6,7 +6,9 @@ from calendarapp.models.event import Event
 from accounts.models.user import TipoDocumento, Persona, Alumno, Facultad, Departamento, Carrera, CarreraAlumno, Materia, MateriaCarrera
 from django.db import transaction
 from datetime import datetime
-today = datetime.now()
+import pytz
+zona_horaria_py = 'Etc/GMT-4'
+today = datetime.now(pytz.timezone(zona_horaria_py))
 hoy = today.strftime("%d_%m_%Y_%H_%M_%S")
 
 @shared_task

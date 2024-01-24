@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 from datetime import timedelta
-from schedule import every
+#import schedule
 
 import os
 
@@ -81,10 +81,21 @@ WSGI_APPLICATION = "eventcalendar.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'AcOMs',
+        'USER': 'postgres',
+        'PASSWORD': 'test',
+        'HOST': 'localhost',  # Si la base de datos está en el mismo servidor
+        'PORT': '5432',      # El puerto predeterminado de PostgreSQL
     }
 }
 
@@ -235,6 +246,8 @@ USE_TZ = False
 
 STATIC_URL = "/static/"
 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 
@@ -272,15 +285,15 @@ CHANNEL_LAYERS = {
 
 
 # Configuración de Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-CELERY_BEAT_SCHEDULE = {
-    'mi-tarea-programada': {
-        'task': '/task.py',  # especifica la ruta de la tarea que deseas programar
-        'schedule': every(1).day.at('00:00'),  # se ejecuta diariamente a medianoche
-    },
-}
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'UTC'
+# CELERY_BEAT_SCHEDULE = {
+#     'mi-tarea-programada': {
+#         'task': '/task.py',  # especifica la ruta de la tarea que deseas programar
+#         'schedule': schedule.every(1).day.at('00:00'),  # se ejecuta diariamente a medianoche
+#     },
+# }

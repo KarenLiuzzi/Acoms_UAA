@@ -1,6 +1,7 @@
 # cal/views.py
 import json
 from django.utils import timezone
+import pytz
 from turtle import title
 from django.contrib import messages
 from django.forms import model_to_dict
@@ -29,6 +30,9 @@ from datetime import datetime, timedelta, date
 from django.core import serializers
 import pandas as pd
 from django.db.models import Q, F, Case, When
+
+zona_horaria_py = 'Etc/GMT-4'
+
 @login_required
 def get_date(req_day):
     if req_day:
@@ -472,7 +476,7 @@ def actualizar_campo(request):
             #Traemos las carreras que esta inscripto el alumno
             carrera_facultad= CarreraAlumno.objects.filter(id_alumno= current_user).values('id_carrera')
             carrera= Carrera.objects.filter(id_carrera__in= carrera_facultad).values('id_facultad')
-            facultad_carrera= Facultad.objects.filter(facultad__in= carrera_facultad)
+            facultad_carrera= Facultad.objects.filter(id_facultad__in= carrera_facultad)
             queryset= ""
             queryset = facultad_carrera
             # Pasar los datos del queryset a datos HTML
@@ -685,7 +689,7 @@ def actualizar_campo(request):
     if campo == "convocatoria":
         try:
             # Obtén la fecha actual
-            fecha_actual = datetime.now().date()
+            fecha_actual = datetime.now(pytz.timezone(zona_horaria_py)).date()
             queryset= ""
             #traemos la convocatoria actual
             prueba= Convocatoria.objects.filter(id_convocatoria= 1).values('fecha_fin')
@@ -1298,7 +1302,7 @@ class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     cita = Event()
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='pendiente').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Pendiente').first()
                     #buscamos el departamento al cual esta asociado la materia
                     id_materia= actividad_academica['id_materia']
                     id_departamento= Materia.objects.filter(id_materia= id_materia).values("id_departamento").first()
@@ -1330,7 +1334,8 @@ class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
-                    cita.datetime_registro= datetime.now()
+                    print(datetime.now(pytz.timezone(zona_horaria_py)))
+                    cita.datetime_registro= datetime.now(pytz.timezone(zona_horaria_py))
                     cita.save()
                     
                     #traemos la instancia de la actividad academica
@@ -1341,7 +1346,7 @@ class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
                     cita_hijo.id_cita= ins_actividad_academica
                     cita_hijo.es_tutoria= True
                     #traemos el parametro actual 
-                    id_parametro = Parametro.objects.filter(es_tutoria= True, id_unidad_medida__descripcion_unidad_medida__contains='minuto').first()
+                    id_parametro = Parametro.objects.filter(es_tutoria= True, id_unidad_medida__descripcion_unidad_medida__contains='inuto').first()
                     cita_hijo.id_parametro= id_parametro
                     cita_hijo.motivo= actividad_academica['motivo']
                     cita_hijo.save()
@@ -1359,7 +1364,7 @@ class CitaTutoriaCreateView(LoginRequiredMixin, CreateView):
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
             data['error'] = str(e)
-            print('aqui')
+            #print('aqui')
             #probar
         return JsonResponse(data, safe=False) #, json_dumps_params=[{"showMessage": "Registro Guardado."}]
     
@@ -1417,7 +1422,7 @@ class CitaOrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     cita = Event()
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='pendiente').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Pendiente').first()
                     
                     #buscamos el primer departamento el cual esta asociado la facultad -- esto con la logica actual
                     ins_departamento =  Departamento.objects.filter(id_facultad= actividad_academica['id_facultad']).first()
@@ -1453,7 +1458,7 @@ class CitaOrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     cita.datetime_inicio_estimado= fecha_hora_inicio
                     cita.datetime_fin_estimado= fecha_hora_fin
                     cita.nro_curso= actividad_academica['nro_curso']
-                    cita.datetime_registro= datetime.now()
+                    cita.datetime_registro= datetime.now(pytz.timezone(zona_horaria_py))
                     cita.save()
                     
                     #traemos la instancia de la actividad academica
@@ -1464,7 +1469,7 @@ class CitaOrientacionAcademicaCreateView(LoginRequiredMixin, CreateView):
                     cita_hijo.id_cita= ins_actividad_academica
                     cita_hijo.es_orientacion_academica= True
                     #traemos el parametro actual 
-                    id_parametro = Parametro.objects.filter(es_orientacion_academica= True, id_unidad_medida__descripcion_unidad_medida__contains='minuto').first()
+                    id_parametro = Parametro.objects.filter(es_orientacion_academica= True, id_unidad_medida__descripcion_unidad_medida__contains='inuto').first()
                     cita_hijo.id_parametro= id_parametro
                     cita_hijo.motivo= actividad_academica['motivo']
                     cita_hijo.save()
@@ -1536,7 +1541,7 @@ class CitaTutoriaUpdateView(LoginRequiredMixin, UpdateView):
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     cita = self.get_object() #obtenemos la instancia del objecto
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='pendiente').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Pendiente').first()
                     #buscamos el departamento al cual esta asociado la materia
                     id_materia= actividad_academica['id_materia']
                     id_departamento= Materia.objects.filter(id_materia= id_materia).values("id_departamento").first()
@@ -1717,7 +1722,7 @@ class CitaOrientacionAcademicaUpdateView(LoginRequiredMixin, UpdateView):
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     cita = self.get_object() #obtenemos la instancia del objecto
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='pendiente').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Pendiente').first()
                     
                     #buscamos el primer departamento el cual esta asociado la facultad -- esto con la logica actual
                     ins_departamento =  Departamento.objects.filter(id_facultad= actividad_academica['id_facultad']).first()
@@ -1993,7 +1998,7 @@ class CitaTutoriaIniciarView(LoginRequiredMixin, ValidatePermissionRequiredMixin
                                         tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                     
                                     tarea.id_persona_responsable= ins_responsable
-                                    tarea.datetime_alta= datetime.now()
+                                    tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                     tarea.id_persona_ultima_modificacion= ins_persona
                                     tarea.observacion=  i['observacion']
                                     tarea.save()
@@ -2202,7 +2207,7 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, ValidatePermission
                                         tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                     
                                     tarea.id_persona_responsable= ins_responsable
-                                    tarea.datetime_alta= datetime.now()
+                                    tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                     tarea.observacion=  i['observacion']
                                     tarea.id_persona_ultima_modificacion= ins_persona
                                     tarea.save()                        
@@ -2282,6 +2287,7 @@ def obtener_horarios_cita(request):
     tipo = request.GET.get('tipo_acti_academica')
     func_doc = request.GET.get('id_func_doc')
     parametro= 0
+    horarios_disponibles= [] #lista final para devolver el resultado del metodo
     try:
         #el parametro cargaremos en minuto y ese vamos a tomar como valor para poder calcular el tiempo entre horarios del funcionario/docente
         #/*************************Inicio funcion para generar los horarios****************************************/
@@ -2311,15 +2317,16 @@ def obtener_horarios_cita(request):
         funcionario/docente primero traemos el parametro de minuto que se encuentra disponible de acuerdo a la actividad academica (tuto u orie academ ) '''
 
         if tipo== "tutoria":
-            parametro = Parametro.objects.filter(es_tutoria= True, id_unidad_medida__descripcion_unidad_medida__contains='minuto').values('valor')
+            parametro = Parametro.objects.filter(es_tutoria= True, id_unidad_medida__descripcion_unidad_medida__contains='inuto').values('valor')
             parametro= parametro[0]['valor']
+           
             
         elif tipo== "ori_academica":
-            parametro = Parametro.objects.filter(es_orientacion_academica= True, id_unidad_medida__descripcion_unidad_medida__contains='minuto').values('valor')
+            parametro = Parametro.objects.filter(es_orientacion_academica= True, id_unidad_medida__descripcion_unidad_medida__contains='inuto').values('valor')
             parametro= parametro[0]['valor']
         else:
             parametro= 0
-
+        print(parametro)
         #vamos a consultar los horarios cargados del funcionario_docente solicitado cuyo semestre aun no haya finalizado    
         horario_func_doc= HorarioSemestral.objects.filter(id_funcionario_docente= func_doc, id_convocatoria__fecha_fin__gt = datetime.now())
         # Convertir el queryset a JSON en formato de cadena (str)
@@ -2343,8 +2350,8 @@ def obtener_horarios_cita(request):
         horarios= [] #lista para ir guardando todos los horarios cargados del fun/doc en la base de datos
         horas_dia= [] #lista auxiliar para ir iterando los registros de horarios generados para el func/doc por registro
 
-        horarios_disponibles= pd.DataFrame() #lista final para devolver el resultado del metodo
-        fecha_hoy= datetime.now()
+        
+        fecha_hoy= datetime.now(pytz.timezone(zona_horaria_py))
         auxiliar= []
 
         #iteramos cada registro del calendario funcionario/docente consultado de la bd y por cada item vamos generando las fechas con los horarios
@@ -2468,10 +2475,10 @@ def obtener_horarios_cita(request):
         traer todos los registros de citas donde la convocatoria aun no haya terminado y la fecha sea de hoy con la hora superior a la actual '''
 
         if tipo== "tutoria":
-            actividades_academicas= Cita.objects.filter(Q(id_cita__datetime_inicio_estimado__gt=fecha_hoy) | Q(id_cita__datetime_inicio_real__gt=fecha_hoy), es_tutoria=True, id_cita__id_funcionario_docente_encargado= func_doc, id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__contains='pendiente').values('id_cita__datetime_inicio_estimado')
+            actividades_academicas= Cita.objects.filter(Q(id_cita__datetime_inicio_estimado__gt=fecha_hoy) | Q(id_cita__datetime_inicio_real__gt=fecha_hoy), es_tutoria=True, id_cita__id_funcionario_docente_encargado= func_doc, id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__contains='Pendiente').values('id_cita__datetime_inicio_estimado')
             
         elif tipo== "ori_academica":
-            actividades_academicas= Cita.objects.filter(Q(id_cita__datetime_inicio_estimado__gt=fecha_hoy) | Q(id_cita__datetime_inicio_real__gt=fecha_hoy), es_orientacion_academica=True, id_cita__id_funcionario_docente_encargado= func_doc, id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__contains='pendiente').values('id_cita__datetime_inicio_estimado')
+            actividades_academicas= Cita.objects.filter(Q(id_cita__datetime_inicio_estimado__gt=fecha_hoy) | Q(id_cita__datetime_inicio_real__gt=fecha_hoy), es_orientacion_academica=True, id_cita__id_funcionario_docente_encargado= func_doc, id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__contains='Pendiente').values('id_cita__datetime_inicio_estimado')
 
         else:
             actividades_academicas= Cita.objects.none()
@@ -2518,7 +2525,7 @@ def obtener_horarios_cita(request):
             df2.drop_duplicates(keep='first', inplace=True)
 
             # Eliminar registros donde fecha sea hoy y la hora_inicio supere la hora actual
-            df2.drop(df2[(df2['fecha'] == datetime.now().date()) & (df2['hora_inicio'] < datetime.now().time())].index, inplace=True)
+            df2.drop(df2[(df2['fecha'] == datetime.now().date()) & (df2['hora_inicio'] < datetime.now(pytz.timezone(zona_horaria_py)).time())].index, inplace=True)
             
             #excluir los horarios que ya se encuentren reservados 
             ''' agregamos una columna llamada '_merge' con la etiqueta del origen de cada registro ('both', 'left_only' o 'right_only') 
@@ -2544,7 +2551,7 @@ def obtener_horarios_cita(request):
             df2['hora_fin'] = pd.to_datetime(df2["hora_fin"].astype(str)).dt.time
             
             # Eliminar registros donde fecha sea hoy y la hora_inicio supere la hora actual
-            df2.drop(df2[(df2['fecha'] == datetime.now().date()) & (df2['hora_inicio'] < datetime.now().time())].index, inplace=True)
+            df2.drop(df2[(df2['fecha'] == datetime.now().date()) & (df2['hora_inicio'] < datetime.now(pytz.timezone(zona_horaria_py)).time())].index, inplace=True)
             
              #ordenamos por fecha 
             df2.sort_values(by='fecha', inplace=True)
@@ -2641,11 +2648,11 @@ class TutoriaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,Cre
                     tutoria.id_persona_solicitante= ins_solicitante
                     tutoria.datetime_inicio_estimado= fecha_hora_inicio
                     tutoria.datetime_fin_estimado= fecha_hora_fin
-                    tutoria.datetime_inicio_real= datetime.now()
+                    tutoria.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))
                     #tutoria.datetime_fin_real= fecha_hora_fin
                     tutoria.nro_curso= actividad_academica['nro_curso']
                     tutoria.observacion= actividad_academica['observacion']
-                    tutoria.datetime_registro= datetime.now()
+                    tutoria.datetime_registro= datetime.now(pytz.timezone(zona_horaria_py))
                     tutoria.save()
                     
                     #traemos la instancia de la actividad academica
@@ -2699,7 +2706,7 @@ class TutoriaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,Cre
                                     tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                 
                                 tarea.id_persona_responsable= ins_responsable
-                                tarea.datetime_alta= datetime.now()
+                                tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                 tarea.id_persona_ultima_modificacion= ins_persona
                                 tarea.observacion=  i['observacion']
                                 tarea.save()
@@ -2744,10 +2751,10 @@ class TutoriaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,Cre
                     tutoria.datetime_inicio_estimado= fecha_hora_inicio
                     tutoria.datetime_fin_estimado= fecha_hora_fin
                     tutoria.datetime_inicio_real= fecha_hora_inicio
-                    tutoria.datetime_fin_real= datetime.now()
+                    tutoria.datetime_fin_real= datetime.now(pytz.timezone(zona_horaria_py))
                     tutoria.nro_curso= actividad_academica['nro_curso']
                     tutoria.observacion= actividad_academica['observacion']
-                    tutoria.datetime_registro= datetime.now()
+                    tutoria.datetime_registro= datetime.now(pytz.timezone(zona_horaria_py))
                     tutoria.save()
                     
                     #traemos la instancia de la actividad academica
@@ -2801,7 +2808,7 @@ class TutoriaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,Cre
                                     tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                 
                                 tarea.id_persona_responsable= ins_responsable
-                                tarea.datetime_alta= datetime.now()
+                                tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                 tarea.id_persona_ultima_modificacion= ins_persona
                                 tarea.observacion=  i['observacion']
                                 tarea.save()
@@ -2901,10 +2908,10 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     orientacion_academica.id_persona_ultima_modificacion= ins_persona
                     orientacion_academica.datetime_inicio_estimado= fecha_hora_inicio
                     orientacion_academica.datetime_fin_estimado= fecha_hora_fin
-                    orientacion_academica.datetime_inicio_real= datetime.now()
+                    orientacion_academica.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))
                     #orientacion_academica.datetime_fin_real= datetime.now()
                     orientacion_academica.nro_curso= actividad_academica['nro_curso']
-                    orientacion_academica.datetime_registro= datetime.now()
+                    orientacion_academica.datetime_registro= datetime.now(pytz.timezone(zona_horaria_py))
                     orientacion_academica.id_persona_solicitante= ins_solicitante
                     orientacion_academica.observacion= actividad_academica['observacion']
                     orientacion_academica.save()
@@ -2961,7 +2968,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                                     tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                 
                                 tarea.id_persona_responsable= ins_responsable
-                                tarea.datetime_alta= datetime.now()
+                                tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                 tarea.id_persona_ultima_modificacion= ins_persona
                                 tarea.observacion=  i['observacion']
                                 tarea.save()
@@ -3012,9 +3019,9 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     orientacion_academica.datetime_inicio_estimado= fecha_hora_inicio
                     orientacion_academica.datetime_fin_estimado= fecha_hora_fin
                     orientacion_academica.datetime_inicio_real= fecha_hora_inicio
-                    orientacion_academica.datetime_fin_real= datetime.now()
+                    orientacion_academica.datetime_fin_real= datetime.now(pytz.timezone(zona_horaria_py))
                     orientacion_academica.nro_curso= actividad_academica['nro_curso']
-                    orientacion_academica.datetime_registro= datetime.now()
+                    orientacion_academica.datetime_registro= datetime.now(pytz.timezone(zona_horaria_py))
                     orientacion_academica.id_persona_solicitante= ins_solicitante
                     orientacion_academica.observacion= actividad_academica['observacion']
                     orientacion_academica.save()
@@ -3071,7 +3078,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                                     tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                 
                                 tarea.id_persona_responsable= ins_responsable
-                                tarea.datetime_alta= datetime.now()
+                                tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                 tarea.id_persona_ultima_modificacion= ins_persona
                                 tarea.observacion=  i['observacion']
                                 tarea.save()
@@ -3231,7 +3238,7 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
                                         tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                     
                                     tarea.id_persona_responsable= ins_responsable
-                                    tarea.datetime_alta= datetime.now()
+                                    tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                     tarea.id_persona_ultima_modificacion= ins_persona
                                     tarea.observacion=  i['observacion']
                                     tarea.save()
@@ -3248,13 +3255,13 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
                                     #si la tarea ya esta finalizada
                                     if ins_estado_tarea.descripcion_estado_tarea == 'Finalizada':
                                         if item_actual.datetime_inicio_real is None:
-                                            item_actual.datetime_inicio_real= datetime.now()
-                                        item_actual.datetime_finalizacion= datetime.now()
+                                            item_actual.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))
+                                        item_actual.datetime_finalizacion= datetime.now(pytz.timezone(zona_horaria_py))
                                         item_actual.id_persona_finalizacion= ins_persona
                                         
                                     #si la tarea esta iniciada
                                     elif ins_estado_tarea.descripcion_estado_tarea == 'Iniciada':
-                                        item_actual.datetime_inicio_real= datetime.now()      
+                                        item_actual.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))      
                                             
                                     item_actual.id_persona_ultima_modificacion= ins_persona
                                     item_actual.observacion=  i['observacion']
@@ -3294,7 +3301,7 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
                     tutoria.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                     tutoria.datetime_inicio_estimado= fecha_hora_inicio
                     tutoria.datetime_fin_estimado= fecha_hora_fin
-                    tutoria.datetime_fin_real= datetime.now()
+                    tutoria.datetime_fin_real= datetime.now(pytz.timezone(zona_horaria_py))
                     tutoria.nro_curso= actividad_academica['nro_curso']
                     tutoria.observacion= actividad_academica['observacion']
                     tutoria.save()
@@ -3362,7 +3369,7 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
                                         tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                     
                                     tarea.id_persona_responsable= ins_responsable
-                                    tarea.datetime_alta= datetime.now()
+                                    tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                     tarea.id_persona_ultima_modificacion= ins_persona
                                     tarea.observacion=  i['observacion']
                                     tarea.save()
@@ -3379,13 +3386,13 @@ class TutoriaUpdateView(LoginRequiredMixin,  ValidatePermissionRequiredMixin ,Up
                                     #si la tarea ya esta finalizada
                                     if ins_estado_tarea.descripcion_estado_tarea == 'Finalizada':
                                         if item_actual.datetime_inicio_real is None:
-                                            item_actual.datetime_inicio_real= datetime.now()
-                                        item_actual.datetime_finalizacion= datetime.now()
+                                            item_actual.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))
+                                        item_actual.datetime_finalizacion= datetime.now(pytz.timezone(zona_horaria_py))
                                         item_actual.id_persona_finalizacion= ins_persona
                                         
                                     #si la tarea esta iniciada
                                     elif ins_estado_tarea.descripcion_estado_tarea == 'Iniciada':
-                                        item_actual.datetime_inicio_real= datetime.now()      
+                                        item_actual.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))      
                                             
                                     item_actual.id_persona_ultima_modificacion= ins_persona
                                     item_actual.observacion=  i['observacion']
@@ -3707,7 +3714,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                                         tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                     
                                     tarea.id_persona_responsable= ins_responsable
-                                    tarea.datetime_alta= datetime.now()
+                                    tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                     tarea.id_persona_ultima_modificacion= ins_persona
                                     tarea.observacion=  i['observacion']
                                     tarea.save()
@@ -3724,13 +3731,13 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                                     #si la tarea ya esta finalizada
                                     if ins_estado_tarea.descripcion_estado_tarea == 'Finalizada':
                                         if item_actual.datetime_inicio_real is None:
-                                            item_actual.datetime_inicio_real= datetime.now()
-                                        item_actual.datetime_finalizacion= datetime.now()
+                                            item_actual.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))
+                                        item_actual.datetime_finalizacion= datetime.now(pytz.timezone(zona_horaria_py))
                                         item_actual.id_persona_finalizacion= ins_persona
                                         
                                     #si la tarea esta iniciada
                                     elif ins_estado_tarea.descripcion_estado_tarea == 'Iniciada':
-                                        item_actual.datetime_inicio_real= datetime.now()      
+                                        item_actual.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))      
                                             
                                     item_actual.id_persona_ultima_modificacion= ins_persona
                                     item_actual.observacion=  i['observacion']
@@ -3777,7 +3784,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                     dict = model_to_dict(request.user)
                     orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(pk= dict["id_persona"])
                     orientacion_academica.datetime_inicio_estimado= fecha_hora_inicio
-                    orientacion_academica.datetime_fin_real= datetime.now()
+                    orientacion_academica.datetime_fin_real= datetime.now(pytz.timezone(zona_horaria_py))
                     orientacion_academica.datetime_fin_estimado= fecha_hora_fin
                     orientacion_academica.nro_curso= actividad_academica['nro_curso']
                     orientacion_academica.observacion= actividad_academica['observacion']
@@ -3847,7 +3854,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                                         tarea.datetime_vencimiento= datetime.strptime(i['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                                     
                                     tarea.id_persona_responsable= ins_responsable
-                                    tarea.datetime_alta= datetime.now()
+                                    tarea.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                                     tarea.id_persona_ultima_modificacion= ins_persona
                                     tarea.observacion=  i['observacion']
                                     tarea.save()
@@ -3864,13 +3871,13 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                                     #si la tarea ya esta finalizada
                                     if ins_estado_tarea.descripcion_estado_tarea == 'Finalizada':
                                         if item_actual.datetime_inicio_real is None:
-                                            item_actual.datetime_inicio_real= datetime.now()
-                                        item_actual.datetime_finalizacion= datetime.now()
+                                            item_actual.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))
+                                        item_actual.datetime_finalizacion= datetime.now(pytz.timezone(zona_horaria_py))
                                         item_actual.id_persona_finalizacion= ins_persona
                                         
                                     #si la tarea esta iniciada
                                     elif ins_estado_tarea.descripcion_estado_tarea == 'Iniciada':
-                                        item_actual.datetime_inicio_real= datetime.now()      
+                                        item_actual.datetime_inicio_real= datetime.now(pytz.timezone(zona_horaria_py))      
                                             
                                     item_actual.id_persona_ultima_modificacion= ins_persona
                                     item_actual.observacion=  i['observacion']
@@ -4121,7 +4128,7 @@ class TareasView(LoginRequiredMixin, ListView):
                     id_estado_tarea = tarea['fields']['id_estado_tarea']
                     #traer la descripcion de la tarea
                     estado_tarea= EstadoTarea.objects.filter(id_estado_tarea= id_estado_tarea).values('descripcion_estado_tarea').first()
-                    if estado_tarea['descripcion_estado_tarea'] not in ('Finalizada', 'Cancelada', 'Rechazada') and datetime.fromisoformat(tarea['fields']['datetime_vencimiento']) <= datetime.now():
+                    if estado_tarea['descripcion_estado_tarea'] not in ('Finalizada', 'Cancelada', 'Rechazada') and datetime.fromisoformat(tarea['fields']['datetime_vencimiento']) <= datetime.now(pytz.timezone(zona_horaria_py)):
                         estado_tarea= 'Vencida'
                     else:
                         estado_tarea= estado_tarea['descripcion_estado_tarea']
@@ -4170,9 +4177,9 @@ class TareasView(LoginRequiredMixin, ListView):
             tareas= Tarea.objects.all().filter(id_persona_responsable= ins_persona).order_by('-datetime_inicio_estimado')
             #devolvemos solo aquellos registros que correspondan al usuario logeado
             tarea_finalizada=  tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Finalizada').count()
-            tarea_iniciada =tareas.filter( id_estado_tarea__descripcion_estado_tarea= 'Iniciada', datetime_vencimiento__gt=datetime.now()).count()
+            tarea_iniciada =tareas.filter( id_estado_tarea__descripcion_estado_tarea= 'Iniciada', datetime_vencimiento__gt=datetime.now(pytz.timezone(zona_horaria_py))).count()
             tarea_cancelada = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Cancelada').count()
-            tarea_vencida = tareas.filter(~Q(id_estado_tarea__descripcion_estado_tarea__in=['Cancelada', 'Finalizada']), datetime_vencimiento__lte=datetime.now()).count()
+            tarea_vencida = tareas.filter(~Q(id_estado_tarea__descripcion_estado_tarea__in=['Cancelada', 'Finalizada']), datetime_vencimiento__lte=datetime.now(pytz.timezone(zona_horaria_py))).count()
             tarea_pendiente = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Pendiente').count()
             data= {'tarea_iniciada': tarea_iniciada, 'tarea_cancelada': tarea_cancelada, 'tarea_finalizada': tarea_finalizada, 'tarea_pendiente': tarea_pendiente, 'tarea_vencida': tarea_vencida}
         except Exception as e:
@@ -4236,7 +4243,7 @@ def AddTarea(request):
                     record.datetime_vencimiento= datetime.strptime(tarea['vencimiento'], '%Y-%m-%d %H:%M:%S')   
                 
                 record.id_persona_responsable= ins_responsable
-                record.datetime_alta= datetime.now()
+                record.datetime_alta= datetime.now(pytz.timezone(zona_horaria_py))
                 record.id_persona_ultima_modificacion= ins_persona
                 record.observacion=  tarea['observacion']
                 record.save()

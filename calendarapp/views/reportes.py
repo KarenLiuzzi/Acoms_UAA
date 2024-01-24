@@ -7,7 +7,8 @@ from django.views.generic import TemplateView
 from calendarapp.forms import ReportForm
 from django.db.models import Q
 from accounts.models.user import Persona, Facultad, Materia, FuncionarioDocente
-
+import pytz
+zona_horaria_py = 'Etc/GMT-4'
 
 
 def actualizar_campos_reportes(request):
@@ -357,7 +358,7 @@ class ReporteTutoriaView(TemplateView):
                     if id_estado != 'Vencida':
                         queryset = queryset.filter(id_tutoria__id_estado_actividad_academica=id_estado)
                     else:
-                        queryset = queryset.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now())
+                        queryset = queryset.filter(~Q(id_tutoria__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_tutoria__datetime_fin_estimado__lte= datetime.now(pytz.timezone(zona_horaria_py)))
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_tutoria__id_persona_solicitante=id_persona_solicitante)
@@ -474,7 +475,7 @@ class ReporteOrientacionAcademicaView(TemplateView):
                     if id_estado != 'Vencida':
                         queryset = queryset.filter(id_orientacion_academica__id_estado_actividad_academica=id_estado)
                     else:
-                        queryset = queryset.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now())
+                        queryset = queryset.filter(~Q(id_orientacion_academica__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_orientacion_academica__datetime_fin_estimado__lte= datetime.now(pytz.timezone(zona_horaria_py)))
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_orientacion_academica__id_persona_solicitante=id_persona_solicitante)
@@ -609,7 +610,7 @@ class ReporteCitasView(TemplateView):
                     if id_estado != 'Vencida':
                         queryset = queryset.filter(id_cita__id_estado_actividad_academica=id_estado)
                     else:
-                        queryset = queryset.filter(~Q(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_cita__datetime_fin_estimado__lte= datetime.now())
+                        queryset = queryset.filter(~Q(id_cita__id_estado_actividad_academica__descripcion_estado_actividad_academica__in=['Cancelada ', 'Finalizada']), id_cita__datetime_fin_estimado__lte= datetime.now(pytz.timezone(zona_horaria_py)))
 
                 if id_persona_solicitante:
                     queryset = queryset.filter(id_cita__id_persona_solicitante=id_persona_solicitante)
@@ -744,7 +745,7 @@ class ReporteTareasView(TemplateView):
                     if id_estado_tarea != 'Vencida':
                         queryset = queryset.filter(id_estado_tarea=id_estado_tarea)
                     else:
-                        queryset = queryset.filter(~Q(id_estado_tarea__descripcion_estado_tarea__in=['Cancelada', 'Finalizada']), datetime_vencimiento__lte= datetime.now())
+                        queryset = queryset.filter(~Q(id_estado_tarea__descripcion_estado_tarea__in=['Cancelada', 'Finalizada']), datetime_vencimiento__lte= datetime.now(pytz.timezone(zona_horaria_py)))
 
                 if id_tipo_tarea:
                     queryset = queryset.filter(id_tipo_tarea= id_tipo_tarea)

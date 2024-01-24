@@ -1,6 +1,7 @@
 Administrador
 prueba@test.com
 estaesasi
+Hugo correa
 4978990
 
 
@@ -15,9 +16,9 @@ pass HolaMundo!26!
 #cargamos una persona especifica para el objecto de persona/alumno
 id 5
 ci 6109876
-Guadalupe
-Diaz
-mail guada.diaz@test.com
+Karen
+Liuzzi
+mail karen.liuzzi@test.com
 pass HolaMundo!26!
 
 
@@ -26,10 +27,24 @@ id 3
 ci 789654
 blanca
 baez
-mail luidi@test.com
+mail blanca.baez@test.com
 pass HolaMundo!25!
 va ser docente de TIC
 intro a la info y paginas web
+
+ricardo de castro
+3040653
+departamento de informatica
+ricardocastro@test.com
+HolaMundo!2025!
+
+
+sebastian grillo
+6040302
+departamento de informatica
+sebasgrillo@test.com
+HolaMundo!2026!
+
 
 
 nuevo persona de prueba 
@@ -79,18 +94,6 @@ departamento de e-learning
 blancabaez@test.com
 HolaMundo!2022!
 
-ricardo de castro
-3040653
-departamento de informatica
-ricardocastro@test.com
-HolaMundo!2025!
-
-
-sebastian grillo
-6040302
-departamento de informatica
-sebasgrillo@test.com
-HolaMundo!2026!
 
 miguel martinez 
 2040503
