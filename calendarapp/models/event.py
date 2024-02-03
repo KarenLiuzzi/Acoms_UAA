@@ -100,7 +100,7 @@ class Event(EventAbstract):
     id_convocatoria= models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='convocatoria')
     id_facultad= models.ForeignKey(Facultad, on_delete=models.CASCADE, related_name='facultad')
     id_materia= models.ForeignKey(Materia, on_delete=models.CASCADE, blank=True, null=True)
-    id_departamento= models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name='departamento')
+    id_departamento= models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name='departamento', blank=True, null=True)
     id_funcionario_docente_encargado= models.ForeignKey(FuncionarioDocente, on_delete=models.CASCADE, related_name='funcionario_docente_encarcado')
     id_persona_solicitante= models.ForeignKey(Persona, on_delete=models.CASCADE, blank=True, null=True)
     id_persona_alta= models.ForeignKey(Persona, on_delete=models.CASCADE, related_name='persona_alta')

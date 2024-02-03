@@ -58,7 +58,7 @@
 
                         <div class="form-group">
                             <label class="label texto-destacado">Fecha de alta:</label>
-                            {{ orientacion_academica.id_orientacion_academica.datetime_registro|date:"d/m/Y" }}
+                            {{ orientacion_academica.id_orientacion_academica.datetime_registro|date:"d/m/Y"|add:' ' }}{{ orientacion_academica.id_orientacion_academica.datetime_registro|time:"H:i" }}
                         </div>
 
                         <div class="form-group">

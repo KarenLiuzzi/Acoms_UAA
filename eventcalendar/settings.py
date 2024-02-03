@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 from datetime import timedelta
 #import schedule
+from celery import schedules
 
 import os
 
@@ -27,7 +28,7 @@ SECRET_KEY = "i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "notify.apps.NotifyConfig",
     'channels',
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -94,7 +96,8 @@ DATABASES = {
         'NAME': 'AcOMs',
         'USER': 'postgres',
         'PASSWORD': 'test',
-        'HOST': 'localhost',  # Si la base de datos está en el mismo servidor
+        'HOST': 'db',
+        #'HOST': 'localhost', Si la base de datos está en el mismo servidor
         'PORT': '5432',      # El puerto predeterminado de PostgreSQL
     }
 }
@@ -284,16 +287,19 @@ CHANNEL_LAYERS = {
 }
 
 
-# Configuración de Celery
+#Configuración de Celery
 # CELERY_BROKER_URL = 'redis://localhost:6379/0'
 # CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE= 'UTC'
 # CELERY_TIMEZONE = 'UTC'
-# CELERY_BEAT_SCHEDULE = {
-#     'mi-tarea-programada': {
-#         'task': '/task.py',  # especifica la ruta de la tarea que deseas programar
-#         'schedule': schedule.every(1).day.at('00:00'),  # se ejecuta diariamente a medianoche
-#     },
-# }
+CELERY_BEAT_SCHEDULE = {
+    'mi-tarea-programada': {
+        'task': '/task.py',  # especifica la ruta de la tarea que deseas programar
+        'schedule': schedules.crontab(hour=0, minute=0),  # se ejecuta diariamente a medianoche
+    },
+}

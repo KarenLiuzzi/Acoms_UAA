@@ -207,19 +207,19 @@ admin.site.register(User, UserAdmin)
 
 
 
-@admin.register(MateriaCarrera)
-class MateriaCarreraAdmin(admin.ModelAdmin):
+# @admin.register(MateriaCarrera)
+# class MateriaCarreraAdmin(admin.ModelAdmin):
 
-    def carrera_nombre(self, obj):
-        return '%s' % (obj.id_carrera.descripcion_carrera) 
-    carrera_nombre.short_description = 'Carrera'
+#     def carrera_nombre(self, obj):
+#         return '%s' % (obj.id_carrera.descripcion_carrera) 
+#     carrera_nombre.short_description = 'Carrera'
 
-    def materia_nombre(self, obj):
-        return '%s' % (obj.id_materia.descripcion_materia) 
-    materia_nombre.short_description = 'Materia'
+#     def materia_nombre(self, obj):
+#         return '%s' % (obj.id_materia.descripcion_materia) 
+#     materia_nombre.short_description = 'Materia'
 
 
-    list_display = ['materia_nombre', 'carrera_nombre']
+#     list_display = ['materia_nombre', 'carrera_nombre']
     
 #esto tb comentamos momentaneamente
 # @admin.register(MateriaFuncionarioDocente)
