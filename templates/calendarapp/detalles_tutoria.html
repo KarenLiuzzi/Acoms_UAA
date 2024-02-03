@@ -58,7 +58,7 @@
 
                         <div class="form-group">
                             <label class="label texto-destacado">Fecha de alta:</label>
-                            {{ tutoria.id_tutoria.datetime_registro|date:"d/m/Y" }}
+                            {{ tutoria.id_tutoria.datetime_registro|date:"d/m/Y"|add:' ' }}{{ tutoria.id_tutoria.datetime_registro|time:"H:i" }}
                         </div>
 
                         <div class="form-group">

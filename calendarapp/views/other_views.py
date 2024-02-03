@@ -476,7 +476,7 @@ def actualizar_campo(request):
             #Traemos las carreras que esta inscripto el alumno
             carrera_facultad= CarreraAlumno.objects.filter(id_alumno= current_user).values('id_carrera')
             carrera= Carrera.objects.filter(id_carrera__in= carrera_facultad).values('id_facultad')
-            facultad_carrera= Facultad.objects.filter(id_facultad__in= carrera_facultad)
+            facultad_carrera= Facultad.objects.filter(id_facultad__in= carrera)
             queryset= ""
             queryset = facultad_carrera
             # Pasar los datos del queryset a datos HTML
@@ -2105,7 +2105,7 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, ValidatePermission
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     cita = self.get_object() #obtenemos la instancia del objecto
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='finalizada').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='inalizada').first()
                     
                     #buscamos el primer departamento el cual esta asociado la facultad -- esto con la logica anterior
                     # ins_departamento =  Departamento.objects.filter(id_facultad= actividad_academica['id_facultad']).first()
@@ -2616,7 +2616,7 @@ class TutoriaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,Cre
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     tutoria = Event()
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='iniciada').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='niciada').first()
                     #buscamos el departamento al cual esta asociado la materia
                     id_materia= actividad_academica['id_materia']
                     id_departamento= Materia.objects.filter(id_materia= id_materia).values("id_departamento").first()
@@ -2718,7 +2718,7 @@ class TutoriaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin ,Cre
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     tutoria = Event()
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='finalizada').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='inalizada').first()
                     #buscamos el departamento al cual esta asociado la materia
                     id_materia= actividad_academica['id_materia']
                     id_departamento= Materia.objects.filter(id_materia= id_materia).values("id_departamento").first()
@@ -2874,7 +2874,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     orientacion_academica = Event()
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='iniciada').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='niciada').first()
                     
                     #buscamos el primer departamento el cual esta asociado la facultad -- esto con la logica anterior
                     #ins_departamento =  Departamento.objects.filter(id_facultad= actividad_academica['id_facultad']).first()
@@ -2882,7 +2882,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     #buscamos el primer departamento al cual esta asociado el funcionario docente  -- logica actual
                     dep_func_doc= FuncionarioDocente.objects.filter(id_funcionario_docente = actividad_academica['id_funcionario_docente_encargado']).values("id_departamento").first()
                     dep_func_doc= dep_func_doc["id_departamento"]
-                    ins_departamento=  Departamento.objects.get(id_departamento= dep_func_doc)
+                    ins_departamento=  Departamento.objects.filter(id_departamento= dep_func_doc).first()
         
                     #obtenemos la persona que esta dando de alta 
                     current_user = request.user
@@ -2898,8 +2898,14 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     ins_persona= Persona.objects.get(id= id_persona)
                     ins_solicitante= Persona.objects.get(id= actividad_academica['id_solicitante'])
                     
+                    #consultamos si la materia existe
+                    if actividad_academica['id_materia'] != '':
+                        ins_materia= Materia.objects.get(id_materia= actividad_academica['id_materia'])
+                        orientacion_academica.id_materia= ins_materia                      
                     orientacion_academica.id_estado_actividad_academica = id_estado
-                    orientacion_academica.id_departamento= ins_departamento
+                    #Agregado en caso de que no exista la relacion con departamento  pero si con facultad
+                    if ins_departamento != None:
+                        orientacion_academica.id_departamento= ins_departamento
                     orientacion_academica.id_convocatoria = ins_convocatoria
                     orientacion_academica.id_facultad= ins_facultad
                     orientacion_academica.id_funcionario_docente_encargado= ins_func_doc_encargado
@@ -2980,7 +2986,7 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     actividad_academica = json.loads(request.POST['actividad_academica'])
                     orientacion_academica = Event()
                     #buscamos el id del estado pendiente
-                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='finalizada').first()
+                    id_estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='inalizada').first()
                     
                     #buscamos el primer departamento el cual esta asociado la facultad -- esto con la logica anterior
                     #ins_departamento =  Departamento.objects.filter(id_facultad= actividad_academica['id_facultad']).first()
@@ -2988,8 +2994,8 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     #buscamos el primer departamento al cual esta asociado el funcionario docente  -- logica actual
                     dep_func_doc= FuncionarioDocente.objects.filter(id_funcionario_docente = actividad_academica['id_funcionario_docente_encargado']).values("id_departamento").first()
                     dep_func_doc= dep_func_doc["id_departamento"]
-                    ins_departamento=  Departamento.objects.get(id_departamento= dep_func_doc)
-        
+                    ins_departamento=  Departamento.objects.filter(id_departamento= dep_func_doc).first()
+                    
                     #obtenemos la persona que esta dando de alta 
                     current_user = request.user
                     dict = model_to_dict(current_user)
@@ -3005,11 +3011,13 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     ins_solicitante= Persona.objects.get(id= actividad_academica['id_solicitante'])
                     
                     #consultamos si la materia existe
-                    if actividad_academica['id_materia'] != '' or actividad_academica['id_materia'] != '.':
+                    if actividad_academica['id_materia'] != '':
                         ins_materia= Materia.objects.get(id_materia= actividad_academica['id_materia'])
                         orientacion_academica.id_materia= ins_materia    
                     orientacion_academica.id_estado_actividad_academica = id_estado
-                    orientacion_academica.id_departamento= ins_departamento
+                    #Agregado en caso de que no exista la relacion con departamento  pero si con facultad
+                    if ins_departamento != None:
+                        orientacion_academica.id_departamento= ins_departamento
                     orientacion_academica.id_convocatoria = ins_convocatoria
                     orientacion_academica.id_facultad= ins_facultad
                     orientacion_academica.id_funcionario_docente_encargado= ins_func_doc_encargado
@@ -3617,7 +3625,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                     #buscamos el primer departamento al cual esta asociado el funcionario docente  -- logica actual
                     dep_func_doc= FuncionarioDocente.objects.filter(id_funcionario_docente = actividad_academica['id_funcionario_docente_encargado']).values("id_departamento").first()
                     dep_func_doc= dep_func_doc["id_departamento"]
-                    ins_departamento=  Departamento.objects.get(id_departamento= dep_func_doc)
+                    ins_departamento=  Departamento.objects.filter(id_departamento= dep_func_doc).first()
                     
                     #convertimos nuestras fechas en formato datetime 
                     fecha_hora_inicio = datetime.strptime(actividad_academica['datetime_inicio_estimado'], '%Y-%m-%d %H:%M:%S')
@@ -3635,7 +3643,8 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                     if (actividad_academica['id_materia'] != ''):
                         ins_materia= Materia.objects.get(id_materia= actividad_academica['id_materia'])
                         orientacion_academica.id_materia= ins_materia 
-                    orientacion_academica.id_departamento= ins_departamento
+                    if ins_departamento != None:
+                        orientacion_academica.id_departamento= ins_departamento
                     orientacion_academica.id_convocatoria = ins_convocatoria
                     orientacion_academica.id_facultad= ins_facultad
                     orientacion_academica.id_materia= ins_materia
@@ -3755,7 +3764,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                     #buscamos el primer departamento al cual esta asociado el funcionario docente  -- logica actual
                     dep_func_doc= FuncionarioDocente.objects.filter(id_funcionario_docente = actividad_academica['id_funcionario_docente_encargado']).values("id_departamento").first()
                     dep_func_doc= dep_func_doc["id_departamento"]
-                    ins_departamento=  Departamento.objects.get(id_departamento= dep_func_doc)
+                    ins_departamento=  Departamento.objects.filter(id_departamento= dep_func_doc).first()
                     
                     #convertimos nuestras fechas en formato datetime 
                     fecha_hora_inicio = datetime.strptime(actividad_academica['datetime_inicio_estimado'], '%Y-%m-%d %H:%M:%S')
@@ -3774,6 +3783,8 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                         orientacion_academica.id_materia= ins_materia 
                     #el estado se cambia
                     orientacion_academica.id_estado_actividad_academica = id_estado
+                    if ins_departamento != None:
+                        orientacion_academica.id_departamento= ins_departamento
                     orientacion_academica.id_departamento= ins_departamento
                     orientacion_academica.id_convocatoria = ins_convocatoria
                     orientacion_academica.id_facultad= ins_facultad
@@ -3901,7 +3912,10 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                 id_materia= ins_evet.id_materia.id_materia
             else:
                 id_materia= ''
-            id_departamento= ins_evet.id_departamento.id_departamento
+            if ins_evet.id_departamento:
+                id_departamento= ins_evet.id_departamento.id_departamento
+            else:
+                id_departamento= ''
             id_funcionario_docente_encargado= ins_evet.id_funcionario_docente_encargado.id_funcionario_docente.id
             if ins_evet.id_persona_solicitante:
                 id_persona_solicitante= ins_evet.id_persona_solicitante.id
@@ -4128,7 +4142,7 @@ class TareasView(LoginRequiredMixin, ListView):
                     id_estado_tarea = tarea['fields']['id_estado_tarea']
                     #traer la descripcion de la tarea
                     estado_tarea= EstadoTarea.objects.filter(id_estado_tarea= id_estado_tarea).values('descripcion_estado_tarea').first()
-                    if estado_tarea['descripcion_estado_tarea'] not in ('Finalizada', 'Cancelada', 'Rechazada') and datetime.fromisoformat(tarea['fields']['datetime_vencimiento']) <= datetime.now(pytz.timezone(zona_horaria_py)):
+                    if estado_tarea['descripcion_estado_tarea'] not in ('Finalizada', 'Cancelada', 'Rechazada') and datetime.fromisoformat(tarea['fields']['datetime_vencimiento']) <= datetime.now():
                         estado_tarea= 'Vencida'
                     else:
                         estado_tarea= estado_tarea['descripcion_estado_tarea']
@@ -4180,7 +4194,7 @@ class TareasView(LoginRequiredMixin, ListView):
             tarea_iniciada =tareas.filter( id_estado_tarea__descripcion_estado_tarea= 'Iniciada', datetime_vencimiento__gt=datetime.now(pytz.timezone(zona_horaria_py))).count()
             tarea_cancelada = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Cancelada').count()
             tarea_vencida = tareas.filter(~Q(id_estado_tarea__descripcion_estado_tarea__in=['Cancelada', 'Finalizada']), datetime_vencimiento__lte=datetime.now(pytz.timezone(zona_horaria_py))).count()
-            tarea_pendiente = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Pendiente').count()
+            tarea_pendiente = tareas.filter(id_estado_tarea__descripcion_estado_tarea= 'Pendiente', datetime_vencimiento__gt=datetime.now(pytz.timezone(zona_horaria_py))).count()
             data= {'tarea_iniciada': tarea_iniciada, 'tarea_cancelada': tarea_cancelada, 'tarea_finalizada': tarea_finalizada, 'tarea_pendiente': tarea_pendiente, 'tarea_vencida': tarea_vencida}
         except Exception as e:
             print(f"Se ha producido un error: {e}")

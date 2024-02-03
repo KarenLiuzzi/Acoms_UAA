@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "python manage.py migrate && python manage.py runserver localhost:8000 && python manage.py dbshell < data.sql"
+ 
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+
+  celery:
+    command: bash -c "celery -A eventcalendar worker -l INFO"
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+        - django
+        - redis
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: AcOMs
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+
+  redis:
+    image: "redis:alpine"
+
+
+  apache:
+    image: httpd:2.4
+    ports:
+      - "8080:80"
+    volumes:
+      - ./apache-config:/usr/local/apache2/conf
+    depends_on:
+      - django

@@ -57,7 +57,7 @@
 
                         <div class="form-group">
                             <label class="label texto-destacado">Fecha de alta:</label>
-                            {{ cita.id_cita.datetime_registro|date:"d/m/Y" }}
+                            {{ cita.id_cita.datetime_registro|date:"d/m/Y"|add:' ' }}{{ cita.id_cita.datetime_registro|time:"H:i" }}
                         </div>
 
                         <div class="form-group">
