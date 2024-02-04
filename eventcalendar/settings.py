@@ -10,25 +10,29 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 from datetime import timedelta
+from pathlib import Path
+
 #import schedule
-from celery import schedules
+# from celery import schedules
 
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS=os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1337"]
 
 
 # Application definition
@@ -92,13 +96,12 @@ WSGI_APPLICATION = "eventcalendar.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'AcOMs',
-        'USER': 'postgres',
-        'PASSWORD': 'test',
-        'HOST': 'db',
-        #'HOST': 'localhost', Si la base de datos está en el mismo servidor
-        'PORT': '5432',      # El puerto predeterminado de PostgreSQL
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"), 
     }
 }
 
@@ -249,7 +252,7 @@ USE_TZ = False
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
@@ -277,9 +280,6 @@ PASSWORD_RESET_TIMEOUT = 86400
 
 LOGIN_URL= '/login/'
 
-
-WSGI_APPLICATION = "eventcalendar.wsgi.application"
-
 CHANNEL_LAYERS = {
     'default':{
         'BACKEND':'channels.layers.InMemoryChannelLayer'
@@ -290,16 +290,16 @@ CHANNEL_LAYERS = {
 #Configuración de Celery
 # CELERY_BROKER_URL = 'redis://localhost:6379/0'
 # CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE= 'UTC'
-# CELERY_TIMEZONE = 'UTC'
-CELERY_BEAT_SCHEDULE = {
-    'mi-tarea-programada': {
-        'task': '/task.py',  # especifica la ruta de la tarea que deseas programar
-        'schedule': schedules.crontab(hour=0, minute=0),  # se ejecuta diariamente a medianoche
-    },
-}
+# CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+# CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE= 'UTC'
+# # CELERY_TIMEZONE = 'UTC'
+# CELERY_BEAT_SCHEDULE = {
+#     'mi-tarea-programada': {
+#         'task': '/task.py',  # especifica la ruta de la tarea que deseas programar
+#         'schedule': schedules.crontab(hour=0, minute=0),  # se ejecuta diariamente a medianoche
+#     },
+# }

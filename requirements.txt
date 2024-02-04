@@ -37,7 +37,6 @@ isort==5.9.2
 kombu==5.3.3
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
-mod-wsgi==5.0.0
 mypy-extensions==0.4.3
 nodeenv==1.6.0
 numpy==1.24.4

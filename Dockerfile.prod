@@ -1,3 +1,7 @@
+###########
+# BUILDER #
+###########
+
 # pull official base image
 FROM python:3.8.12-slim-buster as builder
 
@@ -9,14 +13,17 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends gcc
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
 
-
-# install dependencies
+# lint
 RUN pip install --upgrade pip
+# RUN pip install flake8==6.0.0
 COPY . /usr/src/app/
+# RUN flake8 --ignore=E501,F401 .
+
+# install python dependencies
 COPY ./requirements.txt .
-RUN pip install -r requirements.txt
 RUN pip install gunicorn psycopg2-binary
 RUN apt-get update && apt-get install -y postgresql-client
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
@@ -53,16 +60,13 @@ COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
-# copy entrypoint.sh
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
-RUN chmod +x  $APP_HOME/entrypoint.sh
+# copy entrypoint.prod.sh
+COPY ./entrypoint.prod.sh .
+RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
+RUN chmod +x  $APP_HOME/entrypoint.prod.sh
 
 # copy project
 COPY . $APP_HOME
-
-# # copy project
-# COPY ./static $APP_HOME/staticfiles
 
 # chown all the files to the app user
 RUN chown -R app:app $APP_HOME
@@ -71,4 +75,4 @@ RUN chown -R app:app $APP_HOME
 USER app
 
 # run entrypoint.prod.sh
-ENTRYPOINT ["/home/app/web/entrypoint.sh"]
+ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
