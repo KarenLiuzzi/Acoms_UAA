@@ -1,12 +1,82 @@
-FROM python:3.8
+###########
+# BUILDER #
+###########
 
-WORKDIR /app
+# pull official base image
+FROM python:3.8.12-slim-buster as builder
 
-COPY requirements.txt /app/
-RUN apt-get update && apt-get install -y apache2-dev && pip install mod-wsgi==4.7.1
-RUN pip install --no-cache-dir -r requirements.txt
+# set work directory
+WORKDIR /usr/src/app
 
-COPY . /app/
-COPY data.sql /app/  
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-CMD ["python", "manage.py", "runserver", "localhost:8000"]
+# install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
+
+# lint
+RUN pip install --upgrade pip
+# RUN pip install flake8==6.0.0
+COPY . /usr/src/app/
+# RUN flake8 --ignore=E501,F401 .
+
+# install python dependencies
+COPY ./requirements.txt .
+RUN pip install gunicorn psycopg2-binary
+RUN apt-get update && apt-get install -y postgresql-client
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+
+#########
+# FINAL #
+#########
+
+# pull official base image
+FROM python:3.8.12-slim-buster
+
+# create directory for the app user
+RUN mkdir -p /home/app
+
+# create the app user
+RUN addgroup --system app && adduser --system --group app
+
+# create the appropriate directories
+ENV HOME=/home/app
+ENV APP_HOME=/home/app/web
+#ENV TZ=America/Asuncion
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
+RUN mkdir $APP_HOME/mediafiles
+WORKDIR $APP_HOME
+
+# install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends netcat
+RUN pip install gunicorn psycopg2-binary
+RUN apt-get update && apt-get install -y postgresql-client
+# Install Tkinter dependencies
+RUN apt-get update && apt-get install -y tk
+COPY --from=builder /usr/src/app/wheels /wheels
+COPY --from=builder /usr/src/app/requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache /wheels/*
+RUN apt update && apt install tzdata -y
+ENV TZ="America/Asuncion"
+
+# copy entrypoint.prod.sh
+COPY ./entrypoint.prod.sh .
+RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
+RUN chmod +x  $APP_HOME/entrypoint.prod.sh
+RUN pip uninstall crontab && pip install python-crontab
+
+# copy project
+COPY . $APP_HOME
+
+# chown all the files to the app user
+RUN chown -R app:app $APP_HOME
+
+# change to the app user
+USER app
+
+# run entrypoint.prod.sh
+ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]

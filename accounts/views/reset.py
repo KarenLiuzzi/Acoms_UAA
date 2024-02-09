@@ -36,7 +36,7 @@ class ResetPassView(View):
                 reset_token_generator_object= ForgotPasswordTokenGenerator()
                 password_reset_token= reset_token_generator_object.make_token(user)
                 #verificar para no hacer de manera 
-                base_url= 'http://127.0.0.1:8000/accounts/resetconfirm/'
+                base_url= 'http://0.0.0.0:8000/accounts/resetconfirm/'
                 #base_url= reverse('resetconfirm')
                 base_url= str(base_url)
                 #base_url= reverse('resetconfirm', args=(user.pk, password_reset_token))
