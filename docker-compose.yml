@@ -1,51 +1,102 @@
-version: '3'
+version: '3.8'
 
 services:
+  redis:
+    image: "redis:alpine"
+    ports:
+      - '6379:6379'
+    environment:
+      - TZ=America/Asuncion
+
   django:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py flush --no-input && python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn eventcalendar.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - ./eventcalendar/:/usr/src/app/
+      - static_volume:/home/app/web/staticfiles
+    expose:
+      - 8000
     env_file:
-      - ./.env.dev
+      - ./.env.prod
+    depends_on:
+      - db
+      - redis
+      
+  db:
+    image: postgres:latest
     ports:
-      - "8000:8000"
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod.db
+      
+  nginx:
+    build: ./nginx
+    environment:
+      TZ: "America/Asuncion"
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    ports:
+      - 8000:80
+    depends_on:
+      - django
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: prueba@test.com
+      PGADMIN_DEFAULT_PASSWORD: admintest
+      TZ: "America/Asuncion"
+    ports:
+      - "5050:80"
     depends_on:
       - db
 
-  # celery:
-  #   build: .
-  #   command: bash -c "celery -A eventcalendar worker -l INFO"
-  #   environment:
-  #     - DEBUG=1
-  #     - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
-  #     - CELERY_BROKER=redis://redis:6379/0
-  #     - CELERY_BACKEND=redis://redis:6379/0
-  #   depends_on:
-  #     - django
-  #     - redis
-
-  db:
-    image: postgres:latest
+  celery:
+    build: .
+    container_name: celery
+    command: celery -A eventcalendar worker --beat --loglevel=INFO -E
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - .:/usr/src/app
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=test
-      - POSTGRES_DB=AcOMs
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=db+postgresql://postgres:test@db:5432/AcOMs
+      #- CELERY_ENABLE_UTC=True
+      - TZ=America/Asuncion
+      - SECRET_KEY=foo
+    depends_on:
+      - django
+      - redis
 
-  # redis:
-  #   image: "redis:alpine"
-    # volumes:
-    #   - ./redis-data:/data
+  flower:
+    image: mher/flower
+    container_name: flower
+    command: celery flower --persisten=True 
+    # build:
+    #   context: ./flowers
+    #   dockerfile: Dockerfile
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_BACKEND=db+postgresql://postgres:test@db:5432/AcOMs
+      - FLOWER_PORT=5000
+      # - CELERY_TIMEZONE=America/Asuncion
+      #- CELERY_ENABLE_UTC=True
+      #- TZ=America/Asuncion
+      - SECRET_KEY=foo
+    ports:
+      - "5000:5000"
+    volumes:
+      - flower_data:/data
+    depends_on:
+      - celery
+      - redis
 
-  # nginx:
-  #   build: ./nginx
-  #   ports:
-  #     - 1337:80
-  #   depends_on:
-  #     - web
 volumes:
   postgres_data:
+  static_volume:
+  flower_data:

@@ -1,0 +1,100 @@
+Administrador
+prueba@test.com
+estaesasi
+Hugo correa
+4978990
+
+
+#cargamos una persona especifica para el objecto de persona/alumno
+id 5
+ci 147258
+Maria
+Aguero
+mail karendreammoon@gmail.com
+pass HolaMundo!26!
+
+#cargamos una persona especifica para el objecto de persona/alumno
+id 5
+ci 6109876
+Karen
+Liuzzi
+mail karen.liuzzi@test.com
+pass HolaMundo!26!
+
+
+#cargamos una persona especifica para el objecto de persona/DocenteFuncionario este es el que tiene cargado registros de su calendario
+id 3
+ci 789654
+blanca
+baez
+mail blanca.baez@test.com
+pass HolaMundo!25!
+va ser docente de TIC
+intro a la info y paginas web
+
+ricardo de castro
+3040653
+departamento de informatica
+ricardocastro@test.com
+HolaMundo!2025!
+
+
+sebastian grillo
+6040302
+departamento de informatica
+sebasgrillo@test.com
+HolaMundo!2026!
+
+
+
+nuevo persona de prueba 
+fulanita 
+fulanita@test.com 
+ci 258147
+HolaMundo!22!
+
+admin@admin.com
+654321 documento
+HolaAdmin123!
+
+
+#cargamos una persona especifica para el objecto de persona/funcionario
+id 2
+ci 123456
+Jorge 
+Gonzalez
+mail jorgonz@test.com
+pass HolaMundo!23!
+
+
+
+#cargamos una persona especifica para el objecto de persona/alumno
+id 4
+ci 456123
+Gloria
+Guimenez
+mail glogui@test.com
+pass HolaMundo!25!
+
+
+
+
+
+***************************NUEVO********************************
+Hugo correa
+2030406
+departamento ciencias y tecnologia 
+informatica
+hugocorrea@test.com
+HolaMundo!2023!
+
+luis diaz
+6050089
+departamento de e-learning
+blancabaez@test.com
+HolaMundo!2022!
+
+
+miguel martinez 
+2040503
+Departamento informatica - ciencias exactas

@@ -2571,7 +2571,7 @@ def obtener_horarios_cita(request):
         
             
         #Finalmente devolvemos un JSON 
-        horarios_disponibles.to_excel("C:/Users/beatr/Documents/horarios_disponibles.xlsx", index=False)
+        horarios_disponibles.to_excel("/home/app/web/horarios_disponibles.xlsx", index=False)
 
         '''El método to_json() también admite otros formatos de orientación, como 'split', 'index', 'columns', 'values' y 'table', para adaptarse 
         a diferentes necesidades de estructura JSON. Puedes revisar la documentación de pandas para obtener más detalles sobre estos formatos.'''

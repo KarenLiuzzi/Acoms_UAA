@@ -1,19 +1,21 @@
 # eventcalendar/tasks.py
-from celery import shared_task
 import json
-import requests
-from calendarapp.models.event import Event
-from accounts.models.user import TipoDocumento, Persona, Alumno, Facultad, Departamento, Carrera, CarreraAlumno, Materia, MateriaCarrera
-from django.db import transaction
 from datetime import datetime
 import pytz
+import requests
+from celery import shared_task
+from django.db import transaction
+
+from accounts.models.user import Alumno, Carrera, CarreraAlumno, Departamento, Facultad, Materia, MateriaCarrera, Persona, TipoDocumento
+from calendarapp.models.event import Event
+
 zona_horaria_py = 'Etc/GMT-4'
 today = datetime.now(pytz.timezone(zona_horaria_py))
 hoy = today.strftime("%d_%m_%Y_%H_%M_%S")
 
 @shared_task
 def importar_datos():
-    
+    print('inicio la tarea')
     ###########################################
     ############Tabla Tipo Documento###########
     ###########################################
@@ -61,9 +63,9 @@ def importar_datos():
             print('finalizo')
         except Exception as e:
             print(f'Error al insertar datos de TipoDocumento: {str(e)}')
-            contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla TipoDocumento. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
-            title = 'Error en vuelco de datos AcOMs'
-            enviarcorreo(title, contenido)
+            # contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla TipoDocumento. Favor verificar el mismo: {str(e)}. Atte equipo AcOms.'
+            # title = 'Error en vuelco de datos AcOMs'
+            # enviarcorreo(title, contenido)
 
     # # SI LA RESPUESTA DA ERROR, VOLCAMOS LOS DATOS EN UN BLOC DE NOTAS
     # #respuestas incorrectas lado del cliente
@@ -758,8 +760,9 @@ def importar_datos():
 
 
 import smtplib
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 
 def enviarcorreo(asunto, contenido):
     
