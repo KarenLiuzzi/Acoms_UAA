@@ -11,9 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import os
 from pathlib import Path
+from celery.schedules import crontab
 
-#import schedule
-#from celery import schedules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -82,16 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "eventcalendar.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -257,21 +246,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 
-# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-# EMAIL_FILE_PATH = [os.path.join(BASE_DIR, "sent_emails")]
-
-# SENDGRID_API_KEY = os.getenv('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')
-
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_HOST_USER = 'apikey' # this is exactly the value 'apikey'
-# EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-
 #agregado el tiempo limite del token para reset passwords
 PASSWORD_RESET_TIMEOUT = 86400
-
-
 
 #agregados
 # LOGIN_REDIRECT_URL= '/calendarapp/dashboard'
@@ -287,32 +263,14 @@ CHANNEL_LAYERS = {
 }
 
 
-#Configuración de Celery
-# CELERY_BROKER_URL = 'redis://localhost:6379/0'
-# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-# CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-# CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE= 'UTC'
-# # CELERY_TIMEZONE = 'UTC'
-# CELERY_BEAT_SCHEDULE = {
-#     'mi-tarea-programada': {
-#         'task': '/task.py',  # especifica la ruta de la tarea que deseas programar
-#         'schedule': schedules.crontab(hour=0, minute=0),  # se ejecuta diariamente a medianoche
-#     },
-# }
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "db+postgresql://postgres:test@db:5432/AcOMs")
+CELERY_TIMEZONE = 'America/Asuncion'
 
-# CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-# CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'America/Asuncion'
-# CELERY_BEAT_SCHEDULE = {
-#     'mi-tarea-programada': {
-#         'task': '/tasks.py',  # especifica la ruta de la tarea que deseas programar
-#         'schedule': schedules.crontab(minute='*'),  # se ejecuta diariamente a medianoche
-#     },
-# }
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "calendarapp.tasks.importar_datos",
+        "schedule": crontab(minute=0, hour=0, day_of_week='1-5'),
+    },
+}
+#CELERY_ROUTES= {'calendarapp.tasks.importar_datos': {'queue': 'volcado_datos_academicos'}}

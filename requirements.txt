@@ -83,3 +83,4 @@ redis
 celery
 #celery[redis]
 sqlalchemy
+#pyodbc

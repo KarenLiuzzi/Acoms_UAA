@@ -9,111 +9,114 @@
         <div class="tile-body">
             <div class="table-responsive">
                 <div class="tile">
-                    
-                        {% for item in list_notify %}
-                            {% if item.read == False %}
-                                <div class="app-notification__item-container notification-list">
-                            {% else %}
-                                <div class="app-notification__item-container">
-                            {% endif %}
-                                    {% load humanize %}
-                                    {% if item.tipo ==  'tutoria' %}
-
-                                    <a class="app-notification__item" href="/moredetallesTutoria/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ item.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
-
-                                    {% elif item.tipo ==  'orientacion' %}
-                                        <a class="app-notification__item" href="/moredetallesOrientacionAcademica/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ item.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
-
-                                    {% elif item.tipo ==  'cita_orientacion' %}
-
-                                        <a class="app-notification__item" href="/moredetallesCitaOriAcadem/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ item.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
-
-                                    {% elif item.tipo ==  'cita_tutoria' %}
-
-                                        <a class="app-notification__item" href="/moredetallesCitaTutoria/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ item.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
-
-                                    {% elif item.tipo ==  'tarea_tutoria' %}
+                        {% if not item %}
+                            Sin notificaciones...
+                        {% else %}
+                            {% for item in list_notify %}
+                                {% if item.read == False %}
+                                    <div class="app-notification__item-container notification-list">
+                                {% else %}
+                                    <div class="app-notification__item-container">
+                                {% endif %}
+                                        {% load humanize %}
+                                        {% if item.tipo ==  'tutoria' %}
 
                                         <a class="app-notification__item" href="/moredetallesTutoria/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ item.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ item.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
 
-                                    {% elif item.tipo ==  'tarea_orientacion' %}
+                                        {% elif item.tipo ==  'orientacion' %}
+                                            <a class="app-notification__item" href="/moredetallesOrientacionAcademica/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ item.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
 
-                                        <a class="app-notification__item" href="/moredetallesOrientacionAcademica/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}"> 
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ item.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
+                                        {% elif item.tipo ==  'cita_orientacion' %}
 
-                                    {% elif item.tipo ==  'tarea_cita_orientacion' %}
+                                            <a class="app-notification__item" href="/moredetallesCitaOriAcadem/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ item.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
 
-                                        <a class="app-notification__item" href="/moredetallesCitaOriAcadem/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ item.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
+                                        {% elif item.tipo ==  'cita_tutoria' %}
 
-                                    {% elif item.tipo ==  'tarea_cita_tutoria' %}
-                                        <a class="app-notification__item" href="/moredetallesCitaTutoria/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
-                                            <span class="app-notification__icon">
-                                                <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
-                                            </span>
-                                            <div>
-                                                <p class="app-notification__message">{{ item.verbo }}</p>
-                                                <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
-                                            </div>
-                                        </a>
+                                            <a class="app-notification__item" href="/moredetallesCitaTutoria/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ item.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
 
-                                    {% endif %}
-                                </div>
-                        {% endfor %}
+                                        {% elif item.tipo ==  'tarea_tutoria' %}
+
+                                            <a class="app-notification__item" href="/moredetallesTutoria/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ item.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                        {% elif item.tipo ==  'tarea_orientacion' %}
+
+                                            <a class="app-notification__item" href="/moredetallesOrientacionAcademica/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}"> 
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ item.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                        {% elif item.tipo ==  'tarea_cita_orientacion' %}
+
+                                            <a class="app-notification__item" href="/moredetallesCitaOriAcadem/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ item.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                        {% elif item.tipo ==  'tarea_cita_tutoria' %}
+                                            <a class="app-notification__item" href="/moredetallesCitaTutoria/{{ item.id_tipo}}" name='notificacion_list' value="{{ item.id }}">
+                                                <span class="app-notification__icon">
+                                                    <span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span>
+                                                </span>
+                                                <div>
+                                                    <p class="app-notification__message">{{ item.verbo }}</p>
+                                                    <p class="app-notification__meta">hace {{ item.timestamp|timesince }}.</p>
+                                                </div>
+                                            </a>
+
+                                        {% endif %}
+                                    </div>
+                            {% endfor %}
+                        {% endif %}
                     
                 </div>
             </div>

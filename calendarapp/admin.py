@@ -23,11 +23,14 @@ class TipoOrientacionAcademicaForm(forms.ModelForm):
         descripcion_tipo_orientacion_academica = cleaned_data.get('descripcion_tipo_orientacion_academica')
         if descripcion_tipo_orientacion_academica is not None:
             # Verificar si ya existe un objeto con la misma descripción
-            existing_object = TipoOrientacionAcademica.objects.filter(descripcion_tipo_orientacion_academica__contains= descripcion_tipo_orientacion_academica)
+            existing_object = TipoOrientacionAcademica.objects.filter(descripcion_tipo_orientacion_academica__contains=descripcion_tipo_orientacion_academica)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
             
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos!')
-        
 class TipoOrientacionAcademicaAdmin(admin.ModelAdmin):
     form = TipoOrientacionAcademicaForm
     
@@ -49,6 +52,10 @@ class DiaForm(forms.ModelForm):
         if descripcion_dia is not None:
             # Verificar si ya existe un objeto con la misma descripción
             existing_object = Dia.objects.filter(descripcion_dia__contains= descripcion_dia)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
             
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos!')
@@ -73,6 +80,10 @@ class SemestreForm(forms.ModelForm):
         if descripcion_semestre is not None:
             # Verificar si ya existe un objeto con la misma descripción
             existing_object = Semestre.objects.filter(descripcion_semestre__contains= descripcion_semestre)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
         
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos!')
@@ -101,6 +112,15 @@ class ConvocatoriaForm(forms.ModelForm):
         # Verificar si ya existe un objeto con la misma descripción
         existing_object = Convocatoria.objects.filter(id_semestre= id_semestre, anho = anho, fecha_inicio= fecha_inicio, fecha_fin= fecha_fin)
         convocatoria= Convocatoria.objects.filter(id_semestre= id_semestre, anho = anho)
+        
+        # Excluir la instancia actual del objeto si está presente
+        if self.instance:
+            existing_object = existing_object.exclude(pk=self.instance.pk)
+            
+        # Excluir la instancia actual del objeto si está presente
+        if self.instance:
+            convocatoria = convocatoria.exclude(pk=self.instance.pk)
+                
         if existing_object.exists():
             raise ValidationError('¡Ya existe un registro con el rango de fechas para el semestre y año!')
         
@@ -135,7 +155,11 @@ class EstadoActividadAcademicaForm(forms.ModelForm):
         if descripcion_estado_actividad_academica is not None:
             # Verificar si ya existe un objeto con la misma descripción
             existing_object = EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains= descripcion_estado_actividad_academica)
-        
+
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
+                
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos!')
 
@@ -160,6 +184,10 @@ class UnidadMedidaForm(forms.ModelForm):
         if descripcion_unidad_medida is not None:
             # Verificar si ya existe un objeto con la misma descripción
             existing_object = UnidadMedida.objects.filter(descripcion_unidad_medida__contains= descripcion_unidad_medida)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
         
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos!')
@@ -200,6 +228,10 @@ class ParametroForm(forms.ModelForm):
         if es_orientacion_academica == True:
             # Verificar si ya existe un objeto con la misma descripción
             ins_es_orientacion_academica = Parametro.objects.filter(es_orientacion_academica= es_orientacion_academica)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                ins_es_orientacion_academica = ins_es_orientacion_academica.exclude(pk=self.instance.pk)
         
             if ins_es_orientacion_academica.exists():
                 raise ValidationError('¡Ya existe un registro cargado para orientación académica en la base de datos!')
@@ -207,6 +239,10 @@ class ParametroForm(forms.ModelForm):
         if es_tutoria == True:
             # Verificar si ya existe un objeto con la misma descripción
             ins_es_tutoria = Parametro.objects.filter(es_tutoria= es_tutoria)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                ins_es_tutoria = ins_es_tutoria.exclude(pk=self.instance.pk)
         
             if ins_es_tutoria.exists():
                 raise ValidationError('¡Ya existe un registro cargado para tutoría en la base de datos!')
@@ -235,6 +271,10 @@ class TipoTutoriaForm(forms.ModelForm):
         if descripcion_tipo_tutoria is not None:
             # Verificar si ya existe un objeto con la misma descripción
             existing_object = TipoTutoria.objects.filter(descripcion_tipo_tutoria__contains= descripcion_tipo_tutoria)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
         
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos!')
@@ -261,6 +301,9 @@ class MotivoForm(forms.ModelForm):
         if descripcion_motivo is not None and id_tipo_orientacion_academica is not None:
             # Verificar si ya existe un objeto con la misma descripción
             existing_object = Motivo.objects.filter(descripcion_motivo__contains= descripcion_motivo, id_tipo_orientacion_academica= id_tipo_orientacion_academica)
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
         
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos para el tipo de orientación académica!')
@@ -290,6 +333,10 @@ class TipoTareaForm(forms.ModelForm):
         if descripcion_tipo_tarea is not None:
             # Verificar si ya existe un objeto con la misma descripción
             existing_object = TipoTarea.objects.filter(descripcion_tipo_tarea__contains= descripcion_tipo_tarea)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
         
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos!')
@@ -315,6 +362,10 @@ class EstadoTareaForm(forms.ModelForm):
         if descripcion_estado_tarea is not None:
             # Verificar si ya existe un objeto con la misma descripción
             existing_object = EstadoTarea.objects.filter(descripcion_estado_tarea__contains= descripcion_estado_tarea)
+            
+            # Excluir la instancia actual del objeto si está presente
+            if self.instance:
+                existing_object = existing_object.exclude(pk=self.instance.pk)
         
             if existing_object.exists():
                 raise ValidationError('¡La descripción ya existe en la base de datos!')

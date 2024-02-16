@@ -12,7 +12,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash -c "python manage.py flush --no-input && python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn eventcalendar.wsgi:application --bind 0.0.0.0:8000"
+    command: bash -c "python manage.py flush --no-input && python manage.py makemigrations && python manage.py migrate && python manage.py dbshell < data.sql && python manage.py collectstatic --noinput && gunicorn eventcalendar.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - static_volume:/home/app/web/staticfiles
     expose:
@@ -58,20 +58,27 @@ services:
   celery:
     build: .
     container_name: celery
-    command: celery -A eventcalendar worker --beat --loglevel=INFO -E
+    command: celery -A eventcalendar worker -n datos_academicos --loglevel=INFO -E 
     volumes:
       - .:/usr/src/app
-    environment:
-      - DEBUG=1
-      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
-      - CELERY_BROKER=redis://redis:6379/0
-      - CELERY_BACKEND=db+postgresql://postgres:test@db:5432/AcOMs
-      #- CELERY_ENABLE_UTC=True
-      - TZ=America/Asuncion
-      - SECRET_KEY=foo
+    env_file:
+      - ./.env.prod
     depends_on:
       - django
       - redis
+
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    command: celery -A eventcalendar beat --loglevel=INFO
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - django
+      - redis
+      - celery
 
   flower:
     image: mher/flower
@@ -84,9 +91,6 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_BACKEND=db+postgresql://postgres:test@db:5432/AcOMs
       - FLOWER_PORT=5000
-      # - CELERY_TIMEZONE=America/Asuncion
-      #- CELERY_ENABLE_UTC=True
-      #- TZ=America/Asuncion
       - SECRET_KEY=foo
     ports:
       - "5000:5000"
