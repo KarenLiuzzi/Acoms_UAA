@@ -215,9 +215,11 @@
                         <div class="tile">
                             <div>
                                 {% if cita.id_cita.id_estado_actividad_academica.descripcion_estado_actividad_academica == 'Finalizada' %}
-                                    <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Tarea">
-                                        <i class="bi bi-plus-lg"></i> Agregar Tarea
-                                    </button>
+                                    {% if perms.calendarapp.iniciar_cita %}
+                                        <button type="button" class="btn btn-primary btn-flat btnRegistrarTarea" title="Añadir Tarea">
+                                            <i class="bi bi-plus-lg"></i> Agregar Tarea
+                                        </button>
+                                    {% endif %}
                                 {% endif %} 
                             </div>
                             <br>
@@ -453,11 +455,11 @@
                         "render": function(data, type, row) {
                             if ((row.estado_tarea == "Pendiente") && (row.id_persona_actual == row.id_persona_responsable)) {
                                 return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>';
-                            } else if ((row.estado_tarea == "Pendiente") && (row.id_persona_actual != row.id_persona_responsable) && (staff == 'true')) {
+                            } else if ((row.estado_tarea == "Pendiente") && (row.id_persona_actual != row.id_persona_responsable) && (staff == true)) {
                                 return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>';
                             } else if ((row.estado_tarea == "Iniciada") && (row.id_persona_actual == row.id_persona_responsable )){
                                 return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>'; 
-                            } else if ((row.estado_tarea == "Iniciada") && (row.id_persona_actual != row.id_persona_responsable ) && (staff == 'true')){
+                            } else if ((row.estado_tarea == "Iniciada") && (row.id_persona_actual != row.id_persona_responsable ) && (staff == true)){
                                 return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>'; 
                             } else {
                                 return '';

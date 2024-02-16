@@ -62,7 +62,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 RUN apt update && apt install tzdata -y
 ENV TZ="America/Asuncion"
-
+#RUN apt install unixodbc
 # copy entrypoint.prod.sh
 COPY ./entrypoint.prod.sh .
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh

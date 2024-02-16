@@ -2113,7 +2113,7 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, ValidatePermission
                     #buscamos el primer departamento al cual esta asociado el funcionario docente  - con la logica actual
                     dep_func_doc= FuncionarioDocente.objects.filter(id_funcionario_docente = actividad_academica['id_funcionario_docente_encargado']).values("id_departamento").first()
                     dep_func_doc= dep_func_doc["id_departamento"]
-                    ins_departamento=  Departamento.objects.get(id_departamento= dep_func_doc)
+                    ins_departamento=  Departamento.objects.filter(id_departamento= dep_func_doc).first()
                     
                     #convertimos nuestras fechas en formato datetime 
                     #convertimos nuestras fechas en formato datetime 
@@ -2124,13 +2124,17 @@ class CitaOrientacionAcademicaIniciarView(LoginRequiredMixin, ValidatePermission
                     ins_facultad= Facultad.objects.get(id_facultad= actividad_academica['id_facultad'])
                     ins_func_doc_encargado= FuncionarioDocente.objects.get(id_funcionario_docente= actividad_academica['id_funcionario_docente_encargado'])
                     
+                    ins_materia= None
                     if (actividad_academica['id_materia'] != ''):
                         #obtenemos la instancia de la materia
                         ins_materia= Materia.objects.get(id_materia= actividad_academica['id_materia'])
                         cita.id_materia= ins_materia
+                        id_departamento= ins_materia.id_departamento.id_departamento
+                        ins_departamento= Departamento.objects.get(id_departamento= id_departamento)                        
                         
                     cita.id_estado_actividad_academica = id_estado
-                    cita.id_departamento= ins_departamento
+                    if ins_departamento != None:
+                        cita.id_departamento= ins_departamento
                     cita.id_facultad= ins_facultad
                     cita.id_funcionario_docente_encargado= ins_func_doc_encargado
                     cita.datetime_inicio_real= fecha_hora_inicio_real
@@ -2898,14 +2902,16 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     ins_persona= Persona.objects.get(id= id_persona)
                     ins_solicitante= Persona.objects.get(id= actividad_academica['id_solicitante'])
                     
-                    #consultamos si la materia existe
-                    if actividad_academica['id_materia'] != '':
+                    ins_materia= None
+                    if (actividad_academica['id_materia'] != ''):
                         ins_materia= Materia.objects.get(id_materia= actividad_academica['id_materia'])
-                        orientacion_academica.id_materia= ins_materia                      
-                    orientacion_academica.id_estado_actividad_academica = id_estado
-                    #Agregado en caso de que no exista la relacion con departamento  pero si con facultad
+                        orientacion_academica.id_materia= ins_materia 
+                        id_departamento= ins_materia.id_departamento.id_departamento
+                        ins_departamento= Departamento.objects.get(id_departamento= id_departamento)
+                    print(ins_departamento)
                     if ins_departamento != None:
                         orientacion_academica.id_departamento= ins_departamento
+                    orientacion_academica.id_estado_actividad_academica= id_estado
                     orientacion_academica.id_convocatoria = ins_convocatoria
                     orientacion_academica.id_facultad= ins_facultad
                     orientacion_academica.id_funcionario_docente_encargado= ins_func_doc_encargado
@@ -3011,13 +3017,16 @@ class OrientacionAcademicaCreateView(LoginRequiredMixin, ValidatePermissionRequi
                     ins_solicitante= Persona.objects.get(id= actividad_academica['id_solicitante'])
                     
                     #consultamos si la materia existe
-                    if actividad_academica['id_materia'] != '':
+                    ins_materia= None
+                    if (actividad_academica['id_materia'] != ''):
                         ins_materia= Materia.objects.get(id_materia= actividad_academica['id_materia'])
-                        orientacion_academica.id_materia= ins_materia    
-                    orientacion_academica.id_estado_actividad_academica = id_estado
-                    #Agregado en caso de que no exista la relacion con departamento  pero si con facultad
+                        orientacion_academica.id_materia= ins_materia 
+                        id_departamento= ins_materia.id_departamento.id_departamento
+                        ins_departamento= Departamento.objects.get(id_departamento= id_departamento)
+                    print(ins_departamento)
                     if ins_departamento != None:
                         orientacion_academica.id_departamento= ins_departamento
+                    orientacion_academica.id_estado_actividad_academica= id_estado
                     orientacion_academica.id_convocatoria = ins_convocatoria
                     orientacion_academica.id_facultad= ins_facultad
                     orientacion_academica.id_funcionario_docente_encargado= ins_func_doc_encargado
@@ -3643,6 +3652,9 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                     if (actividad_academica['id_materia'] != ''):
                         ins_materia= Materia.objects.get(id_materia= actividad_academica['id_materia'])
                         orientacion_academica.id_materia= ins_materia 
+                        id_departamento= ins_materia.id_departamento.id_departamento
+                        ins_departamento= Departamento.objects.get(id_departamento= id_departamento)
+                    print(ins_departamento)
                     if ins_departamento != None:
                         orientacion_academica.id_departamento= ins_departamento
                     orientacion_academica.id_convocatoria = ins_convocatoria
@@ -3781,8 +3793,10 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                     if (actividad_academica['id_materia'] != ''):
                         ins_materia= Materia.objects.get(id_materia= actividad_academica['id_materia'])
                         orientacion_academica.id_materia= ins_materia 
-                    #el estado se cambia
-                    orientacion_academica.id_estado_actividad_academica = id_estado
+                        id_departamento= ins_materia.id_departamento.id_departamento
+                        ins_departamento= Departamento.objects.get(id_departamento= id_departamento)
+                    print(ins_departamento)
+                    orientacion_academica.id_estado_actividad_academica= id_estado
                     if ins_departamento != None:
                         orientacion_academica.id_departamento= ins_departamento
                     orientacion_academica.id_departamento= ins_departamento

@@ -16,7 +16,8 @@ from itertools import chain
 from django.db.models import Q,  F, Case, When, Value, IntegerField, DateTimeField
 from django.db.models.functions import Coalesce
 from django.utils.decorators import method_decorator
-
+zona_horaria_py = 'Etc/GMT-4'
+import pytz
 
 # Función para extraer la fecha de cada tipo de objeto
 def get_fecha(event):
@@ -1155,6 +1156,7 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
                         #obtenemos instancia de estado cancelado
                         estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizada').first()
                         tutoria.id_estado_actividad_academica= estado
+                        tutoria.datetime_fin_real= datetime.now(pytz.timezone(zona_horaria_py))
                         tutoria.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                         tutoria.save()
                         return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Tutoría Cancelada."})})
@@ -1165,6 +1167,7 @@ def FinalizarActividadAcademica(request, id_tutoria, id_ori_academ):
                         #obtenemos instancia de estado cancelado
                         estado= EstadoActividadAcademica.objects.filter(descripcion_estado_actividad_academica__contains='Finalizada').first()
                         orientacion_academica.id_estado_actividad_academica= estado
+                        orientacion_academica.datetime_fin_real= datetime.now(pytz.timezone(zona_horaria_py))
                         orientacion_academica.id_persona_ultima_modificacion= Persona.objects.get(id= dict["id_persona"])
                         orientacion_academica.save()
                         return HttpResponse(status=204, headers={'HX-Trigger': json.dumps({"calenarioListChange": None, "showMessage": "Orientación Académica Cancelada."})})
