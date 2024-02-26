@@ -166,10 +166,14 @@
                     {
                         "data": null,
                         "render": function(data, type, row) {
-                            if ((row.id_tutoria == '') && (row.id_orientacion_academica != '') ){
+                            if ((row.id_tutoria == '') && (row.id_orientacion_academica != '') && (row.cita == 'no')){
                                 return "Orientación Académica";
-                            } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '')) {
+                            } else if ((row.id_tutoria == '') && (row.id_orientacion_academica != '') && (row.cita == 'si')){
+                                return "Cita de Orientación Académica";
+                            } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '') && (row.cita == 'no')) {
                                 return "Tutoría";
+                            } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '') && (row.cita == 'si')) {
+                                return "Cita de Tutoría";
                             } else {
                                 return ""
                             }
@@ -190,31 +194,48 @@
                     {
                         "data": null,
                         "render": function(data, type, row) {
-                            if ((row.estado_tarea === "Pendiente") && ((row.id_orientacion_academica == '') && (row.id_tutoria != ''))){
-                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
-                            } else if ((row.estado_tarea === "Iniciada") && ((row.id_orientacion_academica == '') && (row.id_tutoria != ''))){
-                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
-                            } 
-                            else if ((row.estado_tarea === "Pendiente") && ((row.id_tutoria == '') && (row.id_orientacion_academica != ''))){
+                            console.log(row.cita)
+                            console.log(typeof(row.cita))
+                            if ((row.estado_tarea == "Pendiente") && ((row.id_orientacion_academica == '') && (row.id_tutoria != ''))){
+                                if (row.cita == 'si')
+                                {
+                                    return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles cita tutoría" href="/moredetallesCitaTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                                } else {
+                                    return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                                }
 
-                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>';
-                            } else if ((row.estado_tarea === "Iniciada") && ((row.id_tutoria == '') && (row.id_orientacion_academica != ''))){
-                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>  <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
+                            } else if ((row.estado_tarea == "Iniciada") && ((row.id_orientacion_academica == '') && (row.id_tutoria != ''))){
+                                if (row.cita == 'si')
+                                {
+                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles cita tutoría" href="/moredetallesCitaTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                                } else {
+                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                                }
+                            } 
+                            else if ((row.estado_tarea == "Pendiente") && ((row.id_tutoria == '') && (row.id_orientacion_academica != ''))){
+                                if (row.cita == 'si')
+                                {
+                                    return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles cita Orientación Académica" href="/moredetallesCitaOriAcadem/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>';
+                                } else {
+                                    return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a> <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>';
+                                }
+                            } else if ((row.estado_tarea == "Iniciada") && ((row.id_tutoria == '') && (row.id_orientacion_academica != ''))){
+                                if (row.cita == 'si')
+                                {
+                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>  <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles cita Orientación Académica" href="/moredetallesCitaOriAcadem/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
+                                } else {
+                                    return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>  <a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
+                                }
                             }
-                            else if ((row.estado_tarea === "Pendiente") && ((row.id_orientacion_academica == '') && (row.id_tutoria == ''))){
-    
-                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>';
-                            } else if ((row.estado_tarea === "Iniciada") && ((row.id_orientacion_academica == '') && (row.id_tutoria == ''))){
-                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>';
-                            } else if ((row.estado_tarea === "Pendiente") && ((row.id_tutoria == '') && (row.id_orientacion_academica == ''))){
-                 
-                                return '<a rel="iniciar" type="button" class="btn btn-primary" style="color: white;" title="Iniciar tarea" value="/tarea/iniciar/' + row.id_tarea + '/"><i class="bi bi-caret-right-fill"></i></a> <a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>';
-                            } else if ((row.estado_tarea === "Iniciada") && ((row.id_tutoria == '') && (row.id_orientacion_academica == ''))){
-                                return '<a rel="cancelar" class="btn btn-danger" style="color: white;" title="Cancelar tarea" value="/tarea/cancelar/' + row.id_tarea + '/"><i class="bi bi-x-lg"></i></a>  <a rel="finalizar" class="btn btn-primary" style="color: white;" title="Finalizar tarea" value="/tarea/finalizar/' + row.id_tarea + '/"><i class="bi bi-check2"></i></a>'; 
-                            } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '')){
+                             else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '') && (row.cita == 'no') ){
                                 return '<a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles tutoría" href="/moredetallesTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
-                            }  else if ((row.id_tutoria == '') && (row.id_orientacion_academica != '')){
+                            } else if ((row.id_orientacion_academica == '') && (row.id_tutoria != '') && (row.cita == 'si') ){
+                                return '<a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles cita tutoría" href="/moredetallesCitaTutoria/' + row.id_tutoria + '"><i class="bi bi-eye-fill"></i></a>';
+                            
+                            }  else if ((row.id_tutoria == '') && (row.id_orientacion_academica != '') && (row.cita == 'no') ){
                                 return '<a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles Orientación Académica" href="/moredetallesOrientacionAcademica/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
+                            }  else if ((row.id_tutoria == '') && (row.id_orientacion_academica != '') && (row.cita == 'si') ){
+                                return '<a rel="detalles" class="btn btn-primary" style="color: white;" title="Ver detalles cita Orientación Académica" href="/moredetallesCitaOriAcadem/' + row.id_orientacion_academica + '"><i class="bi bi-eye-fill"></i></a>'; 
                             } else {
                                 return '';
                             }

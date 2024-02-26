@@ -3,13 +3,12 @@
 
 {% block content %}
 
-
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         <div class="tile-body">
             <div class="table-responsive">
                 <div class="tile">
-                        {% if not item %}
+                        {% if not list_notify %}
                             Sin notificaciones...
                         {% else %}
                             {% for item in list_notify %}

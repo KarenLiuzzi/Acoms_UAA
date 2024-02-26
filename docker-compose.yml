@@ -58,7 +58,7 @@ services:
   celery:
     build: .
     container_name: celery
-    command: celery -A eventcalendar worker -n datos_academicos --loglevel=INFO -E 
+    command: celery -A eventcalendar worker -Q datos_academicos -n datos_academicos@worker --concurrency=2 --loglevel=INFO -E 
     volumes:
       - .:/usr/src/app
     env_file:
@@ -83,7 +83,7 @@ services:
   flower:
     image: mher/flower
     container_name: flower
-    command: celery flower --persisten=True 
+    command: celery flower --persistent=True 
     # build:
     #   context: ./flowers
     #   dockerfile: Dockerfile

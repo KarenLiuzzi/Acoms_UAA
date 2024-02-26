@@ -1,3 +1,5 @@
+docker exec -it 50440544a05156c6b6654b77b95264262e083a24941bab78dcda1ff8200b0ee3 redis-cli lpop datos_academicos
+docker exec -it 50440544a05156c6b6654b77b95264262e083a24941bab78dcda1ff8200b0ee3 redis-cli llen datos_academicos
 Administrador
 prueba@test.com
 estaesasi

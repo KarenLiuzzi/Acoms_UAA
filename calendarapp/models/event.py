@@ -441,37 +441,40 @@ def notify_tarea(sender, instance, created, **kwargs):
                 #agregamos
                 ins_encargado= Persona.objects.filter(id= instance.id_persona_responsable.id).first()
                 
-                #Verificamos si existe una cita relacionada
-                if instance.id_tutoria is not None:
-                    cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria.id_tutoria.id_actividad_academica).first()
-                elif instance.id_orientacion_academica is not None:
-                    cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica).first()
+                #preguntamos si la persona solicitante es diferente de la encargada entonces no notificar
+                if ins_solicitante != ins_encargado :
                 
-                
-                if cita_existente_tutoria is not None:
-                    tipo_actividad= 'tarea_cita_tutoria'
-                    id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
-                    title = 'Te asignaron una tarea en una cita de tutoría'
+                    #Verificamos si existe una cita relacionada
+                    if instance.id_tutoria is not None:
+                        cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria.id_tutoria.id_actividad_academica).first()
+                    elif instance.id_orientacion_academica is not None:
+                        cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica).first()
+                    
+                    
+                    if cita_existente_tutoria is not None:
+                        tipo_actividad= 'tarea_cita_tutoria'
+                        id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
+                        title = 'Te asignaron una tarea en una cita de tutoría'
+                            
+                    elif cita_existente_orrientacion is not None:
+                        id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                        tipo_actividad= 'tarea_cita_orientacion'            
+                        title = 'Te asignaron una tarea en una cita de orientación académica'
                         
-                elif cita_existente_orrientacion is not None:
-                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
-                    tipo_actividad= 'tarea_cita_orientacion'            
-                    title = 'Te asignaron una tarea en una cita de orientación académica'
+                    elif instance.id_tutoria != None:
+                        id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
+                        tipo_actividad= 'tarea_tutoria'            
+                        title = 'Te asignaron una tarea en una tutoría'
+                        
+                    elif instance.id_orientacion_academica != None:
+                        id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                        tipo_actividad= 'tarea_orientacion'
+                        title = 'Te asignaron una tarea en una orientación académica'
                     
-                elif instance.id_tutoria != None:
-                    id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
-                    tipo_actividad= 'tarea_tutoria'            
-                    title = 'Te asignaron una tarea en una tutoría'
-                    
-                elif instance.id_orientacion_academica != None:
-                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
-                    tipo_actividad= 'tarea_orientacion'
-                    title = 'Te asignaron una tarea en una orientación académica'
-                
-                solicitante= ins_solicitante.usuario.all().first()
-                encargado = ins_encargado.usuario.all().first()
+                    solicitante= ins_solicitante.usuario.all().first()
+                    encargado = ins_encargado.usuario.all().first()
 
-                notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= tipo_actividad , id_tipo= id_actividad)
+                    notificar.send(solicitante, destiny= encargado, verb= title, level='info', tipo= tipo_actividad , id_tipo= id_actividad)
 
     except Exception as e:
         print(f"Se ha producido un error: {e}")
@@ -497,38 +500,39 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
                 cita_existente_tutoria= None
                 cita_existente_orrientacion= None
                 
-                #Verificamos si existe una cita relacionada
-                if instance.id_tutoria is not None:
-                    cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria.id_tutoria.id_actividad_academica).first()
-                elif instance.id_orientacion_academica is not None:
-                    cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica).first()
-                
-                if cita_existente_tutoria is not None:
-                    print('entro en cita tutoria')
-                    tipo= 'tarea_cita_tutoria'
-                    nombre_actividad= 'Tarea de cita de Tutoría'
-                    id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
-                        
-                elif cita_existente_orrientacion is not None:
-                    print('entro en cita orientacion')
-                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
-                    tipo= 'tarea_cita_orientacion'
-                    nombre_actividad= 'Tarea de cita de Orientación Académica'
-                        
-                elif instance.id_tutoria != None:
-                    print('entro en tutoria')
-                    id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
-                    tipo= 'tarea_tutoria'
-                    nombre_actividad= 'Tarea de Tutoría'
-                    
-                elif instance.id_orientacion_academica != None:
-                    print('entro en orientacion')
-                    id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
-                    tipo= 'tarea_orientacion'
-                    nombre_actividad= 'Tarea de Orientación Académica'                    
-                
                 #preguntamos si es que la persona que modifico es diferente de la solicitante avisar al solicitante
                 if instance.id_persona_ultima_modificacion !=  instance.id_persona_alta:
+                
+                    #Verificamos si existe una cita relacionada
+                    if instance.id_tutoria is not None:
+                        cita_existente_tutoria = Cita.objects.filter(id_cita=instance.id_tutoria.id_tutoria.id_actividad_academica).first()
+                    elif instance.id_orientacion_academica is not None:
+                        cita_existente_orrientacion = Cita.objects.filter(id_cita=instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica).first()
+                    
+                    if cita_existente_tutoria is not None:
+                        print('entro en cita tutoria')
+                        tipo= 'tarea_cita_tutoria'
+                        nombre_actividad= 'Tarea de cita de Tutoría'
+                        id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
+                            
+                    elif cita_existente_orrientacion is not None:
+                        print('entro en cita orientacion')
+                        id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                        tipo= 'tarea_cita_orientacion'
+                        nombre_actividad= 'Tarea de cita de Orientación Académica'
+                            
+                    elif instance.id_tutoria != None:
+                        print('entro en tutoria')
+                        id_actividad= instance.id_tutoria.id_tutoria.id_actividad_academica
+                        tipo= 'tarea_tutoria'
+                        nombre_actividad= 'Tarea de Tutoría'
+                        
+                    elif instance.id_orientacion_academica != None:
+                        print('entro en orientacion')
+                        id_actividad= instance.id_orientacion_academica.id_orientacion_academica.id_actividad_academica
+                        tipo= 'tarea_orientacion'
+                        nombre_actividad= 'Tarea de Orientación Académica'    
+                
                     ins_persona_modificacion= Persona.objects.get(id= instance.id_persona_ultima_modificacion.id)
                     originador= ins_persona_modificacion.usuario.all().first()
                     destino= ''

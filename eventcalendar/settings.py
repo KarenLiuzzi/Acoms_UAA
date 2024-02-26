@@ -266,11 +266,19 @@ CHANNEL_LAYERS = {
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "db+postgresql://postgres:test@db:5432/AcOMs")
 CELERY_TIMEZONE = 'America/Asuncion'
-
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_BEAT_SCHEDULE = {
     "sample_task": {
         "task": "calendarapp.tasks.importar_datos",
         "schedule": crontab(minute=0, hour=0, day_of_week='1-5'),
+        #"schedule": crontab(minute="*/12"),
+        "options": {
+            "queue": "datos_academicos",
+            "time_limit": 3600,  # Tiempo límite en segundos (en este caso, 1 hora)
+             "retry": {
+                "max_retries": 2,  # Número máximo de reintentos
+                "interval_start": 20,  #tiempo espera para realizar reintentos en segundos
+            },
+        },
     },
 }
-#CELERY_ROUTES= {'calendarapp.tasks.importar_datos': {'queue': 'volcado_datos_academicos'}}
