@@ -709,9 +709,14 @@ def volcar_MateriaCarrera():
         contenido= f'Estimad@: Le informamos que ocurrio un problema con el vuelco de datos de la tabla MateriaCarrera.  Favor verificar el mismo: {str(e)}.  Atte equipo AcOms.'
         title = 'Error en vuelco de datos AcOMs'
         enviarcorreo(title, contenido)
-            
+    else:
+        contenido= f'Estimad@: Le informamos que ha finalizado con exito el proceso de insersion/actualizacion de datos academicos. Atte equipo AcOms.'
+        title = 'Finalizacion de datos AcOMs'
+        enviarcorreo(title, contenido)
+        
     finally:
         print('Finalizo Materia Carrera...')
+        
     print('Finalizo la tarea...')
         
     #respuestas incorrectas lado del cliente

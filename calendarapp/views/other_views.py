@@ -4056,6 +4056,7 @@ class OrientacionAcademicaUpdateView(LoginRequiredMixin, ValidatePermissionRequi
                         datetime_ultima_modificacion= ''
                     observacion = tarea.observacion
                     id_persona_actual= ins_user_actual.id
+                    
                     auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
                     'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_orientacion_academica': id_orientacion_academica, 
                     'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
@@ -4145,12 +4146,25 @@ class TareasView(LoginRequiredMixin, ListView):
                     else: 
                         id_persona_responsable= ''
                         persona_responsable= ''
-                    if tarea['fields']['id_tutoria']:
+                    cita= ''
+                    if tarea['fields']['id_tutoria'] != None:
                         id_tutoria = tarea['fields']['id_tutoria']
+                        #Verificamos si es una cita
+                        cita_tutoria= Cita.objects.filter(id_cita= id_tutoria)
+                        if cita_tutoria.exists():
+                            cita= 'si'
+                        else:
+                            cita= 'no'
                     else:
                         id_tutoria = ''
-                    if tarea['fields']['id_orientacion_academica']:
+                    if tarea['fields']['id_orientacion_academica'] != None:
                         id_orientacion_academica = tarea['fields']['id_orientacion_academica']
+                        #Verificamos si es una cita
+                        cita_orientacion= Cita.objects.filter(id_cita= id_orientacion_academica)
+                        if cita_orientacion.exists():
+                            cita= 'si'
+                        else:
+                            cita= 'no'
                     else:
                         id_orientacion_academica = ''
                     id_estado_tarea = tarea['fields']['id_estado_tarea']
@@ -4182,12 +4196,11 @@ class TareasView(LoginRequiredMixin, ListView):
                         datetime_finalizacion= ''
                     datetime_ultima_modificacion =  datetime.fromisoformat(tarea['fields']['datetime_ultima_modificacion']).strftime('%d-%m-%Y %H:%M:%S')
                     observacion = tarea['fields']['observacion']
-                    
                     auxiliar= {'id_tarea': id_tarea, 'id_persona_finalizacion': id_persona_finalizacion, 'persona_finalizacion': persona_finalizacion,
                     'id_persona_alta': id_persona_alta, 'persona_alta': persona_alta, 'id_persona_responsable': id_persona_responsable, 'persona_responsable': persona_responsable, 'id_tutoria': id_tutoria, 
                     'id_estado_tarea': id_estado_tarea, 'estado_tarea': estado_tarea, 'tipo_tarea': tipo_tarea, 'id_tipo_tarea': id_tipo_tarea, 'datetime_inicio_estimado': datetime_inicio_estimado, 'datetime_inicio_real': datetime_inicio_real,
                     'datetime_vencimiento':datetime_vencimiento, 'datetime_alta': datetime_alta, 'datetime_finalizacion': datetime_finalizacion, 
-                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion, 'id_orientacion_academica': id_orientacion_academica}               
+                    'datetime_ultima_modificacion': datetime_ultima_modificacion, 'observacion': observacion, 'id_orientacion_academica': id_orientacion_academica, 'cita': cita}               
                     data.append(auxiliar)    
                     
         except Exception as e:
