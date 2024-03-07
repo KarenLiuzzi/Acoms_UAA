@@ -778,3 +778,7 @@ def enviarcorreo(asunto, contenido):
     except Exception as e:
         print(f"Se ha producido un error: {e}")
         
+        
+@shared_task
+def testing_hola():
+    print('Hola Mundo!...;)')

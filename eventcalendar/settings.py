@@ -268,10 +268,10 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "db+postgresql://postgr
 CELERY_TIMEZONE = 'America/Asuncion'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_BEAT_SCHEDULE = {
-    "sample_task": {
+    "volcar_datos_academicos": {
         "task": "calendarapp.tasks.importar_datos",
-        "schedule": crontab(minute=0, hour=0, day_of_week='1-5'),
-        #"schedule": crontab(minute="*/12"),
+        #"schedule": crontab(minute=0, hour=0, day_of_week='1-5'),
+        "schedule": crontab(minute="*/20"),
         "options": {
             "queue": "datos_academicos",
             "time_limit": 3600,  # Tiempo límite en segundos (en este caso, 1 hora)
@@ -280,5 +280,12 @@ CELERY_BEAT_SCHEDULE = {
                 "interval_start": 20,  #tiempo espera para realizar reintentos en segundos
             },
         },
+    },
+    "testing_task": {
+        "task": "calendarapp.tasks.testing_hola",
+        "options": {
+            "queue": "datos_academicos",
+        },
+        "schedule": crontab(minute="*/10"),
     },
 }

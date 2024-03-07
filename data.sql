@@ -262,158 +262,6 @@ INSERT INTO public.auth_group_permissions (group_id, permission_id) VALUES (1 ,1
 INSERT INTO public.auth_group_permissions (group_id, permission_id) VALUES (1 ,162) ;
 INSERT INTO public.auth_group_permissions (group_id, permission_id) VALUES (1 ,163) ;
 
-
---cita Tutoria
-
--- INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, datetime_fin_real, datetime_registro, 
--- observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, id_facultad_id, 
--- id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
--- VALUES ('2024-02-22 20:30:00-03', '2024-02-22 21:00:00-03', '2024-02-21 20:30:00-03', '2024-02-21 21:00:00-03', '2024-02-21 14:16:19.716404-03', 
--- 'Se reforzo el ultimo tema dado en la clase', '1234', 2, 1, 3, 1, 4, 1, 3, 3, 4);
-
--- INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
--- VALUES (1, true, false, true, 'Reforzar ultima clase', NULL, NULL, 2);
-
--- INSERT INTO public.calendarapp_tutoria (id_tutoria_id, nombre_trabajo, id_cita_id, id_tipo_tutoria_id, motivo_cancelacion) VALUES (1, '', 1, 2, NULL);
-
--- INSERT INTO public.calendarapp_detalleactividadacademica ( id_actividad_academica_id, id_participante_id) VALUES ( 1, 2);
-
--- INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
--- datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
--- id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
--- VALUES ('2024-02-21 14:18:00-03', NULL, '2024-02-22 14:18:00-03', '2024-02-21 14:19:19.379231-03', NULL,  
--- '2024-02-21 14:19:19.379604-03', 'Realizar tareas adicionales', true, 4, 4, NULL, 3, 4, 3, NULL, 1);
-
--- INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
--- datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
--- id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
--- VALUES ('2024-02-21 14:18:00-03', NULL, '2024-02-23 14:18:00-03', '2024-02-21 14:19:19.39329-03', NULL,  
--- '2024-02-21 14:19:19.393713-03', 'Seguimiento a la tarea solicitada', true, 4, 4, NULL, 4, 4, 1, NULL, 1);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_tutoria', 1, 4, 'Nueva solicitud de cita', false, true, false, '2024-02-21 14:16:19.736013-03', 34, 3);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_tutoria', 1, 3, 'Cita de Tutoria confirmada.', false, true, false, '2024-02-21 14:19:34.920669-03', 34, 4);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'tarea_cita_tutoria', 1, 3, 'Te asignaron una tarea en una cita de tutoría', false, true, false, '2024-02-21 14:19:19.401062-03', 34, 4);
-
--- -- cita orientacion
-
--- INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, datetime_fin_real, datetime_registro, 
--- observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, id_facultad_id, 
--- id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
--- VALUES ('2024-02-26 20:15:00-03', '2024-02-26 20:30:00-03', '2024-02-21 20:15:00-03', '2024-02-21 20:30:00-03', '2024-02-21 14:16:54.842648-03', 
--- 'Se dio tutoria sobre el procedimiento del trabajo final', '1596', 2, 2, 3, 1, 1, 6, 3, 3, 1);
-
-
--- INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
--- VALUES (2, false, true, true, 'Trabajo Final de grado', NULL, NULL, 1);
-
--- INSERT INTO public.calendarapp_orientacionacademica (id_orientacion_academica_id, id_cita_id, id_motivo_id, id_tipo_orientacion_academica_id, motivo_cancelacion) 
--- VALUES (2, 2, 2, 3, NULL);
-
--- INSERT INTO public.calendarapp_detalleactividadacademica (id_actividad_academica_id, id_participante_id) VALUES (2, 2);
-
-
--- INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
--- datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
--- id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
--- VALUES ('2024-02-21 14:20:00-03', '2024-02-21 14:20:00-03', '2024-02-22 14:20:00-03', '2024-02-21 14:21:49.670119-03', NULL,  
--- '2024-02-21 14:21:49.670412-03', 'lectura del procedimiento de trabajo de grado', true, 1, 1, NULL, 2, 1, 1, 2, NULL);
-
--- INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
--- datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
--- id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
--- VALUES ('2024-02-21 14:20:00-03', '2024-02-21 14:20:00-03', '2024-02-22 14:20:00-03', '2024-02-21 14:21:49.682394-03', NULL,  
--- '2024-02-21 14:21:49.682627-03', 'lectura del procedimiento de trabajo de grado', true, 1, 1, NULL, 3, 1, 3, 2, NULL);
-
--- INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
--- datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
--- id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
--- VALUES ('2024-02-21 14:21:00-03', NULL, '2024-02-23 14:21:00-03', '2024-02-21 14:21:49.694923-03', NULL,  
--- '2024-02-21 14:21:49.695136-03', 'Seguimiento a lo solicitado...', true, 4, 1, NULL, 1, 1, 1, 2, NULL);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_orientacion', 2, 4, 'Nueva solicitud de cita', false, true, false, '2024-02-21 14:16:54.857948-03', 34, 1);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_orientacion', 2, 1, 'Cita de Orientación Académica confirmada.', false, true, false, '2024-02-21 14:19:34.920669-03', 34, 4);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'tarea_cita_orientacion', 2, 1, 'Te asignaron una tarea en una cita de orientación académica', false, true, false, '2024-02-21 14:21:49.678051-03', 34, 2);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'tarea_cita_orientacion', 2, 1, 'Te asignaron una tarea en una cita de orientación académica', false, true, false, '2024-02-21 14:21:49.690909-03', 34, 4);
-
-
--- --citas confirmadas
-
--- INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, datetime_fin_real, datetime_registro, 
--- observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, id_facultad_id, 
--- id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
--- VALUES ('2024-02-28 20:30:00-03', '2024-02-28 21:00:00-03', NULL, NULL, '2024-02-23 14:44:25.706021-03', 
--- '', '', 2, 2, 5, 1, 5, 4, 3, 3, 5);
-
--- INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
--- VALUES (3, true, false, true, 'reforzar etiquetados de listas', NULL, 'No podre estar en ese horario', 2);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_tutoria', 3, 4, 'Nueva solicitud de cita', true, true, false, '2024-02-23 14:44:25.725355-03', 34, 5);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_tutoria', 3, 5, 'Cita de Tutoría rechazada.', false, true, false, '2024-02-23 14:47:50.603754-03', 34, 4);
-
-
--- INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, datetime_fin_real, datetime_registro, 
--- observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, id_facultad_id, 
--- id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
--- VALUES ('2024-02-26 15:30:00-03', '2024-02-26 16:00:00-03', NULL, NULL, '2024-02-23 14:46:13.177488-03', 
--- '', '', 2, 2, 2, 1, 4, 5, 3, 3, 4);
-
--- INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
--- VALUES (4, true, false, true, 'reforzar estructura de condicionales', NULL, NULL, 2);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_tutoria', 4, 4, 'Nueva solicitud de cita', true, true, false, '2024-02-23 14:46:13.193324-03', 34, 3);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_tutoria', 4, 3, 'Cita de Tutoría confirmada.', false, true, false, '2024-02-23 14:46:56.940998-03', 34, 4);
-
--- -- Citas orientaciones
--- INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, datetime_fin_real, datetime_registro, 
--- observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, id_facultad_id, 
--- id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
--- VALUES ('2024-02-26 20:45:00-03', '2024-02-26 21:00:00-03', NULL, NULL, '2024-02-23 14:52:04.843632-03', 
--- '', '', 2, 1, 2, 1, 5, NULL, 3, 3, 5);
-
--- INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
--- VALUES (5, false, true, true, 'consultar horarios de profesores', NULL, NULL, 2);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_orientacion', 5, 4, 'Nueva solicitud de cita', false, true, false, '2024-02-23 14:52:04.85838-03', 34, 5);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_orientacion', 5, 5, 'Cita de Orientación Académica confirmada.', false, true, false, '2024-02-23 14:54:26.493727-03', 34, 4);
-
--- INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, datetime_fin_real, datetime_registro, 
--- observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, id_facultad_id, 
--- id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
--- VALUES ('2024-02-26 20:45:00-03', '2024-02-26 21:00:00-03', NULL, NULL, '2024-02-23 14:52:24.506587-03', 
--- '', '', 2, 1, 5, 1, 1, NULL, 3, 3, 1);
-
--- INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
--- VALUES (6, false, true, true, 'estado academico actual', NULL, 'reposo por enfermedad', 2);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_orientacion', 6, 4, 'Nueva solicitud de cita', false, true, false, '2024-02-23 14:52:24.52096-03', 34, 1);
-
--- INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
--- VALUES ('info', 'cita_orientacion', 6, 1, 'Cita de Orientación Académica rechazada.', false, true, false, '2024-02-23 14:55:06.633176-03', 34, 4);
-
-
---NUEVO
 --cita Tutoria
 
 -- cita tutoria finalizada, karen, blanca
@@ -606,3 +454,186 @@ VALUES ('info', 'cita_tutoria', 9, 4, 'Nueva solicitud de cita', false, true, fa
 
 INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
 VALUES ('info', 'cita_tutoria', 9, 4, 'Cita de Tutoría cancelada.', false, true, false, '2024-02-25 20:49:42.842303-03', 34, 1);
+
+
+-- actividades academicas sin cita
+-- tutoria
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, datetime_fin_real, datetime_registro, 
+observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, id_facultad_id, 
+id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-06 19:00:00-03', '2024-03-06 19:30:00-03', '2024-03-06 19:05:00-03', '2024-03-06 19:35:43.487092-03', '2024-03-06 19:35:50.090436-03', 
+'Se realizo la tutoria correspondiente al trabajo de grado final...', '456', 2, 2, 3, 1, 1, 6, 1, 3, 1);
+
+INSERT INTO public.calendarapp_tutoria (id_tutoria_id, nombre_trabajo, id_cita_id, id_tipo_tutoria_id, motivo_cancelacion) VALUES (10, 'AcOMs', NULL, 1, NULL);
+
+INSERT INTO public.calendarapp_detalleactividadacademica ( id_actividad_academica_id, id_participante_id) VALUES ( 10, 2);
+
+INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
+datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
+id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
+VALUES ('2024-03-06 10:23:00-03', NULL, '2024-03-11 10:23:00-03', '2024-03-06 10:23:10.096905-03', NULL, 
+'2024-03-06 10:26:48.883227-03', 'Inscripcion a trabajo de grado...', true, 4, 1, NULL, 3, 1, 3, NULL, 10);
+
+INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
+datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
+id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
+VALUES ('2024-03-06 10:24:00-03', NULL, '2024-03-11 21:00:00-03', '2024-03-06 10:26:10.107039-03', NULL, 
+'2024-03-06 10:26:48.886086-03', 'Hacer seguimiento a la inscripcion', true, 4, 1, NULL, 1, 1, 1, NULL, 10);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'tutoria', 10,1, 'Tutoría finalizada.', true, true, false, '2024-03-06 19:35:50.842303-03', 34, 4);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'tarea_tutoria', 10,1, 'Te asignaron una tarea en una tutoría.', true, true, false, '2024-03-06 19:40:42.842303-03', 34, 4);
+
+
+
+-- orientaciones
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, datetime_fin_real, datetime_registro, 
+observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, id_facultad_id, 
+id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-07 18:30:00-03', '2024-03-07 18:50:00-03', '2024-03-07 18:40:41.355316-03', '2024-03-07 19:00:06.731462-03', '2024-03-07 19:00:41.355333-03', 
+'Consulta sobre estado academico actual de las alumnas', '456', 2, NULL, 3, 1, 1, NULL, 1, 3, 1);
+
+INSERT INTO public.calendarapp_orientacionacademica (id_orientacion_academica_id, id_cita_id, id_motivo_id, id_tipo_orientacion_academica_id, motivo_cancelacion) 
+VALUES (11, NULL, 5, 2, NULL);
+
+INSERT INTO public.calendarapp_detalleactividadacademica ( id_actividad_academica_id, id_participante_id) VALUES (11, 2);
+
+INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
+datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
+id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
+VALUES ('2024-03-07 10:29:00-03', NULL, '2024-03-08 10:29:00-03', '2024-03-08 10:30:41.364898-03', NULL, 
+'2024-03-08 10:31:11.647624-03', 'solicitar el estado academico actual', true, 4, 1, NULL, 1, 1, 3, 11, NULL);
+
+INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
+datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
+id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
+VALUES ('2024-03-07 10:29:00-03', NULL, '2024-03-08 10:29:00-03', '2024-03-08 10:30:30.368715-03', NULL, 
+'2024-03-08 10:31:41.650758-03', 'seguimiento a la solicitud...', true, 4, 1, NULL, 3, 1, 1, 11, NULL);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'orientacion', 11,1, 'Orientación Académica finalizada.', true, true, false, '2024-03-07 19:01:42.842303-03', 34, 4);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'tarea_orientacion', 11,1, 'Te asignaron una tarea en una orientación académica', true, true, false, '2024-03-07 19:01:50.842303-03', 34, 4);
+
+
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, 
+datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-11 16:30:00-03', '2024-03-11 17:00:00-03', NULL, NULL, '2024-03-03 17:48:33.51623-03', NULL, '', 2, 1, 6, 1, 4, 1, 3, 3, 3);
+
+INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
+VALUES (12, true, false, true, 'reforzar ultima clase', NULL, NULL, 2);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_tutoria', 12, 4, 'Nueva solicitud de cita', false, true, false, '2024-03-03 17:48:33.52697-03', 34, 3);
+
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, 
+datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-11 19:15:00-03', '2024-03-11 19:30:00-03', NULL, NULL, '2024-03-03 17:49:19.663301-03', NULL, '', 2, 1, 2, 1, 1, NULL, 3, 3, 1);
+
+INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
+VALUES (13, false, true, true, 'trabajo de grado final...', NULL, NULL, 1);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_orientacion', 13, 4, 'Nueva solicitud de cita', false, true, false, '2024-03-03 17:49:19.670574-03', 34, 1);
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_orientacion', 13, 1, 'Cita de Orientación Académica confirmada.', false, true, false, '2024-03-03 17:52:20.507935-03', 34, 4);
+
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real,
+ datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+ id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+ VALUES ('2024-03-11 20:30:00-03', '2024-03-11 21:00:00-03', NULL, NULL, '2024-03-03 17:50:26.301538-03', NULL, '', 2, 2, 2, 1, 1, 5, 2, 2, 1);
+
+INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
+VALUES (14, true, false, true, 'reforzar ultima clase', NULL, NULL, 2);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_tutoria', 14, 2, 'Nueva solicitud de cita', false, true, false, '2024-03-03 17:50:26.30981-03', 34, 1);
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_tutoria', 14, 1, 'Cita de Tutoría confirmada.', false, true, false, '2024-03-03 17:53:12.425585-03', 34, 2);
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, 
+datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-11 19:00:00-03', '2024-03-11 19:15:00-03', NULL, NULL, '2024-03-03 17:51:12.449341-03', NULL, '', 2, 1, 5, 1, 1, NULL, 2, 2, 1);
+
+
+INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id)
+VALUES (15, false, true, true, 'refuerzo de ultima clase', NULL, 'horario no disponible', 1);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_orientacion', 15, 2, 'Nueva solicitud de cita', false, true, false, '2024-03-03 17:51:12.456679-03', 34, 1);
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_orientacion', 15, 1, 'Cita de Orientación Académica rechazada.', false, true, false, '2024-03-03 17:52:04.338739-03', 34, 2);
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, 
+datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-12 19:30:00-03', '2024-03-12 20:00:00-03', NULL, NULL, '2024-03-03 18:00:10.566193-03', NULL, '', 2, 2, 6, 1, 1, 5, 3, 3, 3);
+
+INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
+VALUES (16, true, false, true, 'refuerzo de clase', NULL, NULL, 2);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_tutoria', 16, 4, 'Nueva solicitud de cita', false, true, false, '2024-03-03 18:00:10.576918-03', 34, 1);
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, 
+datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-14 19:00:00-03', '2024-03-14 19:15:00-03', NULL, NULL, '2024-03-03 18:00:57.845317-03', NULL, '', 2, 1, 6, 1, 4, NULL, 3, 3, 3);
+
+INSERT INTO public.calendarapp_cita (id_cita_id, es_tutoria, es_orientacion_academica, es_notificable, motivo, motivo_cancelacion, motivo_rechazo, id_parametro_id) 
+VALUES (17, false, true, true, 'consultar horario de clase', NULL, NULL, 1);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'cita_orientacion', 17, 4, 'Nueva solicitud de cita', false, true, false, '2024-03-03 18:00:57.852512-03', 34, 3);
+
+
+
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, 
+datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-07 15:45:00-03', '2024-03-07 16:30:00-03', '2024-03-07 15:45:00-03', '2024-03-07 16:46:32.847457-03', '2024-03-07 15:46:32.847475-03', 'Se brindo la informacion solicitada', '6549', 2, 1, 3, 1, 1, 1, 1, 2, 1);
+
+INSERT INTO public.calendarapp_orientacionacademica (id_orientacion_academica_id, id_cita_id, id_motivo_id, id_tipo_orientacion_academica_id, motivo_cancelacion) 
+VALUES (18, NULL, 6, 2, NULL);
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, 
+datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-08 15:46:00-03', '2024-03-08 16:46:00-03', '2024-03-08 15:47:38.812658-03', NULL, '2024-03-08 15:47:38.812677-03', 'Alumno solicito tutoria de trabajo de grado final...', '', 2, 2, 4, 1, 1, 5, 1, 3, 1);
+INSERT INTO public.calendarapp_tutoria (id_tutoria_id, nombre_trabajo, id_cita_id, id_tipo_tutoria_id, motivo_cancelacion) 
+VALUES (19, 'AcOms', NULL, 1, 'no se pudo concretar la tutoria');
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'tutoria', 19, 1, 'Tutoría cancelada.', false, true, false, '2024-03-08 15:48:25.740161-03', 34, 4);
+
+INSERT INTO public.calendarapp_event (datetime_inicio_estimado, datetime_fin_estimado, datetime_inicio_real, 
+datetime_fin_real, datetime_registro, observacion, nro_curso, id_convocatoria_id, id_departamento_id, id_estado_actividad_academica_id, 
+id_facultad_id, id_funcionario_docente_encargado_id, id_materia_id, id_persona_alta_id, id_persona_solicitante_id, id_persona_ultima_modificacion_id) 
+VALUES ('2024-03-08 15:48:00-03', '2024-03-12 15:48:00-03', '2024-03-08 15:51:00.272615-03', NULL, '2024-03-08 15:51:00.272626-03', 'Solicita cambio de curso...', '9706', 2, 3, 1, 1, 1, 3, 1, 2, 1);
+INSERT INTO public.calendarapp_orientacionacademica (id_orientacion_academica_id, id_cita_id, id_motivo_id, id_tipo_orientacion_academica_id, motivo_cancelacion) 
+VALUES (20, NULL, 4, 1, NULL);
+
+
+
+INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
+datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
+id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
+VALUES ('2024-03-08 15:49:00-03', NULL, '2024-03-12 15:49:00-03', '2024-03-04 15:51:00.277881-03', NULL, '2024-03-08 15:51:00.278098-03', 'Realizar seguimiento a la solicitud', true, 4, 1, NULL, 2, 1, 1, 20, NULL);
+INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
+datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
+id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
+VALUES ('2024-03-08 15:50:00-03', '2024-03-08 15:50:00-03', '2024-03-12 15:50:00-03', '2024-03-08 15:51:00.286279-03', NULL, '2024-03-08 15:51:00.286446-03', 'Solicitar cambio de curso', true, 1, 1, NULL, 1, 1, 3, 20, NULL);
+
+INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
+VALUES ('info', 'tarea_orientacion', 20, 1, 'Te asignaron una tarea en una orientación académica', false, true, false, '2024-03-08 15:51:00.284114-03', 34, 2);
+
+-- cargar blanca finalizada con karen y cancelada con ricardo

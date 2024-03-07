@@ -298,6 +298,27 @@
                     modal.modal('show');
                 });
             });
+
+            $('#tblEvents').on('click', 'a[rel="rechazar"]', function(event) {
+                event.preventDefault();
+            
+                // Obtener la URL del valor del atributo "value" del elemento <a>
+                var url = $(this).attr("value");
+                    
+                // Obtener el elemento modal
+                var modal = $('#modalEvent');
+
+                // Realizar una solicitud AJAX para cargar el contenido
+                $.get(url, function(data) {
+                    //console.log(data)
+                    // Insertar el contenido en el elemento con la clase "modal-dialog"
+                    modal.find('.modal-dialog').html(data);
+
+                    // Mostrar el modal
+                    modal.modal('show');
+                });
+            });
+
             
             $('#dashboardMenu').addClass('active');
 
