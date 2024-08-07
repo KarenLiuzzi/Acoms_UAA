@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse
+from dotenv import load_dotenv
+load_dotenv()
 
 #formulario de carga del correo para enviarle el token de restableciento
 class ResetPassView(View):
@@ -117,8 +119,9 @@ from email.mime.multipart import MIMEMultipart
 #configurar el setting.py, crear logica de envio de correo, obtener el mail del token
 def enviarcorreo(forgot_password_urls, destinatario):
     # Configura tus credenciales de Outlook
-    sender_email = 'kaliuzzi@uaa.edu.py'
-    sender_password = 'Yad92906'
+
+    sender_email = os.getenv('SENDER_EMAIL')
+    sender_password = os.getenv('SENDER_PASSWORD')
 
     # Configura el servidor SMTP de Outlook
     smtp_server = 'smtp-mail.outlook.com'
@@ -164,23 +167,7 @@ def enviarcorreo(forgot_password_urls, destinatario):
         print('Correo enviado con éxito')
     except Exception as e:
         print(f"Se ha producido un error: {e}")
-            
-#anterior        
-# def enviarcorreo(forgot_password_urls, destinatario):
-#     message= Mail(
-#         from_email= 'beatrizmoon@hotmail.com' ,
-#         to_emails= destinatario,
-#         subject= 'Restauración de Contraseña, Sistema AcOms',
-#         html_content= f'A continuación un enlace que le ayudara restablecer su contraseña: <br> <a href= "{forgot_password_urls}"> Click aqui para Restaurar su contraseña </a> <br> Atte equipo AcOms.'
-#     )
-
-#     try:
-#         #si es necesario hacer la obtencion del token con una variable global 
-#         sg= SendGridAPIClient(os.environ.get('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'))
-#         response = sg.send(message)
-#     except Exception as e:
-#         print(f"Se ha producido un error: {e}")
-
+        
 
 class CambiarContrasenhaView(LoginRequiredMixin, View):
 

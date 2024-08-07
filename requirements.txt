@@ -79,6 +79,7 @@ virtualenv==20.7.0
 wcwidth==0.2.10
 wrapt==1.12.1
 redis
+python-dotenv
 # django-celery-beat
 celery
 #celery[redis]
