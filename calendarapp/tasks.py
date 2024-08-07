@@ -1,6 +1,10 @@
 
 from accounts.models.user import TipoDocumento,  Persona, Alumno, Facultad, Departamento, Carrera, CarreraAlumno, Materia, MateriaCarrera
 from celery import shared_task
+import os 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 @shared_task
 def importar_datos():
@@ -739,11 +743,10 @@ from email.mime.text import MIMEText
 
 
 def enviarcorreo(asunto, contenido): 
-    #destinatario= 'hcorrea@uaa.edu.py '
-    destinatario= 'karendreammoon@gmail.com '
+    destinatario= os.getenv('DESTINATARY_EMAIL')
     # Configura tus credenciales de Outlook
-    sender_email = 'kaliuzzi@uaa.edu.py'
-    sender_password = 'Yad92906'
+    sender_email = os.getenv('SENDER_EMAIL')
+    sender_password = os.getenv('SENDER_PASSWORD')
 
     # Configura el servidor SMTP de Outlook
     smtp_server = 'smtp-mail.outlook.com'

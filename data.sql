@@ -1,5 +1,5 @@
 INSERT INTO public.accounts_tipodocumento (descripcion_tipo_documento) VALUES ('CI');
-INSERT INTO public.accounts_persona (nombre, apellido, documento, correo, telefono, celular, id_tipo_documento_id) VALUES ('Hugo', 'Correa', '4978990', '', '', '', 1);
+INSERT INTO public.accounts_persona (nombre, apellido, documento, correo, telefono, celular, id_tipo_documento_id) VALUES ('Hugo', 'Correa', '123456', '', '', '', 1);
 INSERT INTO public.accounts_persona (nombre, apellido, documento, correo, telefono, celular, id_tipo_documento_id) VALUES ('Maria', 'Aguero', '147258', '', '', '', 1);
 INSERT INTO public.accounts_persona (nombre, apellido, documento, correo, telefono, celular, id_tipo_documento_id) VALUES ('Karen', 'Liuzzi', '6109876', '', '', '', 1);
 INSERT INTO public.accounts_persona (nombre, apellido, documento, correo, telefono, celular, id_tipo_documento_id) VALUES ('Blanca', 'Baez', '789654', '', '', '', 1);
@@ -44,11 +44,11 @@ INSERT INTO public.calendarapp_convocatoria (anho, fecha_inicio, fecha_fin, id_s
 INSERT INTO public.calendarapp_convocatoria (anho, fecha_inicio, fecha_fin, id_semestre_id) VALUES (2024, '2024-02-01', '2024-06-30', 2);
 INSERT INTO public.calendarapp_tipotutoria (descripcion_tipo_tutoria) VALUES ('Trabajo de Grado');
 INSERT INTO public.calendarapp_tipotutoria (descripcion_tipo_tutoria) VALUES ('Académica');
-INSERT INTO public.accounts_user (password, last_login, is_superuser, documento, lector, email, is_staff, is_active, date_joined, last_updated, id_persona_id) VALUES ('pbkdf2_sha256$260000$GB8o1UBcjAW58DXdeJCdkj$pQkYb/zy0yg1EJunVyKUqx+4HdvMdp+8GKppaOu/yEI=', '2024-01-29 18:51:21.277463-03', true, '4978990', true, 'prueba@test.com', true, true, '2023-12-28 07:17:50.385747-03', '2024-01-24 11:45:19.70612-03', 1);
-INSERT INTO public.accounts_user (password, last_login, is_superuser, documento, lector, email, is_staff, is_active, date_joined, last_updated, id_persona_id) VALUES ('pbkdf2_sha256$260000$jY5w8viuxNTDNXohgYaatD$yNEKXoUsznOgj9l5yV25VjlVnBT4MmiHgV5yAeacRLo=', '2024-01-30 11:08:13.535584-03', false, '147258', true, 'karendreammoon@gmail.com', false, true, '2023-12-28 10:25:36.105251-03', '2023-12-28 10:25:36.105251-03', 2);
+INSERT INTO public.accounts_user (password, last_login, is_superuser, documento, lector, email, is_staff, is_active, date_joined, last_updated, id_persona_id) VALUES ('pbkdf2_sha256$260000$GB8o1UBcjAW58DXdeJCdkj$pQkYb/zy0yg1EJunVyKUqx+4HdvMdp+8GKppaOu/yEI=', '2024-01-29 18:51:21.277463-03', true, '123456', true, 'hugo.correa@test.com', true, true, '2023-12-28 07:17:50.385747-03', '2024-01-24 11:45:19.70612-03', 1);
+INSERT INTO public.accounts_user (password, last_login, is_superuser, documento, lector, email, is_staff, is_active, date_joined, last_updated, id_persona_id) VALUES ('pbkdf2_sha256$260000$jY5w8viuxNTDNXohgYaatD$yNEKXoUsznOgj9l5yV25VjlVnBT4MmiHgV5yAeacRLo=', '2024-01-30 11:08:13.535584-03', false, '147258', true, 'maria.aguero@test.com', false, true, '2023-12-28 10:25:36.105251-03', '2023-12-28 10:25:36.105251-03', 2);
 INSERT INTO public.accounts_user (password, last_login, is_superuser, documento, lector, email, is_staff, is_active, date_joined, last_updated, id_persona_id) VALUES ('pbkdf2_sha256$260000$wKNjZFm8qUPz5TgeQ3azwp$eryXF4yWaubHD2ql9bCfs0mL7EX6Itu97sUENip685M=', '2024-01-30 13:09:20.436121-03', false, '789654', true, 'blanca.baez@test.com', true, true, '2023-12-28 10:26:39.32369-03', '2024-01-24 11:44:31.706973-03', 4);
 INSERT INTO public.accounts_user (password, last_login, is_superuser, documento, lector, email, is_staff, is_active, date_joined, last_updated, id_persona_id) VALUES ('pbkdf2_sha256$260000$rOVPBt7QUEVSYVsoJkQOCM$ziU656iuT4VzdglVcKCBrnP/YGeoAaWPLWpKr0veXmA=', '2024-01-30 17:45:23.270654-03', false, '6109876', true, 'karen.liuzzi@test.com', false, true, '2023-12-28 10:25:59.80392-03', '2023-12-28 10:25:59.80392-03', 3);
-INSERT INTO public.accounts_user (password, last_login, is_superuser, documento, lector, email, is_staff, is_active, date_joined, last_updated, id_persona_id) VALUES ('pbkdf2_sha256$260000$HZo0mNhD4VKJeWBLp2ZFEP$kQhINNb85o15INMhJjIKnffbA/JCd22veUk+VZaXvQg=', '2024-01-25 11:01:22.62687-03', false, '3040653', true, 'ricardocastro@test.com', true, true, '2023-12-28 10:26:59.045553-03', '2024-01-24 11:44:58.544741-03', 5);
+INSERT INTO public.accounts_user (password, last_login, is_superuser, documento, lector, email, is_staff, is_active, date_joined, last_updated, id_persona_id) VALUES ('pbkdf2_sha256$260000$HZo0mNhD4VKJeWBLp2ZFEP$kQhINNb85o15INMhJjIKnffbA/JCd22veUk+VZaXvQg=', '2024-01-25 11:01:22.62687-03', false, '3040653', true, 'ricardo.castro@test.com', true, true, '2023-12-28 10:26:59.045553-03', '2024-01-24 11:44:58.544741-03', 5);
 INSERT INTO public.accounts_facultad (descripcion_facultad) VALUES ('Facultad de Ciencias y Tecnología');
 INSERT INTO public.accounts_departamento (descripcion_departamento, telefono, id_facultad_id) VALUES ('Departamento de E-learning', '123456', 1);
 INSERT INTO public.accounts_departamento (descripcion_departamento, telefono, id_facultad_id) VALUES ('Informática', '78946', 1);
@@ -623,7 +623,6 @@ INSERT INTO public.calendarapp_orientacionacademica (id_orientacion_academica_id
 VALUES (20, NULL, 4, 1, NULL);
 
 
-
 INSERT INTO public.calendarapp_tarea (datetime_inicio_estimado, datetime_inicio_real, datetime_vencimiento, datetime_alta, datetime_finalizacion, 
 datetime_ultima_modificacion, observacion, es_notificable, id_estado_tarea_id, id_persona_alta_id, id_persona_finalizacion_id, id_persona_responsable_id, 
 id_persona_ultima_modificacion_id, id_tipo_tarea_id, id_orientacion_academica_id, id_tutoria_id) 
@@ -636,4 +635,3 @@ VALUES ('2024-03-08 15:50:00-03', '2024-03-08 15:50:00-03', '2024-03-12 15:50:00
 INSERT INTO public.notify_notification (level, tipo, id_tipo, object_id_actor, verbo, read, publico, eliminado, "timestamp", actor_content_type_id, destiny_id) 
 VALUES ('info', 'tarea_orientacion', 20, 1, 'Te asignaron una tarea en una orientación académica', false, true, false, '2024-03-08 15:51:00.284114-03', 34, 2);
 
--- cargar blanca finalizada con karen y cancelada con ricardo

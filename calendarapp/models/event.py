@@ -4,9 +4,9 @@ from django.forms import model_to_dict
 from calendarapp.models import EventAbstract
 from django.db.models import Q, CheckConstraint
 from itertools import chain
-# from sendgrid import SendGridAPIClient
-# from sendgrid.helpers.mail import Mail
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 """models.Manager es una clase de Django que proporciona un mecanismo para realizar consultas a la base de datos y realizar operaciones en los modelos de manera más fácil y eficiente. Cada modelo de Django tiene al menos un objeto Manager asociado a él de forma predeterminada.
 
@@ -563,21 +563,6 @@ def detectar_cambio_estado_tarea(sender, instance, **kwargs):
         
 pre_save.connect(detectar_cambio_estado_tarea, sender= Tarea)
 
-#configurar el setting.py, crear logica de envio de correo, obtener el mail del token
-# def enviarcorreo(asunto, contenido, destinatario):
-#     message= Mail(
-#         from_email= 'beatrizmoon@hotmail.com' ,
-#         to_emails= destinatario,
-#         subject= asunto,
-#         html_content= contenido
-#     )
-
-#     try:
-#         #si es necesario hacer la obtencion del token con una variable global 
-#         sg= SendGridAPIClient(os.environ.get('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'))
-#         response = sg.send(message)
-#     except Exception as e:
-#         pass
     
 import smtplib
 from email.mime.text import MIMEText
@@ -586,8 +571,9 @@ from email.mime.multipart import MIMEMultipart
 def enviarcorreo(asunto, contenido, destinatario):
     
     # Configura tus credenciales de Outlook
-    sender_email = 'kaliuzzi@uaa.edu.py'
-    sender_password = 'Yad92906'
+    
+    sender_email = os.getenv('SENDER_EMAIL')
+    sender_password = os.getenv('SENDER_PASSWORD')
 
     # Configura el servidor SMTP de Outlook
     smtp_server = 'smtp-mail.outlook.com'
