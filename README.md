@@ -2,35 +2,30 @@
 <div align="center">
     <h1 align="center">Academic Orientation Management System</h1>
 </div>
-<hr>
 
-Welcome to my repository, here you will find a Project done for the "Universidad Autónoma de Asunción" that deals with the management of academic orientation activities (tutoring appointments and academic orientations) provided by the faculty for the students.
+Welcome to my repository. Here, you will find a project done for the "Universidad Autónoma de Asunción" that deals with the management of academic orientation activities (tutoring appointments and academic orientations) provided by the faculty for the students.
 
 ## Build and run the docker container
 
+```bash
 docker compose build && docker compose up
+```
 
 ## 🚀 Documentation
 ### Project Structure
-- **`credentials`**: to use the system you can find some basic credentials in the file `credentials.txt`.
-- **`.env`**: you must create your own variable environments with this format:
+- **credentials**: to use the system you can find some basic credentials in the file `credentials.txt`.
+- **.env**: you must create your own variables environments in the file .env:
 
-.env: 
-DESTINATARY_EMAIL=
-SENDER_EMAIL=
-SENDER_PASSWORD=
-PGADMIN_DEFAULT_EMAIL=
-PGADMIN_DEFAULT_PASSWORD=
-TZ=
-CELERY_BROKER_URL=
-CELERY_BACKEND=
-FLOWER_PORT=
-SECRET_KEY=
--------------------------------------------------
-.env.prod:
+`.env:`
+```
 DEBUG=
 SECRET_KEY=
 DJANGO_ALLOWED_HOSTS=
+TZ=
+CELERY_BROKER=
+CELERY_BACKEND=
+FLOWER_LOCALE=
+FLOWER_PORT=
 SQL_ENGINE=
 SQL_DATABASE=
 SQL_USER=
@@ -38,16 +33,13 @@ SQL_PASSWORD=
 SQL_HOST=
 SQL_PORT=
 DATABASE=
-TZ=
-FLOWER_LOCALE=
-
+PGADMIN_DEFAULT_EMAIL=
+PGADMIN_DEFAULT_PASSWORD=
+DESTINATARY_EMAIL=
+SENDER_EMAIL=
+SENDER_PASSWORD=
+```
 -------------------------------------------------
-
-.env.prod.db:
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-TZ=""
 
 
 ## 🤖 Tech stack
@@ -60,19 +52,19 @@ TZ=""
 
 ## Some System screenshots 
 
-`Main View`
+### Main View
 
 ![plot](./screenshoots/Vista_func_doc.png)
 
-`Appointment Monthly Calendar`
+### Appointment Monthly Calendar
 
 ![plot](./screenshoots/Vista_func_doc_mes_calendario.png)
 
-`Appointment Daily Calendar`
+### Appointment Daily Calendar
 
 ![plot](./screenshoots/Vista_func_doc_dia_calendario.png)
 
-`Main Administration view`
+### Main Administration view
 
 ![plot](./screenshoots/Vista_func_doc_panel_administrativo.png)
 

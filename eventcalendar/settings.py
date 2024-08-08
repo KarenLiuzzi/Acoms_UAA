@@ -263,9 +263,9 @@ CHANNEL_LAYERS = {
 }
 
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "db+postgresql://postgres:test@db:5432/AcOMs")
-CELERY_TIMEZONE = 'America/Asuncion'
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
+CELERY_TIMEZONE = os.environ.get("TZ")
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_BEAT_SCHEDULE = {
     "volcar_datos_academicos": {
